@@ -1,7 +1,7 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
-import { Link } from '@/i18n/navigation';
+import { Link, usePathname } from '@/i18n/navigation';
 import { ThemeToggle } from '@/components/shared/theme-toggle';
 import { LocaleSwitcher } from '@/components/shared/locale-switcher';
 
@@ -16,6 +16,12 @@ const navItems = [
 
 export function Header() {
   const t = useTranslations('nav');
+  const pathname = usePathname();
+
+  function isActive(href: string) {
+    if (href === '/') return pathname === '/';
+    return pathname.startsWith(href);
+  }
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/80 backdrop-blur-xl">
@@ -31,7 +37,11 @@ export function Header() {
             <Link
               key={item.key}
               href={item.href}
-              className="px-3 py-2 text-sm text-muted-foreground hover:text-foreground transition-colors rounded-md hover:bg-accent"
+              className={`px-3 py-2 text-sm transition-colors rounded-md ${
+                isActive(item.href)
+                  ? 'text-brand-mint font-medium bg-brand-mint/10'
+                  : 'text-muted-foreground hover:text-foreground hover:bg-accent'
+              }`}
             >
               {t(item.key)}
             </Link>

@@ -7,6 +7,7 @@ import { routing } from '@/i18n/routing';
 import { ThemeProvider } from '@/components/shared/theme-provider';
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
+import { MobileNav } from '@/components/layout/mobile-nav';
 import '../globals.css';
 
 const geistSans = Geist({
@@ -52,8 +53,11 @@ export default async function LocaleLayout({
         >
           <NextIntlClientProvider messages={messages}>
             <Header />
-            <main className="flex-1">{children}</main>
+            <main className="flex-1 pt-0 pb-16 md:pb-0">
+              {children}
+            </main>
             <Footer />
+            <MobileNav />
           </NextIntlClientProvider>
         </ThemeProvider>
       </body>

@@ -10,7 +10,8 @@
     "cases": "Cases",
     "life": "Life",
     "social": "Social",
-    "about": "About"
+    "about": "About",
+    "more": "More"
   },
   "home": {
     "hero_title": "Will AI Lab",
@@ -26,6 +27,7 @@
   },
   "footer": {
     "copyright": "© 2026 Will AI Lab. All rights reserved.",
-    "powered_by": "Powered by Next.js & AI"
+    "powered_by": "Powered by Next.js & AI",
+    "cattery": "Fuluck Cattery"
   }
 }

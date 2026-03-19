@@ -10,7 +10,8 @@
     "cases": "案例",
     "life": "生活",
     "social": "社交",
-    "about": "关于"
+    "about": "关于",
+    "more": "更多"
   },
   "home": {
     "hero_title": "Will AI Lab",
@@ -26,6 +27,7 @@
   },
   "footer": {
     "copyright": "© 2026 Will AI Lab. All rights reserved.",
-    "powered_by": "Powered by Next.js & AI"
+    "powered_by": "Powered by Next.js & AI",
+    "cattery": "福楽キャッテリー"
   }
 }
