@@ -1,36 +1,79 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Will's AI Blog
 
-## Getting Started
+🌐 [aiblog.fuluckai.com](https://aiblog.fuluckai.com)
 
-First, run the development server:
+个人博客 + AI实践记录 + 大阪生活
+
+A personal blog documenting real AI practices, cattery operations, and daily life in Osaka.
+
+## Tech Stack
+
+- **Framework:** Next.js 15 (App Router) + TypeScript
+- **Styling:** Tailwind CSS + shadcn/ui
+- **Animation:** Motion (Framer Motion)
+- **i18n:** next-intl (中文 / 日本語 / English)
+- **Deployment:** Vercel
+
+## Features
+
+- 🌏 Trilingual support (Chinese, Japanese, English)
+- 🌓 Light / Dark theme
+- 📝 Markdown blog with code highlighting and TOC
+- 📊 AI Dashboard showing real assistant team status
+- 🕐 Interactive timeline with 34+ entries
+- 📋 Case studies with layered storytelling
+- 📱 Fully responsive design
+- 🔍 SEO optimized with sitemap, robots.txt, and structured data
+
+## Development
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Build
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run build
+```
 
-## Learn More
+## Deploy
 
-To learn more about Next.js, take a look at the following resources:
+Push to `main` → Vercel auto-deploy
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Project Structure
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```
+src/
+├── app/              # Next.js App Router pages
+├── components/       # React components
+│   ├── about/        # About page sections
+│   ├── blog/         # Blog components
+│   ├── cases/        # Case study components
+│   ├── home/         # Homepage sections
+│   ├── layout/       # Header, Footer, Nav
+│   ├── life/         # Life gallery
+│   ├── shared/       # Theme, locale, transitions
+│   └── ui/           # shadcn/ui primitives
+├── content/blog/     # Markdown blog posts
+├── data/             # Timeline, cases, life data
+├── i18n/             # Internationalization config
+├── lib/              # Utilities
+└── styles/           # Global CSS
+messages/             # i18n translation files (zh/ja/en)
+```
 
-## Deploy on Vercel
+## Author
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+**Will** (羅方遠) — Osaka, Japan
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- 🐱 [福楽キャッテリー](https://fuluckcattery.com) — Siberian cat breeder
+- 🤖 [福楽AI](https://fuluckai.com) — AI integration & training
+- 📸 Instagram / TikTok / YouTube
+
+## License
+
+MIT

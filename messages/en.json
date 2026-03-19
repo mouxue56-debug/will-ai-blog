@@ -15,8 +15,8 @@
   },
   "home": {
     "hero_title": "AI × Cattery × Osaka Life",
-    "hero_subtitle": "Real stories from an AI practitioner",
-    "hero_description": "A digital garden of an AI engineer — documenting tech explorations, life fragments, and interesting creations.",
+    "hero_subtitle": "Will's Digital Lab — Using AI for cattery ops, healthcare, and daily life",
+    "hero_description": "Not an AI evangelist — just someone actually living with AI. Documenting real successes, honest failures, daily reflections, and life in Osaka.",
     "cta_about": "Learn More",
     "cta_blog": "Latest Posts",
     "feed_title": "Latest Updates",
@@ -118,7 +118,7 @@
   },
   "about": {
     "tagline": "Osaka × AI × Cattery Owner",
-    "bio": "Running Fuluck Cattery (Siberian specialist) in Osaka while providing AI integration consulting (Fuluck AI). I use 4 AI assistants to manage work and life. This blog documents my real experiences with AI and daily life in Osaka — technology isn't the goal, making life better is.",
+    "bio": "Living in Harinakano, Osaka. Running Fuluck Cattery (Siberian cat specialist breeder) while also operating Fuluck AI, providing AI integration and training services.\n\nI work daily with 4 AI assistants — Yuki handles technical architecture and development, Natsu manages SNS operations and content creation, Haru takes care of business support and client communications, and Aki serves as my mobile companion. Each has its own personality and strengths, like a real little team. Yuki runs data analysis overnight, Natsu crafts compelling Japanese copy, Haru meticulously handles administrative paperwork, and Aki stands by during my commute.\n\nFrom automated cat profile management to AI customer service for clinics, to smart multi-platform SNS distribution — this blog is a real record of my AI journey. Not the grand narrative of \"AI changing the world,\" but the real story of a solopreneur using AI to run a small business better and live a more balanced life. Successes, failures, daily reflections, and the everyday moments of Osaka life — it's all here.\n\nTechnology isn't the goal — making life better is.",
     "ai_team_title": "My AI Team",
     "agent_yuki_role": "Tech Engineering",
     "agent_natsu_role": "SNS Operations",
