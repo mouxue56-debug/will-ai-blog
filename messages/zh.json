@@ -58,5 +58,65 @@
     "copyright": "© 2026 Will AI Lab. All rights reserved.",
     "powered_by": "Powered by Next.js & AI",
     "cattery": "福楽キャッテリー"
+  },
+  "timeline": {
+    "title": "时间线",
+    "subtitle": "记录技术探索、生活日常、里程碑和感悟",
+    "filter": {
+      "all": "全部",
+      "tech": "技术",
+      "daily": "日常",
+      "milestone": "里程碑",
+      "reflection": "感悟"
+    },
+    "category": {
+      "tech": "技术",
+      "daily": "日常",
+      "milestone": "里程碑",
+      "reflection": "感悟"
+    },
+    "count": "{count} 条记录",
+    "loadMore": "加载更多",
+    "expand": "展开详情",
+    "collapse": "收起详情",
+    "readMore": "阅读全文"
+  },
+  "cases": {
+    "title": "案例研究",
+    "subtitle": "真实的 AI 实践案例",
+    "filter_all": "全部案例",
+    "filter_ai_architecture": "AI架构",
+    "filter_sns": "SNS自动化",
+    "filter_medical": "医疗AI",
+    "view_details": "查看详情",
+    "story_layer": "故事层",
+    "tech_layer": "技术详情",
+    "deep_layer": "深度解析",
+    "back_to_cases": "返回案例列表",
+    "read_more": "继续阅读",
+    "tech_stack": "技术栈",
+    "results": "成果数据"
+  },
+  "timeline": {
+    "title": "时间线",
+    "subtitle": "记录 AI 实践、大阪生活、猫舍日常的点滴。技术探索、生活感悟、重要里程碑——一路走来的轨迹。",
+    "filter": {
+      "all": "全部",
+      "tech": "技术",
+      "daily": "日常",
+      "milestone": "里程碑",
+      "reflection": "感悟"
+    },
+    "category": {
+      "tech": "技术",
+      "daily": "日常",
+      "milestone": "里程碑",
+      "reflection": "感悟"
+    },
+    "expand": "点击展开",
+    "collapse": "收起",
+    "readMore": "阅读全文",
+    "loadMore": "加载更多",
+    "count": "共 {count} 条记录"
   }
 }

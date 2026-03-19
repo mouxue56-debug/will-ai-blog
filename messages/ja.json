@@ -58,5 +58,65 @@
     "copyright": "© 2026 Will AI Lab. All rights reserved.",
     "powered_by": "Powered by Next.js & AI",
     "cattery": "福楽キャッテリー"
+  },
+  "timeline": {
+    "title": "タイムライン",
+    "subtitle": "技術の探求、日常の記録、マイルストーンと気づき",
+    "filter": {
+      "all": "すべて",
+      "tech": "技術",
+      "daily": "日常",
+      "milestone": "マイルストーン",
+      "reflection": "気づき"
+    },
+    "category": {
+      "tech": "技術",
+      "daily": "日常",
+      "milestone": "マイルストーン",
+      "reflection": "気づき"
+    },
+    "count": "{count} 件の記録",
+    "loadMore": "もっと読み込む",
+    "expand": "詳細を展開",
+    "collapse": "詳細を折りたたむ",
+    "readMore": "続きを読む"
+  },
+  "cases": {
+    "title": "ケーススタディ",
+    "subtitle": "リアルなAI実践ケース",
+    "filter_all": "すべてのケース",
+    "filter_ai_architecture": "AIアーキテクチャ",
+    "filter_sns": "SNS自動化",
+    "filter_medical": "医療AI",
+    "view_details": "詳細を見る",
+    "story_layer": "ストーリー層",
+    "tech_layer": "技術詳細",
+    "deep_layer": "詳細分析",
+    "back_to_cases": "ケース一覧に戻る",
+    "read_more": "続きを読む",
+    "tech_stack": "技術スタック",
+    "results": "成果データ"
+  },
+  "timeline": {
+    "title": "タイムライン",
+    "subtitle": "AI実践、大阪ライフ、キャッテリーの日常を記録。技術探求、暮らしの気づき、大切なマイルストーン——歩んできた軌跡。",
+    "filter": {
+      "all": "すべて",
+      "tech": "技術",
+      "daily": "日常",
+      "milestone": "マイルストーン",
+      "reflection": "気づき"
+    },
+    "category": {
+      "tech": "技術",
+      "daily": "日常",
+      "milestone": "マイルストーン",
+      "reflection": "気づき"
+    },
+    "expand": "クリックで展開",
+    "collapse": "閉じる",
+    "readMore": "続きを読む",
+    "loadMore": "もっと見る",
+    "count": "{count} 件の記録"
   }
 }
