@@ -1,98 +1,147 @@
-# Will's AI Lab — Project Brief
+# Will's AI Blog — Project Brief
 
-## 项目定位
-日本大阪 AI 自动化实践者 Will 的个人网站。展示真实 AI 使用经验，打造 AI 专家形象。
-不是纯作品集，是有日记感的"数字实验室"——生活+技术混合的真实记录。
+## 域名
+aiblog.fuluckai.com
 
-## 核心要求
-- 视觉花哨、有冲击力、有品味（不是模板感）
-- 技术含量高但易阅读
-- 中日英三语（next-intl）
-- 默认深色模式
+## 定位
+个人博客 + 技术分享（不过度强调技术，写得出来最重要）
+日常生活 + AI使用心得 + 宠物 + 社交媒体联动
+"这个人真的在用AI做事"的真实感
+
+## 品牌关联
+- 母站：fuluckai.com（福楽AI，AI導入・AI研修サービス）
+- 猫舍：福楽キャッテリー（サイベリアン専門）
+- 品牌色系：冰淇淋色（mint, strawberry, blueberry, mango, taro）
 
 ## 技术栈
 - Next.js 15 App Router + TypeScript
-- Tailwind CSS + shadcn/ui（底座组件）
+- Tailwind CSS + shadcn/ui
 - Aceternity UI（spotlight cards, text shimmer, 3D effects）
 - Magic UI（animated beam, particles, globe, marquee）
-- Motion（Framer Motion, 页面转场+滚动动画）
+- Motion / Framer Motion（页面转场 + 滚动动画）
 - Recharts（数据可视化）
-- next-intl（i18n, /zh /ja /en 路由）
-- Pagefind（搜索）
+- next-intl（i18n: /zh /ja /en）
+- Pagefind（全站搜索，CJK支持）
 - Vercel 部署
 
-## 视觉设计规范
-- 底色：暖黑/墨蓝黑（不是纯黑 #000，用 #0a0a0f 或 #0d1117）
-- 强调色：
-  - Mint: #4ADE80
-  - Warm Coral: #FB923C
-  - Electric Cyan: #22D3EE
-- 动效克制但高级：首屏进入、滚动联动、卡片展开，不要到处 hover 发光
-- 把真实数据当装饰物（模型名、执行耗时、自动化次数 > 粒子背景）
-- 参考 Linear.app / Stripe / Rauno.me / Supabase 的信息分层和节奏
+## 设计规范
+
+### 双主题（必须）
+- 深色模式：暖黑底 #0a0a0f，不是纯黑
+- 浅色模式：苹果风干净白底
+- 一键切换（跟随系统偏好 + 手动切换按钮）
+- 两种模式都要好看
+
+### 色系（与 fuluckai.com 统一）
+- Mint: #4ADE80（主强调色）
+- Strawberry/Coral: #FB923C（次强调色）
+- Blueberry/Cyan: #22D3EE（第三强调色）
+- Mango: #FBBF24（辅助）
+- Taro: #A78BFA（辅助）
+- 浅色模式下适当降低饱和度
+
+### 移动优先（核心要求）
+- 手机体验第一位
+- 底部 tab 导航（手机）/ 侧边导航（桌面）
+- 大字体、大触摸区域、流畅滑动
+- 所有交互都要手机友好
 
 ## 页面结构
 
 ### 1. 首页 (/)
-- Hero: 一句定位 + "最近7天我让AI做了什么" 动态展示
-- 四实例架构动画图（ユキ/ナツ/ハル/アキ 四个 AI 助手协同工作）
-- 最新案例卡片（spotlight hover 效果）
-- 数据仪表板预览（月度 AI 使用统计）
-- 语言切换
+- Hero：动效标题 + 一句话介绍（"大阪 × AI × 猫舍"）
+- 最新文章/动态 feed
+- SNS 联动入口（YouTube/Instagram/TikTok 卡片）
+- AI 助手状态仪表盘（点缀式，展示4个AI实例：ユキ/ナツ/ハル/アキ）
+- fuluckai.com 互链
 
-### 2. 案例库 (/cases)
-- 卡片列表，悬停显示技术栈标签 + 效果数据
-- 每个案例页三层深度：
-  1. 故事化摘要（200字 + 可视化图）
-  2. 技术概述（工具链、方法论、可折叠代码块）
-  3. 深度细节（完整代码、架构权衡、踩坑记录）
-- 旗舰案例：
-  - OpenClaw 四实例协作架构
-  - 猫舍 SNS 自动化运营
-  - 医疗客服 AI 系统
+### 2. 博客 (/blog)
+- 文章列表（卡片式布局）
+- 分类标签筛选：AI心得 · 技术笔记 · 生活日常 · 猫咪 · 商业思考
+- 每篇支持三语（中/日/英）
+- Markdown + MDX 渲染 + 代码高亮
+- AI可编辑 + 人工可编辑
+- 评论区（AI评论 + 人工评论）
 
 ### 3. 时间线 (/timeline)
-- 垂直时间线，颜色编码区分类型：
-  - 🔧 技术突破（cyan）
-  - 📝 日常碎片（coral）
-  - 🏆 里程碑（mint）
-  - 💭 感悟（灰白）
-- 支持按类型/日期/关键词筛选
-- 滚动加载，展开/折叠详情
-- 先放 30-50 条精选内容
+- 垂直时间线，日记式
+- 颜色编码：
+  - 🔧 技术（cyan #22D3EE）
+  - 📝 日常（coral #FB923C）
+  - 🏆 里程碑（mint #4ADE80）
+  - 💭 感悟（taro #A78BFA）
+- 按类型/日期/关键词筛选
+- 30+ 条示例数据
 
-### 4. 工具箱 (/toolkit)
-- 我使用的 AI 工具链（OpenClaw, Codex, Claude, DS Thinking 等）
-- 每个工具卡片：名称、用途、评分、使用频率
-- 方法论文章
+### 4. 案例 (/cases)
+- AI实践案例（讲故事为主，不用太深度）
+- 旗舰案例：
+  - 多AI协作架构（ユキ/ナツ/ハル/アキ）
+  - 猫舍SNS自动化运营
+  - 医疗客服AI系统
+- 三层展开（故事→技术概述→深度细节）
+- 带证据（截图占位符/数据/链接）
 
 ### 5. 生活 (/life)
-- 日常更新板块（猫咪、大阪生活、美食等）
-- 瀑布流图文布局
-- 轻松调性，和技术板块形成反差
+- 猫咪日常 🐱
+- 大阪生活 🏙️
+- 美食/旅行
+- 瀑布流/Masonry 图文布局
+- 和猫舍SNS内容联动
 
-### 6. About (/about)
-- 个人介绍：Will，大阪，猫舍经营者 × AI 实践者
-- AI 工作方式说明（四实例架构简图）
+### 6. 社交媒体 (/social)
+- YouTube 最新视频嵌入
+- Instagram feed 联动
+- TikTok 精选嵌入
+- 各平台关注入口按钮
+- 预留AI自动同步接口
+
+### 7. About (/about)
+- 个人介绍：Will，大阪 × AI × 猫舎经营者
+- AI工作方式简图（四实例架构动画）
+- fuluckai.com 链接
+- 猫舎链接
 - 联系方式
 
-## 三语策略
-- URL: /zh/..., /ja/..., /en/...
-- 默认按浏览器语言跳转
-- 核心页面（首页/About/旗舰案例）三语结构对齐
-- 时间线内容分层：中文全量，日文业务摘要，英文技术摘要
+## AI 深度集成
 
-## MVP 内容（用示例数据）
-- 首页 Hero + 架构动画
-- 3个案例卡片（用 placeholder 数据）
-- 时间线 30 条示例
-- About 页面
-- 工具箱 + 生活板块（基础框架）
-- 深色主题 + 响应式
-- 三语路由框架（内容用占位符）
+### 编辑系统
+- API: /api/posts (CRUD)
+- 多AI可通过API创建/编辑文章草稿
+- 草稿→审核→发布 工作流
+- OpenClaw webhook 接入点
+- 人工管理界面 /admin
 
-## 不在 MVP 范围
-- AI 自动更新后台（Phase 2）
-- 评论系统（Phase 2）
-- 社交证明墙（Phase 2）
-- 搜索功能（Phase 2）
+### 评论系统
+- API: /api/comments
+- AI评论带标记（哪个AI、什么模型）
+- 人工评论正常支持
+- 评论审核机制
+
+### 自动更新
+- 定期扫描素材 → 生成候选稿
+- 候选稿队列 /admin/queue
+- 一键 approve/edit/reject
+- 自动三语翻译 + 审核状态
+
+## SEO 强化
+- SSG + ISR 混合渲染
+- JSON-LD 结构化数据
+- Open Graph + Twitter Cards
+- 多语言 hreflang 标签
+- 自动 sitemap.xml + robots.txt
+- RSS 订阅
+- Lighthouse 90+ 目标
+
+## 联动
+- fuluckai.com 互链
+- 猫舍 SNS 内容导入
+- AI 猫咪科普/趣事生成
+- YouTube/Instagram/TikTok 嵌入和同步
+
+## 动效要求
+- Aceternity UI: spotlight cards, text reveal, shimmer, 3D pin
+- Magic UI: animated beam, particles, marquee, globe
+- Motion: 页面转场、滚动触发、卡片展开
+- 最大程度丰富但不廉价
+- 参考 Linear / Stripe / Rauno.me 的节奏感
