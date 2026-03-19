@@ -4,6 +4,7 @@ import { useState, useMemo, useRef, useEffect } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
 import { motion, AnimatePresence } from 'motion/react';
 import { PageTransition } from '@/components/shared/PageTransition';
+import { ScrollReveal } from '@/components/shared/ScrollReveal';
 import { timelineData, categoryConfig, type TimelineCategory } from '@/data/timeline';
 
 const INITIAL_COUNT = 15;
@@ -18,6 +19,7 @@ function TimelineEntry({
   isExpanded,
   onToggle,
   t,
+  shouldPulse,
 }: {
   entry: (typeof timelineData)[0];
   index: number;
@@ -25,6 +27,7 @@ function TimelineEntry({
   isExpanded: boolean;
   onToggle: () => void;
   t: (key: string) => string;
+  shouldPulse: boolean;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(false);
@@ -141,8 +144,12 @@ function TimelineEntry({
           left-0 md:left-1/2 md:-translate-x-1/2
           top-6
           w-4 h-4 rounded-full border-[3px] border-background z-10 shadow-sm
+          ${shouldPulse ? 'dot-pulse' : ''}
         `}
-        style={{ backgroundColor: config.color }}
+        style={{
+          backgroundColor: config.color,
+          '--pulse-color': config.color + '60',
+        } as React.CSSProperties}
       />
     </div>
   );
@@ -187,14 +194,14 @@ export default function TimelinePage() {
     <PageTransition>
       <div className="mx-auto max-w-5xl px-4 sm:px-6 py-12 sm:py-16">
         {/* Header */}
-        <div className="text-center mb-10">
+        <ScrollReveal direction="fadeUp" className="text-center mb-10">
           <h1 className="text-3xl sm:text-4xl font-bold mb-3">
             {t('timeline.title')}
           </h1>
           <p className="text-muted-foreground max-w-2xl mx-auto">
             {t('timeline.subtitle')}
           </p>
-        </div>
+        </ScrollReveal>
 
         {/* Filter bar */}
         <div className="flex flex-wrap justify-center gap-2 mb-10">
@@ -234,8 +241,8 @@ export default function TimelinePage() {
 
         {/* Timeline */}
         <div className="relative">
-          {/* Center line */}
-          <div className="absolute left-[7px] md:left-1/2 md:-translate-x-px top-0 bottom-0 w-0.5 bg-border/60" />
+          {/* Center line — animated grow from top */}
+          <div className="absolute left-[7px] md:left-1/2 md:-translate-x-px top-0 bottom-0 w-0.5 bg-border/60 timeline-line-anim" />
 
           {/* Entries */}
           <AnimatePresence mode="popLayout">
@@ -249,6 +256,7 @@ export default function TimelinePage() {
                   isExpanded={expandedId === entry.id}
                   onToggle={() => setExpandedId(expandedId === entry.id ? null : entry.id)}
                   t={t}
+                  shouldPulse={i < 3}
                 />
               ))}
             </div>

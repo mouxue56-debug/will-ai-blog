@@ -100,8 +100,25 @@ export function MobileNav() {
       </AnimatePresence>
 
       {/* Bottom tab bar */}
-      <nav className="fixed bottom-0 left-0 right-0 z-40 border-t border-border/40 bg-background/90 backdrop-blur-xl md:hidden">
-        <div className="flex items-center justify-around h-16 px-1">
+      <nav className="fixed bottom-0 left-0 right-0 z-40 border-t border-border/40 bg-background/90 backdrop-blur-xl md:hidden safe-area-bottom">
+        <div className="relative flex items-center justify-around h-16 px-1">
+          {/* Animated active indicator pill */}
+          {(() => {
+            const activeIndex = mainTabs.findIndex((tab) => isActive(tab.href));
+            const idx = activeIndex >= 0 ? activeIndex : (moreIsActive ? mainTabs.length : -1);
+            if (idx < 0) return null;
+            const totalTabs = mainTabs.length + 1; // +1 for "more"
+            return (
+              <motion.div
+                className="absolute top-1 h-[3px] rounded-full bg-brand-mint"
+                layoutId="mobile-tab-indicator"
+                style={{ width: `${60 / totalTabs}%` }}
+                animate={{ left: `${(idx / totalTabs) * 100 + (100 / totalTabs - 60 / totalTabs) / 2}%` }}
+                transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+              />
+            );
+          })()}
+
           {mainTabs.map((tab) => {
             const Icon = tab.icon;
             const active = isActive(tab.href);
@@ -109,7 +126,7 @@ export function MobileNav() {
               <Link
                 key={tab.key}
                 href={tab.href}
-                className={`flex flex-1 flex-col items-center gap-0.5 py-1.5 transition-colors ${
+                className={`flex flex-1 flex-col items-center gap-0.5 py-1.5 min-h-[44px] justify-center transition-colors ${
                   active
                     ? 'text-brand-mint'
                     : 'text-muted-foreground hover:text-foreground'
@@ -124,7 +141,7 @@ export function MobileNav() {
           {/* More button */}
           <button
             onClick={() => setMoreOpen((prev) => !prev)}
-            className={`flex flex-1 flex-col items-center gap-0.5 py-1.5 transition-colors ${
+            className={`flex flex-1 flex-col items-center gap-0.5 py-1.5 min-h-[44px] justify-center transition-colors ${
               moreIsActive || moreOpen
                 ? 'text-brand-mint'
                 : 'text-muted-foreground hover:text-foreground'

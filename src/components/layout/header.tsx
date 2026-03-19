@@ -2,6 +2,7 @@
 
 import { useTranslations } from 'next-intl';
 import { Link, usePathname } from '@/i18n/navigation';
+import { motion } from 'motion/react';
 import { ThemeToggle } from '@/components/shared/theme-toggle';
 import { LocaleSwitcher } from '@/components/shared/locale-switcher';
 
@@ -33,19 +34,34 @@ export function Header() {
         </Link>
 
         <nav className="hidden md:flex items-center gap-1">
-          {navItems.map((item) => (
-            <Link
-              key={item.key}
-              href={item.href}
-              className={`px-3 py-2 text-sm transition-colors rounded-md ${
-                isActive(item.href)
-                  ? 'text-brand-mint font-medium bg-brand-mint/10'
-                  : 'text-muted-foreground hover:text-foreground hover:bg-accent'
-              }`}
-            >
-              {t(item.key)}
-            </Link>
-          ))}
+          {navItems.map((item) => {
+            const active = isActive(item.href);
+            return (
+              <Link
+                key={item.key}
+                href={item.href}
+                className={`relative px-3 py-2 text-sm transition-colors rounded-md group ${
+                  active
+                    ? 'text-brand-mint font-medium'
+                    : 'text-muted-foreground hover:text-foreground'
+                }`}
+              >
+                {t(item.key)}
+                {/* Active underline */}
+                {active && (
+                  <motion.div
+                    layoutId="desktop-nav-underline"
+                    className="absolute bottom-0 left-2 right-2 h-[2px] rounded-full bg-brand-mint"
+                    transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+                  />
+                )}
+                {/* Hover underline (non-active) */}
+                {!active && (
+                  <span className="absolute bottom-0 left-2 right-2 h-[2px] rounded-full bg-brand-mint scale-x-0 group-hover:scale-x-100 transition-transform duration-200 origin-left" />
+                )}
+              </Link>
+            );
+          })}
         </nav>
 
         <div className="flex items-center gap-2">

@@ -147,3 +147,112 @@
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
 }
+
+/* ── Floating particles (CSS-only, no JS overhead) ───────── */
+@keyframes particle-float {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  25%  { transform: translate(12px, -18px) scale(1.05); }
+  50%  { transform: translate(-8px, -30px) scale(0.95); }
+  75%  { transform: translate(16px, -14px) scale(1.02); }
+}
+
+.particle {
+  position: absolute;
+  border-radius: 9999px;
+  pointer-events: none;
+  will-change: transform;
+  animation: particle-float var(--dur, 20s) ease-in-out infinite;
+  animation-delay: var(--delay, 0s);
+}
+
+/* ── Beam dash flow animation ───────────────────────────── */
+@keyframes beam-dash {
+  0% { stroke-dashoffset: 200; }
+  100% { stroke-dashoffset: 0; }
+}
+
+.beam-flow {
+  stroke-dasharray: 8, 14;
+  animation: beam-dash 3s linear infinite;
+}
+
+.beam-flow-reverse {
+  stroke-dasharray: 8, 14;
+  animation: beam-dash 3.5s linear infinite reverse;
+}
+
+/* ── Timeline center-line grow ──────────────────────────── */
+@keyframes timeline-grow {
+  from { transform: scaleY(0); }
+  to   { transform: scaleY(1); }
+}
+
+.timeline-line-anim {
+  transform-origin: top center;
+  animation: timeline-grow 1.2s ease-out forwards;
+}
+
+/* ── Pulse ring for timeline dots ───────────────────────── */
+@keyframes dot-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 var(--pulse-color, rgba(74,222,128,0.5)); }
+  50%      { box-shadow: 0 0 0 6px var(--pulse-color, rgba(74,222,128,0)); }
+}
+
+.dot-pulse {
+  animation: dot-pulse 2s ease-in-out infinite;
+}
+
+/* ── Horizontal scroll fade edges ───────────────────────── */
+.scroll-fade-edge {
+  position: relative;
+}
+.scroll-fade-edge::before,
+.scroll-fade-edge::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 40px;
+  z-index: 20;
+  pointer-events: none;
+}
+.scroll-fade-edge::before {
+  left: 0;
+  background: linear-gradient(to right, hsl(var(--background)), transparent);
+}
+.scroll-fade-edge::after {
+  right: 0;
+  background: linear-gradient(to left, hsl(var(--background)), transparent);
+}
+
+/* ── CountUp number bounce ──────────────────────────────── */
+@keyframes count-bounce {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.08); }
+}
+
+/* ── Global theme transition ────────────────────────────── */
+*, *::before, *::after {
+  transition-property: color, background-color, border-color, box-shadow;
+  transition-duration: 300ms;
+  transition-timing-function: ease;
+}
+
+/* Exclude motion-animated elements to avoid conflicts */
+[data-motion], [style*="transform"] {
+  transition-property: color, background-color, border-color, box-shadow;
+}
+
+/* ── Safe area for bottom nav (notch devices) ───────── */
+.safe-area-bottom {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* ── Mobile card overflow prevention ────────────────── */
+@media (max-width: 640px) {
+  .break-inside-avoid img,
+  .break-inside-avoid video {
+    max-width: 100%;
+    height: auto;
+  }
+}

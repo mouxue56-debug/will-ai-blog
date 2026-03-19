@@ -8,6 +8,7 @@ import type { BlogPost, Comment, BlogCategory } from '@/lib/blog-types';
 import { CATEGORY_KEYS } from '@/lib/blog-types';
 import { Link } from '@/i18n/navigation';
 import { PageTransition } from '@/components/shared/PageTransition';
+import { ScrollReveal } from '@/components/shared/ScrollReveal';
 import { MarkdownRenderer } from './markdown-renderer';
 import { TableOfContents } from './table-of-contents';
 import { CommentSection } from './comment-section';
@@ -101,13 +102,9 @@ export function BlogDetail({ post, prevPost, nextPost, comments }: BlogDetailPro
             </div>
 
             {/* Article Body */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-            >
+            <ScrollReveal direction="fadeUp" delay={0.2} duration={0.6}>
               <MarkdownRenderer content={post.content} />
-            </motion.div>
+            </ScrollReveal>
 
             {/* Separator */}
             <hr className="my-10 border-border" />

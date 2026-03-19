@@ -1,12 +1,55 @@
 'use client';
 
-import { useState } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import { useState, useEffect, useRef } from 'react';
+import { motion, AnimatePresence, useInView } from 'motion/react';
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 import type { CaseStudy } from '@/data/cases';
 
 type Locale = 'zh' | 'ja' | 'en';
+
+/**
+ * CountUp — extracts a number from a value string and animates from 0.
+ * Keeps prefixes/suffixes intact (e.g., "95%" → animates 0→95, keeps "%").
+ */
+function CountUpValue({ value, inView }: { value: string; inView: boolean }) {
+  const match = value.match(/^([^\d]*)([\d.]+)(.*)$/);
+  const [displayNum, setDisplayNum] = useState(0);
+
+  const prefix = match?.[1] ?? '';
+  const target = match ? parseFloat(match[2]) : 0;
+  const suffix = match?.[3] ?? '';
+  const isFloat = match ? match[2].includes('.') : false;
+
+  useEffect(() => {
+    if (!inView || !match) return;
+    const duration = 1200;
+    const start = performance.now();
+    let raf: number;
+
+    function tick(now: number) {
+      const elapsed = now - start;
+      const progress = Math.min(elapsed / duration, 1);
+      // ease-out cubic
+      const eased = 1 - Math.pow(1 - progress, 3);
+      setDisplayNum(eased * target);
+      if (progress < 1) raf = requestAnimationFrame(tick);
+    }
+
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [inView, target, match]);
+
+  if (!match) return <>{value}</>;
+
+  return (
+    <>
+      {prefix}
+      {isFloat ? displayNum.toFixed(1) : Math.round(displayNum)}
+      {suffix}
+    </>
+  );
+}
 
 function ExpandableSection({
   title,
@@ -75,6 +118,38 @@ function ExpandableSection({
   );
 }
 
+function MetricsGrid({ metrics, locale }: { metrics: CaseStudy['metrics']; locale: Locale }) {
+  const ref = useRef(null);
+  const inView = useInView(ref, { once: true, margin: '-50px' });
+
+  return (
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, y: 16 }}
+      animate={inView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.4, delay: 0.15 }}
+      className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-12"
+    >
+      {metrics.map((m, i) => (
+        <motion.div
+          key={i}
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={inView ? { opacity: 1, scale: 1 } : {}}
+          transition={{ duration: 0.4, delay: 0.2 + i * 0.1 }}
+          className="rounded-xl border border-border/60 bg-card p-4 text-center space-y-1"
+        >
+          <div className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-brand-cyan to-brand-mint bg-clip-text text-transparent">
+            <CountUpValue value={m.value} inView={inView} />
+          </div>
+          <div className="text-xs sm:text-sm text-muted-foreground">
+            {m.label[locale]}
+          </div>
+        </motion.div>
+      ))}
+    </motion.div>
+  );
+}
+
 export function CaseDetail({
   caseStudy,
   locale,
@@ -124,27 +199,8 @@ export function CaseDetail({
         </div>
       </div>
 
-      {/* Metrics */}
-      <motion.div
-        initial={{ opacity: 0, y: 16 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4, delay: 0.15 }}
-        className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-12"
-      >
-        {caseStudy.metrics.map((m, i) => (
-          <div
-            key={i}
-            className="rounded-xl border border-border/60 bg-card p-4 text-center space-y-1"
-          >
-            <div className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-brand-cyan to-brand-mint bg-clip-text text-transparent">
-              {m.value}
-            </div>
-            <div className="text-xs sm:text-sm text-muted-foreground">
-              {m.label[loc]}
-            </div>
-          </div>
-        ))}
-      </motion.div>
+      {/* Metrics with countUp */}
+      <MetricsGrid metrics={caseStudy.metrics} locale={loc} />
 
       {/* Content layers */}
       <motion.div

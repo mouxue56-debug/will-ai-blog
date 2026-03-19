@@ -1,7 +1,6 @@
 'use client';
 
 import { useLocale, useTranslations } from 'next-intl';
-import { motion } from 'motion/react';
 import { Clock, Calendar } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { BlogPost, BlogCategory } from '@/lib/blog-types';
@@ -44,11 +43,7 @@ export function BlogCard({ post, index }: BlogCardProps) {
   const excerpt = post.excerpt[locale] || post.excerpt.zh || post.excerpt.en || '';
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4, delay: index * 0.1, ease: 'easeOut' }}
-    >
+    <div>
       <Link href={`/blog/${post.slug}`}>
         <article className="group relative flex flex-col overflow-hidden rounded-xl bg-card ring-1 ring-foreground/10 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-foreground/5 hover:ring-foreground/20">
           {/* Cover Image Placeholder */}
@@ -106,6 +101,6 @@ export function BlogCard({ post, index }: BlogCardProps) {
           </div>
         </article>
       </Link>
-    </motion.div>
+    </div>
   );
 }

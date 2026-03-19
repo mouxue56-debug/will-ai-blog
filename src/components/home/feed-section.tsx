@@ -129,12 +129,14 @@ export function FeedSection() {
         </motion.h2>
       </div>
 
-      {/* Horizontal scroll container */}
-      <div className="overflow-x-auto pb-4 scrollbar-hide">
-        <div className="flex gap-4 px-4 sm:px-[max(1.5rem,calc((100vw-64rem)/2+1.5rem))]">
-          {feedData.map((item, i) => (
-            <SpotlightCard key={i} item={item} index={i} />
-          ))}
+      {/* Horizontal scroll container with fade edges */}
+      <div className="scroll-fade-edge">
+        <div className="overflow-x-auto pb-4 scrollbar-hide">
+          <div className="flex gap-4 px-4 sm:px-[max(1.5rem,calc((100vw-64rem)/2+1.5rem))]">
+            {feedData.map((item, i) => (
+              <SpotlightCard key={i} item={item} index={i} />
+            ))}
+          </div>
         </div>
       </div>
     </section>

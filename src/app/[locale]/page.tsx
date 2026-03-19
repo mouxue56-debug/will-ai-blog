@@ -1,6 +1,7 @@
 'use client';
 
 import { PageTransition } from '@/components/shared/PageTransition';
+import { ScrollReveal } from '@/components/shared/ScrollReveal';
 import { HeroSection } from '@/components/home/hero-section';
 import { FeedSection } from '@/components/home/feed-section';
 import { SNSSection } from '@/components/home/sns-section';
@@ -17,16 +18,24 @@ export default function HomePage() {
         </div>
 
         {/* Latest Feed - full width for horizontal scroll */}
-        <FeedSection />
+        <ScrollReveal direction="fadeUp">
+          <FeedSection />
+        </ScrollReveal>
 
         {/* SNS Cards */}
-        <SNSSection />
+        <ScrollReveal direction="fadeUp" delay={0.1}>
+          <SNSSection />
+        </ScrollReveal>
 
         {/* AI Dashboard */}
-        <AIDashboard />
+        <ScrollReveal direction="scaleIn">
+          <AIDashboard />
+        </ScrollReveal>
 
         {/* Powered By Banner */}
-        <PoweredBanner />
+        <ScrollReveal direction="fadeIn" delay={0.15}>
+          <PoweredBanner />
+        </ScrollReveal>
       </div>
     </PageTransition>
   );

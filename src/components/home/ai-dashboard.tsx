@@ -99,11 +99,12 @@ export function AIDashboard() {
                 <stop offset="100%" stopColor="#A78BFA" stopOpacity="0" />
               </linearGradient>
             </defs>
-            {/* Horizontal beams */}
+            {/* Horizontal beams with flow animation */}
             <motion.line
               x1="10%" y1="30%" x2="90%" y2="30%"
               stroke="url(#beam-gradient)"
               strokeWidth="1"
+              className="beam-flow"
               initial={{ pathLength: 0 }}
               animate={isInView ? { pathLength: 1 } : {}}
               transition={{ delay: 0.5, duration: 2, ease: 'easeInOut' }}
@@ -112,15 +113,17 @@ export function AIDashboard() {
               x1="15%" y1="70%" x2="85%" y2="70%"
               stroke="url(#beam-gradient)"
               strokeWidth="1"
+              className="beam-flow-reverse"
               initial={{ pathLength: 0 }}
               animate={isInView ? { pathLength: 1 } : {}}
               transition={{ delay: 0.8, duration: 2, ease: 'easeInOut' }}
             />
-            {/* Diagonal beams */}
+            {/* Diagonal beams with flow animation */}
             <motion.line
               x1="20%" y1="25%" x2="80%" y2="75%"
               stroke="url(#beam-gradient)"
               strokeWidth="0.5"
+              className="beam-flow"
               initial={{ pathLength: 0 }}
               animate={isInView ? { pathLength: 1 } : {}}
               transition={{ delay: 1, duration: 2.5, ease: 'easeInOut' }}
@@ -129,6 +132,7 @@ export function AIDashboard() {
               x1="80%" y1="25%" x2="20%" y2="75%"
               stroke="url(#beam-gradient)"
               strokeWidth="0.5"
+              className="beam-flow-reverse"
               initial={{ pathLength: 0 }}
               animate={isInView ? { pathLength: 1 } : {}}
               transition={{ delay: 1.2, duration: 2.5, ease: 'easeInOut' }}
