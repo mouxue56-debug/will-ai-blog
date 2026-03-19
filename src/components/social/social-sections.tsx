@@ -1,0 +1,245 @@
+'use client';
+
+import { useTranslations } from 'next-intl';
+import { motion, useInView } from 'motion/react';
+import { useRef } from 'react';
+
+/* ── YouTube ─────────────────────────────────────────── */
+
+function YouTubeSection() {
+  const t = useTranslations('social');
+  const ref = useRef(null);
+  const inView = useInView(ref, { once: true, margin: '-80px' });
+
+  const videos = [
+    { title: 'サイベリアンの子猫の成長記録', date: '2026-03-18', views: '2.3K', gradient: 'from-red-500 via-red-400 to-orange-400', emoji: '🐱' },
+    { title: 'AI × 猫舎：一日のワークフロー', date: '2026-03-10', views: '1.8K', gradient: 'from-red-600 via-rose-500 to-pink-400', emoji: '🤖' },
+    { title: '大阪グルメ散歩 - 天王寺編', date: '2026-03-01', views: '3.1K', gradient: 'from-red-400 via-orange-400 to-yellow-400', emoji: '🍜' },
+  ];
+
+  return (
+    <motion.section
+      ref={ref}
+      initial={{ opacity: 0, y: 30 }}
+      animate={inView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.5 }}
+      className="rounded-2xl border border-red-200/40 dark:border-red-900/30 bg-gradient-to-br from-red-50/50 to-orange-50/30 dark:from-red-950/20 dark:to-orange-950/10 p-6 sm:p-8"
+    >
+      {/* Header */}
+      <div className="flex items-center gap-3 mb-6">
+        <div className="w-12 h-12 rounded-xl bg-red-500 flex items-center justify-center text-white text-xl shadow-lg shadow-red-500/20">
+          <svg viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
+            <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+          </svg>
+        </div>
+        <div>
+          <h3 className="text-xl font-bold text-red-600 dark:text-red-400">YouTube</h3>
+          <p className="text-sm text-muted-foreground">{t('youtube_subtitle')}</p>
+        </div>
+      </div>
+
+      {/* Video cards */}
+      <div className="grid gap-4 sm:grid-cols-3">
+        {videos.map((v, i) => (
+          <motion.div
+            key={i}
+            initial={{ opacity: 0, y: 20 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{ delay: 0.2 + i * 0.1, duration: 0.4 }}
+            className="rounded-lg overflow-hidden bg-background/60 dark:bg-background/30 border border-border/20"
+          >
+            <div className={`bg-gradient-to-br ${v.gradient} h-28 flex items-center justify-center`}>
+              <span className="text-3xl">{v.emoji}</span>
+            </div>
+            <div className="p-3">
+              <h4 className="text-sm font-medium line-clamp-2 mb-1">{v.title}</h4>
+              <div className="flex justify-between text-xs text-muted-foreground">
+                <span>{v.date}</span>
+                <span>▶ {v.views}</span>
+              </div>
+            </div>
+          </motion.div>
+        ))}
+      </div>
+
+      <a
+        href="#"
+        className="mt-6 inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-red-500 text-white text-sm font-medium hover:bg-red-600 transition-colors shadow-md shadow-red-500/20"
+      >
+        {t('view_channel')} →
+      </a>
+    </motion.section>
+  );
+}
+
+/* ── Instagram ───────────────────────────────────────── */
+
+function InstagramSection() {
+  const t = useTranslations('social');
+  const ref = useRef(null);
+  const inView = useInView(ref, { once: true, margin: '-80px' });
+
+  const posts = [
+    { gradient: 'from-purple-400 to-pink-300', emoji: '🐱' },
+    { gradient: 'from-orange-300 to-yellow-300', emoji: '🌸' },
+    { gradient: 'from-blue-300 to-cyan-300', emoji: '🏙️' },
+    { gradient: 'from-pink-300 to-rose-300', emoji: '🍰' },
+    { gradient: 'from-green-300 to-emerald-300', emoji: '🍃' },
+    { gradient: 'from-amber-300 to-orange-300', emoji: '☀️' },
+  ];
+
+  return (
+    <motion.section
+      ref={ref}
+      initial={{ opacity: 0, y: 30 }}
+      animate={inView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.5, delay: 0.1 }}
+      className="rounded-2xl border border-purple-200/40 dark:border-purple-900/30 bg-gradient-to-br from-purple-50/50 via-pink-50/30 to-orange-50/30 dark:from-purple-950/20 dark:via-pink-950/10 dark:to-orange-950/10 p-6 sm:p-8"
+    >
+      {/* Header */}
+      <div className="flex items-center gap-3 mb-6">
+        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500 via-pink-500 to-orange-400 flex items-center justify-center text-white text-xl shadow-lg shadow-purple-500/20">
+          <svg viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
+            <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+          </svg>
+        </div>
+        <div>
+          <h3 className="text-xl font-bold bg-gradient-to-r from-purple-500 via-pink-500 to-orange-400 bg-clip-text text-transparent">Instagram</h3>
+          <p className="text-sm text-muted-foreground">{t('instagram_subtitle')}</p>
+        </div>
+      </div>
+
+      {/* Photo grid 2x3 */}
+      <div className="grid grid-cols-3 gap-2 sm:gap-3">
+        {posts.map((p, i) => (
+          <motion.div
+            key={i}
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={inView ? { opacity: 1, scale: 1 } : {}}
+            transition={{ delay: 0.3 + i * 0.06, duration: 0.35 }}
+            className={`aspect-square rounded-lg bg-gradient-to-br ${p.gradient} flex items-center justify-center text-2xl sm:text-3xl cursor-pointer hover:scale-105 transition-transform duration-200`}
+          >
+            {p.emoji}
+          </motion.div>
+        ))}
+      </div>
+
+      <a
+        href="#"
+        className="mt-6 inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-gradient-to-r from-purple-500 via-pink-500 to-orange-400 text-white text-sm font-medium hover:opacity-90 transition-opacity shadow-md shadow-purple-500/20"
+      >
+        {t('follow')} →
+      </a>
+    </motion.section>
+  );
+}
+
+/* ── TikTok ──────────────────────────────────────────── */
+
+function TikTokSection() {
+  const t = useTranslations('social');
+  const ref = useRef(null);
+  const inView = useInView(ref, { once: true, margin: '-80px' });
+
+  const videos = [
+    { title: '猫と暮らす朝のルーティン', gradient: 'from-gray-800 via-gray-700 to-gray-900', emoji: '🌅', likes: '5.2K' },
+    { title: 'AI에게 맡기는 고양이 관리', gradient: 'from-gray-900 via-gray-800 to-black', emoji: '🤖', likes: '3.8K' },
+    { title: '大阪ストリートフード', gradient: 'from-gray-700 via-gray-800 to-gray-900', emoji: '🍢', likes: '7.1K' },
+  ];
+
+  return (
+    <motion.section
+      ref={ref}
+      initial={{ opacity: 0, y: 30 }}
+      animate={inView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.5, delay: 0.2 }}
+      className="rounded-2xl border border-gray-300/40 dark:border-gray-700/30 bg-gradient-to-br from-gray-100/50 to-gray-50/50 dark:from-gray-900/50 dark:to-black/30 p-6 sm:p-8"
+    >
+      {/* Header */}
+      <div className="flex items-center gap-3 mb-6">
+        <div className="w-12 h-12 rounded-xl bg-black dark:bg-white flex items-center justify-center text-xl shadow-lg">
+          <svg viewBox="0 0 24 24" className="w-6 h-6 fill-white dark:fill-black">
+            <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.88-2.88 2.89 2.89 0 0 1 2.88-2.88c.28 0 .56.04.82.11v-3.5a6.37 6.37 0 0 0-.82-.05A6.34 6.34 0 0 0 3.15 15.2a6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.34-6.34V9.18a8.16 8.16 0 0 0 4.76 1.52v-3.4a4.85 4.85 0 0 1-1-.61z"/>
+          </svg>
+        </div>
+        <div>
+          <h3 className="text-xl font-bold">TikTok</h3>
+          <p className="text-sm text-muted-foreground">{t('tiktok_subtitle')}</p>
+        </div>
+      </div>
+
+      {/* Vertical video cards */}
+      <div className="grid grid-cols-3 gap-3">
+        {videos.map((v, i) => (
+          <motion.div
+            key={i}
+            initial={{ opacity: 0, y: 20 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{ delay: 0.3 + i * 0.1, duration: 0.4 }}
+            className="rounded-xl overflow-hidden border border-border/20"
+          >
+            <div className={`bg-gradient-to-b ${v.gradient} aspect-[9/16] flex flex-col items-center justify-center relative`}>
+              <span className="text-3xl sm:text-4xl">{v.emoji}</span>
+              <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/80 to-transparent p-2">
+                <p className="text-white text-[10px] sm:text-xs line-clamp-2">{v.title}</p>
+                <p className="text-white/60 text-[10px] mt-0.5">♥ {v.likes}</p>
+              </div>
+            </div>
+          </motion.div>
+        ))}
+      </div>
+
+      <a
+        href="#"
+        className="mt-6 inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-black dark:bg-white text-white dark:text-black text-sm font-medium hover:opacity-80 transition-opacity shadow-md"
+      >
+        {t('follow')} →
+      </a>
+    </motion.section>
+  );
+}
+
+/* ── Bottom Links ────────────────────────────────────── */
+
+function AllPlatformLinks() {
+  const t = useTranslations('social');
+
+  const platforms = [
+    { name: 'YouTube', url: '#', color: 'text-red-500' },
+    { name: 'Instagram', url: '#', color: 'text-pink-500' },
+    { name: 'TikTok', url: '#', color: 'text-foreground' },
+    { name: 'X / Twitter', url: '#', color: 'text-foreground' },
+    { name: 'GitHub', url: '#', color: 'text-foreground' },
+    { name: 'LINE', url: '#', color: 'text-green-500' },
+  ];
+
+  return (
+    <div className="mt-12 pt-8 border-t border-border/40">
+      <h3 className="text-sm font-medium text-muted-foreground mb-4">{t('all_platforms')}</h3>
+      <div className="flex flex-wrap gap-3">
+        {platforms.map((p) => (
+          <a
+            key={p.name}
+            href={p.url}
+            className={`px-4 py-2 rounded-full border border-border/40 text-sm ${p.color} hover:bg-secondary/60 transition-colors`}
+          >
+            {p.name}
+          </a>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* ── Export ───────────────────────────────────────────── */
+
+export function SocialSections() {
+  return (
+    <div className="space-y-8">
+      <YouTubeSection />
+      <InstagramSection />
+      <TikTokSection />
+      <AllPlatformLinks />
+    </div>
+  );
+}

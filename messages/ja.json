@@ -97,6 +97,48 @@
     "tech_stack": "技術スタック",
     "results": "成果データ"
   },
+  "life": {
+    "title": "ライフ",
+    "subtitle": "猫、大阪、グルメ、旅 — 日常の記録",
+    "filter_all": "すべて",
+    "filter_cats": "猫",
+    "filter_osaka": "大阪",
+    "filter_food": "グルメ",
+    "filter_travel": "旅行"
+  },
+  "social": {
+    "title": "フォローする",
+    "subtitle": "各プラットフォームでフォロー",
+    "youtube_subtitle": "最新動画",
+    "instagram_subtitle": "日常アップデート",
+    "tiktok_subtitle": "ショート動画",
+    "view_channel": "チャンネルを見る",
+    "follow": "フォロー",
+    "all_platforms": "すべてのプラットフォーム"
+  },
+  "about": {
+    "tagline": "大阪 × AI × キャッテリー経営者",
+    "bio": "大阪で福楽キャッテリー（サイベリアン専門）を運営しながら、AI導入コンサルティング（福楽AI）も手がけています。日常では4つのAIアシスタントを使って仕事と生活を管理。このブログはAI活用のリアルな体験と大阪の日常を記録しています。",
+    "ai_team_title": "AIチーム",
+    "agent_yuki_role": "技術エンジニアリング",
+    "agent_natsu_role": "SNS運用",
+    "agent_haru_role": "ビジネスサポート",
+    "agent_aki_role": "モバイルアシスタント",
+    "business_title": "ビジネスリンク",
+    "biz_fuluckai": "福楽AI",
+    "biz_fuluckai_desc": "AI導入・研修サービス",
+    "biz_cattery": "福楽キャッテリー",
+    "biz_cattery_desc": "サイベリアン専門ブリーダー · 大阪",
+    "biz_social": "ソーシャルメディア",
+    "biz_social_desc": "YouTube / Instagram / TikTok",
+    "contact_title": "お問い合わせ",
+    "contact_email": "メール",
+    "contact_line_placeholder": "近日公開",
+    "form_name": "お名前",
+    "form_email": "メールアドレス",
+    "form_message": "メッセージ",
+    "form_submit": "送信"
+  },
   "timeline": {
     "title": "タイムライン",
     "subtitle": "AI実践、大阪ライフ、キャッテリーの日常を記録。技術探求、暮らしの気づき、大切なマイルストーン——歩んできた軌跡。",

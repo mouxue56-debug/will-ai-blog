@@ -97,6 +97,48 @@
     "tech_stack": "Tech Stack",
     "results": "Results"
   },
+  "life": {
+    "title": "Life",
+    "subtitle": "Cats, Osaka, food & travel — daily moments captured",
+    "filter_all": "All",
+    "filter_cats": "Cats",
+    "filter_osaka": "Osaka",
+    "filter_food": "Food",
+    "filter_travel": "Travel"
+  },
+  "social": {
+    "title": "Follow Me",
+    "subtitle": "Find me on all platforms",
+    "youtube_subtitle": "Latest Videos",
+    "instagram_subtitle": "Daily Updates",
+    "tiktok_subtitle": "Short Videos",
+    "view_channel": "View Channel",
+    "follow": "Follow",
+    "all_platforms": "All Platforms"
+  },
+  "about": {
+    "tagline": "Osaka × AI × Cattery Owner",
+    "bio": "Running Fuluck Cattery (Siberian specialist) in Osaka while providing AI integration consulting (Fuluck AI). I use 4 AI assistants to manage work and life. This blog documents my real experiences with AI and daily life in Osaka — technology isn't the goal, making life better is.",
+    "ai_team_title": "My AI Team",
+    "agent_yuki_role": "Tech Engineering",
+    "agent_natsu_role": "SNS Operations",
+    "agent_haru_role": "Business Support",
+    "agent_aki_role": "Mobile Assistant",
+    "business_title": "Business Links",
+    "biz_fuluckai": "Fuluck AI",
+    "biz_fuluckai_desc": "AI Integration & Training Services",
+    "biz_cattery": "Fuluck Cattery",
+    "biz_cattery_desc": "Siberian Cat Breeder · Osaka",
+    "biz_social": "Social Media",
+    "biz_social_desc": "YouTube / Instagram / TikTok",
+    "contact_title": "Contact",
+    "contact_email": "Email",
+    "contact_line_placeholder": "Coming soon",
+    "form_name": "Name",
+    "form_email": "Email",
+    "form_message": "Message",
+    "form_submit": "Send"
+  },
   "timeline": {
     "title": "Timeline",
     "subtitle": "Documenting AI practice, Osaka life, and cattery stories. Tech explorations, life reflections, and key milestones — the journey so far.",

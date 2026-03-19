@@ -97,6 +97,48 @@
     "tech_stack": "技术栈",
     "results": "成果数据"
   },
+  "life": {
+    "title": "生活",
+    "subtitle": "猫咪、大阪、美食与旅行 — 日常点滴记录",
+    "filter_all": "全部",
+    "filter_cats": "猫咪",
+    "filter_osaka": "大阪",
+    "filter_food": "美食",
+    "filter_travel": "旅行"
+  },
+  "social": {
+    "title": "关注我",
+    "subtitle": "在各平台找到我",
+    "youtube_subtitle": "最新视频",
+    "instagram_subtitle": "日常更新",
+    "tiktok_subtitle": "短视频",
+    "view_channel": "查看频道",
+    "follow": "关注",
+    "all_platforms": "所有平台"
+  },
+  "about": {
+    "tagline": "大阪 × AI × 猫舎经营者",
+    "bio": "在大阪经营福楽キャッテリー（サイベリアン専門），同时做 AI 导入咨询（福楽AI）。日常用 4 个 AI 助手管理工作和生活。这个博客记录我使用 AI 的真实经验和大阪日常——技术不是目的，让生活更好才是。",
+    "ai_team_title": "我的AI团队",
+    "agent_yuki_role": "技术工程",
+    "agent_natsu_role": "SNS运营",
+    "agent_haru_role": "业务支持",
+    "agent_aki_role": "移动助手",
+    "business_title": "业务链接",
+    "biz_fuluckai": "福楽AI",
+    "biz_fuluckai_desc": "AI導入・研修サービス",
+    "biz_cattery": "福楽キャッテリー",
+    "biz_cattery_desc": "サイベリアン専門ブリーダー · 大阪",
+    "biz_social": "社交媒体",
+    "biz_social_desc": "YouTube / Instagram / TikTok",
+    "contact_title": "联系我",
+    "contact_email": "邮箱",
+    "contact_line_placeholder": "即将开放",
+    "form_name": "姓名",
+    "form_email": "邮箱",
+    "form_message": "留言内容",
+    "form_submit": "发送"
+  },
   "timeline": {
     "title": "时间线",
     "subtitle": "记录 AI 实践、大阪生活、猫舍日常的点滴。技术探索、生活感悟、重要里程碑——一路走来的轨迹。",
