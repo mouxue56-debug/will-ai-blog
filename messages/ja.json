@@ -14,9 +14,19 @@
     "more": "もっと"
   },
   "home": {
-    "hero_title": "Will AI Lab",
-    "hero_subtitle": "テクノロジー、暮らし、猫と創造",
-    "hero_description": "AI エンジニアのデジタルガーデン。技術の探求、日常の断片、そして面白いものを記録しています。"
+    "hero_title": "AI × キャッテリー × 大阪ライフ",
+    "hero_subtitle": "AIプラクティショナーのリアルな記録",
+    "hero_description": "AI エンジニアのデジタルガーデン。技術の探求、日常の断片、そして面白いものを記録しています。",
+    "cta_about": "もっと知る",
+    "cta_blog": "最新記事",
+    "feed_title": "最新の記事",
+    "sns_title": "ソーシャルメディア",
+    "sns_youtube": "最新動画",
+    "sns_instagram": "日常アップデート",
+    "sns_tiktok": "ショート動画",
+    "ai_dashboard_title": "AIアシスタントチーム",
+    "ai_tasks_today": "今日のタスク",
+    "powered_banner": "Powered by 福楽AI — AI導入・研修サービス"
   },
   "common": {
     "theme_toggle": "テーマ切替",

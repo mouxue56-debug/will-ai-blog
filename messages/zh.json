@@ -14,9 +14,19 @@
     "more": "更多"
   },
   "home": {
-    "hero_title": "Will AI Lab",
-    "hero_subtitle": "技术、生活、猫咪与创造",
-    "hero_description": "一个 AI 工程师的数字花园，记录技术探索、生活碎片和一些有趣的东西。"
+    "hero_title": "AI × 猫舎 × 大阪生活",
+    "hero_subtitle": "一个AI实践者的真实记录",
+    "hero_description": "一个 AI 工程师的数字花园，记录技术探索、生活碎片和一些有趣的东西。",
+    "cta_about": "了解更多",
+    "cta_blog": "最新文章",
+    "feed_title": "最新动态",
+    "sns_title": "社交媒体",
+    "sns_youtube": "最新视频",
+    "sns_instagram": "日常更新",
+    "sns_tiktok": "短视频",
+    "ai_dashboard_title": "AI 助手团队",
+    "ai_tasks_today": "今日任务",
+    "powered_banner": "Powered by 福楽AI — AI導入・研修サービス"
   },
   "common": {
     "theme_toggle": "切换主题",

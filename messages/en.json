@@ -14,9 +14,19 @@
     "more": "More"
   },
   "home": {
-    "hero_title": "Will AI Lab",
-    "hero_subtitle": "Tech, Life, Cats & Creation",
-    "hero_description": "A digital garden of an AI engineer — documenting tech explorations, life fragments, and interesting creations."
+    "hero_title": "AI × Cattery × Osaka Life",
+    "hero_subtitle": "Real stories from an AI practitioner",
+    "hero_description": "A digital garden of an AI engineer — documenting tech explorations, life fragments, and interesting creations.",
+    "cta_about": "Learn More",
+    "cta_blog": "Latest Posts",
+    "feed_title": "Latest Updates",
+    "sns_title": "Social Media",
+    "sns_youtube": "Latest Videos",
+    "sns_instagram": "Daily Updates",
+    "sns_tiktok": "Short Videos",
+    "ai_dashboard_title": "AI Assistant Team",
+    "ai_tasks_today": "Tasks Today",
+    "powered_banner": "Powered by Fuluck AI — AI Integration & Training"
   },
   "common": {
     "theme_toggle": "Toggle Theme",
