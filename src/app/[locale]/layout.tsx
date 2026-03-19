@@ -8,6 +8,7 @@ import { ThemeProvider } from '@/components/shared/theme-provider';
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
 import { MobileNav } from '@/components/layout/mobile-nav';
+import { ScrollToTop } from '@/components/shared/ScrollToTop';
 import '../globals.css';
 
 const geistSans = Geist({
@@ -98,6 +99,7 @@ export default async function LocaleLayout({
             </main>
             <Footer />
             <MobileNav />
+            <ScrollToTop />
           </NextIntlClientProvider>
         </ThemeProvider>
       </body>

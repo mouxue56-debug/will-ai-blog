@@ -26,7 +26,10 @@
     "sns_tiktok": "ショート動画",
     "ai_dashboard_title": "AIアシスタントチーム",
     "ai_tasks_today": "今日のタスク",
-    "powered_banner": "Powered by 福楽AI — AI導入・研修サービス"
+    "powered_banner": "Powered by 福楽AI — AI導入・研修サービス",
+    "cattery_title": "福楽キャッテリー — サイベリアン専門ブリーダー",
+    "cattery_desc": "大阪市でサイベリアンを専門に繁育しています。健やかで愛らしい猫たちとの出会いをお手伝いします。",
+    "cattery_cta": "猫ちゃんを見る"
   },
   "common": {
     "theme_toggle": "テーマ切替",
@@ -61,7 +64,7 @@
   },
   "timeline": {
     "title": "タイムライン",
-    "subtitle": "技術の探求、日常の記録、マイルストーンと気づき",
+    "subtitle": "AI実践、大阪ライフ、キャッテリーの日常を記録。技術探求、暮らしの気づき、大切なマイルストーン——歩んできた軌跡。",
     "filter": {
       "all": "すべて",
       "tech": "技術",
@@ -75,11 +78,11 @@
       "milestone": "マイルストーン",
       "reflection": "気づき"
     },
-    "count": "{count} 件の記録",
-    "loadMore": "もっと読み込む",
-    "expand": "詳細を展開",
-    "collapse": "詳細を折りたたむ",
-    "readMore": "続きを読む"
+    "expand": "クリックで展開",
+    "collapse": "閉じる",
+    "readMore": "続きを読む",
+    "loadMore": "もっと見る",
+    "count": "{count} 件の記録"
   },
   "cases": {
     "title": "ケーススタディ",
@@ -104,7 +107,8 @@
     "filter_cats": "猫",
     "filter_osaka": "大阪",
     "filter_food": "グルメ",
-    "filter_travel": "旅行"
+    "filter_travel": "旅行",
+    "cat_showcase_title": "猫ちゃん紹介"
   },
   "social": {
     "title": "フォローする",
@@ -114,7 +118,9 @@
     "tiktok_subtitle": "ショート動画",
     "view_channel": "チャンネルを見る",
     "follow": "フォロー",
-    "all_platforms": "すべてのプラットフォーム"
+    "all_platforms": "すべてのプラットフォーム",
+    "subscribe": "チャンネル登録",
+    "more_platforms_hint": "他のプラットフォームも随時更新中です ✨"
   },
   "about": {
     "tagline": "大阪 × AI × キャッテリー経営者",
@@ -137,28 +143,7 @@
     "form_name": "お名前",
     "form_email": "メールアドレス",
     "form_message": "メッセージ",
-    "form_submit": "送信"
-  },
-  "timeline": {
-    "title": "タイムライン",
-    "subtitle": "AI実践、大阪ライフ、キャッテリーの日常を記録。技術探求、暮らしの気づき、大切なマイルストーン——歩んできた軌跡。",
-    "filter": {
-      "all": "すべて",
-      "tech": "技術",
-      "daily": "日常",
-      "milestone": "マイルストーン",
-      "reflection": "気づき"
-    },
-    "category": {
-      "tech": "技術",
-      "daily": "日常",
-      "milestone": "マイルストーン",
-      "reflection": "気づき"
-    },
-    "expand": "クリックで展開",
-    "collapse": "閉じる",
-    "readMore": "続きを読む",
-    "loadMore": "もっと見る",
-    "count": "{count} 件の記録"
+    "form_submit": "送信",
+    "cattery_life_hint": "キャッテリーの日常は「ライフ」セクションでも更新しています♪"
   }
 }

@@ -3,8 +3,13 @@
 import { useTranslations } from 'next-intl';
 import { motion, useInView } from 'motion/react';
 import { useRef } from 'react';
+import { YouTubeEmbed } from './YouTubeEmbed';
+import { InstagramGrid } from './InstagramGrid';
+import { TikTokGrid } from './TikTokGrid';
 
 /* ── YouTube ─────────────────────────────────────────── */
+
+const sampleVideoIds = ['dQw4w9WgXcQ', 'jNQXAC9IVRw', 'kJQP7kiw5Fk'];
 
 function YouTubeSection() {
   const t = useTranslations('social');
@@ -12,9 +17,9 @@ function YouTubeSection() {
   const inView = useInView(ref, { once: true, margin: '-80px' });
 
   const videos = [
-    { title: 'サイベリアンの子猫の成長記録', date: '2026-03-18', views: '2.3K', gradient: 'from-red-500 via-red-400 to-orange-400', emoji: '🐱' },
-    { title: 'AI × 猫舎：一日のワークフロー', date: '2026-03-10', views: '1.8K', gradient: 'from-red-600 via-rose-500 to-pink-400', emoji: '🤖' },
-    { title: '大阪グルメ散歩 - 天王寺編', date: '2026-03-01', views: '3.1K', gradient: 'from-red-400 via-orange-400 to-yellow-400', emoji: '🍜' },
+    { title: 'サイベリアンの子猫の成長記録', date: '2026-03-18', views: '2.3K', gradient: 'from-red-500 via-red-400 to-orange-400', emoji: '🐱', videoId: sampleVideoIds[0] },
+    { title: 'AI × 猫舎：一日のワークフロー', date: '2026-03-10', views: '1.8K', gradient: 'from-red-600 via-rose-500 to-pink-400', emoji: '🤖', videoId: sampleVideoIds[1] },
+    { title: '大阪グルメ散歩 - 天王寺編', date: '2026-03-01', views: '3.1K', gradient: 'from-red-400 via-orange-400 to-yellow-400', emoji: '🍜', videoId: sampleVideoIds[2] },
   ];
 
   return (
@@ -38,18 +43,35 @@ function YouTubeSection() {
         </div>
       </div>
 
-      {/* Video cards */}
+      {/* Featured video embed */}
+      <motion.div
+        initial={{ opacity: 0, scale: 0.97 }}
+        animate={inView ? { opacity: 1, scale: 1 } : {}}
+        transition={{ delay: 0.2, duration: 0.4 }}
+        className="mb-5"
+      >
+        <YouTubeEmbed videoId={videos[0].videoId} title={videos[0].title} />
+      </motion.div>
+
+      {/* More video cards */}
       <div className="grid gap-4 sm:grid-cols-3">
         {videos.map((v, i) => (
           <motion.div
             key={i}
             initial={{ opacity: 0, y: 20 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
-            transition={{ delay: 0.2 + i * 0.1, duration: 0.4 }}
+            transition={{ delay: 0.3 + i * 0.1, duration: 0.4 }}
             className="rounded-lg overflow-hidden bg-background/60 dark:bg-background/30 border border-border/20"
           >
-            <div className={`bg-gradient-to-br ${v.gradient} h-28 flex items-center justify-center`}>
+            <div className={`bg-gradient-to-br ${v.gradient} h-28 flex items-center justify-center relative`}>
               <span className="text-3xl">{v.emoji}</span>
+              <div className="absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity">
+                <div className="w-10 h-10 rounded-full bg-red-500/90 flex items-center justify-center">
+                  <svg className="w-4 h-4 text-white ml-0.5" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M8 5v14l11-7z" />
+                  </svg>
+                </div>
+              </div>
             </div>
             <div className="p-3">
               <h4 className="text-sm font-medium line-clamp-2 mb-1">{v.title}</h4>
@@ -62,12 +84,24 @@ function YouTubeSection() {
         ))}
       </div>
 
-      <a
-        href="#"
-        className="mt-6 inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-red-500 text-white text-sm font-medium hover:bg-red-600 transition-colors shadow-md shadow-red-500/20"
-      >
-        {t('view_channel')} →
-      </a>
+      {/* Subscribe button */}
+      <div className="mt-6 flex flex-wrap gap-3">
+        <a
+          href="#"
+          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-red-500 text-white text-sm font-medium hover:bg-red-600 transition-colors shadow-md shadow-red-500/20"
+        >
+          <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
+            <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+          </svg>
+          {t('subscribe')}
+        </a>
+        <a
+          href="#"
+          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-red-300 dark:border-red-800 text-red-600 dark:text-red-400 text-sm font-medium hover:bg-red-50 dark:hover:bg-red-950/30 transition-colors"
+        >
+          {t('view_channel')} →
+        </a>
+      </div>
     </motion.section>
   );
 }
@@ -78,15 +112,6 @@ function InstagramSection() {
   const t = useTranslations('social');
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: '-80px' });
-
-  const posts = [
-    { gradient: 'from-purple-400 to-pink-300', emoji: '🐱' },
-    { gradient: 'from-orange-300 to-yellow-300', emoji: '🌸' },
-    { gradient: 'from-blue-300 to-cyan-300', emoji: '🏙️' },
-    { gradient: 'from-pink-300 to-rose-300', emoji: '🍰' },
-    { gradient: 'from-green-300 to-emerald-300', emoji: '🍃' },
-    { gradient: 'from-amber-300 to-orange-300', emoji: '☀️' },
-  ];
 
   return (
     <motion.section
@@ -109,26 +134,15 @@ function InstagramSection() {
         </div>
       </div>
 
-      {/* Photo grid 2x3 */}
-      <div className="grid grid-cols-3 gap-2 sm:gap-3">
-        {posts.map((p, i) => (
-          <motion.div
-            key={i}
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={inView ? { opacity: 1, scale: 1 } : {}}
-            transition={{ delay: 0.3 + i * 0.06, duration: 0.35 }}
-            className={`aspect-square rounded-lg bg-gradient-to-br ${p.gradient} flex items-center justify-center text-2xl sm:text-3xl cursor-pointer hover:scale-105 transition-transform duration-200`}
-          >
-            {p.emoji}
-          </motion.div>
-        ))}
-      </div>
+      {/* Photo grid */}
+      <InstagramGrid />
 
+      {/* Follow button */}
       <a
         href="#"
         className="mt-6 inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-gradient-to-r from-purple-500 via-pink-500 to-orange-400 text-white text-sm font-medium hover:opacity-90 transition-opacity shadow-md shadow-purple-500/20"
       >
-        {t('follow')} →
+        {t('follow')} @fuluck_cattery →
       </a>
     </motion.section>
   );
@@ -140,12 +154,6 @@ function TikTokSection() {
   const t = useTranslations('social');
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: '-80px' });
-
-  const videos = [
-    { title: '猫と暮らす朝のルーティン', gradient: 'from-gray-800 via-gray-700 to-gray-900', emoji: '🌅', likes: '5.2K' },
-    { title: 'AI에게 맡기는 고양이 관리', gradient: 'from-gray-900 via-gray-800 to-black', emoji: '🤖', likes: '3.8K' },
-    { title: '大阪ストリートフード', gradient: 'from-gray-700 via-gray-800 to-gray-900', emoji: '🍢', likes: '7.1K' },
-  ];
 
   return (
     <motion.section
@@ -168,27 +176,10 @@ function TikTokSection() {
         </div>
       </div>
 
-      {/* Vertical video cards */}
-      <div className="grid grid-cols-3 gap-3">
-        {videos.map((v, i) => (
-          <motion.div
-            key={i}
-            initial={{ opacity: 0, y: 20 }}
-            animate={inView ? { opacity: 1, y: 0 } : {}}
-            transition={{ delay: 0.3 + i * 0.1, duration: 0.4 }}
-            className="rounded-xl overflow-hidden border border-border/20"
-          >
-            <div className={`bg-gradient-to-b ${v.gradient} aspect-[9/16] flex flex-col items-center justify-center relative`}>
-              <span className="text-3xl sm:text-4xl">{v.emoji}</span>
-              <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/80 to-transparent p-2">
-                <p className="text-white text-[10px] sm:text-xs line-clamp-2">{v.title}</p>
-                <p className="text-white/60 text-[10px] mt-0.5">♥ {v.likes}</p>
-              </div>
-            </div>
-          </motion.div>
-        ))}
-      </div>
+      {/* Video grid */}
+      <TikTokGrid />
 
+      {/* Follow button */}
       <a
         href="#"
         className="mt-6 inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-black dark:bg-white text-white dark:text-black text-sm font-medium hover:opacity-80 transition-opacity shadow-md"
@@ -205,12 +196,13 @@ function AllPlatformLinks() {
   const t = useTranslations('social');
 
   const platforms = [
-    { name: 'YouTube', url: '#', color: 'text-red-500' },
-    { name: 'Instagram', url: '#', color: 'text-pink-500' },
-    { name: 'TikTok', url: '#', color: 'text-foreground' },
-    { name: 'X / Twitter', url: '#', color: 'text-foreground' },
-    { name: 'GitHub', url: '#', color: 'text-foreground' },
-    { name: 'LINE', url: '#', color: 'text-green-500' },
+    { name: 'YouTube', url: '#', color: 'text-red-500 hover:bg-red-50 dark:hover:bg-red-950/30', icon: '▶' },
+    { name: 'Instagram', url: '#', color: 'text-pink-500 hover:bg-pink-50 dark:hover:bg-pink-950/30', icon: '📷' },
+    { name: 'TikTok', url: '#', color: 'text-foreground hover:bg-gray-100 dark:hover:bg-gray-800', icon: '🎵' },
+    { name: 'X / Twitter', url: '#', color: 'text-foreground hover:bg-gray-100 dark:hover:bg-gray-800', icon: '𝕏' },
+    { name: 'LINE', url: '#', color: 'text-green-500 hover:bg-green-50 dark:hover:bg-green-950/30', icon: '💬' },
+    { name: 'GitHub', url: 'https://github.com', color: 'text-foreground hover:bg-gray-100 dark:hover:bg-gray-800', icon: '💻' },
+    { name: 'note.com', url: 'https://note.com', color: 'text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-950/30', icon: '📝' },
   ];
 
   return (
@@ -221,12 +213,18 @@ function AllPlatformLinks() {
           <a
             key={p.name}
             href={p.url}
-            className={`px-4 py-2 rounded-full border border-border/40 text-sm ${p.color} hover:bg-secondary/60 transition-colors`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={`px-4 py-2 rounded-full border border-border/40 text-sm font-medium ${p.color} transition-colors inline-flex items-center gap-2`}
           >
+            <span className="text-xs">{p.icon}</span>
             {p.name}
           </a>
         ))}
       </div>
+      <p className="mt-4 text-xs text-muted-foreground">
+        {t('more_platforms_hint')}
+      </p>
     </div>
   );
 }

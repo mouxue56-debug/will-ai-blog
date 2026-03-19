@@ -26,7 +26,10 @@
     "sns_tiktok": "短视频",
     "ai_dashboard_title": "AI 助手团队",
     "ai_tasks_today": "今日任务",
-    "powered_banner": "Powered by 福楽AI — AI導入・研修サービス"
+    "powered_banner": "Powered by 福楽AI — AI導入・研修サービス",
+    "cattery_title": "福楽キャッテリー — サイベリアン専門ブリーダー",
+    "cattery_desc": "大阪市で西伯利亚猫（サイベリアン）を専門に繁育しています。健康で性格の良い猫たちとの出会いをお手伝いします。",
+    "cattery_cta": "查看猫咪"
   },
   "common": {
     "theme_toggle": "切换主题",
@@ -61,7 +64,7 @@
   },
   "timeline": {
     "title": "时间线",
-    "subtitle": "记录技术探索、生活日常、里程碑和感悟",
+    "subtitle": "记录 AI 实践、大阪生活、猫舍日常的点滴。技术探索、生活感悟、重要里程碑——一路走来的轨迹。",
     "filter": {
       "all": "全部",
       "tech": "技术",
@@ -75,11 +78,11 @@
       "milestone": "里程碑",
       "reflection": "感悟"
     },
-    "count": "{count} 条记录",
+    "expand": "点击展开",
+    "collapse": "收起",
+    "readMore": "阅读全文",
     "loadMore": "加载更多",
-    "expand": "展开详情",
-    "collapse": "收起详情",
-    "readMore": "阅读全文"
+    "count": "共 {count} 条记录"
   },
   "cases": {
     "title": "案例研究",
@@ -104,7 +107,8 @@
     "filter_cats": "猫咪",
     "filter_osaka": "大阪",
     "filter_food": "美食",
-    "filter_travel": "旅行"
+    "filter_travel": "旅行",
+    "cat_showcase_title": "猫咪精选"
   },
   "social": {
     "title": "关注我",
@@ -114,7 +118,9 @@
     "tiktok_subtitle": "短视频",
     "view_channel": "查看频道",
     "follow": "关注",
-    "all_platforms": "所有平台"
+    "all_platforms": "所有平台",
+    "subscribe": "订阅频道",
+    "more_platforms_hint": "更多平台持续更新中，欢迎关注 ✨"
   },
   "about": {
     "tagline": "大阪 × AI × 猫舎经营者",
@@ -137,28 +143,7 @@
     "form_name": "姓名",
     "form_email": "邮箱",
     "form_message": "留言内容",
-    "form_submit": "发送"
-  },
-  "timeline": {
-    "title": "时间线",
-    "subtitle": "记录 AI 实践、大阪生活、猫舍日常的点滴。技术探索、生活感悟、重要里程碑——一路走来的轨迹。",
-    "filter": {
-      "all": "全部",
-      "tech": "技术",
-      "daily": "日常",
-      "milestone": "里程碑",
-      "reflection": "感悟"
-    },
-    "category": {
-      "tech": "技术",
-      "daily": "日常",
-      "milestone": "里程碑",
-      "reflection": "感悟"
-    },
-    "expand": "点击展开",
-    "collapse": "收起",
-    "readMore": "阅读全文",
-    "loadMore": "加载更多",
-    "count": "共 {count} 条记录"
+    "form_submit": "发送",
+    "cattery_life_hint": "猫舍日常也会更新在「生活」板块哦～"
   }
 }

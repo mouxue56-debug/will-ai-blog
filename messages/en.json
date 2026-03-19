@@ -26,7 +26,10 @@
     "sns_tiktok": "Short Videos",
     "ai_dashboard_title": "AI Assistant Team",
     "ai_tasks_today": "Tasks Today",
-    "powered_banner": "Powered by Fuluck AI — AI Integration & Training"
+    "powered_banner": "Powered by Fuluck AI — AI Integration & Training",
+    "cattery_title": "Fuluck Cattery — Siberian Cat Breeder",
+    "cattery_desc": "Professional Siberian cat breeder in Osaka. We help you find healthy, well-tempered cats for your family.",
+    "cattery_cta": "View Cats"
   },
   "common": {
     "theme_toggle": "Toggle Theme",
@@ -61,25 +64,25 @@
   },
   "timeline": {
     "title": "Timeline",
-    "subtitle": "Documenting tech explorations, daily life, milestones and reflections",
+    "subtitle": "Documenting AI practice, Osaka life, and cattery stories. Tech explorations, life reflections, and key milestones — the journey so far.",
     "filter": {
       "all": "All",
       "tech": "Tech",
       "daily": "Daily",
       "milestone": "Milestone",
-      "reflection": "Reflection"
+      "reflection": "Thoughts"
     },
     "category": {
       "tech": "Tech",
       "daily": "Daily",
       "milestone": "Milestone",
-      "reflection": "Reflection"
+      "reflection": "Thoughts"
     },
-    "count": "{count} entries",
-    "loadMore": "Load More",
-    "expand": "Expand",
+    "expand": "Click to expand",
     "collapse": "Collapse",
-    "readMore": "Read More"
+    "readMore": "Read full post",
+    "loadMore": "Load More",
+    "count": "{count} entries"
   },
   "cases": {
     "title": "Case Studies",
@@ -104,7 +107,8 @@
     "filter_cats": "Cats",
     "filter_osaka": "Osaka",
     "filter_food": "Food",
-    "filter_travel": "Travel"
+    "filter_travel": "Travel",
+    "cat_showcase_title": "Featured Cats"
   },
   "social": {
     "title": "Follow Me",
@@ -114,7 +118,9 @@
     "tiktok_subtitle": "Short Videos",
     "view_channel": "View Channel",
     "follow": "Follow",
-    "all_platforms": "All Platforms"
+    "all_platforms": "All Platforms",
+    "subscribe": "Subscribe",
+    "more_platforms_hint": "More platforms coming soon ✨"
   },
   "about": {
     "tagline": "Osaka × AI × Cattery Owner",
@@ -137,28 +143,7 @@
     "form_name": "Name",
     "form_email": "Email",
     "form_message": "Message",
-    "form_submit": "Send"
-  },
-  "timeline": {
-    "title": "Timeline",
-    "subtitle": "Documenting AI practice, Osaka life, and cattery stories. Tech explorations, life reflections, and key milestones — the journey so far.",
-    "filter": {
-      "all": "All",
-      "tech": "Tech",
-      "daily": "Daily",
-      "milestone": "Milestone",
-      "reflection": "Thoughts"
-    },
-    "category": {
-      "tech": "Tech",
-      "daily": "Daily",
-      "milestone": "Milestone",
-      "reflection": "Thoughts"
-    },
-    "expand": "Click to expand",
-    "collapse": "Collapse",
-    "readMore": "Read full post",
-    "loadMore": "Load More",
-    "count": "{count} entries"
+    "form_submit": "Send",
+    "cattery_life_hint": "Cattery daily life is also shared in the Life section~"
   }
 }

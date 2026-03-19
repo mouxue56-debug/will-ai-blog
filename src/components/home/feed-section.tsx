@@ -2,6 +2,7 @@
 
 import { useRef, useState } from 'react';
 import { useTranslations } from 'next-intl';
+import { Link } from '@/i18n/navigation';
 import { motion, useInView } from 'motion/react';
 import { Badge } from '@/components/ui/badge';
 import { CalendarDays } from 'lucide-react';
@@ -12,6 +13,7 @@ interface FeedItem {
   categoryColor: string;
   date: string;
   summary: string;
+  slug: string;
 }
 
 const feedData: FeedItem[] = [
@@ -21,6 +23,7 @@ const feedData: FeedItem[] = [
     categoryColor: 'bg-brand-mint/15 text-brand-mint',
     date: '2026-03-18',
     summary: '如何让四个AI实例各司其职、高效协作，从工作流设计到实际踩坑经验。',
+    slug: 'my-ai-workflow',
   },
   {
     title: '春天的サイベリアン换毛季',
@@ -28,6 +31,7 @@ const feedData: FeedItem[] = [
     categoryColor: 'bg-brand-coral/15 text-brand-coral',
     date: '2026-03-15',
     summary: '西伯利亚猫的换毛季养护指南，梳毛技巧和毛球预防。',
+    slug: 'siberian-spring-care',
   },
   {
     title: '大阪城公園の桜はもうすぐ',
@@ -35,6 +39,7 @@ const feedData: FeedItem[] = [
     categoryColor: 'bg-brand-taro/15 text-brand-taro',
     date: '2026-03-12',
     summary: '大阪城公園の桜が咲き始めました。今年のお花見スポットを紹介。',
+    slug: 'osaka-sakura-2026',
   },
   {
     title: 'OpenClaw多实例架构踩坑',
@@ -42,6 +47,7 @@ const feedData: FeedItem[] = [
     categoryColor: 'bg-brand-cyan/15 text-brand-cyan',
     date: '2026-03-10',
     summary: '在同一台Mac Mini上运行多个OpenClaw实例的经验，端口管理和进程守护。',
+    slug: 'openclaw-multi-instance',
   },
   {
     title: '医療クリニックのAI導入事例',
@@ -49,6 +55,7 @@ const feedData: FeedItem[] = [
     categoryColor: 'bg-brand-mango/15 text-brand-mango',
     date: '2026-03-08',
     summary: '大阪市内のクリニックにAI自動化を導入した実例。予約管理から患者対応まで。',
+    slug: 'ai-clinic-case',
   },
 ];
 
@@ -67,47 +74,49 @@ function SpotlightCard({ item, index }: { item: FeedItem; index: number }) {
   }
 
   return (
-    <motion.div
-      ref={cardRef}
-      className="relative flex-shrink-0 w-[300px] sm:w-[340px] rounded-xl border border-border/40 bg-card p-5 cursor-pointer overflow-hidden group"
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '-50px' }}
-      transition={{ delay: index * 0.1, duration: 0.5, ease: 'easeOut' }}
-      onMouseMove={handleMouseMove}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      whileHover={{ y: -4 }}
-    >
-      {/* Spotlight effect */}
-      {isHovered && (
-        <div
-          className="pointer-events-none absolute inset-0 z-10 transition-opacity duration-300"
-          style={{
-            background: `radial-gradient(300px circle at ${mousePos.x}px ${mousePos.y}px, rgba(74,222,128,0.08), transparent 60%)`,
-          }}
-        />
-      )}
+    <Link href={`/blog/${item.slug}`}>
+      <motion.div
+        ref={cardRef}
+        className="relative flex-shrink-0 w-[300px] sm:w-[340px] rounded-xl border border-border/40 bg-card p-5 cursor-pointer overflow-hidden group"
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: '-50px' }}
+        transition={{ delay: index * 0.1, duration: 0.5, ease: 'easeOut' }}
+        onMouseMove={handleMouseMove}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+        whileHover={{ y: -4 }}
+      >
+        {/* Spotlight effect */}
+        {isHovered && (
+          <div
+            className="pointer-events-none absolute inset-0 z-10 transition-opacity duration-300"
+            style={{
+              background: `radial-gradient(300px circle at ${mousePos.x}px ${mousePos.y}px, rgba(74,222,128,0.08), transparent 60%)`,
+            }}
+          />
+        )}
 
-      {/* Content */}
-      <div className="relative z-20">
-        <div className="flex items-center justify-between mb-3">
-          <Badge variant="secondary" className={`text-xs ${item.categoryColor} border-0`}>
-            {item.category}
-          </Badge>
-          <span className="flex items-center gap-1 text-xs text-muted-foreground">
-            <CalendarDays className="h-3 w-3" />
-            {item.date}
-          </span>
+        {/* Content */}
+        <div className="relative z-20">
+          <div className="flex items-center justify-between mb-3">
+            <Badge variant="secondary" className={`text-xs ${item.categoryColor} border-0`}>
+              {item.category}
+            </Badge>
+            <span className="flex items-center gap-1 text-xs text-muted-foreground">
+              <CalendarDays className="h-3 w-3" />
+              {item.date}
+            </span>
+          </div>
+          <h3 className="text-base font-semibold leading-snug mb-2 group-hover:text-brand-mint transition-colors">
+            {item.title}
+          </h3>
+          <p className="text-sm text-muted-foreground leading-relaxed line-clamp-2">
+            {item.summary}
+          </p>
         </div>
-        <h3 className="text-base font-semibold leading-snug mb-2 group-hover:text-brand-mint transition-colors">
-          {item.title}
-        </h3>
-        <p className="text-sm text-muted-foreground leading-relaxed line-clamp-2">
-          {item.summary}
-        </p>
-      </div>
-    </motion.div>
+      </motion.div>
+    </Link>
   );
 }
 

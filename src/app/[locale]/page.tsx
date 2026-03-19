@@ -7,6 +7,7 @@ import { FeedSection } from '@/components/home/feed-section';
 import { SNSSection } from '@/components/home/sns-section';
 import { AIDashboard } from '@/components/home/ai-dashboard';
 import { PoweredBanner } from '@/components/home/powered-banner';
+import { CatteryBanner } from '@/components/home/CatteryBanner';
 
 export default function HomePage() {
   return (
@@ -30,6 +31,11 @@ export default function HomePage() {
         {/* AI Dashboard */}
         <ScrollReveal direction="scaleIn">
           <AIDashboard />
+        </ScrollReveal>
+
+        {/* Cattery Banner */}
+        <ScrollReveal direction="fadeUp" delay={0.12}>
+          <CatteryBanner />
         </ScrollReveal>
 
         {/* Powered By Banner */}

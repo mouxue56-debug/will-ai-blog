@@ -150,6 +150,17 @@ function BusinessLinks() {
           </motion.a>
         ))}
       </div>
+
+      {/* Cattery hint */}
+      <motion.p
+        initial={{ opacity: 0 }}
+        animate={inView ? { opacity: 1 } : {}}
+        transition={{ delay: 0.6, duration: 0.5 }}
+        className="mt-4 text-xs text-muted-foreground flex items-center gap-1.5"
+      >
+        <span>🐾</span>
+        {t('cattery_life_hint')}
+      </motion.p>
     </motion.section>
   );
 }
