@@ -69,6 +69,7 @@ export function MobileNav() {
                 <button
                   onClick={() => setMoreOpen(false)}
                   className="rounded-md p-1 text-muted-foreground hover:text-foreground"
+                  aria-label="Close menu"
                 >
                   <X className="h-4 w-4" />
                 </button>

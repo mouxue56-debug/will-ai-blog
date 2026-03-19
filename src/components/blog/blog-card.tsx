@@ -33,10 +33,9 @@ const COVER_ICONS: Record<BlogCategory, string> = {
 
 interface BlogCardProps {
   post: BlogPost;
-  index: number;
 }
 
-export function BlogCard({ post, index }: BlogCardProps) {
+export function BlogCard({ post }: BlogCardProps) {
   const locale = useLocale();
   const t = useTranslations('blog');
   const title = post.title[locale] || post.title.zh || post.title.en || '';
