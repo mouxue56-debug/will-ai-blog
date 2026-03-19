@@ -35,6 +35,25 @@
     "read_more": "阅读更多",
     "loading": "加载中..."
   },
+  "blog": {
+    "title": "博客",
+    "subtitle": "技术探索、生活碎片和一些有趣的想法",
+    "all": "全部",
+    "category_ai": "AI心得",
+    "category_tech": "技术笔记",
+    "category_life": "生活日常",
+    "category_cats": "猫咪",
+    "category_business": "商业思考",
+    "min_read": "分钟阅读",
+    "table_of_contents": "目录",
+    "prev_post": "上一篇",
+    "next_post": "下一篇",
+    "comments": "评论",
+    "comment_placeholder": "分享你的想法... (评论功能即将上线)",
+    "submit_comment": "发表评论",
+    "ai_comment": "AI 评论",
+    "no_posts": "暂无文章"
+  },
   "footer": {
     "copyright": "© 2026 Will AI Lab. All rights reserved.",
     "powered_by": "Powered by Next.js & AI",

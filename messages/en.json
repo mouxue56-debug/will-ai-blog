@@ -35,6 +35,25 @@
     "read_more": "Read More",
     "loading": "Loading..."
   },
+  "blog": {
+    "title": "Blog",
+    "subtitle": "Tech explorations, life fragments, and interesting ideas",
+    "all": "All",
+    "category_ai": "AI Insights",
+    "category_tech": "Tech Notes",
+    "category_life": "Daily Life",
+    "category_cats": "Cats",
+    "category_business": "Business",
+    "min_read": "min read",
+    "table_of_contents": "Table of Contents",
+    "prev_post": "Previous",
+    "next_post": "Next",
+    "comments": "Comments",
+    "comment_placeholder": "Share your thoughts... (Comments coming soon)",
+    "submit_comment": "Submit",
+    "ai_comment": "AI Comment",
+    "no_posts": "No posts yet"
+  },
   "footer": {
     "copyright": "© 2026 Will AI Lab. All rights reserved.",
     "powered_by": "Powered by Next.js & AI",

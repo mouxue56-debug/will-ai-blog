@@ -1,0 +1,163 @@
+'use client';
+
+import { useLocale, useTranslations } from 'next-intl';
+import { motion } from 'motion/react';
+import { Calendar, Clock, User, ChevronLeft, ChevronRight } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import type { BlogPost, Comment, BlogCategory } from '@/lib/blog-types';
+import { CATEGORY_KEYS } from '@/lib/blog-types';
+import { Link } from '@/i18n/navigation';
+import { PageTransition } from '@/components/shared/PageTransition';
+import { MarkdownRenderer } from './markdown-renderer';
+import { TableOfContents } from './table-of-contents';
+import { CommentSection } from './comment-section';
+
+const CATEGORY_TAG_COLORS: Record<BlogCategory, string> = {
+  ai: 'bg-brand-cyan/15 text-brand-cyan',
+  tech: 'bg-brand-mint/15 text-brand-mint',
+  life: 'bg-brand-coral/15 text-brand-coral',
+  cats: 'bg-brand-mango/15 text-brand-mango',
+  business: 'bg-brand-taro/15 text-brand-taro',
+};
+
+interface BlogDetailProps {
+  post: BlogPost;
+  prevPost: BlogPost | null;
+  nextPost: BlogPost | null;
+  comments: Comment[];
+}
+
+export function BlogDetail({ post, prevPost, nextPost, comments }: BlogDetailProps) {
+  const locale = useLocale();
+  const t = useTranslations('blog');
+  const title = post.title[locale] || post.title.zh || post.title.en || '';
+  const prevTitle = prevPost ? (prevPost.title[locale] || prevPost.title.zh || prevPost.title.en || '') : '';
+  const nextTitle = nextPost ? (nextPost.title[locale] || nextPost.title.zh || nextPost.title.en || '') : '';
+
+  return (
+    <PageTransition>
+      <div className="mx-auto max-w-5xl px-4 sm:px-6 py-12">
+        {/* Back to blog */}
+        <Link
+          href="/blog"
+          className="mb-6 inline-flex items-center gap-1 text-sm text-muted-foreground transition-colors hover:text-foreground"
+        >
+          <ChevronLeft className="h-4 w-4" />
+          {t('title')}
+        </Link>
+
+        <div className="lg:grid lg:grid-cols-[1fr_220px] lg:gap-8">
+          {/* Main Content */}
+          <article className="min-w-0">
+            {/* Article Header */}
+            <motion.header
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4 }}
+              className="mb-8 space-y-4"
+            >
+              {/* Category Badge */}
+              <span
+                className={cn(
+                  'inline-flex rounded-full px-3 py-1 text-xs font-medium',
+                  CATEGORY_TAG_COLORS[post.category]
+                )}
+              >
+                {t(CATEGORY_KEYS[post.category])}
+              </span>
+
+              {/* Title */}
+              <h1 className="text-3xl font-bold leading-tight sm:text-4xl">
+                {title}
+              </h1>
+
+              {/* Meta */}
+              <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
+                <span className="flex items-center gap-1.5">
+                  <User className="h-4 w-4" />
+                  {post.author}
+                </span>
+                <span className="flex items-center gap-1.5">
+                  <Calendar className="h-4 w-4" />
+                  <time dateTime={post.date}>
+                    {new Date(post.date).toLocaleDateString(
+                      locale === 'zh' ? 'zh-CN' : locale === 'ja' ? 'ja-JP' : 'en-US',
+                      { year: 'numeric', month: 'long', day: 'numeric' }
+                    )}
+                  </time>
+                </span>
+                <span className="flex items-center gap-1.5">
+                  <Clock className="h-4 w-4" />
+                  {post.readingTime} {t('min_read')}
+                </span>
+              </div>
+
+              <hr className="border-border" />
+            </motion.header>
+
+            {/* Mobile TOC */}
+            <div className="mb-8 lg:hidden">
+              <TableOfContents content={post.content} />
+            </div>
+
+            {/* Article Body */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+            >
+              <MarkdownRenderer content={post.content} />
+            </motion.div>
+
+            {/* Separator */}
+            <hr className="my-10 border-border" />
+
+            {/* Prev / Next Navigation */}
+            <nav className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              {prevPost ? (
+                <Link
+                  href={`/blog/${prevPost.slug}`}
+                  className="group flex flex-col gap-1 rounded-lg border p-4 transition-all hover:bg-muted/50"
+                >
+                  <span className="flex items-center gap-1 text-xs text-muted-foreground">
+                    <ChevronLeft className="h-3 w-3" />
+                    {t('prev_post')}
+                  </span>
+                  <span className="text-sm font-medium line-clamp-1 group-hover:text-brand-cyan">
+                    {prevTitle}
+                  </span>
+                </Link>
+              ) : (
+                <div />
+              )}
+              {nextPost && (
+                <Link
+                  href={`/blog/${nextPost.slug}`}
+                  className="group flex flex-col items-end gap-1 rounded-lg border p-4 transition-all hover:bg-muted/50"
+                >
+                  <span className="flex items-center gap-1 text-xs text-muted-foreground">
+                    {t('next_post')}
+                    <ChevronRight className="h-3 w-3" />
+                  </span>
+                  <span className="text-sm font-medium line-clamp-1 group-hover:text-brand-cyan">
+                    {nextTitle}
+                  </span>
+                </Link>
+              )}
+            </nav>
+
+            {/* Comments */}
+            <div className="mt-12">
+              <CommentSection comments={comments} />
+            </div>
+          </article>
+
+          {/* Desktop TOC Sidebar */}
+          <aside className="hidden lg:block">
+            <TableOfContents content={post.content} />
+          </aside>
+        </div>
+      </div>
+    </PageTransition>
+  );
+}

@@ -35,6 +35,25 @@
     "read_more": "もっと読む",
     "loading": "読み込み中..."
   },
+  "blog": {
+    "title": "ブログ",
+    "subtitle": "テクノロジー、日常、そして面白いアイデア",
+    "all": "すべて",
+    "category_ai": "AI体験",
+    "category_tech": "技術ノート",
+    "category_life": "日常",
+    "category_cats": "猫",
+    "category_business": "ビジネス",
+    "min_read": "分で読める",
+    "table_of_contents": "目次",
+    "prev_post": "前の記事",
+    "next_post": "次の記事",
+    "comments": "コメント",
+    "comment_placeholder": "あなたの考えを共有... (コメント機能は近日公開)",
+    "submit_comment": "コメントする",
+    "ai_comment": "AI コメント",
+    "no_posts": "記事がありません"
+  },
   "footer": {
     "copyright": "© 2026 Will AI Lab. All rights reserved.",
     "powered_by": "Powered by Next.js & AI",
