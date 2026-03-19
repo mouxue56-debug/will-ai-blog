@@ -1,0 +1,31 @@
+{
+  "metadata": {
+    "title": "Will AI Lab",
+    "description": "Will's AI Lab — Tech, Life, Cats & Creation"
+  },
+  "nav": {
+    "home": "Home",
+    "blog": "Blog",
+    "timeline": "Timeline",
+    "cases": "Cases",
+    "life": "Life",
+    "social": "Social",
+    "about": "About"
+  },
+  "home": {
+    "hero_title": "Will AI Lab",
+    "hero_subtitle": "Tech, Life, Cats & Creation",
+    "hero_description": "A digital garden of an AI engineer — documenting tech explorations, life fragments, and interesting creations."
+  },
+  "common": {
+    "theme_toggle": "Toggle Theme",
+    "language": "Language",
+    "back_to_top": "Back to Top",
+    "read_more": "Read More",
+    "loading": "Loading..."
+  },
+  "footer": {
+    "copyright": "© 2026 Will AI Lab. All rights reserved.",
+    "powered_by": "Powered by Next.js & AI"
+  }
+}

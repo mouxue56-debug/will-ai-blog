@@ -1,0 +1,31 @@
+{
+  "metadata": {
+    "title": "Will AI Lab",
+    "description": "Will 的 AI 实验室 — 技术、生活、猫咪与创造"
+  },
+  "nav": {
+    "home": "首页",
+    "blog": "博客",
+    "timeline": "时间线",
+    "cases": "案例",
+    "life": "生活",
+    "social": "社交",
+    "about": "关于"
+  },
+  "home": {
+    "hero_title": "Will AI Lab",
+    "hero_subtitle": "技术、生活、猫咪与创造",
+    "hero_description": "一个 AI 工程师的数字花园，记录技术探索、生活碎片和一些有趣的东西。"
+  },
+  "common": {
+    "theme_toggle": "切换主题",
+    "language": "语言",
+    "back_to_top": "回到顶部",
+    "read_more": "阅读更多",
+    "loading": "加载中..."
+  },
+  "footer": {
+    "copyright": "© 2026 Will AI Lab. All rights reserved.",
+    "powered_by": "Powered by Next.js & AI"
+  }
+}

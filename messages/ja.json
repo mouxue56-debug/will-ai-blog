@@ -1,0 +1,31 @@
+{
+  "metadata": {
+    "title": "Will AI Lab",
+    "description": "Will の AI ラボ — テクノロジー、暮らし、猫と創造"
+  },
+  "nav": {
+    "home": "ホーム",
+    "blog": "ブログ",
+    "timeline": "タイムライン",
+    "cases": "ケース",
+    "life": "ライフ",
+    "social": "ソーシャル",
+    "about": "について"
+  },
+  "home": {
+    "hero_title": "Will AI Lab",
+    "hero_subtitle": "テクノロジー、暮らし、猫と創造",
+    "hero_description": "AI エンジニアのデジタルガーデン。技術の探求、日常の断片、そして面白いものを記録しています。"
+  },
+  "common": {
+    "theme_toggle": "テーマ切替",
+    "language": "言語",
+    "back_to_top": "トップに戻る",
+    "read_more": "もっと読む",
+    "loading": "読み込み中..."
+  },
+  "footer": {
+    "copyright": "© 2026 Will AI Lab. All rights reserved.",
+    "powered_by": "Powered by Next.js & AI"
+  }
+}
