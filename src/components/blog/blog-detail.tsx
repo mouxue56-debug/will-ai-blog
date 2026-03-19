@@ -26,9 +26,10 @@ interface BlogDetailProps {
   prevPost: BlogPost | null;
   nextPost: BlogPost | null;
   comments: Comment[];
+  postSlug?: string;
 }
 
-export function BlogDetail({ post, prevPost, nextPost, comments }: BlogDetailProps) {
+export function BlogDetail({ post, prevPost, nextPost, comments, postSlug }: BlogDetailProps) {
   const locale = useLocale();
   const t = useTranslations('blog');
   const title = post.title[locale] || post.title.zh || post.title.en || '';
@@ -145,7 +146,7 @@ export function BlogDetail({ post, prevPost, nextPost, comments }: BlogDetailPro
 
             {/* Comments */}
             <div className="mt-12">
-              <CommentSection comments={comments} />
+              <CommentSection comments={comments} postSlug={postSlug} />
             </div>
           </article>
 

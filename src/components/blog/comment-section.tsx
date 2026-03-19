@@ -1,12 +1,26 @@
 'use client';
 
+import { useState, useEffect, useCallback } from 'react';
 import { useTranslations } from 'next-intl';
 import { MessageSquare, Send, Bot } from 'lucide-react';
 import type { Comment } from '@/lib/blog-types';
 import { cn } from '@/lib/utils';
 
+interface ApiComment {
+  id: string;
+  postSlug: string;
+  author: string;
+  content: string;
+  authorType: 'human' | 'ai';
+  aiModel?: string;
+  aiInstance?: string;
+  createdAt: string;
+  approved: boolean;
+}
+
 interface CommentSectionProps {
-  comments: Comment[];
+  comments: Comment[];  // Fallback static comments
+  postSlug?: string;    // For loading real comments from API
 }
 
 function CommentItem({ comment }: { comment: Comment }) {
@@ -46,8 +60,47 @@ function CommentItem({ comment }: { comment: Comment }) {
   );
 }
 
-export function CommentSection({ comments }: CommentSectionProps) {
+function apiToComment(c: ApiComment): Comment {
+  return {
+    id: c.id,
+    author: c.author,
+    avatar: c.authorType === 'ai' ? '🤖' : '👤',
+    date: c.createdAt.split('T')[0],
+    content: c.content,
+    isAI: c.authorType === 'ai',
+    model: c.aiModel,
+  };
+}
+
+export function CommentSection({ comments: fallbackComments, postSlug }: CommentSectionProps) {
   const t = useTranslations('blog');
+  const [comments, setComments] = useState<Comment[]>(fallbackComments);
+  const [loaded, setLoaded] = useState(false);
+
+  const loadComments = useCallback(async () => {
+    if (!postSlug) return;
+    try {
+      const res = await fetch(`/api/comments?postSlug=${postSlug}&approved=true`);
+      if (res.ok) {
+        const data = await res.json();
+        const apiComments: ApiComment[] = data.comments || [];
+        if (apiComments.length > 0) {
+          setComments(apiComments.map(apiToComment));
+        }
+        // If no API comments, keep fallback
+      }
+    } catch {
+      // Keep fallback comments on error
+    }
+    setLoaded(true);
+  }, [postSlug]);
+
+  useEffect(() => {
+    loadComments();
+  }, [loadComments]);
+
+  // Use fallback if API hasn't loaded or returned empty
+  const displayComments = loaded ? comments : fallbackComments;
 
   return (
     <section className="space-y-6">
@@ -55,13 +108,13 @@ export function CommentSection({ comments }: CommentSectionProps) {
       <div className="flex items-center gap-2">
         <MessageSquare className="h-5 w-5" />
         <h3 className="text-lg font-semibold">
-          {t('comments')} ({comments.length})
+          {t('comments')} ({displayComments.length})
         </h3>
       </div>
 
       {/* Comment List */}
       <div className="space-y-3">
-        {comments.map((comment) => (
+        {displayComments.map((comment) => (
           <CommentItem key={comment.id} comment={comment} />
         ))}
       </div>

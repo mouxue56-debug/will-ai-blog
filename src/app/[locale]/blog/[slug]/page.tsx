@@ -95,6 +95,7 @@ export default async function BlogPostPage({ params }: Props) {
         prevPost={prev}
         nextPost={next}
         comments={comments}
+        postSlug={slug}
       />
     </>
   );
