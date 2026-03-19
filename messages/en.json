@@ -61,6 +61,44 @@
   },
   "timeline": {
     "title": "Timeline",
+    "subtitle": "Documenting tech explorations, daily life, milestones and reflections",
+    "filter": {
+      "all": "All",
+      "tech": "Tech",
+      "daily": "Daily",
+      "milestone": "Milestone",
+      "reflection": "Reflection"
+    },
+    "category": {
+      "tech": "Tech",
+      "daily": "Daily",
+      "milestone": "Milestone",
+      "reflection": "Reflection"
+    },
+    "count": "{count} entries",
+    "loadMore": "Load More",
+    "expand": "Expand",
+    "collapse": "Collapse",
+    "readMore": "Read More"
+  },
+  "cases": {
+    "title": "Case Studies",
+    "subtitle": "Real-world AI practice cases",
+    "filter_all": "All Cases",
+    "filter_ai_architecture": "AI Architecture",
+    "filter_sns": "SNS Automation",
+    "filter_medical": "Medical AI",
+    "view_details": "View Details",
+    "story_layer": "Story Layer",
+    "tech_layer": "Technical Details",
+    "deep_layer": "Deep Analysis",
+    "back_to_cases": "Back to Cases",
+    "read_more": "Continue Reading",
+    "tech_stack": "Tech Stack",
+    "results": "Results"
+  },
+  "timeline": {
+    "title": "Timeline",
     "subtitle": "Documenting AI practice, Osaka life, and cattery stories. Tech explorations, life reflections, and key milestones — the journey so far.",
     "filter": {
       "all": "All",
