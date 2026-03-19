@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { getAllPosts, getPostBySlug, getAdjacentPosts, getSampleComments } from '@/lib/blog';
 import { BlogDetail } from '@/components/blog/blog-detail';
@@ -7,12 +8,50 @@ export function generateStaticParams() {
   return posts.map((post) => ({ slug: post.slug }));
 }
 
-export default async function BlogPostPage({
-  params,
-}: {
+type Props = {
   params: Promise<{ locale: string; slug: string }>;
-}) {
-  const { slug } = await params;
+};
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { locale, slug } = await params;
+  const post = getPostBySlug(slug);
+
+  if (!post) {
+    return { title: 'Not Found' };
+  }
+
+  const lang = (locale === 'zh' || locale === 'ja' || locale === 'en') ? locale : 'zh';
+  const title = post.title[lang] || post.title['zh'] || post.slug;
+  const description = post.excerpt[lang] || post.excerpt['zh'] || '';
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      type: 'article',
+      publishedTime: post.date,
+      authors: [post.author],
+      ...(post.coverImage ? { images: [{ url: post.coverImage }] } : {}),
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+    },
+    alternates: {
+      languages: {
+        zh: `/zh/blog/${slug}`,
+        ja: `/ja/blog/${slug}`,
+        en: `/en/blog/${slug}`,
+      },
+    },
+  };
+}
+
+export default async function BlogPostPage({ params }: Props) {
+  const { locale, slug } = await params;
   const post = getPostBySlug(slug);
 
   if (!post) {
@@ -21,13 +60,42 @@ export default async function BlogPostPage({
 
   const { prev, next } = getAdjacentPosts(slug);
   const comments = getSampleComments();
+  const lang = (locale === 'zh' || locale === 'ja' || locale === 'en') ? locale : 'zh';
+
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    headline: post.title[lang] || post.title['zh'],
+    description: post.excerpt[lang] || post.excerpt['zh'],
+    datePublished: post.date,
+    author: {
+      '@type': 'Person',
+      name: post.author,
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: "Will's AI Blog",
+      url: 'https://aiblog.fuluckai.com',
+    },
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': `https://aiblog.fuluckai.com/${locale}/blog/${slug}`,
+    },
+    ...(post.coverImage ? { image: post.coverImage } : {}),
+  };
 
   return (
-    <BlogDetail
-      post={post}
-      prevPost={prev}
-      nextPost={next}
-      comments={comments}
-    />
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <BlogDetail
+        post={post}
+        prevPost={prev}
+        nextPost={next}
+        comments={comments}
+      />
+    </>
   );
 }
