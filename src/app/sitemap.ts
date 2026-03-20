@@ -1,14 +1,21 @@
 import type { MetadataRoute } from 'next';
 import { getAllPosts } from '@/lib/blog';
 import { cases } from '@/data/cases';
+import { debates } from '@/data/debates';
 
 const BASE_URL = 'https://aiblog.fuluckai.com';
-const locales = ['zh', 'ja', 'en'];
+const locales = ['zh', 'ja', 'en'] as const;
+
+const withAlternates = (path: string) => ({
+  languages: Object.fromEntries(
+    locales.map((locale) => [locale === 'zh' ? 'zh-CN' : locale, `${BASE_URL}/${locale}${path}`])
+  ),
+});
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const entries: MetadataRoute.Sitemap = [];
 
-  const staticPages = ['', '/blog', '/cattery', '/timeline', '/cases', '/about'];
+  const staticPages = ['', '/blog', '/cases', '/debate', '/timeline', '/about', '/cattery'];
 
   for (const page of staticPages) {
     for (const locale of locales) {
@@ -17,11 +24,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
         lastModified: new Date(),
         changeFrequency: page === '' ? 'daily' : 'weekly',
         priority: page === '' ? 1.0 : 0.8,
-        alternates: {
-          languages: Object.fromEntries(
-            locales.map((l) => [l, `${BASE_URL}/${l}${page}`])
-          ),
-        },
+        alternates: withAlternates(page),
       });
     }
   }
@@ -34,11 +37,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
         lastModified: new Date(post.date),
         changeFrequency: 'monthly',
         priority: 0.7,
-        alternates: {
-          languages: Object.fromEntries(
-            locales.map((l) => [l, `${BASE_URL}/${l}/blog/${post.slug}`])
-          ),
-        },
+        alternates: withAlternates(`/blog/${post.slug}`),
       });
     }
   }
@@ -50,11 +49,19 @@ export default function sitemap(): MetadataRoute.Sitemap {
         lastModified: new Date(),
         changeFrequency: 'monthly',
         priority: 0.7,
-        alternates: {
-          languages: Object.fromEntries(
-            locales.map((l) => [l, `${BASE_URL}/${l}/cases/${c.slug}`])
-          ),
-        },
+        alternates: withAlternates(`/cases/${c.slug}`),
+      });
+    }
+  }
+
+  for (const debate of debates) {
+    for (const locale of locales) {
+      entries.push({
+        url: `${BASE_URL}/${locale}/debate/${debate.id}`,
+        lastModified: new Date(debate.date),
+        changeFrequency: 'daily',
+        priority: 0.7,
+        alternates: withAlternates(`/debate/${debate.id}`),
       });
     }
   }

@@ -21,9 +21,28 @@ export function BlogList({ posts }: BlogListProps) {
     ? posts.filter((p) => p.category === selectedCategory)
     : posts;
 
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@graph': filteredPosts.map((post) => ({
+      '@type': 'Article',
+      '@id': `https://aiblog.fuluckai.com/zh/blog/${post.slug}#article`,
+      headline: post.title.zh || post.title.en || post.slug,
+      datePublished: post.date,
+      author: {
+        '@type': 'Person',
+        name: post.author,
+      },
+      mainEntityOfPage: `https://aiblog.fuluckai.com/zh/blog/${post.slug}`,
+    })),
+  };
+
   return (
     <PageTransition>
       <div className="mx-auto max-w-5xl px-4 sm:px-6 py-12">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
         {/* Header */}
         <ScrollReveal direction="fadeUp">
           <div className="mb-8">

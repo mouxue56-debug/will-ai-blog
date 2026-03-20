@@ -23,9 +23,9 @@ const geistMono = Geist_Mono({
 });
 
 const localeDescriptions: Record<string, string> = {
-  zh: 'AI × 猫舎 × 大阪生活 — 一个AI实践者的真实记录',
-  ja: '大阪在住のAI実践者Willのブログ。AI活用の実例、猫舎経営、ビジネス加速の記録。',
-  en: "Will's AI practice blog from Osaka. Real-world AI use cases, cattery management, and business acceleration.",
+  zh: 'Will 的 AI 实践博客 — 多实例架构、提示词工程、大阪生活日记',
+  ja: 'WillのAI実践ブログ — マルチインスタンス設計、プロンプト工学、大阪での日常',
+  en: "Will's AI Practice Blog — multi-instance architecture, prompt engineering, life in Osaka",
 };
 
 const localeOg: Record<string, string> = {
@@ -73,9 +73,10 @@ export async function generateMetadata({
     alternates: {
       canonical: `https://aiblog.fuluckai.com/${locale}`,
       languages: {
-        zh: 'https://aiblog.fuluckai.com/zh',
+        'zh-CN': 'https://aiblog.fuluckai.com/zh',
         ja: 'https://aiblog.fuluckai.com/ja',
         en: 'https://aiblog.fuluckai.com/en',
+        'x-default': 'https://aiblog.fuluckai.com/zh',
       },
     },
   };
@@ -97,19 +98,41 @@ export default async function LocaleLayout({
   setRequestLocale(locale);
 
   const messages = await getMessages();
-  const description = localeDescriptions[locale] || localeDescriptions.zh;
 
   const jsonLd = {
     '@context': 'https://schema.org',
-    '@type': 'WebSite',
-    name: "Will's AI Blog",
-    url: 'https://aiblog.fuluckai.com',
-    description,
-    author: {
-      '@type': 'Person',
-      name: 'Will',
-    },
-    inLanguage: ['zh', 'ja', 'en'],
+    '@graph': [
+      {
+        '@type': 'Person',
+        '@id': 'https://aiblog.fuluckai.com/#will',
+        name: 'Will (羅方遠)',
+        alternateName: ['落雪', 'konayuki56'],
+        url: 'https://aiblog.fuluckai.com',
+        sameAs: [
+          'https://github.com/konayuki56',
+          'https://www.instagram.com/fuluck_cattery/',
+          'https://aiblog.fuluckai.com/about',
+        ],
+        jobTitle: 'AI Practitioner & Cattery Owner',
+        description:
+          'AI practitioner based in Osaka, Japan. Running a Siberian cat cattery and building multi-AI systems.',
+        address: {
+          '@type': 'PostalAddress',
+          addressLocality: 'Osaka',
+          addressCountry: 'JP',
+        },
+      },
+      {
+        '@type': 'WebSite',
+        '@id': 'https://aiblog.fuluckai.com/#website',
+        url: 'https://aiblog.fuluckai.com',
+        name: "Will's AI Blog",
+        description:
+          'AI practitioner blog — tools, architecture, prompt engineering, daily life in Osaka',
+        inLanguage: ['zh-CN', 'ja', 'en'],
+        author: { '@id': 'https://aiblog.fuluckai.com/#will' },
+      },
+    ],
   };
 
   return (
