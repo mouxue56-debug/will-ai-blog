@@ -2,13 +2,14 @@ import { NextRequest, NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
 import { authenticate } from '@/lib/auth';
+import { auth } from '@/lib/auth-config';
 
 interface StoredComment {
   id: string;
   postSlug: string;
   author: string;
   content: string;
-  authorType: 'human' | 'ai';
+  authorType: 'human' | 'ai' | 'guest' | 'admin';
   aiModel?: string;
   aiInstance?: string;
   createdAt: string;
@@ -70,19 +71,52 @@ export async function GET(request: NextRequest) {
 
 /**
  * POST /api/comments — Create a new comment
- * Requires authentication for AI comments; human comments could be open
+ * - Authenticated users (via session): auto-fill user info
+ * - API key auth: for AI/programmatic comments
+ * - No auth: guest comments (require author field)
  */
 export async function POST(request: NextRequest) {
-  const authError = authenticate(request);
-  if (authError) return authError;
-
   try {
+    // Check for session-based auth first
+    const session = await auth();
+    const isAdmin = session?.user && (session.user as Record<string, unknown>).role === 'admin';
+
+    // If no session, check for API key auth (for AI comments)
+    if (!session) {
+      const authError = authenticate(request);
+      // Allow unauthenticated guest comments (but they need author field)
+      // Only block if it looks like an AI comment without auth
+      const body = await request.clone().json();
+      if (body.authorType === 'ai' && authError) {
+        return authError;
+      }
+    }
+
     const body = await request.json();
     const { postSlug, author, content, authorType, aiModel, aiInstance } = body;
 
-    if (!postSlug || !author || !content) {
+    // Determine author info based on auth state
+    let commentAuthor = author;
+    let commentAuthorType = authorType || 'human';
+
+    if (session?.user) {
+      // Logged-in user: use session info
+      commentAuthor = author || session.user.name || 'User';
+      if (isAdmin) {
+        commentAuthorType = 'admin';
+      }
+    } else if (!author) {
+      // Guest without author name
+      commentAuthor = 'Guest';
+      commentAuthorType = 'guest';
+    } else if (!authorType || authorType === 'human') {
+      // Explicit guest comment
+      commentAuthorType = 'guest';
+    }
+
+    if (!postSlug || !content) {
       return NextResponse.json(
-        { error: 'postSlug, author, and content are required' },
+        { error: 'postSlug and content are required' },
         { status: 400 }
       );
     }
@@ -92,13 +126,13 @@ export async function POST(request: NextRequest) {
     const newComment: StoredComment = {
       id: `cmt-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`,
       postSlug,
-      author,
+      author: commentAuthor,
       content,
-      authorType: authorType || 'human',
+      authorType: commentAuthorType as StoredComment['authorType'],
       ...(aiModel ? { aiModel } : {}),
       ...(aiInstance ? { aiInstance } : {}),
       createdAt: new Date().toISOString(),
-      approved: false, // All new comments need approval
+      approved: isAdmin ? true : false, // Admin comments auto-approved
     };
 
     comments.push(newComment);

@@ -5,6 +5,7 @@ import { getMessages } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { routing } from '@/i18n/routing';
 import { ThemeProvider } from '@/components/shared/theme-provider';
+import { SessionProvider } from '@/components/shared/session-provider';
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
 import { MobileNav } from '@/components/layout/mobile-nav';
@@ -87,21 +88,23 @@ export default async function LocaleLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col`}
       >
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="dark"
-          enableSystem
-        >
-          <NextIntlClientProvider messages={messages}>
-            <Header />
-            <main className="flex-1 pt-0 pb-16 md:pb-0">
-              {children}
-            </main>
-            <Footer />
-            <MobileNav />
-            <ScrollToTop />
-          </NextIntlClientProvider>
-        </ThemeProvider>
+        <SessionProvider>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="dark"
+            enableSystem
+          >
+            <NextIntlClientProvider messages={messages}>
+              <Header />
+              <main className="flex-1 pt-0 pb-16 md:pb-0">
+                {children}
+              </main>
+              <Footer />
+              <MobileNav />
+              <ScrollToTop />
+            </NextIntlClientProvider>
+          </ThemeProvider>
+        </SessionProvider>
       </body>
     </html>
   );
