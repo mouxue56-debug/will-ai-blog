@@ -5,6 +5,7 @@ import { useTranslations } from 'next-intl';
 import { motion, useInView } from 'motion/react';
 import { Link } from '@/i18n/navigation';
 import { Play, Camera, Music } from 'lucide-react';
+import { LampEffect } from '@/components/ui/aceternity';
 
 const snsCards = [
   {
@@ -44,14 +45,16 @@ export function MyWorld() {
   return (
     <section ref={sectionRef} className="py-16 sm:py-20">
       <div className="mx-auto max-w-5xl px-4 sm:px-6">
-        <motion.h2
-          className="text-2xl sm:text-3xl font-bold mb-8"
-          initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.5 }}
-        >
-          🌍 我的世界
-        </motion.h2>
+        <LampEffect color="purple" className="min-h-[140px] -mb-4">
+          <motion.h2
+            className="text-2xl sm:text-3xl font-bold"
+            initial={{ opacity: 0, y: 20 }}
+            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.5 }}
+          >
+            🌍 我的世界
+          </motion.h2>
+        </LampEffect>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Left: SNS cards */}

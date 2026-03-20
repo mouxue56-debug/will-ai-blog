@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useId, useRef } from "react";
+import { useId } from "react";
 import { cn } from "@/lib/utils";
 
 interface AnimatedBeamProps {

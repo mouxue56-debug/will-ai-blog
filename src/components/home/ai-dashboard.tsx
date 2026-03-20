@@ -3,6 +3,7 @@
 import { useTranslations } from 'next-intl';
 import { motion, useInView } from 'motion/react';
 import { useRef } from 'react';
+import { AnimatedBeam } from '@/components/ui/aceternity';
 
 interface AIInstance {
   name: string;
@@ -87,57 +88,43 @@ export function AIDashboard() {
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ delay: 0.2, duration: 0.6, ease: 'easeOut' }}
         >
-          {/* Animated beam lines connecting instances */}
-          <svg
-            className="absolute inset-0 w-full h-full pointer-events-none opacity-20 dark:opacity-15"
-            preserveAspectRatio="none"
-          >
-            <defs>
-              <linearGradient id="beam-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stopColor="#4ADE80" stopOpacity="0" />
-                <stop offset="50%" stopColor="#22D3EE" stopOpacity="0.6" />
-                <stop offset="100%" stopColor="#A78BFA" stopOpacity="0" />
-              </linearGradient>
-            </defs>
-            {/* Horizontal beams with flow animation */}
-            <motion.line
-              x1="10%" y1="30%" x2="90%" y2="30%"
-              stroke="url(#beam-gradient)"
-              strokeWidth="1"
-              className="beam-flow"
-              initial={{ pathLength: 0 }}
-              animate={isInView ? { pathLength: 1 } : {}}
-              transition={{ delay: 0.5, duration: 2, ease: 'easeInOut' }}
+          {/* AnimatedBeam connections replacing old SVG */}
+          <div className="absolute inset-0 pointer-events-none opacity-30 dark:opacity-20 overflow-hidden">
+            {/* Horizontal beams */}
+            <AnimatedBeam
+              pathD="M 40 60 Q 200 40 360 60"
+              duration={4}
+              color="#5eead4"
+              width={400}
+              height={200}
+              className="absolute inset-0 w-full h-full"
             />
-            <motion.line
-              x1="15%" y1="70%" x2="85%" y2="70%"
-              stroke="url(#beam-gradient)"
-              strokeWidth="1"
-              className="beam-flow-reverse"
-              initial={{ pathLength: 0 }}
-              animate={isInView ? { pathLength: 1 } : {}}
-              transition={{ delay: 0.8, duration: 2, ease: 'easeInOut' }}
+            <AnimatedBeam
+              pathD="M 60 140 Q 200 160 340 140"
+              duration={5}
+              color="#38bdf8"
+              width={400}
+              height={200}
+              className="absolute inset-0 w-full h-full"
             />
-            {/* Diagonal beams with flow animation */}
-            <motion.line
-              x1="20%" y1="25%" x2="80%" y2="75%"
-              stroke="url(#beam-gradient)"
-              strokeWidth="0.5"
-              className="beam-flow"
-              initial={{ pathLength: 0 }}
-              animate={isInView ? { pathLength: 1 } : {}}
-              transition={{ delay: 1, duration: 2.5, ease: 'easeInOut' }}
+            {/* Diagonal beams */}
+            <AnimatedBeam
+              pathD="M 80 40 Q 200 100 320 160"
+              duration={6}
+              color="#c084fc"
+              width={400}
+              height={200}
+              className="absolute inset-0 w-full h-full"
             />
-            <motion.line
-              x1="80%" y1="25%" x2="20%" y2="75%"
-              stroke="url(#beam-gradient)"
-              strokeWidth="0.5"
-              className="beam-flow-reverse"
-              initial={{ pathLength: 0 }}
-              animate={isInView ? { pathLength: 1 } : {}}
-              transition={{ delay: 1.2, duration: 2.5, ease: 'easeInOut' }}
+            <AnimatedBeam
+              pathD="M 320 40 Q 200 100 80 160"
+              duration={5.5}
+              color="#fbbf24"
+              width={400}
+              height={200}
+              className="absolute inset-0 w-full h-full"
             />
-          </svg>
+          </div>
 
           {/* Instances grid */}
           <div className="relative z-10 grid grid-cols-2 sm:grid-cols-4 gap-4">

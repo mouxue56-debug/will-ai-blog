@@ -5,6 +5,7 @@ import { Link, usePathname } from '@/i18n/navigation';
 import { motion } from 'motion/react';
 import { ThemeToggle } from '@/components/shared/theme-toggle';
 import { LocaleSwitcher } from '@/components/shared/locale-switcher';
+import { UserMenu } from '@/components/shared/user-menu';
 
 const navItems = [
   { key: 'blog', href: '/blog' },
@@ -50,7 +51,6 @@ export function Header() {
                 }`}
               >
                 {t(item.key)}
-                {/* Active glow underline */}
                 {active && (
                   <motion.div
                     layoutId="desktop-nav-underline"
@@ -61,7 +61,6 @@ export function Header() {
                     transition={{ type: 'spring', stiffness: 400, damping: 30 }}
                   />
                 )}
-                {/* Hover glow underline (non-active) */}
                 {!active && (
                   <span
                     className="absolute bottom-0 left-2 right-2 h-[2px] rounded-full bg-brand-mint scale-x-0 group-hover:scale-x-100 hover:scale-x-100 transition-transform duration-200 origin-left"
@@ -75,9 +74,10 @@ export function Header() {
           })}
         </nav>
 
-        {/* Right side: theme toggle + locale */}
+        {/* Right side: locale + user menu + theme toggle */}
         <div className="flex items-center gap-2">
           <LocaleSwitcher />
+          <UserMenu />
           <ThemeToggle />
         </div>
       </div>

@@ -2,6 +2,7 @@
 
 import { useState, useRef } from 'react';
 import { motion, useInView, AnimatePresence } from 'motion/react';
+import { LampEffect } from '@/components/ui/aceternity';
 import { FeedSection } from './feed-section';
 import { NewsSection } from './news-section';
 
@@ -15,6 +16,11 @@ export function LatestUpdates() {
   return (
     <section ref={sectionRef} className="py-16 sm:py-20">
       <div className="mx-auto max-w-5xl px-4 sm:px-6">
+        {/* Lamp decoration */}
+        <LampEffect color="cyan" className="min-h-[140px] -mb-8">
+          <div />
+        </LampEffect>
+
         {/* Section header with tabs */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}

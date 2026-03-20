@@ -3,6 +3,7 @@
 import { useRef } from 'react';
 import { motion, useInView, useScroll, useTransform } from 'motion/react';
 import { Cat, Bot, Users, Newspaper } from 'lucide-react';
+import { LampEffect } from '@/components/ui/aceternity';
 
 interface StoryNode {
   year: string;
@@ -145,20 +146,22 @@ export function StoryTimeline() {
   return (
     <section ref={sectionRef} className="py-16 sm:py-24">
       <div className="mx-auto max-w-5xl px-4 sm:px-6">
-        {/* Section title */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.5 }}
-          className="text-center mb-12 sm:mb-16"
-        >
-          <h2 className="text-2xl sm:text-3xl font-bold">
-            📖 我的故事
-          </h2>
-          <p className="mt-2 text-muted-foreground">
-            从一个人到一个团队的旅程
-          </p>
-        </motion.div>
+        {/* Section title with Lamp */}
+        <LampEffect color="green" className="min-h-[160px] mb-4">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.5 }}
+            className="text-center"
+          >
+            <h2 className="text-2xl sm:text-3xl font-bold">
+              📖 我的故事
+            </h2>
+            <p className="mt-2 text-muted-foreground">
+              从一个人到一个团队的旅程
+            </p>
+          </motion.div>
+        </LampEffect>
 
         {/* Timeline container */}
         <div ref={containerRef} className="relative">

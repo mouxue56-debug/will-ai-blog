@@ -3,6 +3,8 @@
 import { useTranslations } from 'next-intl';
 import { motion, useInView } from 'motion/react';
 import { useRef, useEffect, useState, useCallback } from 'react';
+import { TextGenerateEffect, ShimmerButton, LampEffect } from '@/components/ui/aceternity';
+import { Link } from '@/i18n/navigation';
 
 /* ── Typing effect hook ──────────────────────────────────── */
 function useTypewriter(text: string, speed = 40, delay = 800) {
@@ -46,7 +48,7 @@ function AnimatedCounter({ value, suffix = '', label }: { value: string; suffix?
 
     function animate(now: number) {
       const progress = Math.min((now - start) / duration, 1);
-      const eased = 1 - Math.pow(1 - progress, 3); // ease-out cubic
+      const eased = 1 - Math.pow(1 - progress, 3);
       setCount(Math.round(eased * numericValue));
       if (progress < 1) frame = requestAnimationFrame(animate);
     }
@@ -94,20 +96,17 @@ function AINetwork() {
   return (
     <div className="relative w-full max-w-[300px] aspect-[300/260] mx-auto">
       <svg viewBox="0 0 300 260" className="w-full h-full" fill="none">
-        {/* Connection lines with animated beam */}
         {connections.map((conn, i) => {
           const from = getNodePos(conn.from);
           const to = getNodePos(conn.to);
           return (
             <g key={`conn-${i}`}>
-              {/* Base line */}
               <line
                 x1={from.x} y1={from.y}
                 x2={to.x} y2={to.y}
                 stroke="rgba(94,234,212,0.15)"
                 strokeWidth="1"
               />
-              {/* Animated beam line */}
               <line
                 x1={from.x} y1={from.y}
                 x2={to.x} y2={to.y}
@@ -119,7 +118,6 @@ function AINetwork() {
           );
         })}
 
-        {/* Gradient defs */}
         <defs>
           <linearGradient id="beamGradient" x1="0%" y1="0%" x2="100%" y2="0%">
             <stop offset="0%" stopColor="rgba(94,234,212,0.6)" />
@@ -128,7 +126,6 @@ function AINetwork() {
           </linearGradient>
         </defs>
 
-        {/* Nodes */}
         {nodes.map((node, i) => {
           const pos = getNodePos(i);
           const isHovered = hoveredNode === node.id;
@@ -139,7 +136,6 @@ function AINetwork() {
               onMouseEnter={() => setHoveredNode(node.id)}
               onMouseLeave={() => setHoveredNode(null)}
             >
-              {/* Outer glow */}
               <circle
                 cx={pos.x} cy={pos.y} r={isHovered ? 24 : 20}
                 fill={`${node.color}10`}
@@ -147,7 +143,6 @@ function AINetwork() {
                 strokeWidth="1"
                 className="transition-all duration-300"
               />
-              {/* Inner circle */}
               <circle
                 cx={pos.x} cy={pos.y} r={isHovered ? 14 : 11}
                 fill={`${node.color}20`}
@@ -158,7 +153,6 @@ function AINetwork() {
                   filter: isHovered ? `drop-shadow(0 0 10px ${node.color}80)` : `drop-shadow(0 0 4px ${node.color}40)`,
                 }}
               />
-              {/* Node name */}
               <text
                 x={pos.x} y={pos.y + 1}
                 textAnchor="middle"
@@ -171,7 +165,6 @@ function AINetwork() {
                 {node.name}
               </text>
 
-              {/* Hover tooltip */}
               {isHovered && (
                 <g>
                   <rect
@@ -197,11 +190,9 @@ function AINetwork() {
           );
         })}
 
-        {/* Center "Will" hub */}
         <circle cx="150" cy="130" r="6" fill="rgba(94,234,212,0.3)" stroke="#5eead4" strokeWidth="1" />
         <text x="150" y="131" textAnchor="middle" dominantBaseline="middle" fill="#5eead4" fontSize="6" fontWeight="700">W</text>
 
-        {/* Lines from center to each node */}
         {nodes.map((_, i) => {
           const pos = getNodePos(i);
           return (
@@ -225,10 +216,16 @@ export function HeroSection() {
   const t = useTranslations('home');
   const subtitleText = t('hero_subtitle');
   const { displayed, done } = useTypewriter(subtitleText, 35, 1000);
-  const titleChars = "Will's AI Lab".split('');
 
   return (
-    <section className="relative overflow-hidden px-4 sm:px-6 py-16 sm:py-24 lg:py-32">
+    <section className="relative overflow-hidden px-4 sm:px-6 py-8 sm:py-16 lg:py-20">
+      {/* LampEffect decoration at the top */}
+      <div className="absolute inset-x-0 top-0 -z-5 pointer-events-none opacity-40 dark:opacity-60">
+        <LampEffect color="cyan" className="min-h-[180px]">
+          <div />
+        </LampEffect>
+      </div>
+
       {/* Ambient background blobs */}
       <div className="absolute inset-0 -z-10">
         <div className="absolute inset-0 dark:opacity-100 opacity-0 transition-opacity duration-500">
@@ -249,7 +246,7 @@ export function HeroSection() {
         <div className="particle bg-brand-mint/10 w-2 h-2 top-[40%] right-[25%]" style={{ '--dur': '20s', '--delay': '1s' } as React.CSSProperties} />
       </div>
 
-      <div className="mx-auto max-w-5xl">
+      <div className="mx-auto max-w-5xl relative z-10">
         <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
           {/* Left side: Content (60%) */}
           <div className="flex-1 lg:max-w-[60%] flex flex-col items-start text-left">
@@ -267,32 +264,12 @@ export function HeroSection() {
               AI Practitioner · 大阪
             </motion.div>
 
-            {/* Main title — char-by-char stagger */}
-            <motion.h1
-              className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight"
-              initial="hidden"
-              animate="visible"
-              variants={{
-                hidden: {},
-                visible: { transition: { staggerChildren: 0.04 } },
-              }}
-            >
-              <span className="bg-gradient-to-r from-brand-mint via-brand-cyan to-brand-taro bg-clip-text text-transparent inline-block">
-                {titleChars.map((char, i) => (
-                  <motion.span
-                    key={i}
-                    className="inline-block"
-                    variants={{
-                      hidden: { opacity: 0, y: 20 },
-                      visible: { opacity: 1, y: 0 },
-                    }}
-                    transition={{ duration: 0.4, ease: 'easeOut' }}
-                  >
-                    {char === ' ' ? '\u00A0' : char}
-                  </motion.span>
-                ))}
-              </span>
-            </motion.h1>
+            {/* Main title — TextGenerateEffect */}
+            <TextGenerateEffect
+              words="Will's AI Lab"
+              className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight bg-gradient-to-r from-brand-mint via-brand-cyan to-brand-taro bg-clip-text text-transparent"
+              delay={0.04}
+            />
 
             {/* Subtitle — typewriter effect */}
             <div className="mt-4 text-lg sm:text-xl text-muted-foreground min-h-[2em]">
@@ -309,6 +286,33 @@ export function HeroSection() {
             >
               {t('hero_description')}
             </motion.p>
+
+            {/* CTA Buttons */}
+            <motion.div
+              className="mt-6 flex flex-wrap gap-3"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 1.8, duration: 0.5, ease: 'easeOut' }}
+            >
+              <Link href="/blog">
+                <ShimmerButton
+                  shimmerColor="rgba(94,234,212,0.3)"
+                  background="rgba(94,234,212,0.12)"
+                  className="border-brand-mint/20 text-brand-mint hover:shadow-[0_0_30px_6px_rgba(94,234,212,0.15)]"
+                >
+                  📝 {t('hero_cta_blog') || 'Read Blog'}
+                </ShimmerButton>
+              </Link>
+              <Link href="/cases">
+                <ShimmerButton
+                  shimmerColor="rgba(192,132,252,0.3)"
+                  background="rgba(192,132,252,0.08)"
+                  className="border-brand-taro/20 text-brand-taro hover:shadow-[0_0_30px_6px_rgba(192,132,252,0.15)]"
+                >
+                  🚀 {t('hero_cta_cases') || 'View Cases'}
+                </ShimmerButton>
+              </Link>
+            </motion.div>
 
             {/* Stats counters */}
             <motion.div

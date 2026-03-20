@@ -15,8 +15,10 @@ import {
   User,
   Radio,
   X,
+  LogIn,
 } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
+import { useSession, signOut } from 'next-auth/react';
 
 const mainTabs = [
   { key: 'home', href: '/', icon: Home },
@@ -36,6 +38,7 @@ export function MobileNav() {
   const t = useTranslations('nav');
   const pathname = usePathname();
   const [moreOpen, setMoreOpen] = useState(false);
+  const { data: session } = useSession();
 
   function isActive(href: string) {
     if (href === '/') return pathname === '/';
@@ -96,6 +99,38 @@ export function MobileNav() {
                     </Link>
                   );
                 })}
+              </div>
+
+              {/* User section */}
+              <div className="border-t border-white/[0.06] mt-2 pt-2 px-1">
+                {session?.user ? (
+                  <div className="flex items-center justify-between px-3 py-2">
+                    <div className="flex items-center gap-2">
+                      <div className="w-7 h-7 rounded-full bg-gradient-to-br from-brand-mint to-brand-cyan flex items-center justify-center text-[10px] font-bold text-white">
+                        {(session.user.name || 'U').slice(0, 2).toUpperCase()}
+                      </div>
+                      <span className="text-sm font-medium truncate max-w-[120px]">{session.user.name}</span>
+                    </div>
+                    <button
+                      onClick={() => {
+                        setMoreOpen(false);
+                        signOut();
+                      }}
+                      className="text-xs text-red-400 hover:text-red-300 transition-colors"
+                    >
+                      登出
+                    </button>
+                  </div>
+                ) : (
+                  <Link
+                    href="/auth/signin"
+                    onClick={() => setMoreOpen(false)}
+                    className="flex items-center gap-2 px-3 py-2.5 rounded-xl text-muted-foreground hover:text-foreground hover:bg-white/[0.05] transition-colors"
+                  >
+                    <LogIn className="h-4 w-4" />
+                    <span className="text-sm">登录</span>
+                  </Link>
+                )}
               </div>
             </motion.div>
           </>

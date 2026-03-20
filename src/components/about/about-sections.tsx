@@ -3,6 +3,7 @@
 import { useTranslations } from 'next-intl';
 import { motion, useInView } from 'motion/react';
 import { useRef } from 'react';
+import { BorderBeam } from '@/components/ui/aceternity';
 
 /* ── Hero / Profile ──────────────────────────────────── */
 
@@ -45,13 +46,15 @@ interface AIAgent {
   color: string;
   bgColor: string;
   borderColor: string;
+  beamFrom: string;
+  beamTo: string;
 }
 
 const agents: AIAgent[] = [
-  { name: 'ユキ', nickname: '小爪爪', roleKey: 'agent_yuki_role', model: 'Claude', color: 'text-brand-mint', bgColor: 'bg-brand-mint/10', borderColor: 'border-brand-mint/30' },
-  { name: 'ナツ', nickname: '小触手', roleKey: 'agent_natsu_role', model: 'Kimi', color: 'text-brand-coral', bgColor: 'bg-brand-coral/10', borderColor: 'border-brand-coral/30' },
-  { name: 'ハル', nickname: '', roleKey: 'agent_haru_role', model: 'DeepSeek', color: 'text-brand-cyan', bgColor: 'bg-brand-cyan/10', borderColor: 'border-brand-cyan/30' },
-  { name: 'アキ', nickname: '', roleKey: 'agent_aki_role', model: 'Qwen', color: 'text-brand-taro', bgColor: 'bg-brand-taro/10', borderColor: 'border-brand-taro/30' },
+  { name: 'ユキ', nickname: '小爪爪', roleKey: 'agent_yuki_role', model: 'Claude', color: 'text-brand-mint', bgColor: 'bg-brand-mint/10', borderColor: 'border-brand-mint/30', beamFrom: '#5eead4', beamTo: '#38bdf8' },
+  { name: 'ナツ', nickname: '小触手', roleKey: 'agent_natsu_role', model: 'Kimi', color: 'text-brand-coral', bgColor: 'bg-brand-coral/10', borderColor: 'border-brand-coral/30', beamFrom: '#fbbf24', beamTo: '#f97316' },
+  { name: 'ハル', nickname: '', roleKey: 'agent_haru_role', model: 'DeepSeek', color: 'text-brand-cyan', bgColor: 'bg-brand-cyan/10', borderColor: 'border-brand-cyan/30', beamFrom: '#38bdf8', beamTo: '#818cf8' },
+  { name: 'アキ', nickname: '', roleKey: 'agent_aki_role', model: 'Qwen', color: 'text-brand-taro', bgColor: 'bg-brand-taro/10', borderColor: 'border-brand-taro/30', beamFrom: '#c084fc', beamTo: '#e879f9' },
 ];
 
 function AITeamSection() {
@@ -93,8 +96,15 @@ function AITeamSection() {
               initial={{ opacity: 0, scale: 0.9 }}
               animate={inView ? { opacity: 1, scale: 1 } : {}}
               transition={{ delay: 0.2 + i * 0.1, duration: 0.4 }}
-              className={`glass-card p-4 sm:p-5 flex flex-col items-center gap-2 text-center`}
+              className={`glass-card p-4 sm:p-5 flex flex-col items-center gap-2 text-center relative overflow-hidden`}
             >
+              <BorderBeam
+                colorFrom={agent.beamFrom}
+                colorTo={agent.beamTo}
+                size={150}
+                duration={8 + i * 2}
+                delay={i * 0.5}
+              />
               <div className={`text-2xl sm:text-3xl font-bold ${agent.color}`}>{agent.name}</div>
               {agent.nickname && (
                 <div className="text-xs text-muted-foreground">{agent.nickname}</div>

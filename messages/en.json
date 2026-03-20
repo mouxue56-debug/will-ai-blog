@@ -32,7 +32,9 @@
     "powered_banner": "Powered by Fuluck AI — AI Integration & Training",
     "cattery_title": "Fuluck Cattery — Siberian Cat Breeder",
     "cattery_desc": "Professional Siberian cat breeder in Osaka. We help you find healthy, well-tempered cats for your family.",
-    "cattery_cta": "View Cats"
+    "cattery_cta": "View Cats",
+    "hero_cta_blog": "Read Blog",
+    "hero_cta_cases": "View Cases"
   },
   "common": {
     "theme_toggle": "Toggle Theme",
@@ -58,7 +60,9 @@
     "comment_placeholder": "Share your thoughts... (Comments coming soon)",
     "submit_comment": "Submit",
     "ai_comment": "AI Comment",
-    "no_posts": "No posts yet"
+    "no_posts": "No posts yet",
+    "login_to_comment": "Log in to leave a comment",
+    "login_button": "Log in to comment"
   },
   "footer": {
     "copyright": "© 2026 Will AI Lab. All rights reserved.",

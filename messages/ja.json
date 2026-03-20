@@ -32,7 +32,9 @@
     "powered_banner": "Powered by 福楽AI — AI導入・研修サービス",
     "cattery_title": "福楽キャッテリー — サイベリアン専門ブリーダー",
     "cattery_desc": "大阪市でサイベリアンを専門に繁育しています。健やかで愛らしい猫たちとの出会いをお手伝いします。",
-    "cattery_cta": "猫ちゃんを見る"
+    "cattery_cta": "猫ちゃんを見る",
+    "hero_cta_blog": "ブログを読む",
+    "hero_cta_cases": "事例を見る"
   },
   "common": {
     "theme_toggle": "テーマ切替",
@@ -58,7 +60,9 @@
     "comment_placeholder": "あなたの考えを共有... (コメント機能は近日公開)",
     "submit_comment": "コメントする",
     "ai_comment": "AI コメント",
-    "no_posts": "記事がありません"
+    "no_posts": "記事がありません",
+    "login_to_comment": "ログインしてコメントする",
+    "login_button": "ログインしてコメント"
   },
   "footer": {
     "copyright": "© 2026 Will AI Lab. All rights reserved.",

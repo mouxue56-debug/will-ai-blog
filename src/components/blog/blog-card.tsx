@@ -6,6 +6,7 @@ import { cn } from '@/lib/utils';
 import type { BlogPost, BlogCategory } from '@/lib/blog-types';
 import { CATEGORY_KEYS } from '@/lib/blog-types';
 import { Link } from '@/i18n/navigation';
+import { SpotlightCard, BorderBeam } from '@/components/ui/aceternity';
 
 const CATEGORY_TAG_COLORS: Record<BlogCategory, string> = {
   ai: 'bg-brand-cyan/15 text-brand-cyan shadow-[0_0_8px_rgba(56,189,248,0.15)]',
@@ -33,9 +34,10 @@ const COVER_ICONS: Record<BlogCategory, string> = {
 
 interface BlogCardProps {
   post: BlogPost;
+  isLatest?: boolean;
 }
 
-export function BlogCard({ post }: BlogCardProps) {
+export function BlogCard({ post, isLatest = false }: BlogCardProps) {
   const locale = useLocale();
   const t = useTranslations('blog');
   const title = post.title[locale] || post.title.zh || post.title.en || '';
@@ -44,61 +46,73 @@ export function BlogCard({ post }: BlogCardProps) {
   return (
     <div>
       <Link href={`/blog/${post.slug}`}>
-        <article className="group relative flex flex-col overflow-hidden glass-card transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-foreground/5">
-          {/* Cover Image Placeholder */}
-          <div
-            className={cn(
-              'relative flex h-40 items-center justify-center bg-gradient-to-br',
-              COVER_GRADIENTS[post.category]
+        <SpotlightCard className="p-0 glass-card border-white/[0.06] bg-card/80 dark:bg-white/[0.03] transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-foreground/5">
+          <article className="group relative flex flex-col overflow-hidden">
+            {/* BorderBeam for latest post */}
+            {isLatest && (
+              <BorderBeam
+                colorFrom="#5eead4"
+                colorTo="#38bdf8"
+                size={180}
+                duration={10}
+              />
             )}
-          >
-            <span className="text-5xl opacity-60 transition-transform duration-300 group-hover:scale-110">
-              {COVER_ICONS[post.category]}
-            </span>
-          </div>
 
-          {/* Content */}
-          <div className="flex flex-1 flex-col gap-3 p-4">
-            {/* Category + Reading Time */}
-            <div className="flex items-center gap-2">
-              <span
-                className={cn(
-                  'inline-flex rounded-full px-2.5 py-0.5 text-xs font-medium',
-                  CATEGORY_TAG_COLORS[post.category]
-                )}
-              >
-                {t(CATEGORY_KEYS[post.category])}
-              </span>
-              <span className="flex items-center gap-1 text-xs text-muted-foreground">
-                <Clock className="h-3 w-3" />
-                {post.readingTime} {t('min_read')}
+            {/* Cover Image Placeholder */}
+            <div
+              className={cn(
+                'relative flex h-40 items-center justify-center bg-gradient-to-br',
+                COVER_GRADIENTS[post.category]
+              )}
+            >
+              <span className="text-5xl opacity-60 transition-transform duration-300 group-hover:scale-110">
+                {COVER_ICONS[post.category]}
               </span>
             </div>
 
-            {/* Title */}
-            <h2 className="text-lg font-semibold leading-snug line-clamp-2 transition-colors group-hover:text-brand-cyan">
-              {title}
-            </h2>
+            {/* Content */}
+            <div className="flex flex-1 flex-col gap-3 p-4">
+              {/* Category + Reading Time */}
+              <div className="flex items-center gap-2">
+                <span
+                  className={cn(
+                    'inline-flex rounded-full px-2.5 py-0.5 text-xs font-medium',
+                    CATEGORY_TAG_COLORS[post.category]
+                  )}
+                >
+                  {t(CATEGORY_KEYS[post.category])}
+                </span>
+                <span className="flex items-center gap-1 text-xs text-muted-foreground">
+                  <Clock className="h-3 w-3" />
+                  {post.readingTime} {t('min_read')}
+                </span>
+              </div>
 
-            {/* Excerpt */}
-            <p className="text-sm text-muted-foreground line-clamp-2">
-              {excerpt}
-            </p>
+              {/* Title */}
+              <h2 className="text-lg font-semibold leading-snug line-clamp-2 transition-colors group-hover:text-brand-cyan">
+                {title}
+              </h2>
 
-            {/* Date */}
-            <div className="mt-auto flex items-center gap-1.5 pt-2 text-xs text-muted-foreground">
-              <Calendar className="h-3 w-3" />
-              <time dateTime={post.date}>
-                {new Date(post.date).toLocaleDateString(locale === 'zh' ? 'zh-CN' : locale === 'ja' ? 'ja-JP' : 'en-US', {
-                  year: 'numeric',
-                  month: 'long',
-                  day: 'numeric',
-                })}
-              </time>
-              <span className="ml-auto text-muted-foreground/60">by {post.author}</span>
+              {/* Excerpt */}
+              <p className="text-sm text-muted-foreground line-clamp-2">
+                {excerpt}
+              </p>
+
+              {/* Date */}
+              <div className="mt-auto flex items-center gap-1.5 pt-2 text-xs text-muted-foreground">
+                <Calendar className="h-3 w-3" />
+                <time dateTime={post.date}>
+                  {new Date(post.date).toLocaleDateString(locale === 'zh' ? 'zh-CN' : locale === 'ja' ? 'ja-JP' : 'en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                  })}
+                </time>
+                <span className="ml-auto text-muted-foreground/60">by {post.author}</span>
+              </div>
             </div>
-          </div>
-        </article>
+          </article>
+        </SpotlightCard>
       </Link>
     </div>
   );

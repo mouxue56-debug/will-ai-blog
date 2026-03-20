@@ -54,7 +54,7 @@ export function BlogList({ posts }: BlogListProps) {
                     exit={{ opacity: 0, scale: 0.95, y: -10 }}
                     transition={{ duration: 0.35, delay: index * 0.05, ease: 'easeOut' }}
                   >
-                    <BlogCard post={post} />
+                    <BlogCard post={post} isLatest={index === 0} />
                   </motion.div>
                 ))}
               </AnimatePresence>
