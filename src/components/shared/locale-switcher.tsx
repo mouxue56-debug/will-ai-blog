@@ -1,7 +1,7 @@
 'use client';
 
 import { useLocale } from 'next-intl';
-import { usePathname } from 'next/navigation';
+import { Link, usePathname } from '@/i18n/navigation';
 import { routing } from '@/i18n/routing';
 
 const localeLabels: Record<string, string> = {
@@ -12,28 +12,20 @@ const localeLabels: Record<string, string> = {
 
 export function LocaleSwitcher({ compact = false }: { compact?: boolean }) {
   const locale = useLocale();
-  const fullPathname = usePathname(); // e.g. /zh/blog or /ja/timeline
-
-  function getLocalizedPath(targetLocale: string) {
-    // Remove current locale prefix and add target locale
-    const segments = fullPathname.split('/');
-    // segments[0] is "", segments[1] is the locale
-    if (routing.locales.includes(segments[1] as typeof routing.locales[number])) {
-      segments[1] = targetLocale;
-    } else {
-      segments.splice(1, 0, targetLocale);
-    }
-    return segments.join('/') || '/';
-  }
+  const pathname = usePathname();
 
   return (
     <div className="flex items-center gap-1">
       {routing.locales.map((l) => {
         const isActive = l === locale;
         return (
-          <a
+          <Link
             key={l}
-            href={getLocalizedPath(l)}
+            href={pathname}
+            locale={l}
+            replace
+            prefetch={false}
+            aria-current={isActive ? 'page' : undefined}
             className={`relative transition-all duration-200 rounded-md font-medium no-underline cursor-pointer ${
               compact
                 ? 'px-2 py-1 text-xs'
@@ -48,7 +40,7 @@ export function LocaleSwitcher({ compact = false }: { compact?: boolean }) {
             {isActive && (
               <span className="absolute -bottom-0.5 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-brand-mint" />
             )}
-          </a>
+          </Link>
         );
       })}
     </div>

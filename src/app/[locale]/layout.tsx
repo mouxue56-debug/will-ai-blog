@@ -11,7 +11,6 @@ import { Footer } from '@/components/layout/footer';
 import { MobileNav } from '@/components/layout/mobile-nav';
 import { ScrollToTop } from '@/components/shared/ScrollToTop';
 import { AIChatWidget } from '@/components/shared/AIChatWidget';
-import '../globals.css';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -96,7 +95,6 @@ export default async function LocaleLayout({
   }
 
   const messages = await getMessages();
-
   const description = localeDescriptions[locale] || localeDescriptions.zh;
 
   const jsonLd = {
@@ -113,14 +111,12 @@ export default async function LocaleLayout({
   };
 
   return (
-    <html lang={locale} suppressHydrationWarning>
-      <head>
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-        />
-      </head>
-      <body
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <div
         className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col`}
       >
         <SessionProvider>
@@ -141,7 +137,7 @@ export default async function LocaleLayout({
             </NextIntlClientProvider>
           </ThemeProvider>
         </SessionProvider>
-      </body>
-    </html>
+      </div>
+    </>
   );
 }

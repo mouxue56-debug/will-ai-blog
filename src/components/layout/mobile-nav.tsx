@@ -19,7 +19,6 @@ import {
 } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
 import { useSession, signOut } from 'next-auth/react';
-import { LocaleSwitcher } from '@/components/shared/locale-switcher';
 
 const mainTabs = [
   { key: 'home', href: '/', icon: Home },
