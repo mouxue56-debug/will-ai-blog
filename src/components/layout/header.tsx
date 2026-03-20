@@ -76,8 +76,13 @@ export function Header() {
 
         {/* Right side: locale + user menu + theme toggle */}
         <div className="flex items-center gap-2">
+          {/* Desktop: full size */}
           <div className="hidden md:block">
             <LocaleSwitcher />
+          </div>
+          {/* Mobile: compact size, always visible in header */}
+          <div className="md:hidden">
+            <LocaleSwitcher compact />
           </div>
           <UserMenu />
           <ThemeToggle />
