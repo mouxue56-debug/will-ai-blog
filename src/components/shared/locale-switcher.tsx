@@ -1,23 +1,32 @@
 'use client';
 
 import { useLocale, useTranslations } from 'next-intl';
-import { Link, usePathname } from '@/i18n/navigation';
+import { usePathname as useNextPathname } from 'next/navigation';
+import { Link } from '@/i18n/navigation';
 import { routing } from '@/i18n/routing';
 
 export function LocaleSwitcher({ compact = false }: { compact?: boolean }) {
-  const locale = useLocale();
+  const fallbackLocale = useLocale();
   const t = useTranslations('common.locale_names');
-  const pathname = usePathname();
+  const nextPathname = useNextPathname();
+  const pathSegments = nextPathname.split('/').filter(Boolean);
+  const pathLocale = routing.locales.includes(pathSegments[0] as (typeof routing.locales)[number])
+    ? (pathSegments[0] as (typeof routing.locales)[number])
+    : fallbackLocale;
+  const normalizedPathname =
+    pathSegments.length > 0 && pathSegments[0] === pathLocale
+      ? `/${pathSegments.slice(1).join('/')}` || '/'
+      : nextPathname || '/';
 
   return (
     <div className="flex items-center gap-1">
       {routing.locales.map((l) => {
-        const isActive = l === locale;
+        const isActive = l === pathLocale;
 
         return (
           <Link
             key={l}
-            href={pathname}
+            href={normalizedPathname}
             locale={l}
             prefetch={false}
             className={`rounded-md font-medium no-underline cursor-pointer ${
