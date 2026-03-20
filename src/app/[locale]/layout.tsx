@@ -111,33 +111,35 @@ export default async function LocaleLayout({
   };
 
   return (
-    <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
-      <div
-        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col`}
-      >
-        <SessionProvider>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="dark"
-            enableSystem
-          >
-            <NextIntlClientProvider messages={messages}>
-              <Header />
-              <main className="flex-1 pt-8 md:pt-0 pb-16 md:pb-0">
-                {children}
-              </main>
-              <Footer />
-              <MobileNav />
-              <ScrollToTop />
-              <AIChatWidget />
-            </NextIntlClientProvider>
-          </ThemeProvider>
-        </SessionProvider>
-      </div>
-    </>
+    <html lang={locale} suppressHydrationWarning>
+      <body>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+        <div
+          className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col`}
+        >
+          <SessionProvider>
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="dark"
+              enableSystem
+            >
+              <NextIntlClientProvider messages={messages}>
+                <Header />
+                <main className="flex-1 pt-8 md:pt-0 pb-16 md:pb-0">
+                  {children}
+                </main>
+                <Footer />
+                <MobileNav />
+                <ScrollToTop />
+                <AIChatWidget />
+              </NextIntlClientProvider>
+            </ThemeProvider>
+          </SessionProvider>
+        </div>
+      </body>
+    </html>
   );
 }
