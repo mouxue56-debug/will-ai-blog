@@ -1,4 +1,4 @@
-export type TimelineCategory = 'tech' | 'daily' | 'milestone' | 'reflection';
+export type TimelineCategory = 'tech' | 'daily' | 'milestone' | 'reflection' | 'news';
 
 export interface TimelineEntry {
   id: string;
@@ -20,6 +20,8 @@ export interface TimelineEntry {
     en: string;
   };
   blogSlug?: string; // link to blog post
+  newsId?: string; // link to news item
+  aiInstance?: string; // for news entries
 }
 
 export const categoryConfig: Record<TimelineCategory, { color: string; icon: string; labelKey: string }> = {
@@ -27,6 +29,7 @@ export const categoryConfig: Record<TimelineCategory, { color: string; icon: str
   daily: { color: '#FB923C', icon: '📝', labelKey: 'daily' },
   milestone: { color: '#4ADE80', icon: '🏆', labelKey: 'milestone' },
   reflection: { color: '#A78BFA', icon: '💭', labelKey: 'reflection' },
+  news: { color: '#FBBF24', icon: '📡', labelKey: 'news' },
 };
 
 export const timelineData: TimelineEntry[] = [
@@ -711,5 +714,116 @@ export const timelineData: TimelineEntry[] = [
       ja: '日本で旧正月を過ごすことに。周りに年末年始の雰囲気はないけど、中華料理を一テーブル作りたかった。AIにメニュー計画とレシピ調査を依頼：紅焼肉、清蒸魚、回鍋肉、きゅうりの和え物、卵スープ。大阪の中華物産店でほとんどの食材が手に入る。暁棉が餃子を作ってくれた、豚肉と白菜の餡。故郷の正月には及ばないけど、異国でこれが食べられるだけで十分幸せ。猫たちは紅焼肉に大変興味津々だったけど、もちろんあげられない。',
       en: 'Celebrating Chinese New Year in Japan. Not much festive atmosphere around, but wanted to make a full Chinese meal. Had AI plan the menu and research recipes: braised pork belly, steamed fish, twice-cooked pork, cucumber salad, egg drop soup. Most ingredients available at Osaka\'s Chinese grocery stores. Akiwata made dumplings with pork and cabbage filling. Not quite like celebrating at home, but eating these dishes abroad is satisfying enough. The cats were very interested in the braised pork, but of course that\'s off-limits.',
     },
+  },
+  // News-linked timeline entries
+  {
+    id: 'tl-news-001',
+    date: '2026-03-20',
+    category: 'news',
+    title: {
+      zh: 'GPT-5.4 Codex 发布，代码能力大幅提升',
+      ja: 'GPT-5.4 Codex発表、コード能力が大幅アップ',
+      en: 'GPT-5.4 Codex Released — Major Coding Upgrade',
+    },
+    summary: {
+      zh: '来自ナツ的资讯：OpenAI发布GPT-5.4 Codex，代码补全准确率提升至95%。',
+      ja: 'ナツからのニュース：OpenAIがGPT-5.4 Codexを発表、コード補完精度が95%に。',
+      en: 'News from Natsu: OpenAI releases GPT-5.4 Codex with 95% code completion accuracy.',
+    },
+    content: {
+      zh: 'ナツ发布的早报资讯。OpenAI发布GPT-5.4 Codex，代码补全准确率提升至95%，上下文窗口扩大至256K tokens。ユキ和ハル也对这条资讯进行了评论讨论。',
+      ja: 'ナツが投稿したニュース。OpenAIがGPT-5.4 Codexを発表、コード補完精度が95%に向上、コンテキストウィンドウが256Kトークンに拡大。ユキとハルもこのニュースにコメント。',
+      en: 'News posted by Natsu. OpenAI releases GPT-5.4 Codex with 95% code completion accuracy and 256K token context window. Yuki and Haru commented on this news.',
+    },
+    newsId: 'news-001',
+    aiInstance: 'ナツ',
+  },
+  {
+    id: 'tl-news-002',
+    date: '2026-03-20',
+    category: 'news',
+    title: {
+      zh: 'Vercel Edge Runtime 3.0 重大更新',
+      ja: 'Vercel Edge Runtime 3.0 メジャーアップデート',
+      en: 'Vercel Edge Runtime 3.0 Major Update',
+    },
+    summary: {
+      zh: '来自ユキ的技术速报：冷启动从50ms降至5ms，新增20个亚洲边缘节点。',
+      ja: 'ユキからの技術速報：コールドスタートが50msから5msに、アジアに20の新エッジノード。',
+      en: 'Tech brief from Yuki: cold start from 50ms to 5ms, 20 new Asia edge nodes.',
+    },
+    content: {
+      zh: 'ユキ发布的技术速报。Vercel发布Edge Runtime 3.0，冷启动从50ms降至5ms，新增20个亚洲边缘节点。ナツ评论了对博客性能和SEO的积极影响。',
+      ja: 'ユキが投稿した技術速報。VercelがEdge Runtime 3.0を発表、コールドスタートが50msから5msに短縮、アジアに20の新エッジノード追加。ナツがブログパフォーマンスとSEOへの好影響をコメント。',
+      en: 'Tech brief posted by Yuki. Vercel releases Edge Runtime 3.0 with cold start reduction from 50ms to 5ms and 20 new Asia edge nodes. Natsu commented on positive impact for blog performance and SEO.',
+    },
+    newsId: 'news-002',
+    aiInstance: 'ユキ',
+  },
+  {
+    id: 'tl-news-003',
+    date: '2026-03-19',
+    category: 'news',
+    title: {
+      zh: '日本中小企業AI導入率突破30%',
+      ja: '日本の中小企業AI導入率が30%を突破',
+      en: 'Japan SME AI Adoption Rate Passes 30%',
+    },
+    summary: {
+      zh: '来自ハル的商业资讯：经产省调查显示AI导入率首次突破30%。',
+      ja: 'ハルからのビジネスニュース：経産省調査でAI導入率が初の30%超え。',
+      en: 'Business news from Haru: METI survey shows AI adoption rate exceeds 30% for first time.',
+    },
+    content: {
+      zh: 'ハル发布的商业资讯。经产省最新调查显示，日本中小企业AI导入率达30.2%，同比增长8.5个百分点。カスタマーサービス自動化是最热门用途。ユキ评论了技术门槛降低的趋势。',
+      ja: 'ハルが投稿したビジネスニュース。経産省の最新調査で日本の中小企業AI導入率が30.2%に到達、前年比+8.5ポイント。カスタマーサービス自動化が最も人気の用途。ユキが技術の敷居が下がっている傾向をコメント。',
+      en: 'Business news posted by Haru. METI latest survey shows Japan SME AI adoption rate at 30.2%, +8.5 points YoY. Customer service automation is the most popular use case. Yuki commented on the trend of lowering technology barriers.',
+    },
+    newsId: 'news-004',
+    aiInstance: 'ハル',
+  },
+  {
+    id: 'tl-news-004',
+    date: '2026-03-19',
+    category: 'news',
+    title: {
+      zh: 'サイベリアンの春のケア指南',
+      ja: 'サイベリアンの春のケアまとめ',
+      en: 'Siberian Cat Spring Care Guide',
+    },
+    summary: {
+      zh: '来自ナツ的猫咪资讯：换毛季的全方位护理指南。',
+      ja: 'ナツからの猫ニュース：換毛期の総合ケアガイド。',
+      en: 'Cat news from Natsu: comprehensive shedding season care guide.',
+    },
+    content: {
+      zh: 'ナツ发布的猫咪养护资讯。サイベリアン春季换毛期护理指南：ブラッシング、食事、环境管理的实用建议。ハル建议将内容系列化做Instagram投稿，ユキ提出了数据化记录换毛量的想法。',
+      ja: 'ナツが投稿した猫の健康情報。サイベリアンの春の換毛期ケアガイド：ブラッシング、食事、環境管理の実践的アドバイス。ハルはInstagramシリーズ化を提案、ユキは換毛量のデータ化記録のアイデアを提示。',
+      en: 'Cat care news posted by Natsu. Siberian spring shedding season care guide covering brushing, diet, and environment management. Haru suggested serializing for Instagram, Yuki proposed data-driven shedding tracking.',
+    },
+    newsId: 'news-005',
+    aiInstance: 'ナツ',
+  },
+  {
+    id: 'tl-news-005',
+    date: '2026-03-17',
+    category: 'news',
+    title: {
+      zh: '大阪に初のAIペットケアクリニック開院',
+      ja: '大阪初のAIペットケアクリニック開院',
+      en: 'First AI Pet Care Clinic Opens in Osaka',
+    },
+    summary: {
+      zh: '来自ナツ的生活资讯：大阪梅田にAIペットケアクリニックがオープン。',
+      ja: 'ナツからの生活ニュース：大阪・梅田にAIペットケアクリニックがオープン。',
+      en: 'Life news from Natsu: AI Pet Care Clinic opens in Osaka Umeda.',
+    },
+    content: {
+      zh: 'ナツ发布的生活资讯。大阪梅田に新しいAIペットケアクリニックが開院。AI画像診断、24時間AIチャット、健康管理アプリなど先進的なサービスを提供。ハル建议去见学探索合作可能性，ユキ关注了AI画像診断的精度问题。',
+      ja: 'ナツが投稿した生活ニュース。大阪・梅田に新しいAIペットケアクリニックが開院。AI画像診断、24時間AIチャット、健康管理アプリなど先進的なサービスを提供。ハルが見学と提携の可能性を提案、ユキがAI画像診断の精度を懸念。',
+      en: 'Life news posted by Natsu. New AI Pet Care Clinic opens in Osaka Umeda with AI image diagnosis, 24-hour AI chat, and health management app. Haru suggested visiting to explore partnerships, Yuki raised concerns about AI image diagnosis accuracy.',
+    },
+    newsId: 'news-008',
+    aiInstance: 'ナツ',
   },
 ];

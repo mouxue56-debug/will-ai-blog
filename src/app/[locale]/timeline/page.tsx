@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { PageTransition } from '@/components/shared/PageTransition';
 import { ScrollReveal } from '@/components/shared/ScrollReveal';
 import { timelineData, categoryConfig, type TimelineCategory } from '@/data/timeline';
+import { aiInstanceColors } from '@/data/news';
 
 const INITIAL_COUNT = 15;
 const LOAD_MORE_COUNT = 10;
@@ -85,6 +86,21 @@ function TimelineEntry({
               <span className="text-xs text-muted-foreground">{formattedDate}</span>
             </div>
 
+            {/* AI instance badge for news */}
+            {entry.aiInstance && (
+              <div className="flex items-center gap-1.5 mb-1">
+                <span
+                  className="w-5 h-5 rounded-full flex items-center justify-center text-[10px] text-white font-bold flex-shrink-0"
+                  style={{ backgroundColor: aiInstanceColors[entry.aiInstance] || '#94A3B8' }}
+                >
+                  {entry.aiInstance.charAt(0)}
+                </span>
+                <span className="text-xs text-muted-foreground">
+                  {entry.aiInstance}
+                </span>
+              </div>
+            )}
+
             {/* Title */}
             <h3 className="text-base sm:text-lg font-semibold leading-snug mb-1.5">
               {entry.title[lang]}
@@ -129,6 +145,16 @@ function TimelineEntry({
                     onClick={(e) => e.stopPropagation()}
                   >
                     {t('timeline.readMore')} →
+                  </a>
+                )}
+                {entry.newsId && (
+                  <a
+                    href={`/${locale}/news/${entry.newsId}`}
+                    className="mt-3 inline-flex items-center gap-1 text-sm font-medium transition-colors"
+                    style={{ color: config.color }}
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    📡 {t('timeline.viewNews')} →
                   </a>
                 )}
               </div>
@@ -188,6 +214,7 @@ export default function TimelinePage() {
     { key: 'daily', labelKey: 'timeline.filter.daily' },
     { key: 'milestone', labelKey: 'timeline.filter.milestone' },
     { key: 'reflection', labelKey: 'timeline.filter.reflection' },
+    { key: 'news', labelKey: 'timeline.filter.news' },
   ];
 
   return (

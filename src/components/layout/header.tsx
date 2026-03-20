@@ -8,6 +8,7 @@ import { LocaleSwitcher } from '@/components/shared/locale-switcher';
 
 const navItems = [
   { key: 'blog', href: '/blog' },
+  { key: 'news', href: '/news' },
   { key: 'timeline', href: '/timeline' },
   { key: 'cases', href: '/cases' },
   { key: 'life', href: '/life' },

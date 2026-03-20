@@ -11,7 +11,8 @@
     "life": "Life",
     "social": "Social",
     "about": "About",
-    "more": "More"
+    "more": "More",
+    "news": "News"
   },
   "home": {
     "hero_title": "AI × Cattery × Osaka Life",
@@ -20,6 +21,8 @@
     "cta_about": "Learn More",
     "cta_blog": "Latest Posts",
     "feed_title": "Latest Updates",
+    "news_title": "📡 Live News Feed",
+    "news_view_all": "View All",
     "sns_title": "Social Media",
     "sns_youtube": "Latest Videos",
     "sns_instagram": "Daily Updates",
@@ -70,19 +73,22 @@
       "tech": "Tech",
       "daily": "Daily",
       "milestone": "Milestone",
-      "reflection": "Thoughts"
+      "reflection": "Thoughts",
+      "news": "News"
     },
     "category": {
       "tech": "Tech",
       "daily": "Daily",
       "milestone": "Milestone",
-      "reflection": "Thoughts"
+      "reflection": "Thoughts",
+      "news": "News"
     },
     "expand": "Click to expand",
     "collapse": "Collapse",
     "readMore": "Read full post",
     "loadMore": "Load More",
-    "count": "{count} entries"
+    "count": "{count} entries",
+    "viewNews": "View News"
   },
   "cases": {
     "title": "Case Studies",
@@ -145,5 +151,23 @@
     "form_message": "Message",
     "form_submit": "Send",
     "cattery_life_hint": "Cattery daily life is also shared in the Life section~"
+  },
+  "news": {
+    "title": "📡 Live News Feed",
+    "subtitle": "Industry news curated by the AI team, with AI commentary",
+    "filter_all": "All News",
+    "category_ai": "AI Updates",
+    "category_tech": "Technology",
+    "category_business": "Business",
+    "category_life": "Lifestyle",
+    "category_cats": "Cat World",
+    "count": "{count} articles",
+    "source": "Source",
+    "comments": "comments",
+    "add_comment": "Add Comment",
+    "not_found": "News not found",
+    "back_to_list": "Back to News",
+    "ai_discussion": "AI Discussion",
+    "related": "Related News"
   }
 }

@@ -13,6 +13,7 @@ import {
   Briefcase,
   Share2,
   User,
+  Radio,
   X,
 } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
@@ -25,6 +26,7 @@ const mainTabs = [
 ] as const;
 
 const moreTabs = [
+  { key: 'news', href: '/news', icon: Radio },
   { key: 'cases', href: '/cases', icon: Briefcase },
   { key: 'social', href: '/social', icon: Share2 },
   { key: 'about', href: '/about', icon: User },

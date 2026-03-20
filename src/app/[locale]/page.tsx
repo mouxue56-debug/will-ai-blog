@@ -8,6 +8,7 @@ import { SNSSection } from '@/components/home/sns-section';
 import { AIDashboard } from '@/components/home/ai-dashboard';
 import { PoweredBanner } from '@/components/home/powered-banner';
 import { CatteryBanner } from '@/components/home/CatteryBanner';
+import { NewsSection } from '@/components/home/news-section';
 
 export default function HomePage() {
   return (
@@ -21,6 +22,11 @@ export default function HomePage() {
         {/* Latest Feed - full width for horizontal scroll */}
         <ScrollReveal direction="fadeUp">
           <FeedSection />
+        </ScrollReveal>
+
+        {/* Live News */}
+        <ScrollReveal direction="fadeUp" delay={0.05}>
+          <NewsSection />
         </ScrollReveal>
 
         {/* SNS Cards */}

@@ -11,7 +11,8 @@
     "life": "ライフ",
     "social": "ソーシャル",
     "about": "について",
-    "more": "もっと"
+    "more": "もっと",
+    "news": "ニュース"
   },
   "home": {
     "hero_title": "AI × キャッテリー × 大阪ライフ",
@@ -20,6 +21,8 @@
     "cta_about": "もっと知る",
     "cta_blog": "最新記事",
     "feed_title": "最新の記事",
+    "news_title": "📡 リアルタイムニュース",
+    "news_view_all": "すべて見る",
     "sns_title": "ソーシャルメディア",
     "sns_youtube": "最新動画",
     "sns_instagram": "日常アップデート",
@@ -70,19 +73,22 @@
       "tech": "技術",
       "daily": "日常",
       "milestone": "マイルストーン",
-      "reflection": "気づき"
+      "reflection": "気づき",
+      "news": "ニュース"
     },
     "category": {
       "tech": "技術",
       "daily": "日常",
       "milestone": "マイルストーン",
-      "reflection": "気づき"
+      "reflection": "気づき",
+      "news": "ニュース"
     },
     "expand": "クリックで展開",
     "collapse": "閉じる",
     "readMore": "続きを読む",
     "loadMore": "もっと見る",
-    "count": "{count} 件の記録"
+    "count": "{count} 件の記録",
+    "viewNews": "ニュースを見る"
   },
   "cases": {
     "title": "ケーススタディ",
@@ -145,5 +151,23 @@
     "form_message": "メッセージ",
     "form_submit": "送信",
     "cattery_life_hint": "キャッテリーの日常は「ライフ」セクションでも更新しています♪"
+  },
+  "news": {
+    "title": "📡 リアルタイムニュース",
+    "subtitle": "AIチームが厳選した業界ニュース、AIコメント付き",
+    "filter_all": "すべてのニュース",
+    "category_ai": "AI動向",
+    "category_tech": "テクノロジー",
+    "category_business": "ビジネス",
+    "category_life": "ライフスタイル",
+    "category_cats": "猫の世界",
+    "count": "{count} 件のニュース",
+    "source": "ソース",
+    "comments": "件のコメント",
+    "add_comment": "コメントを追加",
+    "not_found": "ニュースが見つかりません",
+    "back_to_list": "ニュース一覧に戻る",
+    "ai_discussion": "AIディスカッション",
+    "related": "関連ニュース"
   }
 }

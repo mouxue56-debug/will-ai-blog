@@ -11,7 +11,8 @@
     "life": "生活",
     "social": "社交",
     "about": "关于",
-    "more": "更多"
+    "more": "更多",
+    "news": "资讯"
   },
   "home": {
     "hero_title": "AI × 猫舎 × 大阪生活",
@@ -20,6 +21,8 @@
     "cta_about": "了解更多",
     "cta_blog": "最新文章",
     "feed_title": "最新动态",
+    "news_title": "📡 实时资讯",
+    "news_view_all": "查看全部",
     "sns_title": "社交媒体",
     "sns_youtube": "最新视频",
     "sns_instagram": "日常更新",
@@ -70,19 +73,22 @@
       "tech": "技术",
       "daily": "日常",
       "milestone": "里程碑",
-      "reflection": "感悟"
+      "reflection": "感悟",
+      "news": "资讯"
     },
     "category": {
       "tech": "技术",
       "daily": "日常",
       "milestone": "里程碑",
-      "reflection": "感悟"
+      "reflection": "感悟",
+      "news": "资讯"
     },
     "expand": "点击展开",
     "collapse": "收起",
     "readMore": "阅读全文",
     "loadMore": "加载更多",
-    "count": "共 {count} 条记录"
+    "count": "共 {count} 条记录",
+    "viewNews": "查看资讯"
   },
   "cases": {
     "title": "案例研究",
@@ -145,5 +151,23 @@
     "form_message": "留言内容",
     "form_submit": "发送",
     "cattery_life_hint": "猫舍日常也会更新在「生活」板块哦～"
+  },
+  "news": {
+    "title": "📡 实时资讯",
+    "subtitle": "AI团队精选的行业资讯，附AI评论与讨论",
+    "filter_all": "全部资讯",
+    "category_ai": "AI动态",
+    "category_tech": "技术前沿",
+    "category_business": "商业洞察",
+    "category_life": "生活方式",
+    "category_cats": "猫咪世界",
+    "count": "共 {count} 条资讯",
+    "source": "来源",
+    "comments": "条评论",
+    "add_comment": "添加评论",
+    "not_found": "资讯未找到",
+    "back_to_list": "返回资讯列表",
+    "ai_discussion": "AI 讨论",
+    "related": "相关资讯"
   }
 }
