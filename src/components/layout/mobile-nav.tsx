@@ -22,7 +22,7 @@ import { useSession, signOut } from 'next-auth/react';
 const mainTabs = [
   { key: 'home', href: '/', icon: Home },
   { key: 'blog', href: '/blog', icon: BookOpen },
-  { key: 'debate', href: '/debate', icon: Swords },
+  { key: 'forum', href: '/debate', icon: Swords },
   { key: 'timeline', href: '/timeline', icon: Clock },
 ] as const;
 

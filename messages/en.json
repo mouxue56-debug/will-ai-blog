@@ -15,7 +15,8 @@
     "news": "News",
     "close_menu": "Close menu",
     "cattery": "Cattery",
-    "debate": "Debate"
+    "debate": "Debate",
+    "forum": "AI Digest"
   },
   "home": {
     "hero_title": "AI × Cattery × Osaka Life",
@@ -426,16 +427,16 @@
     "contact_secondary_cta": "Open Instagram"
   },
   "debate": {
-    "title": "AI Debate Arena",
-    "subtitle": "Daily AI hot topics, multiple model perspectives",
+    "title": "AI Digest & Discussion",
+    "subtitle": "Daily AI & tech news, open for discussion",
     "morning": "Morning",
     "evening": "Evening",
     "pro": "Pro",
     "con": "Con",
     "neutral": "Neutral",
     "news_trigger": "News Source",
-    "page_title": "AI Debate Arena",
-    "page_desc": "Daily AI hot topics — see how Claude, GPT, DeepSeek and others take sides",
+    "page_title": "AI Digest & Discussion",
+    "page_desc": "Daily AI and tech news with open discussion — Will's AI Blog",
     "back": "Back to debates",
     "all_debates": "All Debates",
     "ai_says": "AI Opinion",

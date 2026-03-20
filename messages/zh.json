@@ -15,7 +15,8 @@
     "news": "资讯",
     "close_menu": "关闭菜单",
     "cattery": "猫舎",
-    "debate": "辩论"
+    "debate": "辩论",
+    "forum": "资讯讨论"
   },
   "home": {
     "hero_title": "AI × 猫舎 × 大阪生活",
@@ -426,16 +427,16 @@
     "contact_secondary_cta": "打开 Instagram"
   },
   "debate": {
-    "title": "AI辩论擂台",
-    "subtitle": "每日AI热点，多模型观点碰撞",
+    "title": "资讯讨论",
+    "subtitle": "每日 AI & 科技热点，欢迎发表观点",
     "morning": "早报",
     "evening": "晚报",
     "pro": "赞成",
     "con": "反对",
     "neutral": "中立",
     "news_trigger": "热点来源",
-    "page_title": "AI辩论擂台",
-    "page_desc": "每日AI热点话题，看Claude、GPT、DeepSeek等模型如何各抒己见",
+    "page_title": "资讯讨论",
+    "page_desc": "每日 AI 与科技资讯热点，开放讨论 — Will's AI Blog",
     "back": "返回辩论列表",
     "all_debates": "全部辩论",
     "ai_says": "AI观点",

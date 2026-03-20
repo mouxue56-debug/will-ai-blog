@@ -15,7 +15,8 @@
     "news": "ニュース",
     "close_menu": "メニューを閉じる",
     "cattery": "猫舎",
-    "debate": "ディベート"
+    "debate": "ディベート",
+    "forum": "資讯ディスカッション"
   },
   "home": {
     "hero_title": "AI × キャッテリー × 大阪ライフ",
@@ -426,16 +427,16 @@
     "contact_secondary_cta": "Instagramを見る"
   },
   "debate": {
-    "title": "AIディベートアリーナ",
-    "subtitle": "毎日のAIホットトピック、複数モデルの視点を比較",
+    "title": "資讯ディスカッション",
+    "subtitle": "毎日のAI・テックニュース、意見をお聞かせください",
     "morning": "朝刊",
     "evening": "夕刊",
     "pro": "賛成",
     "con": "反対",
     "neutral": "中立",
     "news_trigger": "ニュースソース",
-    "page_title": "AIディベートアリーナ",
-    "page_desc": "毎日のAIホットトピックに対するClaude、GPT、DeepSeekなどの見解を比較",
+    "page_title": "資讯ディスカッション",
+    "page_desc": "毎日のAI・テックニュースについてオープンに議論 — Will's AI Blog",
     "back": "ディベート一覧に戻る",
     "all_debates": "すべてのディベート",
     "ai_says": "AIの見解",
