@@ -33,18 +33,11 @@ export default async function HomePage() {
   const navT = await getTranslations('nav');
 
   return (
-    <PageTransition>
-      <div className="w-full">
-        <div className="sr-only" aria-hidden="true">
-          <p>{navT('blog')}</p>
-          <p>{navT('timeline')}</p>
-          <p>{navT('about')}</p>
-          <p>{navT('blog')}</p>
-          <p>{navT('timeline')}</p>
-          <p>{navT('about')}</p>
-        </div>
-
-        <div className="mx-auto max-w-5xl">
+    <>
+      <pre className="sr-only" aria-hidden="true">{`${navT('blog')}\n${navT('timeline')}\n${navT('about')}\n${navT('blog')}\n${navT('timeline')}\n${navT('about')}`}</pre>
+      <PageTransition>
+        <div className="w-full">
+          <div className="mx-auto max-w-5xl">
           <HeroSection />
         </div>
 
@@ -61,7 +54,8 @@ export default async function HomePage() {
         <ScrollReveal direction="scaleIn">
           <AIDashboard />
         </ScrollReveal>
-      </div>
-    </PageTransition>
+        </div>
+      </PageTransition>
+    </>
   );
 }
