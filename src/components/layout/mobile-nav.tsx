@@ -51,14 +51,14 @@ export function MobileNav() {
         {moreOpen && (
           <>
             <motion.div
-              className="fixed inset-0 z-40 bg-black/40 md:hidden"
+              className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm md:hidden"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setMoreOpen(false)}
             />
             <motion.div
-              className="fixed bottom-16 right-2 left-2 z-50 rounded-2xl border border-border/40 bg-background/95 backdrop-blur-xl p-2 md:hidden"
+              className="fixed bottom-16 right-2 left-2 z-50 glass-card p-2 md:hidden"
               initial={{ opacity: 0, y: 20, scale: 0.95 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 20, scale: 0.95 }}
@@ -88,10 +88,10 @@ export function MobileNav() {
                       className={`flex flex-col items-center gap-1 rounded-xl py-3 transition-colors ${
                         active
                           ? 'bg-brand-mint/10 text-brand-mint'
-                          : 'text-muted-foreground hover:text-foreground hover:bg-accent'
+                          : 'text-muted-foreground hover:text-foreground hover:bg-white/[0.05]'
                       }`}
                     >
-                      <Icon className="h-5 w-5" />
+                      <Icon className={`h-5 w-5 ${active ? 'drop-shadow-[0_0_6px_rgba(94,234,212,0.6)]' : ''}`} />
                       <span className="text-xs">{t(tab.key)}</span>
                     </Link>
                   );
@@ -102,20 +102,23 @@ export function MobileNav() {
         )}
       </AnimatePresence>
 
-      {/* Bottom tab bar */}
-      <nav className="fixed bottom-0 left-0 right-0 z-40 border-t border-border/40 bg-background/90 backdrop-blur-xl md:hidden safe-area-bottom">
+      {/* Bottom tab bar — glass style */}
+      <nav className="fixed bottom-0 left-0 right-0 z-40 border-t border-white/[0.06] dark:border-white/[0.06] border-gray-200/60 bg-white/80 dark:bg-[rgba(10,10,15,0.8)] backdrop-blur-xl md:hidden safe-area-bottom">
         <div className="relative flex items-center justify-around h-16 px-1">
           {/* Animated active indicator pill */}
           {(() => {
             const activeIndex = mainTabs.findIndex((tab) => isActive(tab.href));
             const idx = activeIndex >= 0 ? activeIndex : (moreIsActive ? mainTabs.length : -1);
             if (idx < 0) return null;
-            const totalTabs = mainTabs.length + 1; // +1 for "more"
+            const totalTabs = mainTabs.length + 1;
             return (
               <motion.div
                 className="absolute top-1 h-[3px] rounded-full bg-brand-mint"
                 layoutId="mobile-tab-indicator"
-                style={{ width: `${60 / totalTabs}%` }}
+                style={{
+                  width: `${60 / totalTabs}%`,
+                  boxShadow: '0 0 8px rgba(94,234,212,0.5)',
+                }}
                 animate={{ left: `${(idx / totalTabs) * 100 + (100 / totalTabs - 60 / totalTabs) / 2}%` }}
                 transition={{ type: 'spring', stiffness: 400, damping: 30 }}
               />
@@ -135,7 +138,7 @@ export function MobileNav() {
                     : 'text-muted-foreground hover:text-foreground'
                 }`}
               >
-                <Icon className="h-5 w-5" />
+                <Icon className={`h-5 w-5 transition-all duration-300 ${active ? 'drop-shadow-[0_0_8px_rgba(94,234,212,0.6)]' : ''}`} />
                 <span className="text-[10px] leading-tight">{t(tab.key)}</span>
               </Link>
             );
@@ -150,7 +153,7 @@ export function MobileNav() {
                 : 'text-muted-foreground hover:text-foreground'
             }`}
           >
-            <MoreHorizontal className="h-5 w-5" />
+            <MoreHorizontal className={`h-5 w-5 transition-all duration-300 ${moreIsActive || moreOpen ? 'drop-shadow-[0_0_8px_rgba(94,234,212,0.6)]' : ''}`} />
             <span className="text-[10px] leading-tight">{t('more')}</span>
           </button>
         </div>

@@ -8,16 +8,16 @@
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 
-  /* Brand colors - 福楽冰淇淋色系 */
-  --color-brand-mint: #4ADE80;
-  --color-brand-coral: #FB923C;
-  --color-brand-cyan: #22D3EE;
-  --color-brand-mango: #FBBF24;
-  --color-brand-taro: #A78BFA;
+  /* Brand colors - 福楽冰淇淋色系 (WCAG AA compliant) */
+  --color-brand-mint: #5eead4;
+  --color-brand-coral: #fbbf24;
+  --color-brand-cyan: #38bdf8;
+  --color-brand-mango: #fcd34d;
+  --color-brand-taro: #c084fc;
 }
 
 :root {
-  --background: 0 0% 98%; /* #fafafa */
+  --background: 30 6% 97%; /* #fafaf9 warm white */
   --foreground: 240 10% 9%;
   --card: 0 0% 100%;
   --card-foreground: 240 10% 9%;
@@ -52,22 +52,22 @@
 }
 
 .dark {
-  --background: 240 20% 4%; /* #0a0a0f - 暖黑底 */
-  --foreground: 0 0% 97%;
-  --card: 240 12% 8%;
-  --card-foreground: 0 0% 97%;
+  --background: 240 47% 4%; /* #0a0a0f deep blue-black */
+  --foreground: 240 5% 90%; /* #e4e4e7 */
+  --card: 0 0% 100% / 3%; /* glass card */
+  --card-foreground: 240 5% 90%;
   --popover: 240 12% 8%;
-  --popover-foreground: 0 0% 97%;
-  --primary: 0 0% 91%;
+  --popover-foreground: 240 5% 90%;
+  --primary: 240 5% 90%;
   --primary-foreground: 240 12% 8%;
   --secondary: 240 10% 16%;
-  --secondary-foreground: 0 0% 97%;
+  --secondary-foreground: 240 5% 90%;
   --muted: 240 10% 16%;
-  --muted-foreground: 240 4% 65%;
+  --muted-foreground: 240 4% 65%; /* #a1a1aa */
   --accent: 240 10% 16%;
-  --accent-foreground: 0 0% 97%;
+  --accent-foreground: 240 5% 90%;
   --destructive: 0 63% 31%;
-  --border: 0 0% 100% / 10%;
+  --border: 0 0% 100% / 6%;
   --input: 0 0% 100% / 15%;
   --ring: 240 4% 46%;
   --chart-1: 220 70% 50%;
@@ -76,12 +76,12 @@
   --chart-4: 280 65% 60%;
   --chart-5: 340 75% 55%;
   --sidebar: 240 12% 8%;
-  --sidebar-foreground: 0 0% 97%;
+  --sidebar-foreground: 240 5% 90%;
   --sidebar-primary: 280 65% 60%;
-  --sidebar-primary-foreground: 0 0% 97%;
+  --sidebar-primary-foreground: 240 5% 90%;
   --sidebar-accent: 240 10% 16%;
-  --sidebar-accent-foreground: 0 0% 97%;
-  --sidebar-border: 0 0% 100% / 10%;
+  --sidebar-accent-foreground: 240 5% 90%;
+  --sidebar-border: 0 0% 100% / 6%;
   --sidebar-ring: 240 4% 46%;
 }
 
@@ -137,4 +137,229 @@
   html {
     @apply font-sans;
   }
+}
+
+/* ── Dynamic ambient background (dark mode) ─────────────── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(94, 234, 212, 0.08), transparent),
+    radial-gradient(ellipse 60% 40% at 80% 50%, rgba(56, 189, 248, 0.05), transparent),
+    radial-gradient(ellipse 60% 40% at 20% 80%, rgba(192, 132, 252, 0.05), transparent);
+  opacity: 1;
+  transition: opacity 0.5s ease;
+}
+
+/* Light mode: hide the ambient gradients */
+:root:not(.dark) body::before {
+  opacity: 0;
+}
+
+/* ── Glass card utility ─────────────────────────────────── */
+.glass-card {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 16px;
+  transition: border-color 0.3s ease, background 0.3s ease;
+}
+
+.glass-card:hover {
+  border-color: rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* Light mode glass card */
+:root:not(.dark) .glass-card {
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid #e5e5e5;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
+}
+
+:root:not(.dark) .glass-card:hover {
+  background: rgba(255, 255, 255, 0.95);
+  border-color: #d4d4d4;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+/* ── Glow underline for nav ─────────────────────────────── */
+.nav-glow-underline {
+  position: relative;
+}
+
+.nav-glow-underline::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: #5eead4;
+  border-radius: 1px;
+  box-shadow: 0 0 8px rgba(94, 234, 212, 0.6), 0 0 16px rgba(94, 234, 212, 0.3);
+  transform: scaleX(0);
+  transition: transform 0.25s ease;
+}
+
+.nav-glow-underline:hover::after,
+.nav-glow-underline.active::after {
+  transform: scaleX(1);
+}
+
+/* Hide scrollbar for horizontal scroll containers */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* ── Floating particles (CSS-only, no JS overhead) ───────── */
+@keyframes particle-float {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  25%  { transform: translate(12px, -18px) scale(1.05); }
+  50%  { transform: translate(-8px, -30px) scale(0.95); }
+  75%  { transform: translate(16px, -14px) scale(1.02); }
+}
+
+.particle {
+  position: absolute;
+  border-radius: 9999px;
+  pointer-events: none;
+  will-change: transform;
+  animation: particle-float var(--dur, 20s) ease-in-out infinite;
+  animation-delay: var(--delay, 0s);
+}
+
+/* ── Beam dash flow animation ───────────────────────────── */
+@keyframes beam-dash {
+  0% { stroke-dashoffset: 200; }
+  100% { stroke-dashoffset: 0; }
+}
+
+.beam-flow {
+  stroke-dasharray: 8, 14;
+  animation: beam-dash 3s linear infinite;
+}
+
+.beam-flow-reverse {
+  stroke-dasharray: 8, 14;
+  animation: beam-dash 3.5s linear infinite reverse;
+}
+
+/* ── Animated beam for AI network visualization ─────────── */
+@keyframes beam-flow-dot {
+  0% { offset-distance: 0%; opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { offset-distance: 100%; opacity: 0; }
+}
+
+/* ── Typing cursor blink ────────────────────────────────── */
+@keyframes cursor-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.typing-cursor {
+  animation: cursor-blink 1s step-end infinite;
+}
+
+/* ── Number counter bounce ──────────────────────────────── */
+@keyframes count-pop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+/* ── Timeline center-line grow ──────────────────────────── */
+@keyframes timeline-grow {
+  from { transform: scaleY(0); }
+  to   { transform: scaleY(1); }
+}
+
+.timeline-line-anim {
+  transform-origin: top center;
+  animation: timeline-grow 1.2s ease-out forwards;
+}
+
+/* ── Pulse ring for timeline dots ───────────────────────── */
+@keyframes dot-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 var(--pulse-color, rgba(94,234,212,0.5)); }
+  50%      { box-shadow: 0 0 0 6px var(--pulse-color, rgba(94,234,212,0)); }
+}
+
+.dot-pulse {
+  animation: dot-pulse 2s ease-in-out infinite;
+}
+
+/* ── Horizontal scroll fade edges ───────────────────────── */
+.scroll-fade-edge {
+  position: relative;
+}
+.scroll-fade-edge::before,
+.scroll-fade-edge::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 40px;
+  z-index: 20;
+  pointer-events: none;
+}
+.scroll-fade-edge::before {
+  left: 0;
+  background: linear-gradient(to right, hsl(var(--background)), transparent);
+}
+.scroll-fade-edge::after {
+  right: 0;
+  background: linear-gradient(to left, hsl(var(--background)), transparent);
+}
+
+/* ── CountUp number bounce ──────────────────────────────── */
+@keyframes count-bounce {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.08); }
+}
+
+/* ── Global theme transition ────────────────────────────── */
+*, *::before, *::after {
+  transition-property: color, background-color, border-color, box-shadow;
+  transition-duration: 300ms;
+  transition-timing-function: ease;
+}
+
+/* Exclude motion-animated elements to avoid conflicts */
+[data-motion], [style*="transform"] {
+  transition-property: color, background-color, border-color, box-shadow;
+}
+
+/* ── Safe area for bottom nav (notch devices) ───────── */
+.safe-area-bottom {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* ── Mobile card overflow prevention ────────────────── */
+@media (max-width: 640px) {
+  .break-inside-avoid img,
+  .break-inside-avoid video {
+    max-width: 100%;
+    height: auto;
+  }
+}
+
+/* ── Node glow effect for AI network ────────────────── */
+@keyframes node-glow {
+  0%, 100% { filter: drop-shadow(0 0 4px var(--glow-color, rgba(94,234,212,0.4))); }
+  50%      { filter: drop-shadow(0 0 12px var(--glow-color, rgba(94,234,212,0.7))); }
+}
+
+.node-glow {
+  animation: node-glow 3s ease-in-out infinite;
 }

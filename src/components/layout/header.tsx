@@ -26,14 +26,16 @@ export function Header() {
   }
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/80 backdrop-blur-xl">
+    <header className="sticky top-0 z-50 w-full border-b border-white/[0.06] dark:border-white/[0.06] border-gray-200/60 bg-white/80 dark:bg-[rgba(10,10,15,0.7)] backdrop-blur-xl">
       <div className="mx-auto flex h-16 max-w-5xl items-center justify-between px-4 sm:px-6">
-        <Link href="/" className="flex items-center gap-2">
-          <span className="text-lg font-bold bg-gradient-to-r from-brand-mint via-brand-cyan to-brand-taro bg-clip-text text-transparent">
-            Will AI Lab
+        {/* Logo with brand gradient */}
+        <Link href="/" className="flex items-center gap-2 group">
+          <span className="text-lg font-bold bg-gradient-to-r from-brand-mint via-brand-cyan to-brand-taro bg-clip-text text-transparent transition-all duration-300 group-hover:drop-shadow-[0_0_12px_rgba(94,234,212,0.4)]">
+            Will&apos;s AI Lab
           </span>
         </Link>
 
+        {/* Desktop navigation */}
         <nav className="hidden md:flex items-center gap-1">
           {navItems.map((item) => {
             const active = isActive(item.href);
@@ -41,30 +43,39 @@ export function Header() {
               <Link
                 key={item.key}
                 href={item.href}
-                className={`relative px-3 py-2 text-sm transition-colors rounded-md group ${
+                className={`relative px-3 py-2 text-sm transition-colors rounded-md ${
                   active
                     ? 'text-brand-mint font-medium'
                     : 'text-muted-foreground hover:text-foreground'
                 }`}
               >
                 {t(item.key)}
-                {/* Active underline */}
+                {/* Active glow underline */}
                 {active && (
                   <motion.div
                     layoutId="desktop-nav-underline"
                     className="absolute bottom-0 left-2 right-2 h-[2px] rounded-full bg-brand-mint"
+                    style={{
+                      boxShadow: '0 0 8px rgba(94,234,212,0.6), 0 0 20px rgba(94,234,212,0.3)',
+                    }}
                     transition={{ type: 'spring', stiffness: 400, damping: 30 }}
                   />
                 )}
-                {/* Hover underline (non-active) */}
+                {/* Hover glow underline (non-active) */}
                 {!active && (
-                  <span className="absolute bottom-0 left-2 right-2 h-[2px] rounded-full bg-brand-mint scale-x-0 group-hover:scale-x-100 transition-transform duration-200 origin-left" />
+                  <span
+                    className="absolute bottom-0 left-2 right-2 h-[2px] rounded-full bg-brand-mint scale-x-0 group-hover:scale-x-100 hover:scale-x-100 transition-transform duration-200 origin-left"
+                    style={{
+                      boxShadow: '0 0 6px rgba(94,234,212,0.4)',
+                    }}
+                  />
                 )}
               </Link>
             );
           })}
         </nav>
 
+        {/* Right side: theme toggle + locale */}
         <div className="flex items-center gap-2">
           <LocaleSwitcher />
           <ThemeToggle />
