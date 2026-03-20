@@ -2,124 +2,93 @@
 slug: my-ai-workflow
 title:
   zh: 用4个AI助手管理日常工作
-  ja: 4つのAIアシスタントで日常業務を管理
+  ja: 4つのAIアシスタントで日常業務を管理する
   en: Managing Daily Work with 4 AI Assistants
 category: ai
 date: "2026-03-18"
 author: Will
-locale: zh
-coverImage: /images/blog/ai-workflow.jpg
-excerpt:
-  zh: 从单实例到四实例协作，我的AI工作流经历了三个阶段的演变。分享真实的配置细节和踩坑经验。
-  ja: シングルインスタンスから4インスタンス協調へ、AI ワークフローの進化を共有します。
-  en: From single instance to four-instance collaboration, sharing my real AI workflow evolution.
 readingTime: 8
+excerpt:
+  zh: 一台 Mac Mini M4 跑4个 AI 实例，分别负责代码、内容、客户沟通和医疗咨询。不是炫技，是真的需要。
+  ja: Mac Mini M4 1台で4つのAIインスタンスを稼働。コード、コンテンツ、顧客対応、医療相談をそれぞれ担当。
+  en: One Mac Mini M4 running 4 AI instances for code, content, customer service, and medical consulting.
 ---
 
 ## 从一个 Bot 到四个 AI 助手
 
-去年夏天，我开始用 OpenClaw 跑一个 Claude 实例来处理日常杂事——回邮件、查资料、整理文档。说实话，一开始觉得有点 overkill，一个聊天机器人能干嘛？
+去年夏天，我开始用 OpenClaw 跑一个 Claude 实例来处理日常杂务——回邮件、整理笔记、偶尔帮我查查资料。那个阶段很美好，感觉像是多了一个无限耐心的助理。
 
-结果三个月后，我已经离不开它了。
+然后业务开始扩张。
 
-### 第一阶段：单实例试水
+猫舎的客户问询越来越多，Instagram 需要定期更新，医疗 AI 项目开始要求每天跟进，代码仓库堆了一堆 issue。我发现一个 AI 实例开始变成一个杂工——今天帮我写猫咪介绍文案，明天帮我看医疗系统的 Python 代码，后天又去研究 TikTok 算法。
 
-最初就是一台 Mac Mini 上跑一个 OpenClaw Gateway，接了 Telegram 做交互界面。我给它取名ユキ（小爪爪），主要处理：
+**问题不是 AI 能不能做，是上下文污染太严重了。** 一个专注写 Instagram 日语文案的实例，如果同时要处理医疗 AI 的合规问题，表现会明显下降。不是模型能力的问题，是注意力的问题。
 
-- 技术文档整理和翻译
-- 代码审查和 PR 评论
-- 日程提醒和待办管理
+## 四个实例的分工
 
-效果出奇地好。ユキ帮我把每天处理邮件的时间从 40 分钟压缩到 10 分钟——它会先通读所有邮件，按紧急程度排序，草拟回复让我确认。
+我最终在一台 Mac Mini M4 上跑了四个 OpenClaw 实例：
 
-### 第二阶段：双实例分工
+**ユキ（小爪爪）— 技术工程师**
+- 代码审查、架构设计、自动化脚本
+- 主要用于：调试多实例系统本身、处理 AI 项目的技术问题
+- 模型倾向：Qwen3 Coder（代码任务）、Claude（架构讨论）
 
-随着猫舎业务增长，SNS 运营的工作量暴增。Instagram 要每天发帖、LINE 客户消息要及时回复、小红书要维护中国客户群。于是我启动了第二个实例——ナツ（小触手），专注社交媒体。
+**ナツ（小触手）— 社交媒体顾问**
+- Instagram / TikTok / 小红书文案，日语内容创作
+- 主要用于：每周内容日历、品牌文案审核、日语邮件
+- 模型倾向：Kimi K2.5（日语最自然）、MiniMax M2.5-HS（中文内容）
 
-分工很明确：
-- **ユキ**：技术顾问，代码/工程/自动化
-- **ナツ**：社交媒体顾问，SNS/内容/品牌
+**ハル — 客户沟通 & 行政**
+- LINE 消息分类、预约确认、标准回复生成
+- 主要用于：猫舎客服、日常行政文件
+- 部署在另一台机器上，与本机通信
 
-两个实例每天凌晨 4:15 自动同步知识库，共享一个 `shared-knowledge/` 目录。这样ナツ写猫咪科普内容时，可以引用ユキ整理的繁育数据；ユキ做网站开发时，也知道ナツ那边的品牌规范。
+**アキ — 医疗咨询辅助**
+- 专门处理再生医疗クリニックの多语言咨询
+- 隔离部署，不与其他实例共享上下文
+- 严格的 APPI 合规限制
 
-### 第三阶段：四实例架构
+## 四个实例的技术架构
 
-后来又加了两个：一个跑在 MacBook 上的本地模型实例（用 Ollama 跑 Qwen3），和一个负责监控的 watchdog 实例。
+```
+Mac Mini M4 (192.168.1.100)
+├── Port 18789: ユキ（技术）
+├── Port 18790: ナツ（内容）
+└── Port 18791: 预留
 
-现在的日常是这样的：
+MacBook Neo (192.168.1.161)  
+└── Port 18789: ハル（客服）
 
-**早上 8:00** — 起床看 Telegram，四个 Bot 的晨报已经准备好了。ユキ总结了昨晚的 GitHub 活动，ナツ列出了今天的 SNS 发布计划，watchdog 报告所有服务运行正常。
-
-**上午** — 和ユキ讨论技术方案，让ナツ准备 Instagram 帖子的文案。两边并行，互不干扰。
-
-**下午** — 处理猫舎客户咨询。ナツ会预先分析 LINE 消息，草拟日语回复，我审核后发出。节省了大量时间。
-
-**晚上** — 让ユキ跑一些耗时任务（数据分析、批量处理），第二天早上看结果。
-
-### 踩过的坑
-
-1. **千万别让 AI 自作主张发消息** — 有一次ナツ自动回复了一个客户咨询，虽然内容没问题，但客户发现是 AI 回的，很不高兴。现在所有对外消息必须人工确认。
-
-2. **共享知识库要做冲突处理** — 两个实例同时写一个文件会出问题，后来加了简单的锁机制。
-
-3. **成本控制** — Claude API 用多了费用会飙升，后来把简单任务迁移到本地模型，复杂任务才用 Claude。月费从 200 刀降到了 80 刀左右。
-
-4. **watchdog 很重要** — 实例偶尔会卡住或崩溃，没有 watchdog 的时候经常早上起来发现某个实例挂了好几个小时。
-
-### 总结
-
-AI 助手不是万能的，但用对了确实能大幅提升效率。关键是：
-
-- 明确分工，不要什么都丢给一个实例
-- 建立审核机制，特别是对外通信
-- 做好成本监控
-- 有容错和恢复机制
-
-这套架构已经稳定运行三个月了。每周大概节省 15-20 小时的重复性工作。
-
-### 实际配置参考
-
-给想尝试类似架构的朋友一个参考。我的 launchd 服务配置大概长这样：
-
-```xml
-<!-- com.clawdbot.gateway-natsu.plist -->
-<plist version="1.0">
-<dict>
-  <key>Label</key>
-  <string>com.clawdbot.gateway-natsu</string>
-  <key>ProgramArguments</key>
-  <array>
-    <string>/opt/homebrew/bin/node</string>
-    <string>/opt/homebrew/lib/node_modules/openclaw/dist/gateway.js</string>
-  </array>
-  <key>EnvironmentVariables</key>
-  <dict>
-    <key>OPENCLAW_WORKSPACE</key>
-    <string>workspace-natsu</string>
-    <key>OPENCLAW_PORT</key>
-    <string>18790</string>
-  </dict>
-  <key>KeepAlive</key>
-  <true/>
-  <key>RunAtLoad</key>
-  <true/>
-</dict>
-</plist>
+VPS (Tokyo Region)
+└── Port 18789: アキ（医疗，隔离）
 ```
 
-每个实例的知识同步脚本也很简单：
+每个实例有自己的：
+- 独立工作目录（`workspace-yuki` / `workspace-natsu` / ...）
+- 独立的 cron 任务
+- 独立的 Telegram 频道（不同 bot）
+- 共享知识库（`~/.openclaw/shared-knowledge/`）
 
-```python
-# sync-knowledge.py — 每天 04:15 运行
-import shutil, os, fcntl
-SHARED = os.path.expanduser("~/.openclaw/shared-knowledge/")
-LOCK = SHARED + ".lock"
+## 实际运行了多久？
 
-with open(LOCK, 'w') as f:
-    fcntl.flock(f, fcntl.LOCK_EX)
-    # 合并两个实例的学习笔记
-    merge_notes("workspace-yuki", "workspace-natsu", SHARED)
-    fcntl.flock(f, fcntl.LOCK_UN)
-```
+这套架构从 2025 年 12 月开始搭建，到现在运行了大约 3 个月。
 
-下一步计划是引入语音交互——开车的时候也能和 AI 助手沟通就方便多了。实际上 Whisper 本地识别已经跑通了（详见时间线），就差把语音输入和 Telegram Bot 对接起来。
+**稳定性**：watchdog 自动监控，重启次数个位数。偶尔因为 macOS 更新重启全部实例，5 分钟内恢复正常。
+
+**实际省了多少时间**：很难精确计算，但 Instagram 日语文案从「我花一小时写」变成了「ナツ出初稿我改10分钟」；代码 debug 从「我自己翻 Stack Overflow」变成了「ユキ先跑一遍，有思路再找我」。
+
+**最大的挑战**：边界管理。四个实例互相委派任务时，偶尔会出现「两个实例都在做同一件事」或「谁也没做」的情况。解决方案是引入任务看板（`shared-knowledge/task-board.md`），强制所有跨实例委派都写到那里。
+
+## 什么时候该多开一个实例？
+
+不是越多越好。我自己的判断标准：
+
+1. **上下文污染明显**：一个实例开始在完全不同的领域之间切换，表现下降
+2. **有明确隔离需求**：比如医疗数据，不能和其他业务混在一起
+3. **并行需求**：两件事需要同时进行，不能排队等待
+
+如果只是「任务有点多」，先优化 prompt 和工作流，不要急着开新实例。实例多了，管理成本是真实存在的。
+
+---
+
+下一篇：[OpenClaw 多实例踩坑记录](/blog/openclaw-multi-instance) — 配置隔离、端口冲突、共享缓存那些坑。

@@ -1,11 +1,13 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
+import { setRequestLocale } from 'next-intl/server';
 import { getAllPosts, getPostBySlug, getAdjacentPosts, getSampleComments } from '@/lib/blog';
 import { BlogDetail } from '@/components/blog/blog-detail';
 
 export function generateStaticParams() {
   const posts = getAllPosts();
-  return posts.map((post) => ({ slug: post.slug }));
+  const locales = ['zh', 'ja', 'en'];
+  return locales.flatMap((locale) => posts.map((post) => ({ locale, slug: post.slug })));
 }
 
 type Props = {
@@ -42,9 +44,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     },
     alternates: {
       languages: {
-        zh: `/zh/blog/${slug}`,
+        'zh-CN': `/zh/blog/${slug}`,
         ja: `/ja/blog/${slug}`,
         en: `/en/blog/${slug}`,
+        'x-default': `/zh/blog/${slug}`,
       },
     },
   };
@@ -52,11 +55,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function BlogPostPage({ params }: Props) {
   const { locale, slug } = await params;
-  const post = getPostBySlug(slug);
+  setRequestLocale(locale);
 
-  if (!post) {
-    notFound();
-  }
+  const post = getPostBySlug(slug);
+  if (!post) notFound();
 
   const { prev, next } = getAdjacentPosts(slug);
   const comments = getSampleComments();
@@ -71,6 +73,7 @@ export default async function BlogPostPage({ params }: Props) {
     author: {
       '@type': 'Person',
       name: post.author,
+      url: 'https://aiblog.fuluckai.com/about',
     },
     publisher: {
       '@type': 'Organization',
@@ -81,6 +84,7 @@ export default async function BlogPostPage({ params }: Props) {
       '@type': 'WebPage',
       '@id': `https://aiblog.fuluckai.com/${locale}/blog/${slug}`,
     },
+    inLanguage: locale === 'ja' ? 'ja' : locale === 'en' ? 'en' : 'zh-CN',
     ...(post.coverImage ? { image: post.coverImage } : {}),
   };
 
