@@ -28,10 +28,10 @@ export default function SignInPage() {
     <div className="min-h-[80vh] flex items-center justify-center px-4">
       <div className="w-full max-w-md">
         {/* Glass card */}
-        <div className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl shadow-2xl p-8">
+        <div className="glass-card p-8 shadow-2xl">
           <div className="text-center mb-8">
             <h1 className="text-2xl font-bold mb-2">Welcome Back</h1>
-            <p className="text-sm text-white/50">
+            <p className="text-sm text-muted-foreground">
               Sign in to Will&apos;s AI Lab
             </p>
           </div>
@@ -50,7 +50,7 @@ export default function SignInPage() {
 
             <button
               onClick={() => signIn('google', { callbackUrl: '/' })}
-              className="w-full flex items-center justify-center gap-3 px-4 py-3 rounded-xl bg-white/10 hover:bg-white/20 text-white font-medium transition-colors"
+              className="w-full flex items-center justify-center gap-3 px-4 py-3 rounded-xl bg-muted hover:bg-muted/80 font-medium transition-colors"
             >
               <svg className="w-5 h-5" viewBox="0 0 24 24">
                 <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/>
@@ -64,15 +64,15 @@ export default function SignInPage() {
 
           {/* Divider */}
           <div className="flex items-center gap-4 mb-6">
-            <div className="flex-1 h-px bg-white/10" />
-            <span className="text-xs text-white/30 uppercase tracking-wider">or</span>
-            <div className="flex-1 h-px bg-white/10" />
+            <div className="flex-1 h-px bg-border" />
+            <span className="text-xs text-muted-foreground uppercase tracking-wider">or</span>
+            <div className="flex-1 h-px bg-border" />
           </div>
 
           {/* Admin credentials */}
           <form onSubmit={handleCredentials} className="space-y-4">
             <div>
-              <label htmlFor="password" className="block text-sm text-white/60 mb-2">
+              <label htmlFor="password" className="block text-sm text-muted-foreground mb-2">
                 Admin Password
               </label>
               <input
@@ -81,7 +81,7 @@ export default function SignInPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Enter admin password"
-                className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder:text-white/30 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all"
+                className="w-full px-4 py-3 rounded-xl bg-muted/50 border border-border text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-brand-cyan/40 focus:border-brand-cyan/40 transition-all"
               />
             </div>
 
@@ -92,7 +92,7 @@ export default function SignInPage() {
             <button
               type="submit"
               disabled={loading || !password}
-              className="w-full px-4 py-3 rounded-xl bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white font-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full px-4 py-3 rounded-xl bg-gradient-to-r from-brand-mint to-brand-cyan text-white font-medium transition-all hover:shadow-lg hover:shadow-brand-mint/20 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? 'Signing in...' : 'Sign in as Admin'}
             </button>

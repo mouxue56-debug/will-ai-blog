@@ -123,6 +123,36 @@ function AITeamSection() {
 
 /* ── Business Links ──────────────────────────────────── */
 
+function BusinessLinkCard({ 
+  href, emoji, titleKey, descKey, t, inView, delay 
+}: { 
+  href: string; emoji: string; titleKey: string; descKey: string; 
+  t: (key: string) => string; inView: boolean; delay: number;
+}) {
+  return (
+    <motion.a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      initial={{ opacity: 0, y: 20 }}
+      animate={inView ? { opacity: 1, y: 0 } : {}}
+      transition={{ delay, duration: 0.4 }}
+      className="group glass-card p-5 flex items-center gap-4 hover:shadow-md hover:border-brand-mint/30 transition-all duration-200"
+    >
+      <div className="w-12 h-12 rounded-xl bg-brand-mint/10 flex items-center justify-center text-2xl flex-shrink-0">
+        {emoji}
+      </div>
+      <div className="flex-1 min-w-0">
+        <h3 className="font-semibold group-hover:text-brand-mint transition-colors truncate">{t(titleKey)}</h3>
+        <p className="text-xs sm:text-sm text-muted-foreground line-clamp-1">{t(descKey)}</p>
+      </div>
+      <span className="text-muted-foreground group-hover:text-brand-mint group-hover:translate-x-1 transition-all duration-200 flex-shrink-0">
+        →
+      </span>
+    </motion.a>
+  );
+}
+
 function BusinessLinks() {
   const t = useTranslations('about');
   const ref = useRef(null);
@@ -130,7 +160,7 @@ function BusinessLinks() {
 
   const links = [
     { titleKey: 'biz_fuluckai', descKey: 'biz_fuluckai_desc', url: 'https://fuluckai.com', emoji: '🤖' },
-    { titleKey: 'biz_cattery', descKey: 'biz_cattery_desc', url: '#', emoji: '🐱' },
+    { titleKey: 'biz_cattery', descKey: 'biz_cattery_desc', url: 'https://fuluck-cattery.com', emoji: '🐱' },
     { titleKey: 'biz_social', descKey: 'biz_social_desc', url: '#', emoji: '📱' },
   ];
 
@@ -144,20 +174,16 @@ function BusinessLinks() {
       <h2 className="text-2xl font-bold mb-6">{t('business_title')}</h2>
       <div className="grid gap-4 sm:grid-cols-3">
         {links.map((link, i) => (
-          <motion.a
+          <BusinessLinkCard
             key={i}
             href={link.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            initial={{ opacity: 0, y: 20 }}
-            animate={inView ? { opacity: 1, y: 0 } : {}}
-            transition={{ delay: 0.3 + i * 0.1, duration: 0.4 }}
-            className="group glass-card p-5 hover:shadow-md transition-all duration-200"
-          >
-            <span className="text-2xl">{link.emoji}</span>
-            <h3 className="mt-3 font-semibold group-hover:text-brand-cyan transition-colors">{t(link.titleKey)}</h3>
-            <p className="mt-1 text-xs sm:text-sm text-muted-foreground">{t(link.descKey)}</p>
-          </motion.a>
+            emoji={link.emoji}
+            titleKey={link.titleKey}
+            descKey={link.descKey}
+            t={t}
+            inView={inView}
+            delay={0.3 + i * 0.1}
+          />
         ))}
       </div>
 

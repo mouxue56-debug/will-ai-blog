@@ -19,6 +19,7 @@ import {
 } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
 import { useSession, signOut } from 'next-auth/react';
+import { LocaleSwitcher } from '@/components/shared/locale-switcher';
 
 const mainTabs = [
   { key: 'home', href: '/', icon: Home },
@@ -99,6 +100,12 @@ export function MobileNav() {
                     </Link>
                   );
                 })}
+              </div>
+
+              {/* Language switcher */}
+              <div className="border-t border-white/[0.06] mt-2 pt-2 px-3 flex items-center justify-between">
+                <span className="text-xs text-muted-foreground">🌐</span>
+                <LocaleSwitcher />
               </div>
 
               {/* User section */}

@@ -7,12 +7,12 @@ export function Footer() {
 
   return (
     <footer className="pb-20 md:pb-0">
-      {/* Gradient divider line */}
+      {/* Brand gradient divider line */}
       <div className="mx-auto max-w-5xl px-4 sm:px-6">
-        <div className="h-px bg-gradient-to-r from-transparent via-brand-mint to-brand-cyan opacity-40" />
+        <div className="h-px bg-gradient-to-r from-transparent via-brand-mint/60 to-brand-cyan/60 opacity-50" />
       </div>
 
-      {/* Simple one-line footer */}
+      {/* Footer content */}
       <div className="mx-auto max-w-5xl px-4 sm:px-6 py-6">
         <div className="flex flex-col sm:flex-row items-center justify-between gap-2 text-sm text-muted-foreground">
           <p>© 2026 Will AI Lab</p>
@@ -25,7 +25,7 @@ export function Footer() {
             >
               fuluckai.com
             </a>
-            <span className="text-border">·</span>
+            <span className="text-border">|</span>
             <a
               href="https://fuluck-cattery.com"
               target="_blank"
@@ -33,6 +33,15 @@ export function Footer() {
               className="hover:text-brand-mint transition-colors"
             >
               {t('cattery')}
+            </a>
+            <span className="text-border">|</span>
+            <a
+              href="https://github.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-brand-mint transition-colors"
+            >
+              GitHub
             </a>
           </div>
         </div>

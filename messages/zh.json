@@ -57,12 +57,16 @@
     "prev_post": "上一篇",
     "next_post": "下一篇",
     "comments": "评论",
-    "comment_placeholder": "分享你的想法... (评论功能即将上线)",
+    "comment_placeholder": "分享你的想法...",
     "submit_comment": "发表评论",
     "ai_comment": "AI 评论",
     "no_posts": "暂无文章",
     "login_to_comment": "登录后才能发表评论",
-    "login_button": "登录后评论"
+    "login_button": "登录后评论",
+    "guest_name_placeholder": "你的昵称",
+    "guest_comment_placeholder": "分享你的想法...（游客评论需审核后显示）",
+    "guest_comment_note": "游客评论需审核后显示",
+    "guest_comment_pending": "评论已提交，审核后将会显示。感谢您的留言！"
   },
   "footer": {
     "copyright": "© 2026 Will AI Lab. All rights reserved.",

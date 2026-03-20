@@ -86,44 +86,58 @@ export function MyWorld() {
             })}
           </motion.div>
 
-          {/* Right: Cattery compact banner */}
+          {/* Right: Business link cards — uniform style */}
           <motion.div
             initial={{ opacity: 0, x: 20 }}
             animate={isInView ? { opacity: 1, x: 0 } : {}}
             transition={{ delay: 0.2, duration: 0.5 }}
+            className="flex flex-col gap-3 justify-center"
           >
-            <div className="glass-card relative overflow-hidden h-full p-6 sm:p-8 flex flex-col justify-center">
-              {/* Decorative */}
-              <div className="absolute top-3 right-3 text-4xl opacity-15 select-none">🐱</div>
-              <div className="absolute bottom-3 left-3 text-3xl opacity-10 select-none">🐾</div>
-
-              <div className="relative z-10">
-                <h3 className="text-lg sm:text-xl font-bold mb-2">
-                  🐱 {t('cattery_title')}
+            {/* Cattery card */}
+            <a
+              href="https://fuluck-cattery.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group glass-card p-5 flex items-center gap-4 hover:shadow-md hover:border-brand-mint/30 transition-all duration-200"
+            >
+              <div className="w-12 h-12 rounded-xl bg-brand-mint/10 flex items-center justify-center text-2xl flex-shrink-0">
+                🐱
+              </div>
+              <div className="flex-1 min-w-0">
+                <h3 className="font-semibold group-hover:text-brand-mint transition-colors truncate">
+                  {t('cattery_title')}
                 </h3>
-                <p className="text-sm text-muted-foreground leading-relaxed mb-4">
+                <p className="text-xs sm:text-sm text-muted-foreground line-clamp-1">
                   {t('cattery_desc')}
                 </p>
-                <div className="flex flex-wrap gap-2">
-                  <a
-                    href="#"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-brand-mint/15 text-brand-mint text-sm font-medium hover:bg-brand-mint/25 transition-colors"
-                  >
-                    {t('cattery_cta')} →
-                  </a>
-                  <a
-                    href="#"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full border border-brand-mint/30 text-brand-mint text-sm font-medium hover:bg-brand-mint/10 transition-colors"
-                  >
-                    📱 Instagram
-                  </a>
-                </div>
               </div>
-            </div>
+              <span className="text-muted-foreground group-hover:text-brand-mint group-hover:translate-x-1 transition-all duration-200 flex-shrink-0">
+                →
+              </span>
+            </a>
+
+            {/* Fuluck AI card */}
+            <a
+              href="https://fuluckai.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group glass-card p-5 flex items-center gap-4 hover:shadow-md hover:border-brand-mint/30 transition-all duration-200"
+            >
+              <div className="w-12 h-12 rounded-xl bg-brand-mint/10 flex items-center justify-center text-2xl flex-shrink-0">
+                🤖
+              </div>
+              <div className="flex-1 min-w-0">
+                <h3 className="font-semibold group-hover:text-brand-mint transition-colors truncate">
+                  Fuluck AI
+                </h3>
+                <p className="text-xs sm:text-sm text-muted-foreground line-clamp-1">
+                  AI × {t('cattery_title')}
+                </p>
+              </div>
+              <span className="text-muted-foreground group-hover:text-brand-mint group-hover:translate-x-1 transition-all duration-200 flex-shrink-0">
+                →
+              </span>
+            </a>
           </motion.div>
         </div>
       </div>

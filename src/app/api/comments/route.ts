@@ -132,7 +132,8 @@ export async function POST(request: NextRequest) {
       ...(aiModel ? { aiModel } : {}),
       ...(aiInstance ? { aiInstance } : {}),
       createdAt: new Date().toISOString(),
-      approved: isAdmin ? true : false, // Admin comments auto-approved
+      // Admin: auto-approved, logged-in user: auto-approved, guest: needs review
+      approved: isAdmin ? true : (session?.user && commentAuthorType !== 'guest') ? true : false,
     };
 
     comments.push(newComment);

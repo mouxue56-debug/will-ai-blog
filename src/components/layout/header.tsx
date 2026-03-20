@@ -76,7 +76,9 @@ export function Header() {
 
         {/* Right side: locale + user menu + theme toggle */}
         <div className="flex items-center gap-2">
-          <LocaleSwitcher />
+          <div className="hidden md:block">
+            <LocaleSwitcher />
+          </div>
           <UserMenu />
           <ThemeToggle />
         </div>

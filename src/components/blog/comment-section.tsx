@@ -3,8 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
-import { MessageSquare, Send, Bot, Crown, LogIn } from 'lucide-react';
-import { Link } from '@/i18n/navigation';
+import { MessageSquare, Send, Bot, Crown, UserCircle } from 'lucide-react';
 import Image from 'next/image';
 import type { Comment } from '@/lib/blog-types';
 import { cn } from '@/lib/utils';
@@ -14,7 +13,7 @@ interface ApiComment {
   postSlug: string;
   author: string;
   content: string;
-  authorType: 'human' | 'ai';
+  authorType: 'human' | 'ai' | 'guest' | 'admin';
   authorRole?: 'admin' | 'user';
   aiModel?: string;
   aiInstance?: string;
@@ -95,12 +94,12 @@ function apiToComment(c: ApiComment): Comment & { authorRole?: string } {
   return {
     id: c.id,
     author: c.author,
-    avatar: c.authorType === 'ai' ? '🤖' : c.authorRole === 'admin' ? '👑' : '👤',
+    avatar: c.authorType === 'ai' ? '🤖' : c.authorType === 'admin' ? '👑' : c.authorRole === 'admin' ? '👑' : '👤',
     date: c.createdAt.split('T')[0],
     content: c.content,
     isAI: c.authorType === 'ai',
     model: c.aiModel,
-    authorRole: c.authorRole,
+    authorRole: c.authorRole || (c.authorType === 'admin' ? 'admin' : undefined),
   };
 }
 
@@ -110,7 +109,11 @@ export function CommentSection({ comments: fallbackComments, postSlug }: Comment
   const [comments, setComments] = useState<(Comment & { authorRole?: string })[]>(fallbackComments);
   const [loaded, setLoaded] = useState(false);
   const [newComment, setNewComment] = useState('');
+  const [guestName, setGuestName] = useState('');
   const [submitting, setSubmitting] = useState(false);
+  const [submitSuccess, setSubmitSuccess] = useState(false);
+
+  const isLoggedIn = !!session?.user;
 
   const loadComments = useCallback(async () => {
     if (!postSlug) return;
@@ -134,20 +137,43 @@ export function CommentSection({ comments: fallbackComments, postSlug }: Comment
   }, [loadComments]);
 
   const handleSubmit = async () => {
-    if (!newComment.trim() || !postSlug || !session?.user) return;
+    if (!newComment.trim() || !postSlug) return;
+
+    // Guest must provide a nickname
+    if (!isLoggedIn && !guestName.trim()) return;
+
     setSubmitting(true);
+    setSubmitSuccess(false);
+
     try {
+      const body: Record<string, string> = {
+        postSlug,
+        content: newComment.trim(),
+      };
+
+      if (!isLoggedIn) {
+        body.author = guestName.trim();
+        body.authorType = 'guest';
+      }
+
       const res = await fetch('/api/comments', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          postSlug,
-          content: newComment.trim(),
-        }),
+        body: JSON.stringify(body),
       });
+
       if (res.ok) {
         setNewComment('');
-        loadComments();
+        setGuestName('');
+
+        if (isLoggedIn) {
+          // Logged-in user's comments may be auto-approved, reload
+          loadComments();
+        } else {
+          // Guest comment needs approval — show success message
+          setSubmitSuccess(true);
+          setTimeout(() => setSubmitSuccess(false), 5000);
+        }
       }
     } catch {
       // silent fail
@@ -174,65 +200,82 @@ export function CommentSection({ comments: fallbackComments, postSlug }: Comment
         ))}
       </div>
 
-      {/* Comment Input */}
-      {session?.user ? (
-        <div className="rounded-lg border border-white/[0.06] bg-card p-4">
-          <div className="flex items-start gap-3">
-            {/* User avatar */}
-            <div className="shrink-0">
-              {session.user.image ? (
-                <Image
-                  src={session.user.image}
-                  alt={session.user.name || 'User'}
-                  width={36}
-                  height={36}
-                  className="w-9 h-9 rounded-full border border-white/10"
-                />
-              ) : (
-                <div className="w-9 h-9 rounded-full bg-gradient-to-br from-brand-mint to-brand-cyan flex items-center justify-center text-xs font-bold text-white">
-                  {(session.user.name || 'U').slice(0, 2).toUpperCase()}
-                </div>
-              )}
-            </div>
+      {/* Success message for guest comments */}
+      {submitSuccess && (
+        <div className="rounded-lg border border-brand-mint/30 bg-brand-mint/10 p-4 text-center">
+          <p className="text-sm text-brand-mint font-medium">
+            ✅ {t('guest_comment_pending') || '评论已提交，审核后将会显示。感谢您的留言！'}
+          </p>
+        </div>
+      )}
 
-            {/* Input area */}
-            <div className="flex-1">
-              <textarea
-                value={newComment}
-                onChange={(e) => setNewComment(e.target.value)}
-                placeholder={t('comment_placeholder')}
-                className="w-full resize-none rounded-md bg-muted/50 p-3 text-sm placeholder:text-muted-foreground/50 focus:outline-none focus:ring-1 focus:ring-brand-cyan/40"
-                rows={3}
+      {/* Comment Input — works for both logged-in and guest */}
+      <div className="rounded-lg border border-white/[0.06] bg-card p-4">
+        <div className="flex items-start gap-3">
+          {/* Avatar */}
+          <div className="shrink-0">
+            {isLoggedIn && session?.user?.image ? (
+              <Image
+                src={session.user.image}
+                alt={session.user.name || 'User'}
+                width={36}
+                height={36}
+                className="w-9 h-9 rounded-full border border-white/10"
               />
-              <div className="mt-3 flex items-center justify-between">
-                <span className="text-xs text-muted-foreground">
-                  {session.user.name}
-                </span>
-                <button
-                  onClick={handleSubmit}
-                  disabled={submitting || !newComment.trim()}
-                  className="inline-flex items-center gap-2 rounded-lg bg-brand-mint/15 text-brand-mint px-4 py-2 text-sm font-medium hover:bg-brand-mint/25 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  <Send className="h-4 w-4" />
-                  {t('submit_comment')}
-                </button>
+            ) : isLoggedIn ? (
+              <div className="w-9 h-9 rounded-full bg-gradient-to-br from-brand-mint to-brand-cyan flex items-center justify-center text-xs font-bold text-white">
+                {(session?.user?.name || 'U').slice(0, 2).toUpperCase()}
               </div>
+            ) : (
+              <div className="w-9 h-9 rounded-full bg-muted flex items-center justify-center">
+                <UserCircle className="h-5 w-5 text-muted-foreground" />
+              </div>
+            )}
+          </div>
+
+          {/* Input area */}
+          <div className="flex-1">
+            {/* Guest nickname input */}
+            {!isLoggedIn && (
+              <input
+                type="text"
+                value={guestName}
+                onChange={(e) => setGuestName(e.target.value)}
+                placeholder={t('guest_name_placeholder') || '你的昵称'}
+                className="w-full mb-2 rounded-md bg-muted/50 px-3 py-2 text-sm placeholder:text-muted-foreground/50 focus:outline-none focus:ring-1 focus:ring-brand-cyan/40"
+                maxLength={30}
+              />
+            )}
+
+            <textarea
+              value={newComment}
+              onChange={(e) => setNewComment(e.target.value)}
+              placeholder={isLoggedIn
+                ? (t('comment_placeholder') || '分享你的想法...')
+                : (t('guest_comment_placeholder') || '分享你的想法...（游客评论需审核后显示）')
+              }
+              className="w-full resize-none rounded-md bg-muted/50 p-3 text-sm placeholder:text-muted-foreground/50 focus:outline-none focus:ring-1 focus:ring-brand-cyan/40"
+              rows={3}
+            />
+            <div className="mt-3 flex items-center justify-between">
+              <span className="text-xs text-muted-foreground">
+                {isLoggedIn
+                  ? session?.user?.name
+                  : (t('guest_comment_note') || '游客评论需审核后显示')
+                }
+              </span>
+              <button
+                onClick={handleSubmit}
+                disabled={submitting || !newComment.trim() || (!isLoggedIn && !guestName.trim())}
+                className="inline-flex items-center gap-2 rounded-lg bg-brand-mint/15 text-brand-mint px-4 py-2 text-sm font-medium hover:bg-brand-mint/25 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <Send className="h-4 w-4" />
+                {t('submit_comment')}
+              </button>
             </div>
           </div>
         </div>
-      ) : (
-        <div className="rounded-lg border border-white/[0.06] bg-card p-6 text-center">
-          <p className="text-sm text-muted-foreground mb-4">
-            {t('login_to_comment') || '登录后才能发表评论'}
-          </p>
-          <Link href="/auth/signin">
-            <button className="inline-flex items-center gap-2 rounded-lg bg-brand-mint/15 text-brand-mint px-5 py-2.5 text-sm font-medium hover:bg-brand-mint/25 transition-colors">
-              <LogIn className="h-4 w-4" />
-              {t('login_button') || '登录后评论'}
-            </button>
-          </Link>
-        </div>
-      )}
+      </div>
     </section>
   );
 }

@@ -57,12 +57,16 @@
     "prev_post": "Previous",
     "next_post": "Next",
     "comments": "Comments",
-    "comment_placeholder": "Share your thoughts... (Comments coming soon)",
+    "comment_placeholder": "Share your thoughts...",
     "submit_comment": "Submit",
     "ai_comment": "AI Comment",
     "no_posts": "No posts yet",
     "login_to_comment": "Log in to leave a comment",
-    "login_button": "Log in to comment"
+    "login_button": "Log in to comment",
+    "guest_name_placeholder": "Your nickname",
+    "guest_comment_placeholder": "Share your thoughts... (Guest comments require approval)",
+    "guest_comment_note": "Guest comments require approval",
+    "guest_comment_pending": "Comment submitted! It will appear after approval. Thank you!"
   },
   "footer": {
     "copyright": "© 2026 Will AI Lab. All rights reserved.",

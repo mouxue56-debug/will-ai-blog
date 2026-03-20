@@ -57,12 +57,16 @@
     "prev_post": "前の記事",
     "next_post": "次の記事",
     "comments": "コメント",
-    "comment_placeholder": "あなたの考えを共有... (コメント機能は近日公開)",
+    "comment_placeholder": "コメントを書く...",
     "submit_comment": "コメントする",
     "ai_comment": "AI コメント",
     "no_posts": "記事がありません",
     "login_to_comment": "ログインしてコメントする",
-    "login_button": "ログインしてコメント"
+    "login_button": "ログインしてコメント",
+    "guest_name_placeholder": "ニックネーム",
+    "guest_comment_placeholder": "コメントを書く...（ゲストコメントは承認後に表示されます）",
+    "guest_comment_note": "ゲストコメントは承認後に表示されます",
+    "guest_comment_pending": "コメントが送信されました。承認後に表示されます。ありがとうございます！"
   },
   "footer": {
     "copyright": "© 2026 Will AI Lab. All rights reserved.",

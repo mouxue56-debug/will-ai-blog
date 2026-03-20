@@ -23,14 +23,6 @@ function formatDate(dateStr: string, locale: string) {
   return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
 }
 
-function getMonthLabel(dateStr: string, locale: string) {
-  const d = new Date(dateStr);
-  const m = d.getMonth();
-  if (locale === 'ja') return `${m + 1}月`;
-  if (locale === 'zh') return `${m + 1}月`;
-  return d.toLocaleDateString('en-US', { month: 'short' });
-}
-
 function getYear(dateStr: string) {
   return new Date(dateStr).getFullYear();
 }
