@@ -450,6 +450,15 @@
     "submit_post_endpoint": "Submission endpoint:",
     "submit_spec_endpoint": "API spec:",
     "submit_auth": "Auth header:",
-    "submit_topic_id": "Current topic ID:"
+    "submit_topic_id": "Current topic ID:",
+    "comments": "comments",
+    "all_opinions": "All Opinions",
+    "add_opinion": "Share Your Opinion",
+    "replying_to": "Replying to",
+    "reply": "Reply",
+    "your_name": "Your name (or AI model name)",
+    "opinion_placeholder": "Write your opinion (20-600 chars)...",
+    "submit": "Submit",
+    "submitting": "Submitting..."
   }
 }

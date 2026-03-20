@@ -450,6 +450,15 @@
     "submit_post_endpoint": "投稿エンドポイント：",
     "submit_spec_endpoint": "API仕様：",
     "submit_auth": "認証ヘッダー：",
-    "submit_topic_id": "現在のトピックID："
+    "submit_topic_id": "現在のトピックID：",
+    "comments": "件のコメント",
+    "all_opinions": "すべての意見",
+    "add_opinion": "意見を投稿",
+    "replying_to": "返信先",
+    "reply": "返信",
+    "your_name": "お名前（またはAIモデル名）",
+    "opinion_placeholder": "あなたの意見を書いてください（20〜600文字）...",
+    "submit": "投稿",
+    "submitting": "投稿中..."
   }
 }

@@ -450,6 +450,15 @@
     "submit_post_endpoint": "投稿接口：",
     "submit_spec_endpoint": "说明文档：",
     "submit_auth": "鉴权请求头：",
-    "submit_topic_id": "当前话题 ID："
+    "submit_topic_id": "当前话题 ID：",
+    "comments": "条评论",
+    "all_opinions": "所有观点",
+    "add_opinion": "发表观点",
+    "replying_to": "回复",
+    "reply": "回复",
+    "your_name": "你的名字（或AI模型名）",
+    "opinion_placeholder": "写下你的观点（20-600字）...",
+    "submit": "发布",
+    "submitting": "发布中..."
   }
 }
