@@ -13,7 +13,8 @@
     "about": "About",
     "more": "More",
     "news": "News",
-    "close_menu": "Close menu"
+    "close_menu": "Close menu",
+    "cattery": "Cattery"
   },
   "home": {
     "hero_title": "AI × Cattery × Osaka Life",
@@ -122,7 +123,10 @@
         "category": "Cases",
         "summary": "A real AI automation rollout for a clinic in Osaka, from appointment workflows to patient-facing operations."
       }
-    }
+    },
+    "feed_filter_all": "All",
+    "feed_filter_ai": "AI",
+    "feed_filter_cattery": "Cattery"
   },
   "common": {
     "theme_toggle": "Toggle Theme",
@@ -167,7 +171,11 @@
   "footer": {
     "copyright": "© 2026 Will AI Lab. All rights reserved.",
     "powered_by": "Powered by Next.js & AI",
-    "cattery": "Fuluck Cattery"
+    "cattery": "Fuluck Cattery",
+    "sites_title": "Sites",
+    "social_title": "Social Links",
+    "xiaohongshu": "Xiaohongshu",
+    "xiaohongshu_handle": "Osaka Cattery Diary"
   },
   "timeline": {
     "title": "Timeline",
@@ -370,5 +378,50 @@
     "description": "The page you're looking for doesn't exist or has been moved.",
     "home": "Back Home",
     "blog": "Read the Blog"
+  },
+  "cattery": {
+    "title": "Cattery Journal",
+    "subtitle": "Life with Siberians in Osaka",
+    "page_title": "Cattery",
+    "page_desc": "Daily life at Fulluck Cattery — living with Siberian cats in Osaka",
+    "headline": "A closer look at daily life inside Fulluck Cattery.",
+    "intro_body": "This section documents the real rhythm of the cattery in Osaka: kitten growth, parent cat care, space management, customer communication, and how AI helps keep daily operations lighter and more consistent.",
+    "cta_line": "Contact via the cattery site",
+    "cta_timeline": "View timeline",
+    "highlight_1_label": "Breeder Award",
+    "highlight_1_body": "Ranked #1 nationwide on Minna no Koneko Breeder for H1 2025 with a perfect review score.",
+    "highlight_2_label": "Osaka Base",
+    "highlight_2_body": "Daily care, socialization, and in-person visits all happen from our base in Osaka Joto Ward.",
+    "highlight_3_label": "LINE Support",
+    "highlight_3_body": "From first inquiry to post-adoption follow-up, LINE remains the core communication channel.",
+    "daily_title": "Daily cattery notes",
+    "daily_intro": "Not just cat photos, but the real overlap between breeding, care, documentation, and customer support.",
+    "post_1_tag": "Growth log",
+    "post_1_date": "Updated daily",
+    "post_1_title": "Kitten development is the most important timeline in the cattery.",
+    "post_1_body": "We track weaning, weight, temperament, and socialization so future families can see steady development instead of isolated snapshots.",
+    "post_2_tag": "Cattery ops",
+    "post_2_date": "Osaka · Joto",
+    "post_2_title": "Cleanliness and space design are part of trust.",
+    "post_2_body": "Temperature, humidity, traffic flow, and daily cleaning all shape the cats' condition and the confidence visitors feel when they arrive.",
+    "post_3_tag": "Customer care",
+    "post_3_date": "LINE first",
+    "post_3_title": "Communication should feel supportive, not transactional.",
+    "post_3_body": "From early inquiries to post-home adjustment, the goal is consistent guidance and long-term trust rather than one-off sales talk.",
+    "siberian_title": "About Siberians",
+    "siberian_intro": "Siberians are known for their presence and dense coats, but they also need thoughtful care and a stable home environment.",
+    "info_1_title": "Rich coats need calm, consistent grooming",
+    "info_1_body": "During shedding season, regular brushing matters most when it stays gentle and predictable enough for the cat to feel safe.",
+    "info_2_title": "People-oriented cats do well with active family interaction",
+    "info_2_body": "Siberians often stay curious about people, so early socialization and exposure to everyday routines make a big difference.",
+    "info_3_title": "Breeding priorities: health, temperament, and long-term fit",
+    "info_3_body": "Beyond looks, Fulluck Cattery focuses on health management, breeding planning, and how smoothly each cat adapts to a new home.",
+    "contact_kicker": "Contact",
+    "contact_title": "If you want to know the current cattery situation, start with LINE.",
+    "contact_body": "For visits, reservation plans, home setup questions, or care guidance, the easiest path is to contact us through the official cattery site first.",
+    "contact_line_note": "LINE: Reach out through the contact flow on the Fulluck Cattery website",
+    "contact_instagram_note": "Instagram: @fuluck_cattery for more daily moments",
+    "contact_cta": "Open cattery site",
+    "contact_secondary_cta": "Open Instagram"
   }
 }

@@ -13,7 +13,8 @@
     "about": "について",
     "more": "もっと",
     "news": "ニュース",
-    "close_menu": "メニューを閉じる"
+    "close_menu": "メニューを閉じる",
+    "cattery": "猫舎"
   },
   "home": {
     "hero_title": "AI × キャッテリー × 大阪ライフ",
@@ -122,7 +123,10 @@
         "category": "ケース",
         "summary": "大阪市内のクリニックで進めたAI自動化導入事例。予約管理から患者対応までの流れを振り返ります。"
       }
-    }
+    },
+    "feed_filter_all": "すべて",
+    "feed_filter_ai": "AI",
+    "feed_filter_cattery": "猫舎"
   },
   "common": {
     "theme_toggle": "テーマ切替",
@@ -167,7 +171,11 @@
   "footer": {
     "copyright": "© 2026 Will AI Lab. All rights reserved.",
     "powered_by": "Powered by Next.js & AI",
-    "cattery": "福楽キャッテリー"
+    "cattery": "福楽キャッテリー",
+    "sites_title": "サイト",
+    "social_title": "Social Links",
+    "xiaohongshu": "小紅書",
+    "xiaohongshu_handle": "大阪猫舎日常FullucKitty"
   },
   "timeline": {
     "title": "タイムライン",
@@ -370,5 +378,50 @@
     "description": "The page you're looking for doesn't exist or has been moved.",
     "home": "ホームに戻る",
     "blog": "ブログを見る"
+  },
+  "cattery": {
+    "title": "猫舎日記",
+    "subtitle": "サイベリアンと暮らす大阪の日々",
+    "page_title": "猫舎",
+    "page_desc": "福楽キャッテリーの日常 — サイベリアンと大阪で暮らす記録",
+    "headline": "福楽キャッテリーの日々を、猫と人の距離感ごと残していく。",
+    "intro_body": "ここでは大阪の猫舎で積み重なる日常を記録しています。子猫の成長、親猫のコンディション、空間づくり、お客様とのやり取り、そしてAIを取り入れたことで少しずつ整ってきた運営の流れまで。",
+    "cta_line": "公式サイトからLINEで相談",
+    "cta_timeline": "タイムラインを見る",
+    "highlight_1_label": "Breeder Award",
+    "highlight_1_body": "みんなの子猫ブリーダー 2025年上半期全国1位。満点評価を継続中。",
+    "highlight_2_label": "Osaka Base",
+    "highlight_2_body": "大阪・城東区での飼育、社会化、見学対応まで、日々の現場をそのまま届けます。",
+    "highlight_3_label": "LINE Support",
+    "highlight_3_body": "初回のお問い合わせからお迎え後まで、LINEがいちばん大切な連絡導線です。",
+    "daily_title": "猫舎の日常",
+    "daily_intro": "ただ可愛い写真を並べるのではなく、繁育と暮らしと対話がつながっている様子を残しています。",
+    "post_1_tag": "成長記録",
+    "post_1_date": "毎日更新",
+    "post_1_title": "子猫の変化こそ、猫舎でいちばん大事なタイムライン。",
+    "post_1_body": "離乳、体重、性格、社会化の反応まで細かく見ながら記録し、新しいご家族にも成長の流れが見えるようにしています。",
+    "post_2_tag": "猫舎運営",
+    "post_2_date": "大阪・城東区",
+    "post_2_title": "空間管理と清潔さは、そのまま信頼につながる。",
+    "post_2_body": "温湿度や導線、日々の清掃まで含めて整えることで、猫の状態だけでなく、見学時の安心感にも直結します。",
+    "post_3_tag": "お客様対応",
+    "post_3_date": "LINEが主導線",
+    "post_3_title": "説明は売り込みではなく、伴走のためにある。",
+    "post_3_body": "見学前のご相談からお迎え後のフォローまで、言い回しや返信速度を揃え、長く安心していただける関係を目指しています。",
+    "siberian_title": "サイベリアンについて",
+    "siberian_intro": "サイベリアンは被毛の豊かさと穏やかな存在感が魅力ですが、そのぶん丁寧なケアと安定した環境づくりが欠かせません。",
+    "info_1_title": "豊かな被毛には、やさしく一定したケアを",
+    "info_1_body": "換毛期はブラッシングの頻度を上げつつ、引っ張りすぎず、猫にとって安心できる時間として整えることが大切です。",
+    "info_2_title": "人との距離が近く、対話の多い家庭に向く",
+    "info_2_body": "サイベリアンは人への関心が高い傾向があり、幼い時期からの社会化や生活音への慣れが、その後の落ち着きにつながります。",
+    "info_3_title": "繁育で見るのは、健康と性格と暮らしやすさ",
+    "info_3_body": "見た目だけでなく、健康管理、血統計画、新しいご家庭での馴染みやすさまで含めて丁寧に判断しています。",
+    "contact_kicker": "Contact",
+    "contact_title": "猫舎の状況を知りたい方は、まずLINEからどうぞ。",
+    "contact_body": "見学のご相談、今後の出産予定、飼育環境、日々のお世話についてなど、気になることがあれば公式サイト経由でご連絡ください。必要な情報を整理したうえで、順番にご案内します。",
+    "contact_line_note": "LINE：福楽キャッテリー公式サイトの導線からご連絡ください",
+    "contact_instagram_note": "Instagram：@fuluck_cattery で日々の様子を更新中",
+    "contact_cta": "猫舎サイトへ",
+    "contact_secondary_cta": "Instagramを見る"
   }
 }

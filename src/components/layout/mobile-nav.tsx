@@ -8,14 +8,12 @@ import {
   Home,
   BookOpen,
   Clock,
-  Heart,
   MoreHorizontal,
   Briefcase,
-  Share2,
   User,
-  Radio,
   X,
   LogIn,
+  Cat,
 } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
 import { useSession, signOut } from 'next-auth/react';
@@ -23,14 +21,12 @@ import { useSession, signOut } from 'next-auth/react';
 const mainTabs = [
   { key: 'home', href: '/', icon: Home },
   { key: 'blog', href: '/blog', icon: BookOpen },
+  { key: 'cattery', href: '/cattery', icon: Cat },
   { key: 'timeline', href: '/timeline', icon: Clock },
-  { key: 'life', href: '/life', icon: Heart },
 ] as const;
 
 const moreTabs = [
-  { key: 'news', href: '/news', icon: Radio },
   { key: 'cases', href: '/cases', icon: Briefcase },
-  { key: 'social', href: '/social', icon: Share2 },
   { key: 'about', href: '/about', icon: User },
 ] as const;
 
@@ -50,7 +46,6 @@ export function MobileNav() {
 
   return (
     <>
-      {/* More menu overlay */}
       <AnimatePresence>
         {moreOpen && (
           <>
@@ -80,7 +75,7 @@ export function MobileNav() {
                   <X className="h-4 w-4" />
                 </button>
               </div>
-              <div className="grid grid-cols-3 gap-1">
+              <div className="grid grid-cols-2 gap-1">
                 {moreTabs.map((tab) => {
                   const Icon = tab.icon;
                   const active = isActive(tab.href);
@@ -102,7 +97,6 @@ export function MobileNav() {
                 })}
               </div>
 
-              {/* User section */}
               <div className="border-t border-white/[0.06] mt-2 pt-2 px-1">
                 {session?.user ? (
                   <div className="flex items-center justify-between px-3 py-2">
@@ -138,10 +132,8 @@ export function MobileNav() {
         )}
       </AnimatePresence>
 
-      {/* Bottom tab bar — glass style */}
       <nav className="fixed bottom-0 left-0 right-0 z-40 border-t border-white/[0.06] dark:border-white/[0.06] border-gray-200/60 bg-white/80 dark:bg-[rgba(10,10,15,0.8)] backdrop-blur-xl md:hidden safe-area-bottom">
         <div className="relative flex items-center justify-around h-16 px-1">
-          {/* Animated active indicator pill */}
           {(() => {
             const activeIndex = mainTabs.findIndex((tab) => isActive(tab.href));
             const idx = activeIndex >= 0 ? activeIndex : (moreIsActive ? mainTabs.length : -1);
@@ -180,7 +172,6 @@ export function MobileNav() {
             );
           })}
 
-          {/* More button */}
           <button
             onClick={() => setMoreOpen((prev) => !prev)}
             className={`flex flex-1 flex-col items-center gap-0.5 py-1.5 min-h-[44px] justify-center transition-colors ${

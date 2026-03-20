@@ -8,8 +8,7 @@ const locales = ['zh', 'ja', 'en'];
 export default function sitemap(): MetadataRoute.Sitemap {
   const entries: MetadataRoute.Sitemap = [];
 
-  // Static pages
-  const staticPages = ['', '/blog', '/timeline', '/cases', '/life', '/social', '/about'];
+  const staticPages = ['', '/blog', '/cattery', '/timeline', '/cases', '/about'];
 
   for (const page of staticPages) {
     for (const locale of locales) {
@@ -27,7 +26,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     }
   }
 
-  // Blog posts
   const posts = getAllPosts();
   for (const post of posts) {
     for (const locale of locales) {
@@ -45,7 +43,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     }
   }
 
-  // Case studies
   for (const c of cases) {
     for (const locale of locales) {
       entries.push({

@@ -2,6 +2,37 @@
 
 import { useTranslations } from 'next-intl';
 
+type FooterLink = {
+  href: string;
+  label?: string;
+  labelKey?: 'cattery' | 'xiaohongshu';
+  value?: string;
+  valueKey?: 'xiaohongshu_handle';
+};
+
+const siteLinks: FooterLink[] = [
+  { href: 'https://fuluckai.com', label: 'fuluckai.com' },
+  { href: 'https://fuluck-cattery.com', labelKey: 'cattery' },
+];
+
+const socialLinks: FooterLink[] = [
+  {
+    href: 'https://www.instagram.com/fuluck_cattery/',
+    label: 'Instagram',
+    value: '@fuluck_cattery',
+  },
+  {
+    href: 'https://github.com/mouxue56-debug/will-ai-blog',
+    label: 'GitHub',
+    value: 'mouxue56-debug/will-ai-blog',
+  },
+  {
+    href: 'https://www.xiaohongshu.com/user/profile/65b8e6a4000000000d008d37',
+    labelKey: 'xiaohongshu',
+    valueKey: 'xiaohongshu_handle',
+  },
+];
+
 export function Footer() {
   const t = useTranslations('footer');
 
@@ -12,35 +43,51 @@ export function Footer() {
       </div>
 
       <div className="mx-auto max-w-5xl px-4 sm:px-6 py-6">
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-2 text-sm text-muted-foreground">
-          <p>{t('copyright')}</p>
-          <div className="flex items-center gap-3">
-            <a
-              href="https://fuluckai.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-brand-mint transition-colors"
-            >
-              fuluckai.com
-            </a>
-            <span className="text-border">|</span>
-            <a
-              href="https://fuluck-cattery.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-brand-mint transition-colors"
-            >
-              {t('cattery')}
-            </a>
-            <span className="text-border">|</span>
-            <a
-              href="https://github.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-brand-mint transition-colors"
-            >
-              GitHub
-            </a>
+        <div className="grid gap-6 md:grid-cols-[1.3fr_1fr_1.2fr] md:items-start">
+          <div className="space-y-2 text-sm text-muted-foreground">
+            <p>{t('copyright')}</p>
+            <p>{t('powered_by')}</p>
+          </div>
+
+          <div className="space-y-3">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground/80">
+              {t('sites_title')}
+            </p>
+            <div className="flex flex-col gap-2 text-sm text-muted-foreground">
+              {siteLinks.map((link) => (
+                <a
+                  key={link.href}
+                  href={link.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-brand-mint transition-colors"
+                >
+                  {link.labelKey ? t(link.labelKey) : link.label}
+                </a>
+              ))}
+            </div>
+          </div>
+
+          <div className="space-y-3">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground/80">
+              {t('social_title')}
+            </p>
+            <div className="flex flex-col gap-2 text-sm text-muted-foreground">
+              {socialLinks.map((link) => (
+                <a
+                  key={link.href}
+                  href={link.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group flex items-center justify-between gap-3 rounded-xl border border-border/40 px-3 py-2 transition-colors hover:border-brand-mint/40 hover:text-brand-mint"
+                >
+                  <span>{link.labelKey ? t(link.labelKey) : link.label}</span>
+                  <span className="text-xs text-muted-foreground transition-colors group-hover:text-brand-mint/80">
+                    {link.valueKey ? t(link.valueKey) : link.value}
+                  </span>
+                </a>
+              ))}
+            </div>
           </div>
         </div>
       </div>

@@ -254,7 +254,7 @@ function TimelineCard({
                 {entry.content[lang]}
                 {entry.blogSlug && (
                   <a
-                    href={`/${locale}/blog/${entry.blogSlug}`}
+                    href={`/blog/${entry.blogSlug}`}
                     className="mt-3 inline-flex items-center gap-1 text-sm font-medium transition-colors"
                     style={{ color: config.color }}
                     onClick={(e) => e.stopPropagation()}
@@ -264,7 +264,7 @@ function TimelineCard({
                 )}
                 {entry.newsId && (
                   <a
-                    href={`/${locale}/news/${entry.newsId}`}
+                    href={`/news/${entry.newsId}`}
                     className="mt-3 inline-flex items-center gap-1 text-sm font-medium transition-colors"
                     style={{ color: config.color }}
                     onClick={(e) => e.stopPropagation()}

@@ -13,7 +13,8 @@
     "about": "关于",
     "more": "更多",
     "news": "资讯",
-    "close_menu": "关闭菜单"
+    "close_menu": "关闭菜单",
+    "cattery": "猫舎"
   },
   "home": {
     "hero_title": "AI × 猫舎 × 大阪生活",
@@ -122,7 +123,10 @@
         "category": "案例",
         "summary": "大阪市内诊所导入 AI 自动化的真实案例，从预约管理一路延伸到患者沟通。"
       }
-    }
+    },
+    "feed_filter_all": "全部",
+    "feed_filter_ai": "AI",
+    "feed_filter_cattery": "猫舎"
   },
   "common": {
     "theme_toggle": "切换主题",
@@ -167,7 +171,11 @@
   "footer": {
     "copyright": "© 2026 Will AI Lab. All rights reserved.",
     "powered_by": "Powered by Next.js & AI",
-    "cattery": "福楽キャッテリー"
+    "cattery": "福楽キャッテリー",
+    "sites_title": "站点",
+    "social_title": "社交链接",
+    "xiaohongshu": "小红书",
+    "xiaohongshu_handle": "大阪猫舍日常FullucKitty"
   },
   "timeline": {
     "title": "时间线",
@@ -370,5 +378,50 @@
     "description": "The page you're looking for doesn't exist or has been moved.",
     "home": "回到首页",
     "blog": "去看博客"
+  },
+  "cattery": {
+    "title": "猫舎日记",
+    "subtitle": "サイベリアンと暮らす大阪の日々",
+    "page_title": "猫舎",
+    "page_desc": "福楽キャッテリーの日常 — サイベリアンと暮らす大阪生活",
+    "headline": "福楽キャッテリー的日常，回到猫与人的真实节奏。",
+    "intro_body": "这里记录大阪猫舎的真实运营节奏：幼猫成长、亲猫状态、空间维护、客户沟通，以及把 AI 放进猫舎之后，日常是怎样一点点变轻的。",
+    "cta_line": "通过官网联系 LINE",
+    "cta_timeline": "查看时间线",
+    "highlight_1_label": "Breeder Award",
+    "highlight_1_body": "みんなの子猫ブリーダー 2025 上半期全国第一，持续维持满分评价。",
+    "highlight_2_label": "Osaka Base",
+    "highlight_2_body": "大阪城東区的日常照护、社会化训练与对面见学都在这里发生。",
+    "highlight_3_label": "LINE Support",
+    "highlight_3_body": "从初次咨询到卒業后的长期交流，LINE 仍然是最重要的联系入口。",
+    "daily_title": "猫舎日常",
+    "daily_intro": "不是单纯晒猫，而是把繁育、照护、记录和客户沟通放回同一个生活现场。",
+    "post_1_tag": "成长记录",
+    "post_1_date": "每天更新",
+    "post_1_title": "幼猫的变化，是猫舎里最重要的时间线。",
+    "post_1_body": "断奶、体重、性格与社会化反应都会被持续记录。内容不只是可爱，而是让未来家庭看见稳定成长的过程。",
+    "post_2_tag": "猫舎运营",
+    "post_2_date": "大阪·城東区",
+    "post_2_title": "空间管理和清洁，是品牌可信度的一部分。",
+    "post_2_body": "从温湿度、动线到日常清洁，每一个细节都直接影响猫咪状态，也会反映在客户第一次见学的感受上。",
+    "post_3_tag": "客户沟通",
+    "post_3_date": "LINE 主渠道",
+    "post_3_title": "沟通不是销售话术，而是陪伴式说明。",
+    "post_3_body": "从选猫咨询到回家后的适应期，福楽キャッテリー更重视长期关系，因此回复节奏、说明方式与售后支持都保持一致。",
+    "siberian_title": "关于サイベリアン",
+    "siberian_intro": "サイベリアン既有厚实被毛与存在感，也需要细致的照护和稳定环境。",
+    "info_1_title": "毛量丰富，但护理要温和稳定",
+    "info_1_body": "换毛季需要更规律的梳理，重点是减少拉扯与打结，让猫咪把梳毛视作安全的互动。",
+    "info_2_title": "性格亲人，适合建立高频互动",
+    "info_2_body": "サイベリアン通常对人保持兴趣，喜欢参与家庭日常，因此早期社会化和环境刺激很关键。",
+    "info_3_title": "繁育重点是健康、性格与长期陪伴",
+    "info_3_body": "比起单纯追求外观，福楽キャッテリー更重视健康管理、遗传规划和进入新家庭后的适应质量。",
+    "contact_kicker": "Contact",
+    "contact_title": "想了解当前猫舎情况，可以先从 LINE 开始。",
+    "contact_body": "如果你想咨询见学、预定计划、在养环境或日常照护，先通过官网入口联系最顺畅。这里会优先整理需要的信息，再进入具体沟通。",
+    "contact_line_note": "LINE：通过福楽キャッテリー官网入口联系",
+    "contact_instagram_note": "Instagram：@fuluck_cattery 记录更多日常片段",
+    "contact_cta": "前往猫舎官网",
+    "contact_secondary_cta": "打开 Instagram"
   }
 }

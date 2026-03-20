@@ -9,11 +9,9 @@ import { UserMenu } from '@/components/shared/user-menu';
 
 const navItems = [
   { key: 'blog', href: '/blog' },
-  { key: 'news', href: '/news' },
-  { key: 'timeline', href: '/timeline' },
+  { key: 'cattery', href: '/cattery' },
   { key: 'cases', href: '/cases' },
-  { key: 'life', href: '/life' },
-  { key: 'social', href: '/social' },
+  { key: 'timeline', href: '/timeline' },
   { key: 'about', href: '/about' },
 ] as const;
 
@@ -29,14 +27,12 @@ export function Header() {
   return (
     <header className="sticky top-0 z-50 w-full border-b border-white/[0.06] dark:border-white/[0.06] border-gray-200/60 bg-white/80 dark:bg-[rgba(10,10,15,0.7)] backdrop-blur-xl">
       <div className="mx-auto flex h-16 max-w-5xl items-center justify-between px-4 sm:px-6">
-        {/* Logo with brand gradient */}
         <Link href="/" className="flex items-center gap-2 group">
           <span className="text-lg font-bold bg-gradient-to-r from-brand-mint via-brand-cyan to-brand-taro bg-clip-text text-transparent transition-all duration-300 group-hover:drop-shadow-[0_0_12px_rgba(94,234,212,0.4)]">
             Will&apos;s AI Lab
           </span>
         </Link>
 
-        {/* Desktop navigation */}
         <nav className="hidden md:flex items-center gap-1">
           {navItems.map((item) => {
             const active = isActive(item.href);
@@ -74,13 +70,10 @@ export function Header() {
           })}
         </nav>
 
-        {/* Right side: locale + user menu + theme toggle */}
         <div className="flex items-center gap-2">
-          {/* Desktop: full size */}
           <div className="hidden md:block">
             <LocaleSwitcher />
           </div>
-          {/* Mobile: compact size, always visible in header */}
           <div className="md:hidden">
             <LocaleSwitcher compact />
           </div>
