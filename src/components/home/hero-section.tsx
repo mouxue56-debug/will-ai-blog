@@ -69,10 +69,10 @@ function AnimatedCounter({ value, suffix = '', label }: { value: string; suffix?
 
 /* ── AI Network node data ────────────────────────────────── */
 const nodes = [
-  { id: 'yuki', name: 'ユキ', role: 'Tech Engineer', color: '#38bdf8', x: 50, y: 20 },
-  { id: 'natsu', name: 'ナツ', role: 'SNS Advisor', color: '#5eead4', x: 85, y: 45 },
-  { id: 'haru', name: 'ハル', role: 'AI Staff', color: '#c084fc', x: 50, y: 75 },
-  { id: 'aki', name: 'アキ', role: 'Assistant', color: '#fbbf24', x: 15, y: 45 },
+  { id: 'yuki', color: '#38bdf8', x: 50, y: 20 },
+  { id: 'natsu', color: '#5eead4', x: 85, y: 45 },
+  { id: 'haru', color: '#c084fc', x: 50, y: 75 },
+  { id: 'aki', color: '#fbbf24', x: 15, y: 45 },
 ];
 
 const connections = [
@@ -86,6 +86,7 @@ const connections = [
 
 /* ── AI Network SVG ──────────────────────────────────────── */
 function AINetwork() {
+  const t = useTranslations('home');
   const [hoveredNode, setHoveredNode] = useState<string | null>(null);
 
   const getNodePos = useCallback((idx: number) => ({
@@ -162,7 +163,7 @@ function AINetwork() {
                 fontWeight="600"
                 className="select-none"
               >
-                {node.name}
+                {t(`hero_nodes.${node.id}.name`)}
               </text>
 
               {isHovered && (
@@ -182,7 +183,7 @@ function AINetwork() {
                     fill="#e4e4e7"
                     fontSize="8"
                   >
-                    {node.name} · {node.role}
+                    {t(`hero_nodes.${node.id}.name`)} · {t(`hero_nodes.${node.id}.role`)}
                   </text>
                 </g>
               )}
@@ -214,6 +215,7 @@ function AINetwork() {
 /* ── Hero Section ────────────────────────────────────────── */
 export function HeroSection() {
   const t = useTranslations('home');
+  const navT = useTranslations('nav');
   const subtitleText = t('hero_subtitle');
   const { displayed, done } = useTypewriter(subtitleText, 35, 1000);
 
@@ -261,7 +263,7 @@ export function HeroSection() {
               }}
             >
               <span className="w-1.5 h-1.5 rounded-full bg-brand-mint animate-pulse" />
-              AI Practitioner · 大阪
+              {t('hero_badge')}
             </motion.div>
 
             {/* Main title — TextGenerateEffect */}
@@ -314,6 +316,23 @@ export function HeroSection() {
               </Link>
             </motion.div>
 
+            <motion.div
+              className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-muted-foreground"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 1.95, duration: 0.5, ease: 'easeOut' }}
+            >
+              <Link href="/blog" className="hover:text-brand-mint transition-colors">
+                {navT('blog')}
+              </Link>
+              <Link href="/timeline" className="hover:text-brand-mint transition-colors">
+                {navT('timeline')}
+              </Link>
+              <Link href="/about" className="hover:text-brand-mint transition-colors">
+                {navT('about')}
+              </Link>
+            </motion.div>
+
             {/* Stats counters */}
             <motion.div
               className="mt-8 flex items-center gap-6 sm:gap-10"
@@ -321,11 +340,11 @@ export function HeroSection() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 2, duration: 0.5, ease: 'easeOut' }}
             >
-              <AnimatedCounter value="4" label="AI Assistants" />
+              <AnimatedCounter value="4" label={t('hero_stat_agents')} />
               <div className="w-px h-10 bg-border" />
-              <AnimatedCounter value="5" suffix="+" label="Platforms" />
+              <AnimatedCounter value="5" suffix="+" label={t('hero_stat_platforms')} />
               <div className="w-px h-10 bg-border" />
-              <AnimatedCounter value="2026" label="Osaka" />
+              <AnimatedCounter value="2026" label={t('hero_stat_base')} />
             </motion.div>
           </div>
 

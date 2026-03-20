@@ -6,9 +6,8 @@ import { useRef } from 'react';
 import { AnimatedBeam } from '@/components/ui/aceternity';
 
 interface AIInstance {
-  name: string;
-  nickname: string;
-  role: string;
+  key: string;
+  nicknameKey?: string;
   status: 'online' | 'idle';
   tasks: number;
   color: string;
@@ -17,36 +16,30 @@ interface AIInstance {
 
 const instances: AIInstance[] = [
   {
-    name: 'ユキ',
-    nickname: '小爪爪',
-    role: '技术工程',
+    key: 'yuki',
+    nicknameKey: 'ai_instances.yuki.nickname',
     status: 'online',
     tasks: 12,
     color: 'text-brand-cyan',
     dotColor: 'bg-brand-cyan',
   },
   {
-    name: 'ナツ',
-    nickname: '小触手',
-    role: 'SNS运营',
+    key: 'natsu',
+    nicknameKey: 'ai_instances.natsu.nickname',
     status: 'online',
     tasks: 8,
     color: 'text-brand-coral',
     dotColor: 'bg-brand-coral',
   },
   {
-    name: 'ハル',
-    nickname: '',
-    role: '业务支持',
+    key: 'haru',
     status: 'online',
     tasks: 5,
     color: 'text-brand-mint',
     dotColor: 'bg-brand-mint',
   },
   {
-    name: 'アキ',
-    nickname: '',
-    role: '移动助手',
+    key: 'aki',
     status: 'idle',
     tasks: 2,
     color: 'text-brand-mango',
@@ -88,9 +81,7 @@ export function AIDashboard() {
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ delay: 0.2, duration: 0.6, ease: 'easeOut' }}
         >
-          {/* AnimatedBeam connections replacing old SVG */}
           <div className="absolute inset-0 pointer-events-none opacity-30 dark:opacity-20 overflow-hidden">
-            {/* Horizontal beams */}
             <AnimatedBeam
               pathD="M 40 60 Q 200 40 360 60"
               duration={4}
@@ -107,7 +98,6 @@ export function AIDashboard() {
               height={200}
               className="absolute inset-0 w-full h-full"
             />
-            {/* Diagonal beams */}
             <AnimatedBeam
               pathD="M 80 40 Q 200 100 320 160"
               duration={6}
@@ -126,33 +116,28 @@ export function AIDashboard() {
             />
           </div>
 
-          {/* Instances grid */}
           <div className="relative z-10 grid grid-cols-2 sm:grid-cols-4 gap-4">
             {instances.map((inst, i) => (
               <motion.div
-                key={inst.name}
+                key={inst.key}
                 className="flex flex-col items-center gap-3 rounded-lg bg-white/5 dark:bg-white/[0.03] p-4 border border-white/[0.06] backdrop-blur-sm"
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={isInView ? { opacity: 1, scale: 1 } : {}}
                 transition={{ delay: 0.3 + i * 0.1, duration: 0.5, ease: 'easeOut' }}
               >
-                {/* Status dot */}
                 <StatusDot status={inst.status} color={inst.dotColor} />
 
-                {/* Name */}
                 <div className="text-center">
                   <div className={`text-lg font-bold ${inst.color}`}>
-                    {inst.name}
+                    {t(`ai_instances.${inst.key}.name`)}
                   </div>
-                  {inst.nickname && (
-                    <div className="text-xs text-muted-foreground">{inst.nickname}</div>
-                  )}
+                  {inst.nicknameKey ? (
+                    <div className="text-xs text-muted-foreground">{t(inst.nicknameKey)}</div>
+                  ) : null}
                 </div>
 
-                {/* Role */}
-                <div className="text-xs text-muted-foreground">{inst.role}</div>
+                <div className="text-xs text-muted-foreground">{t(`ai_instances.${inst.key}.role`)}</div>
 
-                {/* Tasks today */}
                 <div className="flex items-center gap-1.5 text-sm">
                   <span className="text-muted-foreground">{t('ai_tasks_today')}</span>
                   <span className="font-semibold">{inst.tasks}</span>

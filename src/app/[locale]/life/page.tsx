@@ -15,11 +15,8 @@ export default function LifePage() {
           <p className="mt-3 text-muted-foreground text-base sm:text-lg">{t('subtitle')}</p>
         </div>
 
-        {/* Coming soon notice */}
         <div className="glass-card p-4 sm:p-5 mb-8 text-center">
-          <p className="text-sm text-muted-foreground">
-            ✨ 真实内容即将上线，敬请期待
-          </p>
+          <p className="text-sm text-muted-foreground">✨ {t('coming_soon')}</p>
         </div>
 
         <LifeGrid />

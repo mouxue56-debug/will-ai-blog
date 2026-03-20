@@ -17,9 +17,9 @@ function YouTubeSection() {
   const inView = useInView(ref, { once: true, margin: '-80px' });
 
   const videos = [
-    { title: 'サイベリアンの子猫の成長記録', date: '2026-03-18', views: '2.3K', gradient: 'from-red-500 via-red-400 to-orange-400', emoji: '🐱', videoId: sampleVideoIds[0] },
-    { title: 'AI × 猫舎：一日のワークフロー', date: '2026-03-10', views: '1.8K', gradient: 'from-red-600 via-rose-500 to-pink-400', emoji: '🤖', videoId: sampleVideoIds[1] },
-    { title: '大阪グルメ散歩 - 天王寺編', date: '2026-03-01', views: '3.1K', gradient: 'from-red-400 via-orange-400 to-yellow-400', emoji: '🍜', videoId: sampleVideoIds[2] },
+    { key: 'kittens', date: '2026-03-18', views: '2.3K', gradient: 'from-red-500 via-red-400 to-orange-400', emoji: '🐱', videoId: sampleVideoIds[0] },
+    { key: 'workflow', date: '2026-03-10', views: '1.8K', gradient: 'from-red-600 via-rose-500 to-pink-400', emoji: '🤖', videoId: sampleVideoIds[1] },
+    { key: 'foodwalk', date: '2026-03-01', views: '3.1K', gradient: 'from-red-400 via-orange-400 to-yellow-400', emoji: '🍜', videoId: sampleVideoIds[2] },
   ];
 
   return (
@@ -50,7 +50,7 @@ function YouTubeSection() {
         transition={{ delay: 0.2, duration: 0.4 }}
         className="mb-5"
       >
-        <YouTubeEmbed videoId={videos[0].videoId} title={videos[0].title} />
+        <YouTubeEmbed videoId={videos[0].videoId} title={t(`youtube_videos.${videos[0].key}`)} />
       </motion.div>
 
       {/* More video cards */}
@@ -74,7 +74,7 @@ function YouTubeSection() {
               </div>
             </div>
             <div className="p-3">
-              <h4 className="text-sm font-medium line-clamp-2 mb-1">{v.title}</h4>
+              <h4 className="text-sm font-medium line-clamp-2 mb-1">{t(`youtube_videos.${v.key}`)}</h4>
               <div className="flex justify-between text-xs text-muted-foreground">
                 <span>{v.date}</span>
                 <span>▶ {v.views}</span>

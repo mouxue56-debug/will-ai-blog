@@ -12,7 +12,8 @@
     "social": "社交",
     "about": "关于",
     "more": "更多",
-    "news": "资讯"
+    "news": "资讯",
+    "close_menu": "关闭菜单"
   },
   "home": {
     "hero_title": "AI × 猫舎 × 大阪生活",
@@ -51,14 +52,89 @@
     "story_node4_desc": "AI博客上线，记录这一切。从踩坑到跑通，从一个人到一个团队——这是一个普通人和AI共同成长的故事。",
     "feed_section_title": "📡 最新动态",
     "tab_blog": "📝 博客",
-    "tab_news": "🤖 AI资讯"
+    "tab_news": "🤖 AI资讯",
+    "my_world_title": "我的世界",
+    "hero_badge": "AI 实践者 · 大阪",
+    "hero_stat_agents": "AI 助手",
+    "hero_stat_platforms": "平台",
+    "hero_stat_base": "大阪据点",
+    "hero_nodes": {
+      "yuki": {
+        "name": "ユキ",
+        "role": "技术工程"
+      },
+      "natsu": {
+        "name": "ナツ",
+        "role": "SNS顾问"
+      },
+      "haru": {
+        "name": "ハル",
+        "role": "业务支持"
+      },
+      "aki": {
+        "name": "アキ",
+        "role": "助理"
+      }
+    },
+    "ai_instances": {
+      "yuki": {
+        "name": "ユキ",
+        "nickname": "小爪爪",
+        "role": "技术工程"
+      },
+      "natsu": {
+        "name": "ナツ",
+        "nickname": "小触手",
+        "role": "SNS运营"
+      },
+      "haru": {
+        "name": "ハル",
+        "role": "业务支持"
+      },
+      "aki": {
+        "name": "アキ",
+        "role": "移动助手"
+      }
+    },
+    "feed_items": {
+      "workflow": {
+        "title": "用 4 个 AI 助手管理日常工作",
+        "category": "AI心得",
+        "summary": "如何让四个 AI 实例各司其职、高效协作，从工作流设计到实际踩坑经验。"
+      },
+      "siberian": {
+        "title": "春天的サイベリアン换毛季",
+        "category": "猫咪",
+        "summary": "西伯利亚猫换毛季的养护指南，包含梳毛技巧和毛球预防。"
+      },
+      "sakura": {
+        "title": "大阪城公园的樱花快开了",
+        "category": "生活",
+        "summary": "大阪城公园已经开始有春意，今年的赏樱路线和最佳时间整理在这里。"
+      },
+      "openclaw": {
+        "title": "OpenClaw 多实例架构踩坑记",
+        "category": "技术笔记",
+        "summary": "同一台 Mac mini 上运行多个 OpenClaw 实例的实战经验，重点是端口管理和守护进程。"
+      },
+      "clinic": {
+        "title": "医疗诊所的 AI 导入案例",
+        "category": "案例",
+        "summary": "大阪市内诊所导入 AI 自动化的真实案例，从预约管理一路延伸到患者沟通。"
+      }
+    }
   },
   "common": {
     "theme_toggle": "切换主题",
     "language": "语言",
     "back_to_top": "回到顶部",
     "read_more": "阅读更多",
-    "loading": "加载中..."
+    "loading": "加载中...",
+    "locale_names": {
+      "zh": "中文",
+      "ja": "日本語",
+      "en": "EN"
+    }
   },
   "blog": {
     "title": "博客",
@@ -177,7 +253,8 @@
     "filter_travel": "旅行",
     "cat_showcase_title": "猫咪精选",
     "page_title": "生活",
-    "page_desc": "大阪生活、猫咪日常、美食探店 — Will的生活碎片"
+    "page_desc": "大阪生活、猫咪日常、美食探店 — Will的生活碎片",
+    "coming_soon": "真实内容即将上线，敬请期待"
   },
   "social": {
     "title": "关注我",
@@ -191,7 +268,31 @@
     "subscribe": "订阅频道",
     "more_platforms_hint": "更多平台持续更新中，欢迎关注 ✨",
     "page_title": "关注我",
-    "page_desc": "在各平台关注Will — Instagram、TikTok、小红书、GitHub"
+    "page_desc": "在各平台关注Will — Instagram、TikTok、小红书、GitHub",
+    "instagram_posts": {
+      "cats": "サイベリアン的日常",
+      "spring": "大阪的春天",
+      "osaka": "天王寺街景",
+      "nap": "小猫午睡",
+      "plants": "猫与植物",
+      "morning": "早晨例行"
+    },
+    "tiktok_videos": {
+      "morning": {
+        "title": "和猫一起生活的早晨例行"
+      },
+      "ai": {
+        "title": "让 AI 帮忙照看猫舍"
+      },
+      "food": {
+        "title": "大阪街头美食巡礼"
+      }
+    },
+    "youtube_videos": {
+      "kittens": "サイベリアン幼猫成长记录",
+      "workflow": "AI × 猫舍的一天工作流",
+      "foodwalk": "大阪美食散步 · 天王寺篇"
+    }
   },
   "about": {
     "tagline": "大阪 × AI × 猫舎经营者",
@@ -219,7 +320,16 @@
     "calendar_title": "公开日历",
     "calendar_desc": "博客更新、活动、里程碑的时间表。",
     "page_title": "关于",
-    "page_desc": "关于Will — AI实践者、猫舎经营者、大阪在住"
+    "page_desc": "关于Will — AI实践者、猫舎经营者、大阪在住",
+    "display_name_native": "（羅方遠）",
+    "agent_names": {
+      "yuki": "ユキ",
+      "natsu": "ナツ",
+      "haru": "ハル",
+      "aki": "アキ"
+    },
+    "agent_yuki_nickname": "小爪爪",
+    "agent_natsu_nickname": "小触手"
   },
   "news": {
     "title": "📡 实时资讯",
@@ -238,5 +348,27 @@
     "back_to_list": "返回资讯列表",
     "ai_discussion": "AI 讨论",
     "related": "相关资讯"
+  },
+  "auth": {
+    "sign_in": "登录",
+    "sign_out": "登出",
+    "admin_panel": "管理后台",
+    "welcome_back": "欢迎回来",
+    "sign_in_to_lab": "登录 Will AI Lab",
+    "sign_in_with_github": "使用 GitHub 登录",
+    "sign_in_with_google": "使用 Google 登录",
+    "or": "或",
+    "admin_password": "管理员密码",
+    "enter_admin_password": "输入管理员密码",
+    "signing_in": "登录中...",
+    "sign_in_as_admin": "以管理员身份登录",
+    "invalid_password": "密码不正确"
+  },
+  "notFound": {
+    "title": "这只猫把页面藏起来了",
+    "subtitle": "页面可能不存在，或者已经换地方了 🐾",
+    "description": "The page you're looking for doesn't exist or has been moved.",
+    "home": "回到首页",
+    "blog": "去看博客"
   }
 }

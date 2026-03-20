@@ -204,7 +204,7 @@ export function CommentSection({ comments: fallbackComments, postSlug }: Comment
       {submitSuccess && (
         <div className="rounded-lg border border-brand-mint/30 bg-brand-mint/10 p-4 text-center">
           <p className="text-sm text-brand-mint font-medium">
-            ✅ {t('guest_comment_pending') || '评论已提交，审核后将会显示。感谢您的留言！'}
+            ✅ {t('guest_comment_pending')}
           </p>
         </div>
       )}
@@ -241,7 +241,7 @@ export function CommentSection({ comments: fallbackComments, postSlug }: Comment
                 type="text"
                 value={guestName}
                 onChange={(e) => setGuestName(e.target.value)}
-                placeholder={t('guest_name_placeholder') || '你的昵称'}
+                placeholder={t('guest_name_placeholder')}
                 className="w-full mb-2 rounded-md bg-muted/50 px-3 py-2 text-sm placeholder:text-muted-foreground/50 focus:outline-none focus:ring-1 focus:ring-brand-cyan/40"
                 maxLength={30}
               />
@@ -251,8 +251,8 @@ export function CommentSection({ comments: fallbackComments, postSlug }: Comment
               value={newComment}
               onChange={(e) => setNewComment(e.target.value)}
               placeholder={isLoggedIn
-                ? (t('comment_placeholder') || '分享你的想法...')
-                : (t('guest_comment_placeholder') || '分享你的想法...（游客评论需审核后显示）')
+                ? t('comment_placeholder')
+                : t('guest_comment_placeholder')
               }
               className="w-full resize-none rounded-md bg-muted/50 p-3 text-sm placeholder:text-muted-foreground/50 focus:outline-none focus:ring-1 focus:ring-brand-cyan/40"
               rows={3}
@@ -261,7 +261,7 @@ export function CommentSection({ comments: fallbackComments, postSlug }: Comment
               <span className="text-xs text-muted-foreground">
                 {isLoggedIn
                   ? session?.user?.name
-                  : (t('guest_comment_note') || '游客评论需审核后显示')
+                  : t('guest_comment_note')
                 }
               </span>
               <button

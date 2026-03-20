@@ -27,7 +27,7 @@ function ProfileHero() {
       </div>
 
       <div className="text-center sm:text-left">
-        <h1 className="text-3xl sm:text-4xl font-bold">Will<span className="text-muted-foreground font-normal text-lg sm:text-xl ml-2">（羅方遠）</span></h1>
+        <h1 className="text-3xl sm:text-4xl font-bold">Will<span className="text-muted-foreground font-normal text-lg sm:text-xl ml-2">{t('display_name_native')}</span></h1>
         <p className="mt-2 text-lg text-muted-foreground">{t('tagline')}</p>
         <p className="mt-4 text-sm sm:text-base text-muted-foreground leading-relaxed max-w-xl">
           {t('bio')}
@@ -40,8 +40,8 @@ function ProfileHero() {
 /* ── AI Team ─────────────────────────────────────────── */
 
 interface AIAgent {
-  name: string;
-  nickname: string;
+  key: string;
+  nicknameKey?: string;
   roleKey: string;
   model: string;
   color: string;
@@ -52,10 +52,10 @@ interface AIAgent {
 }
 
 const agents: AIAgent[] = [
-  { name: 'ユキ', nickname: '小爪爪', roleKey: 'agent_yuki_role', model: 'Claude', color: 'text-brand-mint', bgColor: 'bg-brand-mint/10', borderColor: 'border-brand-mint/30', beamFrom: '#5eead4', beamTo: '#38bdf8' },
-  { name: 'ナツ', nickname: '小触手', roleKey: 'agent_natsu_role', model: 'Kimi', color: 'text-brand-coral', bgColor: 'bg-brand-coral/10', borderColor: 'border-brand-coral/30', beamFrom: '#fbbf24', beamTo: '#f97316' },
-  { name: 'ハル', nickname: '', roleKey: 'agent_haru_role', model: 'DeepSeek', color: 'text-brand-cyan', bgColor: 'bg-brand-cyan/10', borderColor: 'border-brand-cyan/30', beamFrom: '#38bdf8', beamTo: '#818cf8' },
-  { name: 'アキ', nickname: '', roleKey: 'agent_aki_role', model: 'Qwen', color: 'text-brand-taro', bgColor: 'bg-brand-taro/10', borderColor: 'border-brand-taro/30', beamFrom: '#c084fc', beamTo: '#e879f9' },
+  { key: 'yuki', nicknameKey: 'agent_yuki_nickname', roleKey: 'agent_yuki_role', model: 'Claude', color: 'text-brand-mint', bgColor: 'bg-brand-mint/10', borderColor: 'border-brand-mint/30', beamFrom: '#5eead4', beamTo: '#38bdf8' },
+  { key: 'natsu', nicknameKey: 'agent_natsu_nickname', roleKey: 'agent_natsu_role', model: 'Kimi', color: 'text-brand-coral', bgColor: 'bg-brand-coral/10', borderColor: 'border-brand-coral/30', beamFrom: '#fbbf24', beamTo: '#f97316' },
+  { key: 'haru', roleKey: 'agent_haru_role', model: 'DeepSeek', color: 'text-brand-cyan', bgColor: 'bg-brand-cyan/10', borderColor: 'border-brand-cyan/30', beamFrom: '#38bdf8', beamTo: '#818cf8' },
+  { key: 'aki', roleKey: 'agent_aki_role', model: 'Qwen', color: 'text-brand-taro', bgColor: 'bg-brand-taro/10', borderColor: 'border-brand-taro/30', beamFrom: '#c084fc', beamTo: '#e879f9' },
 ];
 
 function AITeamSection() {
@@ -93,7 +93,7 @@ function AITeamSection() {
         <div className="relative z-10 grid grid-cols-2 sm:grid-cols-4 gap-4">
           {agents.map((agent, i) => (
             <motion.div
-              key={agent.name}
+              key={agent.key}
               initial={{ opacity: 0, scale: 0.9 }}
               animate={inView ? { opacity: 1, scale: 1 } : {}}
               transition={{ delay: 0.2 + i * 0.1, duration: 0.4 }}
@@ -106,10 +106,10 @@ function AITeamSection() {
                 duration={8 + i * 2}
                 delay={i * 0.5}
               />
-              <div className={`text-2xl sm:text-3xl font-bold ${agent.color}`}>{agent.name}</div>
-              {agent.nickname && (
-                <div className="text-xs text-muted-foreground">{agent.nickname}</div>
-              )}
+              <div className={`text-2xl sm:text-3xl font-bold ${agent.color}`}>{t(`agent_names.${agent.key}`)}</div>
+              {agent.nicknameKey ? (
+                <div className="text-xs text-muted-foreground">{t(agent.nicknameKey)}</div>
+              ) : null}
               <div className="text-xs sm:text-sm text-muted-foreground">{t(agent.roleKey)}</div>
               <div className={`text-[10px] sm:text-xs ${agent.color} font-medium px-2 py-0.5 rounded-full ${agent.bgColor}`}>
                 {agent.model}

@@ -12,7 +12,8 @@
     "social": "Social",
     "about": "About",
     "more": "More",
-    "news": "News"
+    "news": "News",
+    "close_menu": "Close menu"
   },
   "home": {
     "hero_title": "AI × Cattery × Osaka Life",
@@ -51,14 +52,89 @@
     "story_node4_desc": "Launched this AI blog to document it all. From failures to breakthroughs, from one person to a team — a story of a regular person growing alongside AI.",
     "feed_section_title": "📡 Latest Updates",
     "tab_blog": "📝 Blog",
-    "tab_news": "🤖 AI News"
+    "tab_news": "🤖 AI News",
+    "my_world_title": "My World",
+    "hero_badge": "AI Practitioner · Osaka",
+    "hero_stat_agents": "AI Assistants",
+    "hero_stat_platforms": "Platforms",
+    "hero_stat_base": "Osaka Base",
+    "hero_nodes": {
+      "yuki": {
+        "name": "Yuki",
+        "role": "Tech Engineer"
+      },
+      "natsu": {
+        "name": "Natsu",
+        "role": "SNS Advisor"
+      },
+      "haru": {
+        "name": "Haru",
+        "role": "Operations Support"
+      },
+      "aki": {
+        "name": "Aki",
+        "role": "Assistant"
+      }
+    },
+    "ai_instances": {
+      "yuki": {
+        "name": "Yuki",
+        "nickname": "Little Claw",
+        "role": "Tech Engineering"
+      },
+      "natsu": {
+        "name": "Natsu",
+        "nickname": "Little Tentacle",
+        "role": "SNS Operations"
+      },
+      "haru": {
+        "name": "Haru",
+        "role": "Business Support"
+      },
+      "aki": {
+        "name": "Aki",
+        "role": "Mobile Assistant"
+      }
+    },
+    "feed_items": {
+      "workflow": {
+        "title": "Running Daily Work with Four AI Assistants",
+        "category": "AI Insights",
+        "summary": "How I split responsibilities across four AI instances and turn that structure into an actual working workflow."
+      },
+      "siberian": {
+        "title": "Spring Shedding Season for Siberians",
+        "category": "Cats",
+        "summary": "A practical care guide for Siberian cats during shedding season, including brushing routines and hairball prevention."
+      },
+      "sakura": {
+        "title": "Osaka Castle Park Sakura Is Almost Here",
+        "category": "Life",
+        "summary": "Cherry blossom season is around the corner, so I pulled together my favorite routes and timing around Osaka Castle Park."
+      },
+      "openclaw": {
+        "title": "Hard Lessons from an OpenClaw Multi-Instance Setup",
+        "category": "Tech Notes",
+        "summary": "What I learned from running multiple OpenClaw instances on one Mac mini, especially around ports and process supervision."
+      },
+      "clinic": {
+        "title": "An AI Rollout for a Medical Clinic",
+        "category": "Cases",
+        "summary": "A real AI automation rollout for a clinic in Osaka, from appointment workflows to patient-facing operations."
+      }
+    }
   },
   "common": {
     "theme_toggle": "Toggle Theme",
     "language": "Language",
     "back_to_top": "Back to Top",
     "read_more": "Read More",
-    "loading": "Loading..."
+    "loading": "Loading...",
+    "locale_names": {
+      "zh": "中文",
+      "ja": "日本語",
+      "en": "EN"
+    }
   },
   "blog": {
     "title": "Blog",
@@ -177,7 +253,8 @@
     "filter_travel": "Travel",
     "cat_showcase_title": "Featured Cats",
     "page_title": "Life",
-    "page_desc": "Osaka life, cats, food spots — fragments of Will's daily life"
+    "page_desc": "Osaka life, cats, food spots — fragments of Will's daily life",
+    "coming_soon": "Real stories and updates are coming soon"
   },
   "social": {
     "title": "Follow Me",
@@ -191,7 +268,31 @@
     "subscribe": "Subscribe",
     "more_platforms_hint": "More platforms coming soon ✨",
     "page_title": "Follow Me",
-    "page_desc": "Follow Will on all platforms — Instagram, TikTok, Xiaohongshu, GitHub"
+    "page_desc": "Follow Will on all platforms — Instagram, TikTok, Xiaohongshu, GitHub",
+    "instagram_posts": {
+      "cats": "Daily Siberian moments",
+      "spring": "Spring in Osaka",
+      "osaka": "Views around Tennoji",
+      "nap": "Kitten nap time",
+      "plants": "Cats and plants",
+      "morning": "Morning routine"
+    },
+    "tiktok_videos": {
+      "morning": {
+        "title": "Morning Routine with Cats"
+      },
+      "ai": {
+        "title": "Letting AI Help with Cat Care"
+      },
+      "food": {
+        "title": "Osaka Street Food Walk"
+      }
+    },
+    "youtube_videos": {
+      "kittens": "Growing Up with Siberian Kittens",
+      "workflow": "A Day of AI × Cattery Workflow",
+      "foodwalk": "Osaka Food Walk: Tennoji Edition"
+    }
   },
   "about": {
     "tagline": "Osaka × AI × Cattery Owner",
@@ -219,7 +320,16 @@
     "calendar_title": "Public Calendar",
     "calendar_desc": "Schedule of blog updates, events, and milestones.",
     "page_title": "About",
-    "page_desc": "About Will — AI practitioner, cattery owner, based in Osaka"
+    "page_desc": "About Will — AI practitioner, cattery owner, based in Osaka",
+    "display_name_native": "(Luo Fangyuan)",
+    "agent_names": {
+      "yuki": "Yuki",
+      "natsu": "Natsu",
+      "haru": "Haru",
+      "aki": "Aki"
+    },
+    "agent_yuki_nickname": "Little Claw",
+    "agent_natsu_nickname": "Little Tentacle"
   },
   "news": {
     "title": "📡 Live News Feed",
@@ -238,5 +348,27 @@
     "back_to_list": "Back to News",
     "ai_discussion": "AI Discussion",
     "related": "Related News"
+  },
+  "auth": {
+    "sign_in": "Sign in",
+    "sign_out": "Sign out",
+    "admin_panel": "Admin panel",
+    "welcome_back": "Welcome back",
+    "sign_in_to_lab": "Sign in to Will's AI Lab",
+    "sign_in_with_github": "Sign in with GitHub",
+    "sign_in_with_google": "Sign in with Google",
+    "or": "or",
+    "admin_password": "Admin password",
+    "enter_admin_password": "Enter admin password",
+    "signing_in": "Signing in...",
+    "sign_in_as_admin": "Sign in as Admin",
+    "invalid_password": "Incorrect password"
+  },
+  "notFound": {
+    "title": "This cat hid the page",
+    "subtitle": "The page may be missing or has moved somewhere else 🐾",
+    "description": "The page you're looking for doesn't exist or has been moved.",
+    "home": "Back Home",
+    "blog": "Read the Blog"
   }
 }

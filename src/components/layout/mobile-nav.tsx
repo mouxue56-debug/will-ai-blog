@@ -36,6 +36,7 @@ const moreTabs = [
 
 export function MobileNav() {
   const t = useTranslations('nav');
+  const authT = useTranslations('auth');
   const pathname = usePathname();
   const [moreOpen, setMoreOpen] = useState(false);
   const { data: session } = useSession();
@@ -74,7 +75,7 @@ export function MobileNav() {
                 <button
                   onClick={() => setMoreOpen(false)}
                   className="rounded-md p-1 text-muted-foreground hover:text-foreground"
-                  aria-label="Close menu"
+                  aria-label={t('close_menu')}
                 >
                   <X className="h-4 w-4" />
                 </button>
@@ -118,7 +119,7 @@ export function MobileNav() {
                       }}
                       className="text-xs text-red-400 hover:text-red-300 transition-colors"
                     >
-                      登出
+                      {authT('sign_out')}
                     </button>
                   </div>
                 ) : (
@@ -128,7 +129,7 @@ export function MobileNav() {
                     className="flex items-center gap-2 px-3 py-2.5 rounded-xl text-muted-foreground hover:text-foreground hover:bg-white/[0.05] transition-colors"
                   >
                     <LogIn className="h-4 w-4" />
-                    <span className="text-sm">登录</span>
+                    <span className="text-sm">{authT('sign_in')}</span>
                   </Link>
                 )}
               </div>

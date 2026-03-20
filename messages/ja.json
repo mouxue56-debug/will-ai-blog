@@ -12,7 +12,8 @@
     "social": "ソーシャル",
     "about": "について",
     "more": "もっと",
-    "news": "ニュース"
+    "news": "ニュース",
+    "close_menu": "メニューを閉じる"
   },
   "home": {
     "hero_title": "AI × キャッテリー × 大阪ライフ",
@@ -51,14 +52,89 @@
     "story_node4_desc": "AIブログを立ち上げ、この全てを記録する。試行錯誤から成功へ、一人からチームへ——これは普通の人間とAIが共に成長するストーリーだ。",
     "feed_section_title": "📡 最新情報",
     "tab_blog": "📝 ブログ",
-    "tab_news": "🤖 AIニュース"
+    "tab_news": "🤖 AIニュース",
+    "my_world_title": "My World",
+    "hero_badge": "AI実践者・大阪",
+    "hero_stat_agents": "AIアシスタント",
+    "hero_stat_platforms": "プラットフォーム",
+    "hero_stat_base": "Osaka Base",
+    "hero_nodes": {
+      "yuki": {
+        "name": "ユキ",
+        "role": "技術エンジニア"
+      },
+      "natsu": {
+        "name": "ナツ",
+        "role": "SNSアドバイザー"
+      },
+      "haru": {
+        "name": "ハル",
+        "role": "業務サポート"
+      },
+      "aki": {
+        "name": "アキ",
+        "role": "アシスタント"
+      }
+    },
+    "ai_instances": {
+      "yuki": {
+        "name": "ユキ",
+        "nickname": "小爪爪",
+        "role": "技術エンジニアリング"
+      },
+      "natsu": {
+        "name": "ナツ",
+        "nickname": "小触手",
+        "role": "SNS運用"
+      },
+      "haru": {
+        "name": "ハル",
+        "role": "ビジネスサポート"
+      },
+      "aki": {
+        "name": "アキ",
+        "role": "モバイルアシスタント"
+      }
+    },
+    "feed_items": {
+      "workflow": {
+        "title": "4体のAIアシスタントで日常業務を回す方法",
+        "category": "AI実践",
+        "summary": "4つのAIインスタンスをどう役割分担させ、実運用で連携させているかをワークフローごとに整理。"
+      },
+      "siberian": {
+        "title": "春のサイベリアン換毛シーズン",
+        "category": "猫",
+        "summary": "サイベリアンの換毛期ケアをまとめた実践メモ。ブラッシングのコツと毛玉対策を紹介。"
+      },
+      "sakura": {
+        "title": "大阪城公園の桜、そろそろ見頃",
+        "category": "暮らし",
+        "summary": "大阪城公園で春の気配が強くなってきました。今年のお花見ルートとおすすめ時間帯をまとめています。"
+      },
+      "openclaw": {
+        "title": "OpenClawマルチインスタンス構成の落とし穴",
+        "category": "技術ノート",
+        "summary": "1台のMac miniで複数のOpenClawを動かした実体験。ポート管理とプロセス運用の要点を共有。"
+      },
+      "clinic": {
+        "title": "クリニック向けAI導入の実例",
+        "category": "ケース",
+        "summary": "大阪市内のクリニックで進めたAI自動化導入事例。予約管理から患者対応までの流れを振り返ります。"
+      }
+    }
   },
   "common": {
     "theme_toggle": "テーマ切替",
     "language": "言語",
     "back_to_top": "トップに戻る",
     "read_more": "もっと読む",
-    "loading": "読み込み中..."
+    "loading": "読み込み中...",
+    "locale_names": {
+      "zh": "中文",
+      "ja": "日本語",
+      "en": "EN"
+    }
   },
   "blog": {
     "title": "ブログ",
@@ -177,7 +253,8 @@
     "filter_travel": "旅行",
     "cat_showcase_title": "猫ちゃん紹介",
     "page_title": "ライフ",
-    "page_desc": "大阪生活、猫との日々、グルメ探訪 — Willの日常"
+    "page_desc": "大阪生活、猫との日々、グルメ探訪 — Willの日常",
+    "coming_soon": "実際のコンテンツはまもなく公開予定です"
   },
   "social": {
     "title": "フォローする",
@@ -191,7 +268,31 @@
     "subscribe": "チャンネル登録",
     "more_platforms_hint": "他のプラットフォームも随時更新中です ✨",
     "page_title": "フォローする",
-    "page_desc": "各プラットフォームでWillをフォロー — Instagram、TikTok、小紅書、GitHub"
+    "page_desc": "各プラットフォームでWillをフォロー — Instagram、TikTok、小紅書、GitHub",
+    "instagram_posts": {
+      "cats": "サイベリアンの日常",
+      "spring": "大阪の春",
+      "osaka": "天王寺の風景",
+      "nap": "子猫のお昼寝",
+      "plants": "猫と植物",
+      "morning": "朝のルーティン"
+    },
+    "tiktok_videos": {
+      "morning": {
+        "title": "猫と暮らす朝のルーティン"
+      },
+      "ai": {
+        "title": "AIに猫のお世話を手伝ってもらう"
+      },
+      "food": {
+        "title": "大阪ストリートフード巡り"
+      }
+    },
+    "youtube_videos": {
+      "kittens": "サイベリアンの子猫の成長記録",
+      "workflow": "AI × 猫舎の一日ワークフロー",
+      "foodwalk": "大阪グルメ散歩・天王寺編"
+    }
   },
   "about": {
     "tagline": "大阪 × AI × キャッテリー経営者",
@@ -219,7 +320,16 @@
     "calendar_title": "公開カレンダー",
     "calendar_desc": "ブログ更新、イベント、マイルストーンのスケジュールです。",
     "page_title": "について",
-    "page_desc": "Willについて — AI実践者、猫舎経営者、大阪在住"
+    "page_desc": "Willについて — AI実践者、猫舎経営者、大阪在住",
+    "display_name_native": "（羅方遠）",
+    "agent_names": {
+      "yuki": "ユキ",
+      "natsu": "ナツ",
+      "haru": "ハル",
+      "aki": "アキ"
+    },
+    "agent_yuki_nickname": "小爪爪",
+    "agent_natsu_nickname": "小触手"
   },
   "news": {
     "title": "📡 リアルタイムニュース",
@@ -238,5 +348,27 @@
     "back_to_list": "ニュース一覧に戻る",
     "ai_discussion": "AIディスカッション",
     "related": "関連ニュース"
+  },
+  "auth": {
+    "sign_in": "ログイン",
+    "sign_out": "ログアウト",
+    "admin_panel": "管理画面",
+    "welcome_back": "おかえりなさい",
+    "sign_in_to_lab": "Will AI Lab にサインイン",
+    "sign_in_with_github": "GitHub でサインイン",
+    "sign_in_with_google": "Google でサインイン",
+    "or": "または",
+    "admin_password": "管理者パスワード",
+    "enter_admin_password": "管理者パスワードを入力",
+    "signing_in": "サインイン中...",
+    "sign_in_as_admin": "管理者としてサインイン",
+    "invalid_password": "パスワードが正しくありません"
+  },
+  "notFound": {
+    "title": "この猫がページを隠しちゃった",
+    "subtitle": "ページが見つからないか、場所が変わったようです 🐾",
+    "description": "The page you're looking for doesn't exist or has been moved.",
+    "home": "ホームに戻る",
+    "blog": "ブログを見る"
   }
 }

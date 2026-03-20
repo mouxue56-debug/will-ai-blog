@@ -16,9 +16,7 @@ type SlideDirection = 'right' | 'left';
 /* ─── helpers ────────────────────────────────────────────── */
 function formatDate(dateStr: string, locale: string) {
   const d = new Date(dateStr);
-  if (locale === 'ja') return `${d.getMonth() + 1}月${d.getDate()}日`;
-  if (locale === 'zh') return `${d.getMonth() + 1}月${d.getDate()}日`;
-  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  return new Intl.DateTimeFormat(locale, { month: 'short', day: 'numeric' }).format(d);
 }
 
 function getKeywords(entries: TimelineEntry[], lang: 'zh' | 'ja' | 'en', max = 3): string[] {

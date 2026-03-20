@@ -7,15 +7,13 @@ export function Footer() {
 
   return (
     <footer className="pb-20 md:pb-0">
-      {/* Brand gradient divider line */}
       <div className="mx-auto max-w-5xl px-4 sm:px-6">
         <div className="h-px bg-gradient-to-r from-transparent via-brand-mint/60 to-brand-cyan/60 opacity-50" />
       </div>
 
-      {/* Footer content */}
       <div className="mx-auto max-w-5xl px-4 sm:px-6 py-6">
         <div className="flex flex-col sm:flex-row items-center justify-between gap-2 text-sm text-muted-foreground">
-          <p>© 2026 Will AI Lab</p>
+          <p>{t('copyright')}</p>
           <div className="flex items-center gap-3">
             <a
               href="https://fuluckai.com"

@@ -1,11 +1,13 @@
 'use client'
 
 import { useSession, signOut } from 'next-auth/react'
+import { useTranslations } from 'next-intl'
 import { useState, useRef, useEffect } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 
 export function UserMenu() {
+  const t = useTranslations('auth')
   const { data: session, status } = useSession()
   const [open, setOpen] = useState(false)
   const menuRef = useRef<HTMLDivElement>(null)
@@ -21,9 +23,7 @@ export function UserMenu() {
   }, [])
 
   if (status === 'loading') {
-    return (
-      <div className="w-8 h-8 rounded-full bg-white/10 animate-pulse" />
-    )
+    return <div className="w-8 h-8 rounded-full bg-white/10 animate-pulse" />
   }
 
   if (!session?.user) {
@@ -32,7 +32,7 @@ export function UserMenu() {
         href="/auth/signin"
         className="px-4 py-2 text-sm font-medium rounded-lg bg-white/10 hover:bg-white/20 transition-colors"
       >
-        登录
+        {t('sign_in')}
       </Link>
     )
   }
@@ -80,7 +80,7 @@ export function UserMenu() {
                 className="block px-4 py-2 text-sm hover:bg-white/10 transition-colors"
                 onClick={() => setOpen(false)}
               >
-                管理后台
+                {t('admin_panel')}
               </Link>
             )}
             <button
@@ -90,7 +90,7 @@ export function UserMenu() {
               }}
               className="w-full text-left px-4 py-2 text-sm text-red-400 hover:bg-white/10 transition-colors"
             >
-              登出
+              {t('sign_out')}
             </button>
           </div>
         </div>

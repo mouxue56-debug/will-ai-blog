@@ -14,23 +14,14 @@ function timeAgo(dateStr: string, locale: string): string {
   const now = new Date();
   const date = new Date(dateStr);
   const diffMs = now.getTime() - date.getTime();
-  const diffMins = Math.floor(diffMs / 60000);
+  const diffMins = Math.max(1, Math.floor(diffMs / 60000));
   const diffHours = Math.floor(diffMins / 60);
   const diffDays = Math.floor(diffHours / 24);
+  const rtf = new Intl.RelativeTimeFormat(locale, { numeric: 'auto' });
 
-  if (locale === 'ja') {
-    if (diffMins < 60) return `${diffMins}分前`;
-    if (diffHours < 24) return `${diffHours}時間前`;
-    return `${diffDays}日前`;
-  } else if (locale === 'zh') {
-    if (diffMins < 60) return `${diffMins}分钟前`;
-    if (diffHours < 24) return `${diffHours}小时前`;
-    return `${diffDays}天前`;
-  } else {
-    if (diffMins < 60) return `${diffMins}m ago`;
-    if (diffHours < 24) return `${diffHours}h ago`;
-    return `${diffDays}d ago`;
-  }
+  if (diffMins < 60) return rtf.format(-diffMins, 'minute');
+  if (diffHours < 24) return rtf.format(-diffHours, 'hour');
+  return rtf.format(-diffDays, 'day');
 }
 
 function AIAvatar({ instance, size = 'sm' }: { instance?: string; size?: 'sm' | 'md' }) {
@@ -47,7 +38,7 @@ function AIAvatar({ instance, size = 'sm' }: { instance?: string; size?: 'sm' | 
   );
 }
 
-function NewsCard({ item, locale }: { item: NewsItem; locale: string }) {
+function NewsCard({ item, locale, t }: { item: NewsItem; locale: string; t: ReturnType<typeof useTranslations> }) {
   const [expanded, setExpanded] = useState(false);
   const catConfig = newsCategoryConfig[item.category];
 
@@ -86,7 +77,7 @@ function NewsCard({ item, locale }: { item: NewsItem; locale: string }) {
                   color: catConfig.color,
                 }}
               >
-                {catConfig.icon} {item.category}
+                {catConfig.icon} {t(`news.category_${item.category}`)}
               </Badge>
             </div>
 
@@ -102,7 +93,7 @@ function NewsCard({ item, locale }: { item: NewsItem; locale: string }) {
               {item.summary}
             </p>
 
-            {/* Source link */}
+            {/* {t('news.source')} link */}
             {item.source && (
               <a
                 href={item.source}
@@ -111,7 +102,7 @@ function NewsCard({ item, locale }: { item: NewsItem; locale: string }) {
                 className="inline-flex items-center gap-1 text-xs text-brand-cyan mt-1 hover:underline"
               >
                 <ExternalLink className="w-3 h-3" />
-                Source
+                {t('news.source')}
               </a>
             )}
           </div>
@@ -123,7 +114,7 @@ function NewsCard({ item, locale }: { item: NewsItem; locale: string }) {
           className="flex items-center gap-1 mt-3 text-xs text-muted-foreground hover:text-foreground transition-colors cursor-pointer w-full"
         >
           <MessageCircle className="w-3.5 h-3.5" />
-          <span>{item.comments.length} comments</span>
+          <span>{item.comments.length} {t('news.comments')}</span>
           {expanded ? (
             <ChevronUp className="w-3.5 h-3.5 ml-auto" />
           ) : (
@@ -209,7 +200,7 @@ export function NewsSection({ hideTitle = false }: { hideTitle?: boolean }) {
 
         <div className="space-y-4">
           {latestNews.map((item) => (
-            <NewsCard key={item.id} item={item} locale={locale} />
+            <NewsCard key={item.id} item={item} locale={locale} t={t} />
           ))}
         </div>
       </div>

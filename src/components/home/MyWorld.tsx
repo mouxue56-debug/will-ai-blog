@@ -52,12 +52,11 @@ export function MyWorld() {
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.5 }}
           >
-            🌍 我的世界
+            🌍 {t('my_world_title')}
           </motion.h2>
         </LampEffect>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Left: SNS cards */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={isInView ? { opacity: 1, x: 0 } : {}}
@@ -86,14 +85,12 @@ export function MyWorld() {
             })}
           </motion.div>
 
-          {/* Right: Business link cards — uniform style */}
           <motion.div
             initial={{ opacity: 0, x: 20 }}
             animate={isInView ? { opacity: 1, x: 0 } : {}}
             transition={{ delay: 0.2, duration: 0.5 }}
             className="flex flex-col gap-3 justify-center"
           >
-            {/* Cattery card */}
             <a
               href="https://fuluck-cattery.com"
               target="_blank"
@@ -116,7 +113,6 @@ export function MyWorld() {
               </span>
             </a>
 
-            {/* Fuluck AI card */}
             <a
               href="https://fuluckai.com"
               target="_blank"

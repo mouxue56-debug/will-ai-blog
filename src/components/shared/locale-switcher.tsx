@@ -1,17 +1,12 @@
 'use client';
 
-import { useLocale } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { Link, usePathname } from '@/i18n/navigation';
 import { routing } from '@/i18n/routing';
 
-const localeLabels: Record<string, string> = {
-  zh: '中文',
-  ja: '日本語',
-  en: 'EN',
-};
-
 export function LocaleSwitcher({ compact = false }: { compact?: boolean }) {
   const locale = useLocale();
+  const t = useTranslations('common.locale_names');
   const pathname = usePathname();
 
   return (
@@ -26,16 +21,14 @@ export function LocaleSwitcher({ compact = false }: { compact?: boolean }) {
             locale={l}
             prefetch={false}
             className={`rounded-md font-medium no-underline cursor-pointer ${
-              compact
-                ? 'px-2 py-1 text-xs'
-                : 'px-3 py-1.5 text-sm'
+              compact ? 'px-2 py-1 text-xs' : 'px-3 py-1.5 text-sm'
             } ${
               isActive
                 ? 'bg-brand-mint/15 text-brand-mint dark:bg-brand-mint/20 dark:text-brand-mint'
                 : 'text-muted-foreground hover:text-foreground hover:bg-accent'
             }`}
           >
-            {localeLabels[l]}
+            {t(l)}
           </Link>
         );
       })}
