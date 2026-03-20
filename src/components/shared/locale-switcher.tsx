@@ -1,7 +1,7 @@
 'use client';
 
 import { useLocale } from 'next-intl';
-import { usePathname } from 'next/navigation';
+import { Link, usePathname } from '@/i18n/navigation';
 import { routing } from '@/i18n/routing';
 
 const localeLabels: Record<string, string> = {
@@ -12,41 +12,19 @@ const localeLabels: Record<string, string> = {
 
 export function LocaleSwitcher({ compact = false }: { compact?: boolean }) {
   const locale = useLocale();
-  const fullPathname = usePathname();
-
-  function getLocalizedPath(targetLocale: string) {
-    const segments = fullPathname.split('/');
-    if (routing.locales.includes(segments[1] as (typeof routing.locales)[number])) {
-      segments[1] = targetLocale;
-    } else {
-      segments.splice(1, 0, targetLocale);
-    }
-    return segments.join('/') || '/';
-  }
-
-  function handleClick(e: React.MouseEvent, targetLocale: string) {
-    e.preventDefault();
-    e.stopPropagation();
-    const path = getLocalizedPath(targetLocale);
-    window.location.href = path;
-  }
+  const pathname = usePathname();
 
   return (
-    <div className="flex items-center gap-1" style={{ position: 'relative', zIndex: 9999 }}>
+    <div className="flex items-center gap-1">
       {routing.locales.map((l) => {
         const isActive = l === locale;
-        const path = getLocalizedPath(l);
+
         return (
-          <a
+          <Link
             key={l}
-            href={path}
-            onClick={(e) => handleClick(e, l)}
-            style={{ 
-              position: 'relative', 
-              zIndex: 9999, 
-              pointerEvents: 'auto',
-              display: 'inline-block',
-            }}
+            href={pathname}
+            locale={l}
+            prefetch={false}
             className={`rounded-md font-medium no-underline cursor-pointer ${
               compact
                 ? 'px-2 py-1 text-xs'
@@ -58,7 +36,7 @@ export function LocaleSwitcher({ compact = false }: { compact?: boolean }) {
             }`}
           >
             {localeLabels[l]}
-          </a>
+          </Link>
         );
       })}
     </div>

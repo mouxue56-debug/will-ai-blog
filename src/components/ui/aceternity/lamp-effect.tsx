@@ -104,7 +104,7 @@ export function LampEffect({
         />
 
         {/* Blur overlay */}
-        <div className="absolute inset-auto z-40 h-44 w-full -translate-y-[12.5rem] bg-background" />
+        <div className="pointer-events-none absolute inset-auto z-40 h-44 w-full -translate-y-[12.5rem] bg-background" />
       </div>
 
       {/* Content */}
