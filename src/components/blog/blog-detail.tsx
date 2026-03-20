@@ -104,7 +104,9 @@ export function BlogDetail({ post, prevPost, nextPost, comments, postSlug }: Blo
 
             {/* Article Body */}
             <ScrollReveal direction="fadeUp" delay={0.2} duration={0.6}>
-              <MarkdownRenderer content={post.content} />
+              <div className="glass-card p-6 sm:p-8">
+                <MarkdownRenderer content={post.content} />
+              </div>
             </ScrollReveal>
 
             {/* Separator */}

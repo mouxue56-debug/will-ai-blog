@@ -82,7 +82,7 @@ export function AIDashboard() {
         </motion.h2>
 
         <motion.div
-          className="relative rounded-xl border border-border/40 bg-card/50 backdrop-blur-sm p-6 overflow-hidden"
+          className="relative glass-card p-6 overflow-hidden"
           initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ delay: 0.2, duration: 0.6, ease: 'easeOut' }}
@@ -144,7 +144,7 @@ export function AIDashboard() {
             {instances.map((inst, i) => (
               <motion.div
                 key={inst.name}
-                className="flex flex-col items-center gap-3 rounded-lg bg-background/60 dark:bg-background/30 p-4 border border-border/20"
+                className="flex flex-col items-center gap-3 rounded-lg bg-white/5 dark:bg-white/[0.03] p-4 border border-white/[0.06] backdrop-blur-sm"
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={isInView ? { opacity: 1, scale: 1 } : {}}
                 transition={{ delay: 0.3 + i * 0.1, duration: 0.5, ease: 'easeOut' }}

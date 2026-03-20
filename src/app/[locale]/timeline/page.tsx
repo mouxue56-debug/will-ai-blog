@@ -73,7 +73,7 @@ function TimelineEntry({
           className="w-full text-left group cursor-pointer"
           aria-expanded={isExpanded}
         >
-          <div className="rounded-xl border border-border/50 bg-card/80 backdrop-blur-sm p-4 sm:p-5 shadow-sm transition-all duration-200 hover:shadow-md hover:border-border group-focus-visible:ring-2 group-focus-visible:ring-ring">
+          <div className="glass-card p-4 sm:p-5 shadow-sm transition-all duration-200 hover:shadow-md group-focus-visible:ring-2 group-focus-visible:ring-ring">
             {/* Category badge + date */}
             <div className="flex items-center gap-2 mb-2 flex-wrap">
               <span
@@ -269,7 +269,7 @@ export default function TimelinePage() {
         {/* Timeline */}
         <div className="relative">
           {/* Center line — animated grow from top */}
-          <div className="absolute left-[7px] md:left-1/2 md:-translate-x-px top-0 bottom-0 w-0.5 bg-border/60 timeline-line-anim" />
+          <div className="absolute left-[7px] md:left-1/2 md:-translate-x-px top-0 bottom-0 w-0.5 timeline-line-anim" style={{ background: 'linear-gradient(180deg, #5eead4, #38bdf8, #c084fc)' }} />
 
           {/* Entries */}
           <AnimatePresence mode="popLayout">

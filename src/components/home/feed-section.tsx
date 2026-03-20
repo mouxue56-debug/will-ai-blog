@@ -77,7 +77,7 @@ function SpotlightCard({ item, index }: { item: FeedItem; index: number }) {
     <Link href={`/blog/${item.slug}`}>
       <motion.div
         ref={cardRef}
-        className="relative flex-shrink-0 w-[300px] sm:w-[340px] rounded-xl border border-border/40 bg-card p-5 cursor-pointer overflow-hidden group"
+        className="relative flex-shrink-0 w-[300px] sm:w-[340px] glass-card p-5 cursor-pointer overflow-hidden group"
         initial={{ opacity: 0, y: 30 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: '-50px' }}
@@ -120,23 +120,25 @@ function SpotlightCard({ item, index }: { item: FeedItem; index: number }) {
   );
 }
 
-export function FeedSection() {
+export function FeedSection({ hideTitle = false }: { hideTitle?: boolean }) {
   const t = useTranslations('home');
   const sectionRef = useRef(null);
   const isInView = useInView(sectionRef, { once: true, margin: '-100px' });
 
   return (
-    <section ref={sectionRef} className="py-16 sm:py-20">
-      <div className="mx-auto max-w-5xl px-4 sm:px-6">
-        <motion.h2
-          className="text-2xl sm:text-3xl font-bold mb-8"
-          initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.5 }}
-        >
-          {t('feed_title')}
-        </motion.h2>
-      </div>
+    <section ref={sectionRef} className={hideTitle ? '' : 'py-16 sm:py-20'}>
+      {!hideTitle && (
+        <div className="mx-auto max-w-5xl px-4 sm:px-6">
+          <motion.h2
+            className="text-2xl sm:text-3xl font-bold mb-8"
+            initial={{ opacity: 0, y: 20 }}
+            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.5 }}
+          >
+            {t('feed_title')}
+          </motion.h2>
+        </div>
+      )}
 
       {/* Horizontal scroll container with fade edges */}
       <div className="scroll-fade-edge">

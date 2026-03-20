@@ -25,7 +25,7 @@ function LifeCard({ post, index, locale }: { post: LifePost; index: number; loca
       transition={{ delay: index * 0.06, duration: 0.4, ease: 'easeOut' }}
       className="group break-inside-avoid mb-4"
     >
-      <div className="rounded-xl border border-border/40 bg-card/80 backdrop-blur-sm overflow-hidden transition-all duration-300 hover:scale-[1.02] hover:shadow-lg hover:shadow-black/5 dark:hover:shadow-black/20">
+      <div className="glass-card overflow-hidden transition-all duration-300 hover:scale-[1.02] hover:shadow-lg hover:shadow-black/5 dark:hover:shadow-black/20">
         {/* Gradient image placeholder */}
         <div
           className={`relative bg-gradient-to-br ${post.imageGradient} flex items-center justify-center`}

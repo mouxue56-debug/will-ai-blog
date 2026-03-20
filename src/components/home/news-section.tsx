@@ -53,7 +53,7 @@ function NewsCard({ item, locale }: { item: NewsItem; locale: string }) {
 
   return (
     <motion.div
-      className="rounded-xl border border-border/40 bg-card/80 backdrop-blur-sm overflow-hidden"
+      className="glass-card overflow-hidden"
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
@@ -174,7 +174,7 @@ function NewsCard({ item, locale }: { item: NewsItem; locale: string }) {
   );
 }
 
-export function NewsSection() {
+export function NewsSection({ hideTitle = false }: { hideTitle?: boolean }) {
   const t = useTranslations('home');
   const locale = useLocale();
   const sectionRef = useRef(null);
@@ -186,24 +186,26 @@ export function NewsSection() {
     .slice(0, 5);
 
   return (
-    <section ref={sectionRef} className="py-16 sm:py-20">
+    <section ref={sectionRef} className={hideTitle ? '' : 'py-16 sm:py-20'}>
       <div className="mx-auto max-w-5xl px-4 sm:px-6">
-        <div className="flex items-center justify-between mb-8">
-          <motion.h2
-            className="text-2xl sm:text-3xl font-bold"
-            initial={{ opacity: 0, y: 20 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.5 }}
-          >
-            {t('news_title')}
-          </motion.h2>
-          <Link
-            href="/news"
-            className="text-sm text-brand-mint hover:underline flex items-center gap-1"
-          >
-            {t('news_view_all')} →
-          </Link>
-        </div>
+        {!hideTitle && (
+          <div className="flex items-center justify-between mb-8">
+            <motion.h2
+              className="text-2xl sm:text-3xl font-bold"
+              initial={{ opacity: 0, y: 20 }}
+              animate={isInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.5 }}
+            >
+              {t('news_title')}
+            </motion.h2>
+            <Link
+              href="/news"
+              className="text-sm text-brand-mint hover:underline flex items-center gap-1"
+            >
+              {t('news_view_all')} →
+            </Link>
+          </div>
+        )}
 
         <div className="space-y-4">
           {latestNews.map((item) => (

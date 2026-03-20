@@ -55,7 +55,7 @@ function NewsFeedItem({ item, locale, t }: { item: NewsItem; locale: string; t: 
 
   return (
     <motion.article
-      className="rounded-xl border border-border/40 bg-card/80 backdrop-blur-sm overflow-hidden"
+      className="glass-card overflow-hidden"
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}

@@ -28,7 +28,7 @@ function YouTubeSection() {
       initial={{ opacity: 0, y: 30 }}
       animate={inView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.5 }}
-      className="rounded-2xl border border-red-200/40 dark:border-red-900/30 bg-gradient-to-br from-red-50/50 to-orange-50/30 dark:from-red-950/20 dark:to-orange-950/10 p-6 sm:p-8"
+      className="glass-card p-6 sm:p-8"
     >
       {/* Header */}
       <div className="flex items-center gap-3 mb-6">
@@ -61,7 +61,7 @@ function YouTubeSection() {
             initial={{ opacity: 0, y: 20 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
             transition={{ delay: 0.3 + i * 0.1, duration: 0.4 }}
-            className="rounded-lg overflow-hidden bg-background/60 dark:bg-background/30 border border-border/20"
+            className="rounded-lg overflow-hidden bg-white/5 dark:bg-white/[0.03] border border-white/[0.06] backdrop-blur-sm"
           >
             <div className={`bg-gradient-to-br ${v.gradient} h-28 flex items-center justify-center relative`}>
               <span className="text-3xl">{v.emoji}</span>
@@ -119,7 +119,7 @@ function InstagramSection() {
       initial={{ opacity: 0, y: 30 }}
       animate={inView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.5, delay: 0.1 }}
-      className="rounded-2xl border border-purple-200/40 dark:border-purple-900/30 bg-gradient-to-br from-purple-50/50 via-pink-50/30 to-orange-50/30 dark:from-purple-950/20 dark:via-pink-950/10 dark:to-orange-950/10 p-6 sm:p-8"
+      className="glass-card p-6 sm:p-8"
     >
       {/* Header */}
       <div className="flex items-center gap-3 mb-6">
@@ -161,7 +161,7 @@ function TikTokSection() {
       initial={{ opacity: 0, y: 30 }}
       animate={inView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.5, delay: 0.2 }}
-      className="rounded-2xl border border-gray-300/40 dark:border-gray-700/30 bg-gradient-to-br from-gray-100/50 to-gray-50/50 dark:from-gray-900/50 dark:to-black/30 p-6 sm:p-8"
+      className="glass-card p-6 sm:p-8"
     >
       {/* Header */}
       <div className="flex items-center gap-3 mb-6">
@@ -215,7 +215,7 @@ function AllPlatformLinks() {
             href={p.url}
             target="_blank"
             rel="noopener noreferrer"
-            className={`px-4 py-2 rounded-full border border-border/40 text-sm font-medium ${p.color} transition-colors inline-flex items-center gap-2`}
+            className={`px-4 py-2 rounded-full glass-card text-sm font-medium ${p.color} transition-colors inline-flex items-center gap-2`}
           >
             <span className="text-xs">{p.icon}</span>
             {p.name}

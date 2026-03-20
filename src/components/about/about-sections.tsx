@@ -93,7 +93,7 @@ function AITeamSection() {
               initial={{ opacity: 0, scale: 0.9 }}
               animate={inView ? { opacity: 1, scale: 1 } : {}}
               transition={{ delay: 0.2 + i * 0.1, duration: 0.4 }}
-              className={`rounded-xl ${agent.bgColor} border ${agent.borderColor} p-4 sm:p-5 flex flex-col items-center gap-2 text-center`}
+              className={`glass-card p-4 sm:p-5 flex flex-col items-center gap-2 text-center`}
             >
               <div className={`text-2xl sm:text-3xl font-bold ${agent.color}`}>{agent.name}</div>
               {agent.nickname && (
@@ -142,7 +142,7 @@ function BusinessLinks() {
             initial={{ opacity: 0, y: 20 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
             transition={{ delay: 0.3 + i * 0.1, duration: 0.4 }}
-            className="group rounded-xl border border-border/40 bg-card/80 p-5 hover:shadow-md hover:border-border/60 transition-all duration-200"
+            className="group glass-card p-5 hover:shadow-md transition-all duration-200"
           >
             <span className="text-2xl">{link.emoji}</span>
             <h3 className="mt-3 font-semibold group-hover:text-brand-cyan transition-colors">{t(link.titleKey)}</h3>
@@ -201,7 +201,7 @@ function ContactSection() {
         </div>
 
         {/* Contact form */}
-        <div className="rounded-xl border border-border/40 bg-card/80 p-5">
+        <div className="glass-card p-5">
           <div className="space-y-3">
             <input
               type="text"

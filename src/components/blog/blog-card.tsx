@@ -8,11 +8,11 @@ import { CATEGORY_KEYS } from '@/lib/blog-types';
 import { Link } from '@/i18n/navigation';
 
 const CATEGORY_TAG_COLORS: Record<BlogCategory, string> = {
-  ai: 'bg-brand-cyan/15 text-brand-cyan',
-  tech: 'bg-brand-mint/15 text-brand-mint',
-  life: 'bg-brand-coral/15 text-brand-coral',
-  cats: 'bg-brand-mango/15 text-brand-mango',
-  business: 'bg-brand-taro/15 text-brand-taro',
+  ai: 'bg-brand-cyan/15 text-brand-cyan shadow-[0_0_8px_rgba(56,189,248,0.15)]',
+  tech: 'bg-brand-mint/15 text-brand-mint shadow-[0_0_8px_rgba(94,234,212,0.15)]',
+  life: 'bg-brand-coral/15 text-brand-coral shadow-[0_0_8px_rgba(251,191,36,0.15)]',
+  cats: 'bg-brand-mango/15 text-brand-mango shadow-[0_0_8px_rgba(252,211,77,0.15)]',
+  business: 'bg-brand-taro/15 text-brand-taro shadow-[0_0_8px_rgba(192,132,252,0.15)]',
 };
 
 const COVER_GRADIENTS: Record<BlogCategory, string> = {
@@ -44,7 +44,7 @@ export function BlogCard({ post }: BlogCardProps) {
   return (
     <div>
       <Link href={`/blog/${post.slug}`}>
-        <article className="group relative flex flex-col overflow-hidden rounded-xl bg-card ring-1 ring-foreground/10 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-foreground/5 hover:ring-foreground/20">
+        <article className="group relative flex flex-col overflow-hidden glass-card transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-foreground/5">
           {/* Cover Image Placeholder */}
           <div
             className={cn(

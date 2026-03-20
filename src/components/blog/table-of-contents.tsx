@@ -64,7 +64,7 @@ export function TableOfContents({ content }: TableOfContentsProps) {
   return (
     <>
       {/* Desktop: sidebar */}
-      <nav className="hidden lg:block sticky top-24 max-h-[calc(100vh-8rem)] overflow-y-auto">
+      <nav className="hidden lg:block sticky top-24 max-h-[calc(100vh-8rem)] overflow-y-auto glass-card p-4">
         <h4 className="mb-3 flex items-center gap-2 text-sm font-semibold text-muted-foreground">
           <List className="h-4 w-4" />
           {t('table_of_contents')}
@@ -90,7 +90,7 @@ export function TableOfContents({ content }: TableOfContentsProps) {
       </nav>
 
       {/* Mobile: collapsible */}
-      <div className="lg:hidden rounded-lg border bg-card p-3">
+      <div className="lg:hidden glass-card p-3">
         <button
           onClick={() => setIsOpen(!isOpen)}
           className="flex w-full items-center justify-between text-sm font-semibold"

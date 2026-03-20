@@ -641,7 +641,7 @@ export default function AdminPage() {
       </div>
 
       {/* Tabs */}
-      <div className="mb-6 flex items-center gap-1 rounded-xl bg-muted/30 p-1 w-fit">
+      <div className="mb-6 flex items-center gap-1 glass-card p-1 w-fit">
         <TabButton active={activeTab === 'posts'} onClick={() => setActiveTab('posts')} icon={FileText} label="Posts" />
         <TabButton active={activeTab === 'comments'} onClick={() => setActiveTab('comments')} icon={MessageSquare} label="Comments" />
         <TabButton active={activeTab === 'drafts'} onClick={() => setActiveTab('drafts')} icon={Inbox} label="Draft Queue" />

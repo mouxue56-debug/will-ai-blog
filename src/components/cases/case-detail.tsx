@@ -136,7 +136,7 @@ function MetricsGrid({ metrics, locale }: { metrics: CaseStudy['metrics']; local
           initial={{ opacity: 0, scale: 0.9 }}
           animate={inView ? { opacity: 1, scale: 1 } : {}}
           transition={{ duration: 0.4, delay: 0.2 + i * 0.1 }}
-          className="rounded-xl border border-border/60 bg-card p-4 text-center space-y-1"
+          className="glass-card p-4 text-center space-y-1"
         >
           <div className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-brand-cyan to-brand-mint bg-clip-text text-transparent">
             <CountUpValue value={m.value} inView={inView} />
@@ -210,7 +210,7 @@ export function CaseDetail({
         className="space-y-8"
       >
         {/* Story layer - always open */}
-        <div className="rounded-2xl border border-border/50 bg-card p-6 sm:p-8 space-y-6">
+        <div className="glass-card p-6 sm:p-8 space-y-6">
           <ExpandableSection
             title={`📖 ${t('story_layer')}`}
             content={caseStudy.story[loc]}

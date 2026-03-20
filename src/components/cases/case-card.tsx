@@ -33,7 +33,7 @@ export function CaseCard({ c, locale }: { c: CaseStudy; locale: string }) {
         onMouseLeave={() => setIsHovered(false)}
         whileHover={{ y: -6 }}
         transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-        className="group relative overflow-hidden rounded-2xl border border-border/50 bg-card cursor-pointer"
+        className="group relative overflow-hidden glass-card cursor-pointer"
       >
         {/* Spotlight effect */}
         {isHovered && (

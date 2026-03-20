@@ -3,7 +3,6 @@
 import { useTranslations } from 'next-intl';
 import { PageTransition } from '@/components/shared/PageTransition';
 import { LifeGrid } from '@/components/life/life-grid';
-import { CatShowcase } from '@/components/life/CatShowcase';
 
 export default function LifePage() {
   const t = useTranslations('life');
@@ -15,7 +14,14 @@ export default function LifePage() {
           <h1 className="text-3xl sm:text-4xl font-bold">{t('title')}</h1>
           <p className="mt-3 text-muted-foreground text-base sm:text-lg">{t('subtitle')}</p>
         </div>
-        <CatShowcase />
+
+        {/* Coming soon notice */}
+        <div className="glass-card p-4 sm:p-5 mb-8 text-center">
+          <p className="text-sm text-muted-foreground">
+            ✨ 真实内容即将上线，敬请期待
+          </p>
+        </div>
+
         <LifeGrid />
       </div>
     </PageTransition>

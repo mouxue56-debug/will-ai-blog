@@ -3,12 +3,10 @@
 import { PageTransition } from '@/components/shared/PageTransition';
 import { ScrollReveal } from '@/components/shared/ScrollReveal';
 import { HeroSection } from '@/components/home/hero-section';
-import { FeedSection } from '@/components/home/feed-section';
-import { SNSSection } from '@/components/home/sns-section';
+import { StoryTimeline } from '@/components/home/StoryTimeline';
+import { LatestUpdates } from '@/components/home/LatestUpdates';
+import { MyWorld } from '@/components/home/MyWorld';
 import { AIDashboard } from '@/components/home/ai-dashboard';
-import { PoweredBanner } from '@/components/home/powered-banner';
-import { CatteryBanner } from '@/components/home/CatteryBanner';
-import { NewsSection } from '@/components/home/news-section';
 
 export default function HomePage() {
   return (
@@ -19,34 +17,22 @@ export default function HomePage() {
           <HeroSection />
         </div>
 
-        {/* Latest Feed - full width for horizontal scroll */}
+        {/* My Story — Timeline */}
         <ScrollReveal direction="fadeUp">
-          <FeedSection />
+          <StoryTimeline />
         </ScrollReveal>
 
-        {/* Live News */}
+        {/* Latest Updates — Blog + News tabs */}
+        <LatestUpdates />
+
+        {/* My World — SNS + Cattery */}
         <ScrollReveal direction="fadeUp" delay={0.05}>
-          <NewsSection />
-        </ScrollReveal>
-
-        {/* SNS Cards */}
-        <ScrollReveal direction="fadeUp" delay={0.1}>
-          <SNSSection />
+          <MyWorld />
         </ScrollReveal>
 
         {/* AI Dashboard */}
         <ScrollReveal direction="scaleIn">
           <AIDashboard />
-        </ScrollReveal>
-
-        {/* Cattery Banner */}
-        <ScrollReveal direction="fadeUp" delay={0.12}>
-          <CatteryBanner />
-        </ScrollReveal>
-
-        {/* Powered By Banner */}
-        <ScrollReveal direction="fadeIn" delay={0.15}>
-          <PoweredBanner />
         </ScrollReveal>
       </div>
     </PageTransition>
