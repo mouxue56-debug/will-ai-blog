@@ -20,10 +20,7 @@ export function LocaleSwitcher({ compact = false }: { compact?: boolean }) {
   function onChange(nextLocale: string) {
     if (nextLocale === locale) return;
     startTransition(() => {
-      router.replace(
-        { pathname },
-        { locale: nextLocale, scroll: false }
-      );
+      router.replace(pathname, { locale: nextLocale });
     });
   }
 
