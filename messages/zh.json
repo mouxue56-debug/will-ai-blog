@@ -235,7 +235,9 @@
       "12": "12月"
     },
     "page_title": "时间线",
-    "page_desc": "AI实践、猫舎运营、技术探索的时间线记录"
+    "page_desc": "AI实践、猫舎运营、技术探索的时间线记录",
+    "events_count": "条记录",
+    "months_count": "个月"
   },
   "cases": {
     "title": "案例研究",

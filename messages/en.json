@@ -235,7 +235,9 @@
       "12": "Dec"
     },
     "page_title": "Timeline",
-    "page_desc": "A timeline of AI practice, cattery ops, and tech exploration"
+    "page_desc": "A timeline of AI practice, cattery ops, and tech exploration",
+    "events_count": "events",
+    "months_count": "months"
   },
   "cases": {
     "title": "Case Studies",

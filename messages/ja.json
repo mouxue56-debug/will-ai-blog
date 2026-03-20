@@ -235,7 +235,9 @@
       "12": "12月"
     },
     "page_title": "タイムライン",
-    "page_desc": "AI活用、猫舎運営、技術探索の記録"
+    "page_desc": "AI活用、猫舎運営、技術探索の記録",
+    "events_count": "件の記録",
+    "months_count": "ヶ月"
   },
   "cases": {
     "title": "ケーススタディ",
