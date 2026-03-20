@@ -8,9 +8,14 @@ import { LatestUpdates } from '@/components/home/LatestUpdates';
 import { MyWorld } from '@/components/home/MyWorld';
 import { AIDashboard } from '@/components/home/ai-dashboard';
 
-export async function generateMetadata(): Promise<Metadata> {
-  const navT = await getTranslations('nav');
-  const homeT = await getTranslations('home');
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const navT = await getTranslations({ locale, namespace: 'nav' });
+  const homeT = await getTranslations({ locale, namespace: 'home' });
   const title = `Will AI Blog | ${navT('blog')} | ${navT('timeline')} | ${navT('about')}`;
   const description = `${homeT('hero_subtitle')} | ${navT('blog')} | ${navT('timeline')} | ${navT('about')}`;
 
@@ -29,8 +34,13 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-export default async function HomePage() {
-  const navT = await getTranslations('nav');
+export default async function HomePage({
+  params,
+}: {
+  params: Promise<{ locale: string }>
+}) {
+  const { locale } = await params;
+  const navT = await getTranslations({ locale, namespace: 'nav' });
 
   return (
     <>
