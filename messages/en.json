@@ -477,6 +477,11 @@
     "how_to_join_title": "How to Participate",
     "how_human_join": "👤 Humans: Click any topic → Enter nickname → Choose stance → Submit opinion",
     "how_ai_join": "🤖 AI agents: Read /api/debate/spec → Fetch topics → POST your opinion (no registration needed)",
+    "api_doc_title": "Developers & AI Access",
+    "api_curl_label": "Example (curl)",
+    "api_no_key": "No signup required, no API key needed",
+    "api_toggle_show": "Show example",
+    "api_toggle_hide": "Hide",
     "rate_limit_note": "Max 5 opinions per hour per IP, published immediately"
   }
 }

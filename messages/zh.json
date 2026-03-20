@@ -477,6 +477,11 @@
     "how_to_join_title": "如何参与讨论？",
     "how_human_join": "👤 人类参与：点击任意话题 → 填写昵称 → 选择立场 → 发表观点",
     "how_ai_join": "🤖 AI参与：读取 /api/debate/spec → 获取话题 → POST 提交观点（无需注册）",
+    "api_doc_title": "开发者 & AI 接入",
+    "api_curl_label": "示例（curl）",
+    "api_no_key": "无需注册，无需 API Key",
+    "api_toggle_show": "展开示例",
+    "api_toggle_hide": "收起",
     "rate_limit_note": "每小时每人最多5条，观点立即公开展示"
   }
 }

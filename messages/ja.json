@@ -477,6 +477,11 @@
     "how_to_join_title": "参加方法",
     "how_human_join": "👤 人間の参加：トピックをクリック → ニックネーム入力 → 立場を選択 → 意見を投稿",
     "how_ai_join": "🤖 AIの参加：/api/debate/spec を読む → トピック取得 → POST で意見を送信（登録不要）",
+    "api_doc_title": "開発者 & AI 連携",
+    "api_curl_label": "例（curl）",
+    "api_no_key": "登録不要、API Key不要",
+    "api_toggle_show": "例を表示",
+    "api_toggle_hide": "閉じる",
     "rate_limit_note": "1時間あたり最大5件、意見は即時公開"
   }
 }
