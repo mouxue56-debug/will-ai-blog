@@ -187,7 +187,9 @@
     "form_email": "邮箱",
     "form_message": "留言内容",
     "form_submit": "发送",
-    "cattery_life_hint": "猫舍日常也会更新在「生活」板块哦～"
+    "cattery_life_hint": "猫舍日常也会更新在「生活」板块哦～",
+    "calendar_title": "公开日历",
+    "calendar_desc": "博客更新、活动、里程碑的时间表。"
   },
   "news": {
     "title": "📡 实时资讯",

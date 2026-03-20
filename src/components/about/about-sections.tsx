@@ -4,6 +4,7 @@ import { useTranslations } from 'next-intl';
 import { motion, useInView } from 'motion/react';
 import { useRef } from 'react';
 import { BorderBeam } from '@/components/ui/aceternity';
+import { PublicCalendar } from '@/components/shared/PublicCalendar';
 
 /* ── Hero / Profile ──────────────────────────────────── */
 
@@ -270,6 +271,27 @@ function ContactSection() {
   );
 }
 
+/* ── Calendar ─────────────────────────────────────────── */
+
+function CalendarSection() {
+  const t = useTranslations('about');
+  const ref = useRef(null);
+  const inView = useInView(ref, { once: true, margin: '-80px' });
+
+  return (
+    <motion.section
+      ref={ref}
+      initial={{ opacity: 0, y: 30 }}
+      animate={inView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.5, delay: 0.15 }}
+    >
+      <h2 className="text-2xl font-bold mb-2">{t('calendar_title')}</h2>
+      <p className="text-sm text-muted-foreground mb-6">{t('calendar_desc')}</p>
+      <PublicCalendar />
+    </motion.section>
+  );
+}
+
 /* ── Export ───────────────────────────────────────────── */
 
 export function AboutSections() {
@@ -277,6 +299,7 @@ export function AboutSections() {
     <div className="space-y-16">
       <ProfileHero />
       <AITeamSection />
+      <CalendarSection />
       <BusinessLinks />
       <ContactSection />
     </div>

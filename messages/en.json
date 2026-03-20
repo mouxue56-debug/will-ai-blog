@@ -187,7 +187,9 @@
     "form_email": "Email",
     "form_message": "Message",
     "form_submit": "Send",
-    "cattery_life_hint": "Cattery daily life is also shared in the Life section~"
+    "cattery_life_hint": "Cattery daily life is also shared in the Life section~",
+    "calendar_title": "Public Calendar",
+    "calendar_desc": "Schedule of blog updates, events, and milestones."
   },
   "news": {
     "title": "📡 Live News Feed",

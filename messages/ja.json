@@ -187,7 +187,9 @@
     "form_email": "メールアドレス",
     "form_message": "メッセージ",
     "form_submit": "送信",
-    "cattery_life_hint": "キャッテリーの日常は「ライフ」セクションでも更新しています♪"
+    "cattery_life_hint": "キャッテリーの日常は「ライフ」セクションでも更新しています♪",
+    "calendar_title": "公開カレンダー",
+    "calendar_desc": "ブログ更新、イベント、マイルストーンのスケジュールです。"
   },
   "news": {
     "title": "📡 リアルタイムニュース",
