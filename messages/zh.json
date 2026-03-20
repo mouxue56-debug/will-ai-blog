@@ -16,7 +16,7 @@
   },
   "home": {
     "hero_title": "AI × 猫舎 × 大阪生活",
-    "hero_subtitle": "Will的数字实验室 — 用AI打理猫舍、辅助医疗、记录生活",
+    "hero_subtitle": "Will的数字实验室 — 用AI打理猫舍、助力商业落地、记录生活",
     "hero_description": "不是 AI 布道者，只是一个真的在用 AI 生活的人。这里记录成功的案例、失败的尝试、日常的感悟，以及大阪生活的点点滴滴。",
     "cta_about": "了解更多",
     "cta_blog": "最新文章",
@@ -104,7 +104,28 @@
       "month": "本月",
       "year": "今年"
     },
-    "thought": "感悟"
+    "thought": "感悟",
+    "back": "返回",
+    "yearView": "{year}年",
+    "monthView": "{year}年{month}月",
+    "milestoneCount": "{count} 个里程碑",
+    "eventCount": "{count} 个事件",
+    "events": "{count} 条记录",
+    "noEvents": "暂无事件",
+    "monthNames": {
+      "1": "1月",
+      "2": "2月",
+      "3": "3月",
+      "4": "4月",
+      "5": "5月",
+      "6": "6月",
+      "7": "7月",
+      "8": "8月",
+      "9": "9月",
+      "10": "10月",
+      "11": "11月",
+      "12": "12月"
+    }
   },
   "cases": {
     "title": "案例研究",

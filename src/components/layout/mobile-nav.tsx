@@ -102,12 +102,6 @@ export function MobileNav() {
                 })}
               </div>
 
-              {/* Language switcher */}
-              <div className="border-t border-white/[0.06] mt-2 pt-2 px-3 flex items-center justify-between">
-                <span className="text-xs text-muted-foreground">🌐</span>
-                <LocaleSwitcher />
-              </div>
-
               {/* User section */}
               <div className="border-t border-white/[0.06] mt-2 pt-2 px-1">
                 {session?.user ? (
@@ -143,6 +137,11 @@ export function MobileNav() {
           </>
         )}
       </AnimatePresence>
+
+      {/* Top locale switcher bar — mobile only */}
+      <div className="fixed top-16 left-0 right-0 z-30 flex items-center justify-center py-1 bg-white/70 dark:bg-[rgba(10,10,15,0.6)] backdrop-blur-md border-b border-white/[0.04] dark:border-white/[0.04] border-gray-200/40 md:hidden">
+        <LocaleSwitcher compact />
+      </div>
 
       {/* Bottom tab bar — glass style */}
       <nav className="fixed bottom-0 left-0 right-0 z-40 border-t border-white/[0.06] dark:border-white/[0.06] border-gray-200/60 bg-white/80 dark:bg-[rgba(10,10,15,0.8)] backdrop-blur-xl md:hidden safe-area-bottom">

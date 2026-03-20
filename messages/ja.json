@@ -16,7 +16,7 @@
   },
   "home": {
     "hero_title": "AI × キャッテリー × 大阪ライフ",
-    "hero_subtitle": "Willのデジタル研究室 — AIで猫舎運営、医療サポート、暮らしを記録",
+    "hero_subtitle": "Willのデジタル研究室 — AIで猫舎運営、ビジネスを加速、暮らしを記録",
     "hero_description": "AI伝道師ではなく、ただAIと共に暮らしている一人の人間の記録。成功事例、失敗談、日々の気づき、そして大阪ライフのあれこれ。",
     "cta_about": "もっと知る",
     "cta_blog": "最新記事",
@@ -104,7 +104,28 @@
       "month": "今月",
       "year": "今年"
     },
-    "thought": "気づき"
+    "thought": "気づき",
+    "back": "戻る",
+    "yearView": "{year}年",
+    "monthView": "{year}年{month}月",
+    "milestoneCount": "{count} マイルストーン",
+    "eventCount": "{count} イベント",
+    "events": "{count} 件",
+    "noEvents": "イベントなし",
+    "monthNames": {
+      "1": "1月",
+      "2": "2月",
+      "3": "3月",
+      "4": "4月",
+      "5": "5月",
+      "6": "6月",
+      "7": "7月",
+      "8": "8月",
+      "9": "9月",
+      "10": "10月",
+      "11": "11月",
+      "12": "12月"
+    }
   },
   "cases": {
     "title": "ケーススタディ",

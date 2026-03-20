@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: '案例',
-  description: 'AI落地案例 — 多AI协作架构、猫舎SNS自动化、医療AI导入',
+  description: 'AI落地案例 — 多AI协作架构、猫舎SNS自动化、ビジネスAI導入',
   alternates: {
     languages: {
       zh: '/zh/cases',

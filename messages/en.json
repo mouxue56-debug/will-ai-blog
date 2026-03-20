@@ -16,7 +16,7 @@
   },
   "home": {
     "hero_title": "AI × Cattery × Osaka Life",
-    "hero_subtitle": "Will's Digital Lab — Using AI for cattery ops, healthcare, and daily life",
+    "hero_subtitle": "Will's Digital Lab — Using AI for cattery ops, business acceleration, and daily life",
     "hero_description": "Not an AI evangelist — just someone actually living with AI. Documenting real successes, honest failures, daily reflections, and life in Osaka.",
     "cta_about": "Learn More",
     "cta_blog": "Latest Posts",
@@ -104,7 +104,28 @@
       "month": "This Month",
       "year": "This Year"
     },
-    "thought": "Thoughts"
+    "thought": "Thoughts",
+    "back": "Back",
+    "yearView": "{year}",
+    "monthView": "{month} {year}",
+    "milestoneCount": "{count} milestones",
+    "eventCount": "{count} events",
+    "events": "{count} entries",
+    "noEvents": "No events",
+    "monthNames": {
+      "1": "Jan",
+      "2": "Feb",
+      "3": "Mar",
+      "4": "Apr",
+      "5": "May",
+      "6": "Jun",
+      "7": "Jul",
+      "8": "Aug",
+      "9": "Sep",
+      "10": "Oct",
+      "11": "Nov",
+      "12": "Dec"
+    }
   },
   "cases": {
     "title": "Case Studies",
