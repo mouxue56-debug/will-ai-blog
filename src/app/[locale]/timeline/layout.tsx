@@ -1,17 +1,22 @@
 import type { Metadata } from 'next';
+import { getTranslations } from 'next-intl/server';
 
-export const metadata: Metadata = {
-  title: '时间线',
-  description: 'AI实践、猫舎运营、技术探索的时间线记录',
-  alternates: {
-    languages: {
-      zh: '/zh/timeline',
-      ja: '/ja/timeline',
-      en: '/en/timeline',
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'timeline' });
+  return {
+    title: t('page_title'),
+    description: t('page_desc'),
+    alternates: {
+      languages: {
+        zh: '/zh/timeline',
+        ja: '/ja/timeline',
+        en: '/en/timeline',
+      },
     },
-  },
-};
+  };
+}
 
-export default function TimelineLayout({ children }: { children: React.ReactNode }) {
+export default function Layout({ children }: { children: React.ReactNode }) {
   return children;
 }

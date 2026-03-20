@@ -5,10 +5,12 @@ import { motion, useInView, AnimatePresence } from 'motion/react';
 import { LampEffect } from '@/components/ui/aceternity';
 import { FeedSection } from './feed-section';
 import { NewsSection } from './news-section';
+import { useTranslations } from 'next-intl';
 
 type Tab = 'blog' | 'news';
 
 export function LatestUpdates() {
+  const t = useTranslations('home');
   const [activeTab, setActiveTab] = useState<Tab>('blog');
   const sectionRef = useRef(null);
   const isInView = useInView(sectionRef, { once: true, margin: '-100px' });
@@ -29,7 +31,7 @@ export function LatestUpdates() {
           className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8"
         >
           <h2 className="text-2xl sm:text-3xl font-bold">
-            📡 最新动态
+            {t('feed_section_title')}
           </h2>
 
           {/* Tab switcher */}
@@ -44,7 +46,7 @@ export function LatestUpdates() {
                 }
               `}
             >
-              📝 博客
+              {t('tab_blog')}
             </button>
             <button
               onClick={() => setActiveTab('news')}
@@ -56,7 +58,7 @@ export function LatestUpdates() {
                 }
               `}
             >
-              🤖 AI资讯
+              {t('tab_news')}
             </button>
           </div>
         </motion.div>

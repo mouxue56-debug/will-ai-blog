@@ -4,6 +4,7 @@ import { useRef } from 'react';
 import { motion, useInView, useScroll, useTransform } from 'motion/react';
 import { Cat, Bot, Users, Newspaper } from 'lucide-react';
 import { LampEffect } from '@/components/ui/aceternity';
+import { useTranslations } from 'next-intl';
 
 interface StoryNode {
   year: string;
@@ -13,45 +14,6 @@ interface StoryNode {
   color: string;
   glowColor: string;
 }
-
-const storyNodes: StoryNode[] = [
-  {
-    year: '2024',
-    title: '猫舍启程',
-    description:
-      '开始在大阪经营猫舍，每天被5个平台的内容搞得焦头烂额——Instagram、TikTok、小红书、ブリーダー、LINE，全靠一个人扛。',
-    icon: <Cat className="h-5 w-5" />,
-    color: 'text-brand-coral',
-    glowColor: 'rgba(251,191,36,0.4)',
-  },
-  {
-    year: '2025',
-    title: '发现 AI 的力量',
-    description:
-      '发现AI可以帮忙管理内容，开始尝试OpenClaw多实例架构。一个人的运营，变成了人+AI的协作。',
-    icon: <Bot className="h-5 w-5" />,
-    color: 'text-brand-cyan',
-    glowColor: 'rgba(56,189,248,0.4)',
-  },
-  {
-    year: '2025 末',
-    title: '四位 AI 助手就位',
-    description:
-      '4个AI助手就位——ユキ做技术、ナツ管SNS、ハル帮业务、アキ随身带。终于不用一个人扛所有事了。',
-    icon: <Users className="h-5 w-5" />,
-    color: 'text-brand-taro',
-    glowColor: 'rgba(192,132,252,0.4)',
-  },
-  {
-    year: '2026',
-    title: 'AI博客上线',
-    description:
-      'AI博客上线，记录这一切。从踩坑到跑通，从一个人到一个团队——这是一个普通人和AI共同成长的故事。',
-    icon: <Newspaper className="h-5 w-5" />,
-    color: 'text-brand-mint',
-    glowColor: 'rgba(94,234,212,0.4)',
-  },
-];
 
 function StoryNodeCard({
   node,
@@ -132,6 +94,7 @@ function StoryNodeCard({
 }
 
 export function StoryTimeline() {
+  const t = useTranslations('home');
   const containerRef = useRef<HTMLDivElement>(null);
   const sectionRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(sectionRef, { once: true, margin: '-100px' });
@@ -142,6 +105,41 @@ export function StoryTimeline() {
   });
 
   const lineHeight = useTransform(scrollYProgress, [0, 0.8], ['0%', '100%']);
+
+  const storyNodes: StoryNode[] = [
+    {
+      year: t('story_node1_year'),
+      title: t('story_node1_title'),
+      description: t('story_node1_desc'),
+      icon: <Cat className="h-5 w-5" />,
+      color: 'text-brand-coral',
+      glowColor: 'rgba(251,191,36,0.4)',
+    },
+    {
+      year: t('story_node2_year'),
+      title: t('story_node2_title'),
+      description: t('story_node2_desc'),
+      icon: <Bot className="h-5 w-5" />,
+      color: 'text-brand-cyan',
+      glowColor: 'rgba(56,189,248,0.4)',
+    },
+    {
+      year: t('story_node3_year'),
+      title: t('story_node3_title'),
+      description: t('story_node3_desc'),
+      icon: <Users className="h-5 w-5" />,
+      color: 'text-brand-taro',
+      glowColor: 'rgba(192,132,252,0.4)',
+    },
+    {
+      year: t('story_node4_year'),
+      title: t('story_node4_title'),
+      description: t('story_node4_desc'),
+      icon: <Newspaper className="h-5 w-5" />,
+      color: 'text-brand-mint',
+      glowColor: 'rgba(94,234,212,0.4)',
+    },
+  ];
 
   return (
     <section ref={sectionRef} className="py-16 sm:py-24">
@@ -155,10 +153,10 @@ export function StoryTimeline() {
             className="text-center"
           >
             <h2 className="text-2xl sm:text-3xl font-bold">
-              📖 我的故事
+              📖 {t('story_section_title')}
             </h2>
             <p className="mt-2 text-muted-foreground">
-              从一个人到一个团队的旅程
+              {t('story_section_subtitle')}
             </p>
           </motion.div>
         </LampEffect>

@@ -1,17 +1,22 @@
 import type { Metadata } from 'next';
+import { getTranslations } from 'next-intl/server';
 
-export const metadata: Metadata = {
-  title: '案例',
-  description: 'AI落地案例 — 多AI协作架构、猫舎SNS自动化、ビジネスAI導入',
-  alternates: {
-    languages: {
-      zh: '/zh/cases',
-      ja: '/ja/cases',
-      en: '/en/cases',
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'cases' });
+  return {
+    title: t('page_title'),
+    description: t('page_desc'),
+    alternates: {
+      languages: {
+        zh: '/zh/cases',
+        ja: '/ja/cases',
+        en: '/en/cases',
+      },
     },
-  },
-};
+  };
+}
 
-export default function CasesLayout({ children }: { children: React.ReactNode }) {
+export default function Layout({ children }: { children: React.ReactNode }) {
   return children;
 }

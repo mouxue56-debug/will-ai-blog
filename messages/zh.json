@@ -34,7 +34,24 @@
     "cattery_desc": "大阪市で西伯利亚猫（サイベリアン）を専門に繁育しています。健康で性格の良い猫たちとの出会いをお手伝いします。",
     "cattery_cta": "查看猫咪",
     "hero_cta_blog": "阅读博客",
-    "hero_cta_cases": "查看案例"
+    "hero_cta_cases": "查看案例",
+    "story_section_title": "我的故事",
+    "story_section_subtitle": "从一个人到一个团队的旅程",
+    "story_node1_year": "2024",
+    "story_node1_title": "猫舍启程",
+    "story_node1_desc": "开始在大阪经营猫舍，每天被5个平台的内容搞得焦头烂额——Instagram、TikTok、小红书、ブリーダー、LINE，全靠一个人扛。",
+    "story_node2_year": "2025",
+    "story_node2_title": "发现 AI 的力量",
+    "story_node2_desc": "发现AI可以帮忙管理内容，开始尝试OpenClaw多实例架构。一个人的运营，变成了人+AI的协作。",
+    "story_node3_year": "2025 末",
+    "story_node3_title": "四位 AI 助手就位",
+    "story_node3_desc": "4个AI助手就位——ユキ做技术、ナツ管SNS、ハル帮业务、アキ随身带。终于不用一个人扛所有事了。",
+    "story_node4_year": "2026",
+    "story_node4_title": "AI博客上线",
+    "story_node4_desc": "AI博客上线，记录这一切。从踩坑到跑通，从一个人到一个团队——这是一个普通人和AI共同成长的故事。",
+    "feed_section_title": "📡 最新动态",
+    "tab_blog": "📝 博客",
+    "tab_news": "🤖 AI资讯"
   },
   "common": {
     "theme_toggle": "切换主题",
@@ -66,7 +83,10 @@
     "guest_name_placeholder": "你的昵称",
     "guest_comment_placeholder": "分享你的想法...（游客评论需审核后显示）",
     "guest_comment_note": "游客评论需审核后显示",
-    "guest_comment_pending": "评论已提交，审核后将会显示。感谢您的留言！"
+    "guest_comment_pending": "评论已提交，审核后将会显示。感谢您的留言！",
+    "page_title": "博客",
+    "page_subtitle": "的博客文章合集",
+    "page_desc": "心得、技术笔记、生活日常"
   },
   "footer": {
     "copyright": "© 2026 Will AI Lab. All rights reserved.",
@@ -125,7 +145,9 @@
       "10": "10月",
       "11": "11月",
       "12": "12月"
-    }
+    },
+    "page_title": "时间线",
+    "page_desc": "AI实践、猫舎运营、技术探索的时间线记录"
   },
   "cases": {
     "title": "案例研究",
@@ -141,7 +163,9 @@
     "back_to_cases": "返回案例列表",
     "read_more": "继续阅读",
     "tech_stack": "技术栈",
-    "results": "成果数据"
+    "results": "成果数据",
+    "page_title": "案例",
+    "page_desc": "AI落地案例 — 多AI协作、猫舎SNS自动化、ビジネスAI導入"
   },
   "life": {
     "title": "生活",
@@ -151,7 +175,9 @@
     "filter_osaka": "大阪",
     "filter_food": "美食",
     "filter_travel": "旅行",
-    "cat_showcase_title": "猫咪精选"
+    "cat_showcase_title": "猫咪精选",
+    "page_title": "生活",
+    "page_desc": "大阪生活、猫咪日常、美食探店 — Will的生活碎片"
   },
   "social": {
     "title": "关注我",
@@ -163,7 +189,9 @@
     "follow": "关注",
     "all_platforms": "所有平台",
     "subscribe": "订阅频道",
-    "more_platforms_hint": "更多平台持续更新中，欢迎关注 ✨"
+    "more_platforms_hint": "更多平台持续更新中，欢迎关注 ✨",
+    "page_title": "关注我",
+    "page_desc": "在各平台关注Will — Instagram、TikTok、小红书、GitHub"
   },
   "about": {
     "tagline": "大阪 × AI × 猫舎经营者",
@@ -189,7 +217,9 @@
     "form_submit": "发送",
     "cattery_life_hint": "猫舍日常也会更新在「生活」板块哦～",
     "calendar_title": "公开日历",
-    "calendar_desc": "博客更新、活动、里程碑的时间表。"
+    "calendar_desc": "博客更新、活动、里程碑的时间表。",
+    "page_title": "关于",
+    "page_desc": "关于Will — AI实践者、猫舎经营者、大阪在住"
   },
   "news": {
     "title": "📡 实时资讯",

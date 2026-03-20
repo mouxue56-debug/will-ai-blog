@@ -34,7 +34,24 @@
     "cattery_desc": "大阪市でサイベリアンを専門に繁育しています。健やかで愛らしい猫たちとの出会いをお手伝いします。",
     "cattery_cta": "猫ちゃんを見る",
     "hero_cta_blog": "ブログを読む",
-    "hero_cta_cases": "事例を見る"
+    "hero_cta_cases": "事例を見る",
+    "story_section_title": "私のストーリー",
+    "story_section_subtitle": "一人から一つのチームへの旅",
+    "story_node1_year": "2024",
+    "story_node1_title": "猫舎スタート",
+    "story_node1_desc": "大阪で猫舎を始め、5つのプラットフォーム（Instagram、TikTok、小紅書、ブリーダーサイト、LINE）のコンテンツを一人でこなす日々が始まった。",
+    "story_node2_year": "2025",
+    "story_node2_title": "AIの力を発見",
+    "story_node2_desc": "AIがコンテンツ管理を助けてくれることに気づき、OpenClawのマルチインスタンス構成を試し始めた。一人の運営が、人とAIの協働へと変わった。",
+    "story_node3_year": "2025 末",
+    "story_node3_title": "4人のAIアシスタントが揃う",
+    "story_node3_desc": "4人のAIアシスタントが揃った——ユキはエンジニアリング、ナツはSNS、ハルはビジネス、アキはいつでも傍に。もう一人で全部背負わなくていい。",
+    "story_node4_year": "2026",
+    "story_node4_title": "AIブログ開設",
+    "story_node4_desc": "AIブログを立ち上げ、この全てを記録する。試行錯誤から成功へ、一人からチームへ——これは普通の人間とAIが共に成長するストーリーだ。",
+    "feed_section_title": "📡 最新情報",
+    "tab_blog": "📝 ブログ",
+    "tab_news": "🤖 AIニュース"
   },
   "common": {
     "theme_toggle": "テーマ切替",
@@ -66,7 +83,10 @@
     "guest_name_placeholder": "ニックネーム",
     "guest_comment_placeholder": "コメントを書く...（ゲストコメントは承認後に表示されます）",
     "guest_comment_note": "ゲストコメントは承認後に表示されます",
-    "guest_comment_pending": "コメントが送信されました。承認後に表示されます。ありがとうございます！"
+    "guest_comment_pending": "コメントが送信されました。承認後に表示されます。ありがとうございます！",
+    "page_title": "ブログ",
+    "page_subtitle": "のブログ記事一覧",
+    "page_desc": "気づき、技術メモ、日常の記録"
   },
   "footer": {
     "copyright": "© 2026 Will AI Lab. All rights reserved.",
@@ -125,7 +145,9 @@
       "10": "10月",
       "11": "11月",
       "12": "12月"
-    }
+    },
+    "page_title": "タイムライン",
+    "page_desc": "AI活用、猫舎運営、技術探索の記録"
   },
   "cases": {
     "title": "ケーススタディ",
@@ -141,7 +163,9 @@
     "back_to_cases": "ケース一覧に戻る",
     "read_more": "続きを読む",
     "tech_stack": "技術スタック",
-    "results": "成果データ"
+    "results": "成果データ",
+    "page_title": "ケース",
+    "page_desc": "AI導入事例 — マルチAI連携、猫舎SNS自動化、ビジネスAI活用"
   },
   "life": {
     "title": "ライフ",
@@ -151,7 +175,9 @@
     "filter_osaka": "大阪",
     "filter_food": "グルメ",
     "filter_travel": "旅行",
-    "cat_showcase_title": "猫ちゃん紹介"
+    "cat_showcase_title": "猫ちゃん紹介",
+    "page_title": "ライフ",
+    "page_desc": "大阪生活、猫との日々、グルメ探訪 — Willの日常"
   },
   "social": {
     "title": "フォローする",
@@ -163,7 +189,9 @@
     "follow": "フォロー",
     "all_platforms": "すべてのプラットフォーム",
     "subscribe": "チャンネル登録",
-    "more_platforms_hint": "他のプラットフォームも随時更新中です ✨"
+    "more_platforms_hint": "他のプラットフォームも随時更新中です ✨",
+    "page_title": "フォローする",
+    "page_desc": "各プラットフォームでWillをフォロー — Instagram、TikTok、小紅書、GitHub"
   },
   "about": {
     "tagline": "大阪 × AI × キャッテリー経営者",
@@ -189,7 +217,9 @@
     "form_submit": "送信",
     "cattery_life_hint": "キャッテリーの日常は「ライフ」セクションでも更新しています♪",
     "calendar_title": "公開カレンダー",
-    "calendar_desc": "ブログ更新、イベント、マイルストーンのスケジュールです。"
+    "calendar_desc": "ブログ更新、イベント、マイルストーンのスケジュールです。",
+    "page_title": "について",
+    "page_desc": "Willについて — AI実践者、猫舎経営者、大阪在住"
   },
   "news": {
     "title": "📡 リアルタイムニュース",

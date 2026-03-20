@@ -34,7 +34,24 @@
     "cattery_desc": "Professional Siberian cat breeder in Osaka. We help you find healthy, well-tempered cats for your family.",
     "cattery_cta": "View Cats",
     "hero_cta_blog": "Read Blog",
-    "hero_cta_cases": "View Cases"
+    "hero_cta_cases": "View Cases",
+    "story_section_title": "My Story",
+    "story_section_subtitle": "A journey from solo to a full team",
+    "story_node1_year": "2024",
+    "story_node1_title": "Cattery Begins",
+    "story_node1_desc": "Started running a cattery in Osaka, drowning in content for 5 platforms — Instagram, TikTok, Xiaohongshu, breeder sites, and LINE. All solo.",
+    "story_node2_year": "2025",
+    "story_node2_title": "Discovering AI",
+    "story_node2_desc": "Discovered AI could help manage content and started experimenting with OpenClaw's multi-instance setup. Solo operations became human-AI collaboration.",
+    "story_node3_year": "Late 2025",
+    "story_node3_title": "4 AI Assistants Ready",
+    "story_node3_desc": "4 AI assistants in place — Yuki for engineering, Natsu for SNS, Haru for business, Aki always by my side. No longer carrying everything alone.",
+    "story_node4_year": "2026",
+    "story_node4_title": "AI Blog Launches",
+    "story_node4_desc": "Launched this AI blog to document it all. From failures to breakthroughs, from one person to a team — a story of a regular person growing alongside AI.",
+    "feed_section_title": "📡 Latest Updates",
+    "tab_blog": "📝 Blog",
+    "tab_news": "🤖 AI News"
   },
   "common": {
     "theme_toggle": "Toggle Theme",
@@ -66,7 +83,10 @@
     "guest_name_placeholder": "Your nickname",
     "guest_comment_placeholder": "Share your thoughts... (Guest comments require approval)",
     "guest_comment_note": "Guest comments require approval",
-    "guest_comment_pending": "Comment submitted! It will appear after approval. Thank you!"
+    "guest_comment_pending": "Comment submitted! It will appear after approval. Thank you!",
+    "page_title": "Blog",
+    "page_subtitle": "Blog Posts",
+    "page_desc": "Insights, tech notes, and daily life"
   },
   "footer": {
     "copyright": "© 2026 Will AI Lab. All rights reserved.",
@@ -125,7 +145,9 @@
       "10": "Oct",
       "11": "Nov",
       "12": "Dec"
-    }
+    },
+    "page_title": "Timeline",
+    "page_desc": "A timeline of AI practice, cattery ops, and tech exploration"
   },
   "cases": {
     "title": "Case Studies",
@@ -141,7 +163,9 @@
     "back_to_cases": "Back to Cases",
     "read_more": "Continue Reading",
     "tech_stack": "Tech Stack",
-    "results": "Results"
+    "results": "Results",
+    "page_title": "Cases",
+    "page_desc": "AI in practice — multi-AI orchestration, cattery SNS automation, business AI"
   },
   "life": {
     "title": "Life",
@@ -151,7 +175,9 @@
     "filter_osaka": "Osaka",
     "filter_food": "Food",
     "filter_travel": "Travel",
-    "cat_showcase_title": "Featured Cats"
+    "cat_showcase_title": "Featured Cats",
+    "page_title": "Life",
+    "page_desc": "Osaka life, cats, food spots — fragments of Will's daily life"
   },
   "social": {
     "title": "Follow Me",
@@ -163,7 +189,9 @@
     "follow": "Follow",
     "all_platforms": "All Platforms",
     "subscribe": "Subscribe",
-    "more_platforms_hint": "More platforms coming soon ✨"
+    "more_platforms_hint": "More platforms coming soon ✨",
+    "page_title": "Follow Me",
+    "page_desc": "Follow Will on all platforms — Instagram, TikTok, Xiaohongshu, GitHub"
   },
   "about": {
     "tagline": "Osaka × AI × Cattery Owner",
@@ -189,7 +217,9 @@
     "form_submit": "Send",
     "cattery_life_hint": "Cattery daily life is also shared in the Life section~",
     "calendar_title": "Public Calendar",
-    "calendar_desc": "Schedule of blog updates, events, and milestones."
+    "calendar_desc": "Schedule of blog updates, events, and milestones.",
+    "page_title": "About",
+    "page_desc": "About Will — AI practitioner, cattery owner, based in Osaka"
   },
   "news": {
     "title": "📡 Live News Feed",
