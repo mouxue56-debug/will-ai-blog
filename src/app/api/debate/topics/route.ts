@@ -1,70 +1,87 @@
-import { NextResponse } from 'next/server';
-import { getRedis } from '@/lib/redis';
-import { debates } from '@/data/debates';
+import { NextRequest, NextResponse } from 'next/server';
+import {
+  getTodayDebateTopics,
+  getTodayInTokyo,
+  saveDebateTopic,
+  type DebateSession,
+  type DebateTopic,
+} from '@/lib/debate-store';
 
 export const runtime = 'edge';
+export const dynamic = 'force-dynamic';
 
-// GET /api/debate/topics — return today's topics (Redis + static fallback)
+function isDebateSession(value: string): value is DebateSession {
+  return value === 'morning' || value === 'evening';
+}
+
 export async function GET() {
   try {
-    const redis = getRedis();
-    if (redis) {
-      const keys = await redis.keys('debate:topic:*');
-      if (keys.length > 0) {
-        const topics = await Promise.all(
-          keys.map((k) => redis.hgetall(k))
-        );
-        return NextResponse.json({ topics: topics.filter(Boolean) });
-      }
-    }
-    // Fallback to static data
-    return NextResponse.json({
-      topics: debates.map((d) => ({
-        id: d.id,
-        date: d.date,
-        session: d.session,
-        topic: d.topic,
-        newsSource: d.newsSource,
-        tags: d.tags,
-        opinionCount: d.aiOpinions.length,
-      })),
-    });
-  } catch {
-    return NextResponse.json({ error: 'Failed to fetch topics' }, { status: 500 });
+    const topics = await getTodayDebateTopics();
+    return NextResponse.json({ topics });
+  } catch (error) {
+    return NextResponse.json(
+      { error: 'Failed to fetch debate topics', detail: String(error) },
+      { status: 500 },
+    );
   }
 }
 
-// POST /api/debate/topics — create new topic (admin only)
-export async function POST(req: Request) {
+export async function POST(request: NextRequest) {
+  const adminKey = process.env.DEBATE_ADMIN_KEY;
+  const requestKey = request.headers.get('x-api-key');
+
+  if (!adminKey) {
+    return NextResponse.json({ error: 'Admin key is not configured' }, { status: 503 });
+  }
+
+  if (!requestKey || requestKey !== adminKey) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
   try {
-    const adminKey = process.env.DEBATE_ADMIN_KEY;
-    const providedKey = req.headers.get('x-admin-key');
-    if (!adminKey || providedKey !== adminKey) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    const body = (await request.json()) as {
+      title?: Record<'zh' | 'ja' | 'en', string>;
+      newsSource?: string;
+      session?: DebateSession;
+      tags?: string[];
+    };
+
+    if (
+      !body.title?.zh ||
+      !body.title.ja ||
+      !body.title.en ||
+      !body.newsSource ||
+      !body.session ||
+      !isDebateSession(body.session)
+    ) {
+      return NextResponse.json({ error: 'Invalid topic payload' }, { status: 400 });
     }
 
-    const body = await req.json();
-    const { id, date, session, topic, newsSource, tags } = body;
-
-    if (!id || !date || !session || !topic?.zh || !newsSource) {
-      return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
-    }
-
-    const redis = getRedis();
-    if (!redis) {
-      return NextResponse.json({ error: 'Redis not configured' }, { status: 503 });
-    }
-
-    await redis.hset(`debate:topic:${id}`, {
-      id, date, session,
-      topic: JSON.stringify(topic),
-      newsSource,
-      tags: JSON.stringify(tags || []),
+    const date = getTodayInTokyo();
+    const topic: DebateTopic = {
+      id: `${date}-${body.session}`,
+      date,
+      session: body.session,
+      title: {
+        zh: body.title.zh.trim(),
+        ja: body.title.ja.trim(),
+        en: body.title.en.trim(),
+      },
+      newsSource: body.newsSource.trim(),
+      tags: Array.isArray(body.tags) ? body.tags.map((tag) => tag.trim()).filter(Boolean) : [],
       createdAt: new Date().toISOString(),
-    });
+    };
 
-    return NextResponse.json({ success: true, id });
-  } catch {
-    return NextResponse.json({ error: 'Failed to create topic' }, { status: 500 });
+    const saved = await saveDebateTopic(topic);
+    if (!saved) {
+      return NextResponse.json({ error: 'Redis is unavailable' }, { status: 503 });
+    }
+
+    return NextResponse.json(topic, { status: 201 });
+  } catch (error) {
+    return NextResponse.json(
+      { error: 'Failed to create debate topic', detail: String(error) },
+      { status: 500 },
+    );
   }
 }

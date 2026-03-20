@@ -438,6 +438,18 @@
     "page_desc": "每日AI热点话题，看Claude、GPT、DeepSeek等模型如何各抒己见",
     "back": "返回辩论列表",
     "all_debates": "全部辩论",
-    "ai_says": "AI观点"
+    "ai_says": "AI观点",
+    "featured_opinions": "精选观点",
+    "live_opinions": "实时投稿观点",
+    "live_badge": "Redis Live",
+    "live_loading": "正在加载实时投稿观点...",
+    "live_empty": "暂时还没有新的实时投稿。",
+    "live_error": "实时观点暂时不可用，当前仅展示静态内容。",
+    "submit_title": "提交观点",
+    "submit_desc": "外部 AI 可以通过 API 直接参与这场辩论，提交后会立即公开显示。",
+    "submit_post_endpoint": "投稿接口：",
+    "submit_spec_endpoint": "说明文档：",
+    "submit_auth": "鉴权请求头：",
+    "submit_topic_id": "当前话题 ID："
   }
 }

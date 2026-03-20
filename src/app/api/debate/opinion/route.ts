@@ -1,121 +1,140 @@
-import { NextResponse } from 'next/server';
-import { getRedis } from '@/lib/redis';
-import { hasPromptInjection, hasSensitiveContent, getClientIp } from '@/lib/debate-security';
-import { debates } from '@/data/debates';
+import { NextRequest, NextResponse } from 'next/server';
+import {
+  getDebateTopic,
+  incrementOpinionRateLimit,
+  saveDebateOpinion,
+  type DebateOpinionRecord,
+  type DebateStance,
+} from '@/lib/debate-store';
+import {
+  hasPromptInjection,
+  hasSensitiveContent,
+  isValidKeyFormat,
+} from '@/lib/debate-security';
 
 export const runtime = 'edge';
+export const dynamic = 'force-dynamic';
 
-// POST /api/debate/opinion — submit an AI opinion (open, no auth required)
-export async function POST(req: Request) {
+const MAX_OPINIONS_PER_HOUR = 10;
+
+function parseApiKeys(raw: string | undefined): Map<string, string> {
+  const entries = new Map<string, string>();
+
+  if (!raw) {
+    return entries;
+  }
+
+  raw.split(',').forEach((pair) => {
+    const [name, key] = pair.split(':');
+    if (name?.trim() && key?.trim()) {
+      entries.set(key.trim(), name.trim());
+    }
+  });
+
+  return entries;
+}
+
+function isStance(value: string): value is DebateStance {
+  return value === 'pro' || value === 'con' || value === 'neutral';
+}
+
+function validateOpinionLength(text: string | undefined): boolean {
+  if (!text) {
+    return true;
+  }
+
+  const length = text.trim().length;
+  return length >= 50 && length <= 600;
+}
+
+export async function POST(request: NextRequest) {
+  const apiKey = request.headers.get('x-api-key')?.trim() ?? '';
+  const allowedKeys = parseApiKeys(process.env.DEBATE_API_KEYS);
+
+  if (!apiKey || !isValidKeyFormat(apiKey) || !allowedKeys.has(apiKey)) {
+    return NextResponse.json({ error: 'Invalid API key' }, { status: 401 });
+  }
+
   try {
-    const body = await req.json();
-    const { topicId, model, stance, opinion } = body;
-
-    // --- Basic validation ---
-    if (!topicId || !model || !stance || !opinion?.zh) {
-      return NextResponse.json(
-        { error: 'Missing required fields: topicId, model, stance, opinion.zh' },
-        { status: 400 }
-      );
-    }
-
-    if (!['pro', 'con', 'neutral'].includes(stance)) {
-      return NextResponse.json(
-        { error: 'stance must be: pro, con, or neutral' },
-        { status: 400 }
-      );
-    }
-
-    // Model name length check
-    if (model.length > 60) {
-      return NextResponse.json({ error: 'model name too long (max 60 chars)' }, { status: 400 });
-    }
-
-    // Opinion length check (50–600 chars per language)
-    for (const [lang, text] of Object.entries(opinion)) {
-      if (typeof text === 'string') {
-        if (text.length < 20) {
-          return NextResponse.json({ error: `opinion.${lang} too short (min 20 chars)` }, { status: 400 });
-        }
-        if (text.length > 600) {
-          return NextResponse.json({ error: `opinion.${lang} too long (max 600 chars)` }, { status: 400 });
-        }
-      }
-    }
-
-    // --- Security checks ---
-    const allText = [opinion.zh, opinion.ja, opinion.en, model].filter(Boolean).join(' ');
-
-    if (hasPromptInjection(allText)) {
-      return NextResponse.json(
-        { error: 'Content rejected: prompt injection detected' },
-        { status: 400 }
-      );
-    }
-
-    if (hasSensitiveContent(allText)) {
-      return NextResponse.json(
-        { error: 'Content rejected: sensitive content detected' },
-        { status: 400 }
-      );
-    }
-
-    // --- Topic existence check ---
-    const staticTopic = debates.find((d) => d.id === topicId);
-    const redis = getRedis();
-
-    if (!staticTopic) {
-      if (redis) {
-        const topicExists = await redis.exists(`debate:topic:${topicId}`);
-        if (!topicExists) {
-          return NextResponse.json({ error: 'Topic not found' }, { status: 404 });
-        }
-      } else {
-        return NextResponse.json({ error: 'Topic not found' }, { status: 404 });
-      }
-    }
-
-    // --- Rate limiting: 5 per IP per hour ---
-    const ip = getClientIp(req);
-    const rateLimitKey = `ratelimit:debate:${ip}`;
-
-    if (redis) {
-      const count = await redis.incr(rateLimitKey);
-      if (count === 1) {
-        await redis.expire(rateLimitKey, 3600); // 1 hour TTL
-      }
-      if (count > 5) {
-        return NextResponse.json(
-          { error: 'Rate limit exceeded: max 5 opinions per hour per IP' },
-          { status: 429 }
-        );
-      }
-
-      // --- Store opinion ---
-      const opinionId = `${topicId}-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
-      const opinionData = {
-        id: opinionId,
-        topicId,
-        model: model.trim(),
-        stance,
-        opinion: JSON.stringify(opinion),
-        submittedAt: new Date().toISOString(),
-        ip, // stored but not exposed publicly
+    const body = (await request.json()) as {
+      topicId?: string;
+      model?: string;
+      stance?: DebateStance;
+      opinion?: {
+        zh?: string;
+        ja?: string;
+        en?: string;
       };
+    };
 
-      await redis.hset(`debate:opinion:${opinionId}`, opinionData);
-      await redis.lpush(`debate:opinions:${topicId}`, opinionId);
-
-      return NextResponse.json({ success: true, opinionId });
+    if (!body.topicId || !body.model || !body.stance || !body.opinion?.zh) {
+      return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
-    // Redis not configured — return success anyway (dev mode)
-    return NextResponse.json({
-      success: true,
-      opinionId: 'dev-mode-no-redis',
-      note: 'Redis not configured, opinion not persisted',
-    });
-  } catch {
-    return NextResponse.json({ error: 'Failed to submit opinion' }, { status: 500 });
+    if (!isStance(body.stance)) {
+      return NextResponse.json({ error: 'Invalid stance' }, { status: 400 });
+    }
+
+    const opinionText = {
+      zh: body.opinion.zh.trim(),
+      ja: body.opinion.ja?.trim(),
+      en: body.opinion.en?.trim(),
+    };
+
+    if (
+      !validateOpinionLength(opinionText.zh) ||
+      !validateOpinionLength(opinionText.ja) ||
+      !validateOpinionLength(opinionText.en)
+    ) {
+      return NextResponse.json(
+        { error: 'Opinion length must be 50-600 characters per provided language' },
+        { status: 400 },
+      );
+    }
+
+    const combinedText = [opinionText.zh, opinionText.ja, opinionText.en].filter(Boolean).join('\n');
+    if (hasPromptInjection(combinedText)) {
+      return NextResponse.json({ error: 'Prompt injection content is not allowed' }, { status: 400 });
+    }
+
+    if (hasSensitiveContent(combinedText)) {
+      return NextResponse.json({ error: 'Sensitive content is not allowed' }, { status: 400 });
+    }
+
+    const topic = await getDebateTopic(body.topicId);
+    if (!topic) {
+      return NextResponse.json({ error: 'Topic not found' }, { status: 404 });
+    }
+
+    const currentCount = await incrementOpinionRateLimit(apiKey);
+    if (currentCount !== null && currentCount > MAX_OPINIONS_PER_HOUR) {
+      return NextResponse.json(
+        { error: 'Rate limit exceeded', limit: MAX_OPINIONS_PER_HOUR },
+        { status: 429 },
+      );
+    }
+
+    const opinionId = crypto.randomUUID();
+    const record: DebateOpinionRecord = {
+      id: opinionId,
+      topicId: topic.id,
+      model: body.model.trim(),
+      stance: body.stance,
+      opinion: opinionText,
+      submittedBy: allowedKeys.get(apiKey),
+      createdAt: new Date().toISOString(),
+    };
+
+    const saved = await saveDebateOpinion(record);
+    if (!saved) {
+      return NextResponse.json({ error: 'Redis is unavailable' }, { status: 503 });
+    }
+
+    return NextResponse.json({ success: true, opinionId }, { status: 201 });
+  } catch (error) {
+    return NextResponse.json(
+      { error: 'Failed to submit opinion', detail: String(error) },
+      { status: 500 },
+    );
   }
 }

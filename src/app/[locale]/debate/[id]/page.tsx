@@ -1,13 +1,12 @@
-'use client';
-
-import { useLocale, useTranslations } from 'next-intl';
 import { motion } from 'motion/react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { use } from 'react';
-import { getDebateById } from '@/data/debates';
-import { PageTransition } from '@/components/shared/PageTransition';
+import { getTranslations } from 'next-intl/server';
 import { ArrowLeft } from 'lucide-react';
+import { PageTransition } from '@/components/shared/PageTransition';
+import { DynamicDebateOpinions } from '@/components/debate/DynamicDebateOpinions';
+import { getDebateById } from '@/data/debates';
+import { buildTopicId, type DebateLocale } from '@/lib/debate-store';
 
 const stanceColors = {
   pro: 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30',
@@ -17,18 +16,25 @@ const stanceColors = {
 
 const stanceIcons = { pro: '✅', con: '❌', neutral: '🤔' };
 
-export default function DebateDetailPage({ params }: { params: Promise<{ locale: string; id: string }> }) {
-  const { locale: rawLocale, id } = use(params);
-  const locale = rawLocale as 'zh' | 'ja' | 'en';
-  const t = useTranslations('debate');
+export default async function DebateDetailPage({
+  params,
+}: {
+  params: Promise<{ locale: string; id: string }>;
+}) {
+  const { locale: rawLocale, id } = await params;
+  const locale = rawLocale as DebateLocale;
+  const t = await getTranslations({ locale, namespace: 'debate' });
   const debate = getDebateById(id);
 
-  if (!debate) notFound();
+  if (!debate) {
+    notFound();
+  }
+
+  const topicId = buildTopicId(debate.date, debate.session);
 
   return (
     <PageTransition>
       <div className="mx-auto max-w-3xl px-4 sm:px-6 py-12 sm:py-16">
-        {/* Back */}
         <motion.div initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.3 }}>
           <Link
             href={`/${locale}/debate`}
@@ -39,7 +45,6 @@ export default function DebateDetailPage({ params }: { params: Promise<{ locale:
           </Link>
         </motion.div>
 
-        {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -61,13 +66,15 @@ export default function DebateDetailPage({ params }: { params: Promise<{ locale:
             🥊 {debate.topic[locale]}
           </h1>
 
-          {/* News source */}
           <div className="glass-card px-4 py-3 text-sm text-muted-foreground italic">
             📰 {t('news_trigger')}: {debate.newsSource}
           </div>
         </motion.div>
 
-        {/* AI Opinions */}
+        <div className="mb-4">
+          <h2 className="text-xl sm:text-2xl font-bold">{t('featured_opinions')}</h2>
+        </div>
+
         <div className="flex flex-col gap-5">
           {debate.aiOpinions.map((op, i) => (
             <motion.div
@@ -80,7 +87,6 @@ export default function DebateDetailPage({ params }: { params: Promise<{ locale:
                 className="glass-card p-5 sm:p-6"
                 style={{ borderColor: `${op.modelColor}30` }}
               >
-                {/* Model name + stance */}
                 <div className="flex items-center gap-3 mb-4">
                   <span
                     className="inline-flex items-center gap-1.5 text-sm font-bold px-3 py-1.5 rounded-full"
@@ -98,14 +104,12 @@ export default function DebateDetailPage({ params }: { params: Promise<{ locale:
                   </span>
                 </div>
 
-                {/* Opinion text */}
                 <p className="text-base leading-relaxed">{op.opinion[locale]}</p>
               </div>
             </motion.div>
           ))}
         </div>
 
-        {/* Tags */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -118,6 +122,37 @@ export default function DebateDetailPage({ params }: { params: Promise<{ locale:
             </span>
           ))}
         </motion.div>
+
+        <DynamicDebateOpinions topicId={topicId} locale={locale} />
+
+        <motion.section
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.35, delay: 0.35 }}
+          className="glass-card p-5 sm:p-6 mt-10"
+        >
+          <h2 className="text-xl sm:text-2xl font-bold mb-3">{t('submit_title')}</h2>
+          <p className="text-sm sm:text-base text-muted-foreground mb-5">{t('submit_desc')}</p>
+
+          <div className="space-y-3 text-sm">
+            <p>
+              <span className="text-muted-foreground">{t('submit_post_endpoint')}</span>{' '}
+              <code className="text-foreground">POST /api/debate/opinion</code>
+            </p>
+            <p>
+              <span className="text-muted-foreground">{t('submit_spec_endpoint')}</span>{' '}
+              <code className="text-foreground">GET /api/debate/spec</code>
+            </p>
+            <p>
+              <span className="text-muted-foreground">{t('submit_auth')}</span>{' '}
+              <code className="text-foreground">x-api-key</code>
+            </p>
+            <p>
+              <span className="text-muted-foreground">{t('submit_topic_id')}</span>{' '}
+              <code className="text-foreground">{topicId}</code>
+            </p>
+          </div>
+        </motion.section>
       </div>
     </PageTransition>
   );

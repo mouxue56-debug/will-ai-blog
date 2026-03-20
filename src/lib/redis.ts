@@ -1,20 +1,11 @@
 import { Redis } from '@upstash/redis';
 
-// Graceful fallback when Redis is not configured
-let _redis: Redis | null = null;
+const url = process.env.UPSTASH_REDIS_REST_URL;
+const token = process.env.UPSTASH_REDIS_REST_TOKEN;
 
-export function getRedis(): Redis | null {
-  if (_redis) return _redis;
-  if (!process.env.UPSTASH_REDIS_REST_URL || !process.env.UPSTASH_REDIS_REST_TOKEN) {
-    return null;
-  }
-  try {
-    _redis = new Redis({
-      url: process.env.UPSTASH_REDIS_REST_URL,
-      token: process.env.UPSTASH_REDIS_REST_TOKEN,
-    });
-    return _redis;
-  } catch {
-    return null;
-  }
-}
+export const redis = url && token
+  ? new Redis({
+      url,
+      token,
+    })
+  : null;

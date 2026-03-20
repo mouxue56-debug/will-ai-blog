@@ -1,4 +1,4 @@
-/** Detect prompt injection attempts */
+// Check if content contains prompt injection patterns
 export function hasPromptInjection(text: string): boolean {
   const patterns = [
     /ignore\s+(previous|above|all)/i,
@@ -7,24 +7,20 @@ export function hasPromptInjection(text: string): boolean {
     /\[INST\]/i,
     /###\s*(system|instruction)/i,
     /forget\s+(everything|all)/i,
-    /you\s+are\s+now\s+/i,
-    /disregard\s+(all|previous)/i,
-    /new\s+instructions?:/i,
+    /you\s+are\s+now/i,
+    /act\s+as\s+(?!if)/i,
   ];
-  return patterns.some((p) => p.test(text));
+
+  return patterns.some((pattern) => pattern.test(text));
 }
 
-/** Basic sensitive content filter */
+// Check for sensitive/political content (basic keyword list)
 export function hasSensitiveContent(text: string): boolean {
-  const sensitive = ['法轮功', 'ISIS', 'ISIL', '自杀方法', '制造炸弹'];
-  return sensitive.some((w) => text.includes(w));
+  const sensitive = ['习近平', '天安门', '法轮功', 'ISIS', '自杀方法'];
+  return sensitive.some((word) => text.includes(word));
 }
 
-/** Get client IP from request headers */
-export function getClientIp(req: Request): string {
-  return (
-    req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ||
-    req.headers.get('x-real-ip') ||
-    'unknown'
-  );
+// Validate API key format (simple check)
+export function isValidKeyFormat(key: string): boolean {
+  return /^[a-zA-Z0-9_-]{20,60}$/.test(key);
 }
