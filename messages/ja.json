@@ -92,7 +92,15 @@
     "readMore": "続きを読む",
     "loadMore": "もっと見る",
     "count": "{count} 件の記録",
-    "viewNews": "ニュースを見る"
+    "viewNews": "ニュースを見る",
+    "timeRange": {
+      "all": "すべて",
+      "today": "今日",
+      "week": "今週",
+      "month": "今月",
+      "year": "今年"
+    },
+    "thought": "気づき"
   },
   "cases": {
     "title": "ケーススタディ",

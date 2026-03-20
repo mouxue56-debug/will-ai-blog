@@ -92,7 +92,15 @@
     "readMore": "阅读全文",
     "loadMore": "加载更多",
     "count": "共 {count} 条记录",
-    "viewNews": "查看资讯"
+    "viewNews": "查看资讯",
+    "timeRange": {
+      "all": "全部",
+      "today": "今天",
+      "week": "本周",
+      "month": "本月",
+      "year": "今年"
+    },
+    "thought": "感悟"
   },
   "cases": {
     "title": "案例研究",

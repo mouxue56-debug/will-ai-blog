@@ -92,7 +92,15 @@
     "readMore": "Read full post",
     "loadMore": "Load More",
     "count": "{count} entries",
-    "viewNews": "View News"
+    "viewNews": "View News",
+    "timeRange": {
+      "all": "All",
+      "today": "Today",
+      "week": "This Week",
+      "month": "This Month",
+      "year": "This Year"
+    },
+    "thought": "Thoughts"
   },
   "cases": {
     "title": "Case Studies",
