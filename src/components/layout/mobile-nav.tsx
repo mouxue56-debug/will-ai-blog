@@ -14,6 +14,7 @@ import {
   X,
   LogIn,
   Cat,
+  Swords,
 } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
 import { useSession, signOut } from 'next-auth/react';
@@ -21,7 +22,7 @@ import { useSession, signOut } from 'next-auth/react';
 const mainTabs = [
   { key: 'home', href: '/', icon: Home },
   { key: 'blog', href: '/blog', icon: BookOpen },
-  { key: 'cattery', href: '/cattery', icon: Cat },
+  { key: 'debate', href: '/debate', icon: Swords },
   { key: 'timeline', href: '/timeline', icon: Clock },
 ] as const;
 
