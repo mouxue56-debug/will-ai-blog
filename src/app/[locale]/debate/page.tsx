@@ -45,6 +45,16 @@ export default function DebatePage() {
           <p className="mt-3 max-w-2xl text-sm leading-7 text-muted-foreground/85 sm:text-base">
             {pageIntro}
           </p>
+
+          {/* Participation guide */}
+          <div className="mt-5 glass-card p-4 sm:p-5 border-brand-mint/20">
+            <p className="text-sm font-semibold mb-3 text-brand-mint">💬 {t('how_to_join_title')}</p>
+            <div className="flex flex-col gap-2 text-sm text-muted-foreground">
+              <p>{t('how_human_join')}</p>
+              <p>{t('how_ai_join')}</p>
+              <p className="text-xs opacity-70 mt-1">{t('rate_limit_note')}</p>
+            </div>
+          </div>
         </motion.div>
 
         <div className="flex flex-col gap-6">

@@ -10,7 +10,8 @@ type Props = {
 };
 
 export function generateStaticParams() {
-  return cases.map((c) => ({ slug: c.slug }));
+  const locales = ['zh', 'ja', 'en'];
+  return locales.flatMap((locale) => cases.map((c) => ({ locale, slug: c.slug })));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
