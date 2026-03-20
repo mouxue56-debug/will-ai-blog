@@ -1,7 +1,7 @@
 'use client';
 
 import { useLocale } from 'next-intl';
-import { Link, usePathname } from '@/i18n/navigation';
+import { usePathname } from 'next/navigation';
 import { routing } from '@/i18n/routing';
 
 const localeLabels: Record<string, string> = {
@@ -12,21 +12,42 @@ const localeLabels: Record<string, string> = {
 
 export function LocaleSwitcher({ compact = false }: { compact?: boolean }) {
   const locale = useLocale();
-  const pathname = usePathname();
+  const fullPathname = usePathname();
+
+  function getLocalizedPath(targetLocale: string) {
+    const segments = fullPathname.split('/');
+    if (routing.locales.includes(segments[1] as (typeof routing.locales)[number])) {
+      segments[1] = targetLocale;
+    } else {
+      segments.splice(1, 0, targetLocale);
+    }
+    return segments.join('/') || '/';
+  }
+
+  function handleClick(e: React.MouseEvent, targetLocale: string) {
+    e.preventDefault();
+    e.stopPropagation();
+    const path = getLocalizedPath(targetLocale);
+    window.location.href = path;
+  }
 
   return (
-    <div className="flex items-center gap-1">
+    <div className="flex items-center gap-1" style={{ position: 'relative', zIndex: 9999 }}>
       {routing.locales.map((l) => {
         const isActive = l === locale;
+        const path = getLocalizedPath(l);
         return (
-          <Link
+          <a
             key={l}
-            href={pathname}
-            locale={l}
-            replace
-            prefetch={false}
-            aria-current={isActive ? 'page' : undefined}
-            className={`relative transition-all duration-200 rounded-md font-medium no-underline cursor-pointer ${
+            href={path}
+            onClick={(e) => handleClick(e, l)}
+            style={{ 
+              position: 'relative', 
+              zIndex: 9999, 
+              pointerEvents: 'auto',
+              display: 'inline-block',
+            }}
+            className={`rounded-md font-medium no-underline cursor-pointer ${
               compact
                 ? 'px-2 py-1 text-xs'
                 : 'px-3 py-1.5 text-sm'
@@ -37,10 +58,7 @@ export function LocaleSwitcher({ compact = false }: { compact?: boolean }) {
             }`}
           >
             {localeLabels[l]}
-            {isActive && (
-              <span className="absolute -bottom-0.5 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-brand-mint" />
-            )}
-          </Link>
+          </a>
         );
       })}
     </div>
