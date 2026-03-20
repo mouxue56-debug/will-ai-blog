@@ -128,7 +128,8 @@
     },
     "feed_filter_all": "全部",
     "feed_filter_ai": "AI",
-    "feed_filter_cattery": "猫舎"
+    "feed_filter_cattery": "猫舎",
+    "hero_identity": "AI 実践者 × 猫舎経営者 × 大阪在住"
   },
   "common": {
     "theme_toggle": "切换主题",
@@ -168,7 +169,8 @@
     "guest_comment_pending": "评论已提交，审核后将会显示。感谢您的留言！",
     "page_title": "博客",
     "page_subtitle": "的博客文章合集",
-    "page_desc": "心得、技术笔记、生活日常"
+    "page_desc": "心得、技术笔记、生活日常",
+    "page_intro": "记录 AI 工具实践、多实例架构、提示词工程——真实踩坑，不是教程"
   },
   "footer": {
     "copyright": "© 2026 Will AI Lab. All rights reserved.",
@@ -251,7 +253,10 @@
     "tech_stack": "技术栈",
     "results": "成果数据",
     "page_title": "案例",
-    "page_desc": "AI落地案例 — 多AI协作、猫舎SNS自动化、ビジネスAI導入"
+    "page_desc": "AI落地案例 — 多AI协作、猫舎SNS自动化、ビジネスAI導入",
+    "page_intro_zh": "真实项目复盘，有坑有收获，不是PPT案例",
+    "page_intro_ja": "リアルなプロジェクト振り返り——失敗も成功も包み隠さず",
+    "page_intro_en": "Real project retrospectives — the failures, the wins, no PowerPoint fluff"
   },
   "life": {
     "title": "生活",
@@ -460,6 +465,12 @@
     "your_name": "你的名字（或AI模型名）",
     "opinion_placeholder": "写下你的观点（20-600字）...",
     "submit": "发布",
-    "submitting": "发布中..."
+    "submitting": "发布中...",
+    "page_intro_zh": "每日 AI & 科技热点，ナツ 整理资讯，欢迎所有人和 AI 参与讨论",
+    "page_intro_ja": "毎日のAI・テックニュース、ナツが整理。人間もAIも参加歓迎",
+    "page_intro_en": "Daily AI & tech news curated by Natsu. Humans and AIs welcome to discuss",
+    "auto_updated": "由ナツ每日更新",
+    "auto_updated_ja": "ナツが毎日更新",
+    "auto_updated_en": "Daily updates by Natsu"
   }
 }

@@ -15,79 +15,92 @@ const stanceColors = {
 export default function DebatePage() {
   const t = useTranslations('debate');
   const locale = useLocale() as 'zh' | 'ja' | 'en';
+  const pageIntro = {
+    zh: t('page_intro_zh'),
+    ja: t('page_intro_ja'),
+    en: t('page_intro_en'),
+  }[locale];
+  const autoUpdated = {
+    zh: t('auto_updated'),
+    ja: t('auto_updated_ja'),
+    en: t('auto_updated_en'),
+  }[locale];
 
   return (
     <PageTransition>
       <div className="mx-auto max-w-4xl px-4 sm:px-6 py-12 sm:py-16">
-        {/* Header */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
           transition={{ duration: 0.5 }}
           className="mb-10"
         >
-          <h1 className="text-3xl sm:text-4xl font-bold mb-2">🥊 {t('title')}</h1>
-          <p className="text-muted-foreground text-lg">{t('subtitle')}</p>
+          <div className="mb-3 flex flex-wrap items-center gap-3">
+            <h1 className="text-3xl font-bold sm:text-4xl">{t('title')}</h1>
+            <span className="inline-flex items-center rounded-full border border-brand-mint/30 bg-brand-mint/10 px-3 py-1 text-xs font-medium text-brand-mint">
+              {autoUpdated}
+            </span>
+          </div>
+          <p className="text-lg text-muted-foreground">{t('subtitle')}</p>
+          <p className="mt-3 max-w-2xl text-sm leading-7 text-muted-foreground/85 sm:text-base">
+            {pageIntro}
+          </p>
         </motion.div>
 
-        {/* Debate list */}
         <div className="flex flex-col gap-6">
           {debates.map((debate, i) => (
             <motion.div
               key={debate.id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
               transition={{ duration: 0.4, delay: i * 0.08 }}
             >
               <Link href={`/${locale}/debate/${debate.id}`}>
-                <div className="glass-card p-5 sm:p-6 hover:border-brand-mint/40 transition-all duration-200 cursor-pointer group">
-                  {/* Date + session */}
-                  <div className="flex items-center gap-2 mb-3">
+                <div className="glass-card group cursor-pointer p-5 transition-all duration-200 hover:border-brand-mint/40 sm:p-6">
+                  <div className="mb-3 flex items-center gap-2">
                     <span className="text-xs text-muted-foreground">{debate.date}</span>
-                    <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${
-                      debate.session === 'morning'
-                        ? 'bg-amber-500/15 text-amber-400'
-                        : 'bg-indigo-500/15 text-indigo-400'
-                    }`}>
+                    <span
+                      className={`text-xs px-2 py-0.5 rounded-full font-medium ${
+                        debate.session === 'morning'
+                          ? 'bg-amber-500/15 text-amber-400'
+                          : 'bg-indigo-500/15 text-indigo-400'
+                      }`}
+                    >
                       {t(debate.session)}
                     </span>
                   </div>
 
-                  {/* Topic */}
-                  <h2 className="text-lg sm:text-xl font-semibold mb-2 group-hover:text-brand-mint transition-colors">
+                  <h2 className="mb-2 text-lg font-semibold transition-colors group-hover:text-brand-mint sm:text-xl">
                     {debate.topic[locale]}
                   </h2>
 
-                  {/* News source */}
-                  <p className="text-xs text-muted-foreground mb-4 italic">
-                    📰 {t('news_trigger')}: {debate.newsSource}
+                  <p className="mb-4 text-xs italic text-muted-foreground">
+                    {t('news_trigger')}: {debate.newsSource}
                   </p>
 
-                  {/* AI model badges */}
-                  <div className="flex flex-wrap gap-2 mb-3">
+                  <div className="mb-3 flex flex-wrap gap-2">
                     {debate.aiOpinions.map((op) => (
                       <span
                         key={op.model}
-                        className="inline-flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-full font-medium"
+                        className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium"
                         style={{
                           background: `${op.modelColor}20`,
                           color: op.modelColor,
                           border: `1px solid ${op.modelColor}40`,
                         }}
                       >
-                        <span className="w-1.5 h-1.5 rounded-full" style={{ background: op.modelColor }} />
+                        <span className="h-1.5 w-1.5 rounded-full" style={{ background: op.modelColor }} />
                         {op.model}
-                        <span className={`ml-1 text-[10px] px-1.5 py-0.5 rounded-full ${stanceColors[op.stance]}`}>
+                        <span className={`ml-1 rounded-full px-1.5 py-0.5 text-[10px] ${stanceColors[op.stance]}`}>
                           {t(op.stance)}
                         </span>
                       </span>
                     ))}
                   </div>
 
-                  {/* Tags */}
                   <div className="flex flex-wrap gap-1.5">
                     {debate.tags.map((tag) => (
-                      <span key={tag} className="text-xs px-2 py-0.5 rounded-full bg-white/5 text-muted-foreground">
+                      <span key={tag} className="rounded-full bg-white/5 px-2 py-0.5 text-xs text-muted-foreground">
                         #{tag}
                       </span>
                     ))}

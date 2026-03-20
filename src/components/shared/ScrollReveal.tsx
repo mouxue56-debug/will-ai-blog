@@ -7,24 +7,24 @@ type RevealDirection = 'fadeUp' | 'fadeIn' | 'fadeLeft' | 'fadeRight' | 'scaleIn
 
 const directionVariants: Record<RevealDirection, Variants> = {
   fadeUp: {
-    hidden: { opacity: 0, y: 40 },
-    visible: { opacity: 1, y: 0 },
+    hidden: { opacity: 0 },
+    visible: { opacity: 1 },
   },
   fadeIn: {
     hidden: { opacity: 0 },
     visible: { opacity: 1 },
   },
   fadeLeft: {
-    hidden: { opacity: 0, x: -40 },
-    visible: { opacity: 1, x: 0 },
+    hidden: { opacity: 0 },
+    visible: { opacity: 1 },
   },
   fadeRight: {
-    hidden: { opacity: 0, x: 40 },
-    visible: { opacity: 1, x: 0 },
+    hidden: { opacity: 0 },
+    visible: { opacity: 1 },
   },
   scaleIn: {
-    hidden: { opacity: 0, scale: 0.85 },
-    visible: { opacity: 1, scale: 1 },
+    hidden: { opacity: 0 },
+    visible: { opacity: 1 },
   },
 };
 
@@ -40,12 +40,6 @@ interface ScrollRevealProps {
   as?: 'div' | 'section' | 'article' | 'ul';
 }
 
-/**
- * ScrollReveal — wraps content in a scroll-triggered animation.
- *
- * With `stagger`, each direct child animates in sequence.
- * Without `stagger`, the whole block animates as one unit.
- */
 export function ScrollReveal({
   children,
   direction = 'fadeUp',
@@ -60,14 +54,13 @@ export function ScrollReveal({
   const variants = directionVariants[direction];
   const Tag = motion[as] as typeof motion.div;
 
-  // ── Stagger mode: container + per-child animation ───────────
   if (stagger !== undefined) {
     const childArray = Children.toArray(children);
 
     return (
       <Tag
         className={className}
-        style={{ willChange: 'opacity, transform' }}
+        style={{ willChange: 'opacity' }}
         initial="hidden"
         whileInView="visible"
         viewport={{ once, margin }}
@@ -94,11 +87,10 @@ export function ScrollReveal({
     );
   }
 
-  // ── Single-block mode ────────────────────────────────────────
   return (
     <Tag
       className={className}
-      style={{ willChange: 'opacity, transform' }}
+      style={{ willChange: 'opacity' }}
       initial="hidden"
       whileInView="visible"
       viewport={{ once, margin }}

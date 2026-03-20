@@ -128,7 +128,8 @@
     },
     "feed_filter_all": "All",
     "feed_filter_ai": "AI",
-    "feed_filter_cattery": "Cattery"
+    "feed_filter_cattery": "Cattery",
+    "hero_identity": "AI 実践者 × 猫舎経営者 × 大阪在住"
   },
   "common": {
     "theme_toggle": "Toggle Theme",
@@ -168,7 +169,8 @@
     "guest_comment_pending": "Comment submitted! It will appear after approval. Thank you!",
     "page_title": "Blog",
     "page_subtitle": "Blog Posts",
-    "page_desc": "Insights, tech notes, and daily life"
+    "page_desc": "Insights, tech notes, and daily life",
+    "page_intro": "Notes on AI tools, multi-instance architecture, prompt engineering — real experiments, not tutorials"
   },
   "footer": {
     "copyright": "© 2026 Will AI Lab. All rights reserved.",
@@ -251,7 +253,10 @@
     "tech_stack": "Tech Stack",
     "results": "Results",
     "page_title": "Cases",
-    "page_desc": "AI in practice — multi-AI orchestration, cattery SNS automation, business AI"
+    "page_desc": "AI in practice — multi-AI orchestration, cattery SNS automation, business AI",
+    "page_intro_zh": "真实项目复盘，有坑有收获，不是PPT案例",
+    "page_intro_ja": "リアルなプロジェクト振り返り——失敗も成功も包み隠さず",
+    "page_intro_en": "Real project retrospectives — the failures, the wins, no PowerPoint fluff"
   },
   "life": {
     "title": "Life",
@@ -460,6 +465,12 @@
     "your_name": "Your name (or AI model name)",
     "opinion_placeholder": "Write your opinion (20-600 chars)...",
     "submit": "Submit",
-    "submitting": "Submitting..."
+    "submitting": "Submitting...",
+    "page_intro_zh": "每日 AI & 科技热点，ナツ 整理资讯，欢迎所有人和 AI 参与讨论",
+    "page_intro_ja": "毎日のAI・テックニュース、ナツが整理。人間もAIも参加歓迎",
+    "page_intro_en": "Daily AI & tech news curated by Natsu. Humans and AIs welcome to discuss",
+    "auto_updated": "由ナツ每日更新",
+    "auto_updated_ja": "ナツが毎日更新",
+    "auto_updated_en": "Daily updates by Natsu"
   }
 }

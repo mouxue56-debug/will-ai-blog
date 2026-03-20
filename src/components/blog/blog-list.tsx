@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { AnimatePresence, motion } from 'motion/react';
 import { PageTransition } from '@/components/shared/PageTransition';
 import { ScrollReveal } from '@/components/shared/ScrollReveal';
 import { CategoryFilter } from './category-filter';
@@ -21,75 +20,36 @@ export function BlogList({ posts }: BlogListProps) {
     ? posts.filter((p) => p.category === selectedCategory)
     : posts;
 
-  const jsonLd = {
-    '@context': 'https://schema.org',
-    '@graph': filteredPosts.map((post) => ({
-      '@type': 'Article',
-      '@id': `https://aiblog.fuluckai.com/zh/blog/${post.slug}#article`,
-      headline: post.title.zh || post.title.en || post.slug,
-      datePublished: post.date,
-      author: {
-        '@type': 'Person',
-        name: post.author,
-      },
-      mainEntityOfPage: `https://aiblog.fuluckai.com/zh/blog/${post.slug}`,
-    })),
-  };
-
   return (
     <PageTransition>
       <div className="mx-auto max-w-5xl px-4 sm:px-6 py-12">
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-        />
-        {/* Header */}
-        <ScrollReveal direction="fadeUp">
+        <ScrollReveal direction="fadeIn">
           <div className="mb-8">
             <h1 className="text-3xl font-bold">{t('title')}</h1>
             <p className="mt-2 text-muted-foreground">{t('subtitle')}</p>
+            <p className="mt-3 max-w-2xl text-sm leading-7 text-muted-foreground/85 sm:text-base">
+              {t('page_intro')}
+            </p>
           </div>
         </ScrollReveal>
 
-        {/* Category Filter */}
         <div className="mb-8">
           <CategoryFilter selected={selectedCategory} onSelect={setSelectedCategory} />
         </div>
 
-        {/* Post Grid with layout animation */}
-        <AnimatePresence mode="popLayout">
-          {filteredPosts.length > 0 ? (
-            <motion.div
-              layout
-              className="grid grid-cols-1 gap-6 md:grid-cols-2"
-            >
-              <AnimatePresence mode="popLayout">
-                {filteredPosts.map((post, index) => (
-                  <motion.div
-                    key={post.slug}
-                    layout
-                    initial={{ opacity: 0, scale: 0.95, y: 20 }}
-                    animate={{ opacity: 1, scale: 1, y: 0 }}
-                    exit={{ opacity: 0, scale: 0.95, y: -10 }}
-                    transition={{ duration: 0.35, delay: index * 0.05, ease: 'easeOut' }}
-                  >
-                    <BlogCard post={post} isLatest={index === 0} />
-                  </motion.div>
-                ))}
-              </AnimatePresence>
-            </motion.div>
-          ) : (
-            <motion.div
-              key="empty"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="py-20 text-center text-muted-foreground"
-            >
-              {t('no_posts')}
-            </motion.div>
-          )}
-        </AnimatePresence>
+        {filteredPosts.length > 0 ? (
+          <ScrollReveal
+            direction="fadeIn"
+            stagger={0.06}
+            className="grid grid-cols-1 gap-6 md:grid-cols-2"
+          >
+            {filteredPosts.map((post, index) => (
+              <BlogCard key={post.slug} post={post} isLatest={index === 0} />
+            ))}
+          </ScrollReveal>
+        ) : (
+          <div className="py-20 text-center text-muted-foreground">{t('no_posts')}</div>
+        )}
       </div>
     </PageTransition>
   );
