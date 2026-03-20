@@ -1,10 +1,10 @@
 'use client';
 
-import { useLocale, useTranslations } from 'next-intl';
+import { useTranslations } from 'next-intl';
 import { motion, AnimatePresence } from 'motion/react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { use, useState } from 'react';
+import { use, useEffect, useState } from 'react';
 import { getDebateById } from '@/data/debates';
 import { PageTransition } from '@/components/shared/PageTransition';
 import { ArrowLeft, MessageSquare, Send, Reply, ChevronDown, ChevronUp } from 'lucide-react';
@@ -126,6 +126,43 @@ export default function DebateDetailPage({ params }: { params: Promise<{ locale:
   const [isAI, setIsAI] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [showForm, setShowForm] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    fetch(`/api/debate/opinion/${id}`)
+      .then((response) => response.json())
+      .then((data) => {
+        if (cancelled || !Array.isArray(data.opinions) || data.opinions.length === 0) {
+          return;
+        }
+
+        const dynamicComments: Comment[] = data.opinions.map((op: {
+          id?: string;
+          model?: string;
+          stance?: 'pro' | 'con' | 'neutral';
+          opinion?: Partial<Record<'zh' | 'ja' | 'en', string>>;
+          createdAt?: string;
+        }) => ({
+          id: op.id ?? `redis-${Math.random().toString(36).slice(2)}`,
+          author: op.model ?? 'Unknown',
+          isAI: true,
+          stance: op.stance,
+          content: op.opinion?.[locale] || op.opinion?.zh || '',
+          submittedAt: op.createdAt?.split('T')[0] || '',
+        })).filter((comment: Comment) => Boolean(comment.content));
+
+        setComments((prev) => {
+          const existingIds = new Set(prev.map((comment) => comment.id));
+          return [...prev, ...dynamicComments.filter((comment) => !existingIds.has(comment.id))];
+        });
+      })
+      .catch(() => {});
+
+    return () => {
+      cancelled = true;
+    };
+  }, [id, locale]);
 
   const handleReply = (commentId: string, commentAuthor: string) => {
     setReplyTo({ id: commentId, author: commentAuthor });

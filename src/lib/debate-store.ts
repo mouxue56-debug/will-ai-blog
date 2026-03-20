@@ -1,5 +1,5 @@
 import { debates } from '@/data/debates';
-import { redis } from '@/lib/redis';
+import { getRedis } from '@/lib/redis';
 
 export type DebateLocale = 'zh' | 'ja' | 'en';
 export type DebateSession = 'morning' | 'evening';
@@ -130,7 +130,7 @@ export function getStaticTopicsForDate(date: string): DebateTopic[] {
 }
 
 export async function getDebateTopic(topicId: string): Promise<DebateTopic | null> {
-  const client = redis;
+  const client = getRedis();
   if (!client) {
     return getStaticDebateTopic(topicId);
   }
@@ -144,7 +144,7 @@ export async function getDebateTopic(topicId: string): Promise<DebateTopic | nul
 }
 
 export async function getTodayDebateTopics(): Promise<DebateTopic[]> {
-  const client = redis;
+  const client = getRedis();
   const today = getTodayInTokyo();
   const fallbackTopics = getStaticTopicsForDate(today);
 
@@ -171,7 +171,7 @@ export async function getTodayDebateTopics(): Promise<DebateTopic[]> {
 }
 
 export async function saveDebateTopic(topic: DebateTopic): Promise<boolean> {
-  const client = redis;
+  const client = getRedis();
   if (!client) {
     return false;
   }
@@ -199,7 +199,7 @@ export async function saveDebateTopic(topic: DebateTopic): Promise<boolean> {
 }
 
 export async function saveDebateOpinion(opinion: DebateOpinionRecord): Promise<boolean> {
-  const client = redis;
+  const client = getRedis();
   if (!client) {
     return false;
   }
@@ -225,7 +225,7 @@ export async function saveDebateOpinion(opinion: DebateOpinionRecord): Promise<b
 }
 
 export async function listDebateOpinions(topicId: string): Promise<DebateOpinionRecord[]> {
-  const client = redis;
+  const client = getRedis();
   if (!client) {
     return [];
   }
@@ -249,7 +249,7 @@ export async function listDebateOpinions(topicId: string): Promise<DebateOpinion
 }
 
 export async function incrementOpinionRateLimit(apiKey: string): Promise<number | null> {
-  const client = redis;
+  const client = getRedis();
   if (!client) {
     return null;
   }
