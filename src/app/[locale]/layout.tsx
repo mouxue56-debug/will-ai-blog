@@ -11,6 +11,7 @@ import { Footer } from '@/components/layout/footer';
 import { MobileNav } from '@/components/layout/mobile-nav';
 import { ScrollToTop } from '@/components/shared/ScrollToTop';
 import { AIChatWidget } from '@/components/shared/AIChatWidget';
+import { Analytics } from '@/components/shared/analytics';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -161,6 +162,7 @@ export default async function LocaleLayout({
                 <MobileNav />
                 <ScrollToTop />
                 <AIChatWidget />
+                <Analytics />
               </NextIntlClientProvider>
             </ThemeProvider>
           </SessionProvider>

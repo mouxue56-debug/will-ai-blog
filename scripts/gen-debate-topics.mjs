@@ -130,7 +130,7 @@ async function main() {
   const { session } = parseArgs(process.argv.slice(2));
   // ZhipuAI GLM key（内置默认，也可通过环境变量覆盖）
   const aiApiKey = process.env.AI_API_KEY || 'f0f2d642791245feb63469815f0cf758.HiwAMwoIqlHCCfZd';
-  const adminKey = process.env.DEBATE_ADMIN_KEY || '8148fd0799b24dcc471401aefc671cbf';
+  const adminKey = process.env.DEBATE_ADMIN_KEY || '2bf58ea711067f04172c365a703d92f723f88aa13356ff76d19ee3ab2ee6d911';
   const baseUrl = DEFAULT_BASE_URL.replace(/\/$/, '');
 
   const topics = await generateTopics({ session, aiApiKey });
