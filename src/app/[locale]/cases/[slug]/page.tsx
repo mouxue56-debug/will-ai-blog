@@ -25,6 +25,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const lang = (locale === 'zh' || locale === 'ja' || locale === 'en') ? locale : 'zh';
   const title = caseStudy.title[lang];
   const description = caseStudy.subtitle[lang];
+  const ogImageUrl = `https://aiblog.fuluckai.com/api/og?title=${encodeURIComponent(title)}&lang=${encodeURIComponent(lang)}`;
 
   return {
     title,
@@ -33,6 +34,18 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title,
       description,
       type: 'article',
+      images: [{
+        url: ogImageUrl,
+        width: 1200,
+        height: 630,
+        alt: `${title} OG image`,
+      }],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images: [ogImageUrl],
     },
     alternates: {
       languages: {
