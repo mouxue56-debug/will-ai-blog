@@ -92,3 +92,38 @@ VPS (Tokyo Region)
 ---
 
 下一篇：[OpenClaw 多实例踩坑记录](/blog/openclaw-multi-instance) — 配置隔离、端口冲突、共享缓存那些坑。
+
+
+---
+
+## 日英翻译（Kimi K2.5）
+
+### 日本語
+
+my-ai-workflow
+
+1つのBotから4人のAIアシスタントへ
+
+去年の夏、私はOpenClawでClaudeインスタンスを1つ動かし始めた。日常の雑務——メール返信、メモ整理、たまに調べ物を手伝ってもらう——を処理するためだ。その時期は素晴らしかった。無限に忍耐強いアシスタントがもう1人いるような感じだった。
+
+そして事業が拡大し始めた。
+
+猫舎の顧客問い合わせが増え、Instagramは定期的な更新が必要になり、医療AIプロジェクトは毎日のフォローアップを求め始め、コードリポジトリにはissueが山積みになった。私は1つのAIインスタンスが雑用係になっていくのを目の当たりにした——今日は猫の紹介文案を書き、明日は医療システムのPythonコードを見て、明後日はTikTokアルゴリズムを調べる。
+
+**問題はAIができるかどうかではなく、コンテキスト汚染が深刻すぎることだ。** Instagramの日本語文案に集中しているインスタンスが、同時に医療AIのコンプライアンス問題も処理しなければならないと、パフォーマンスが明らかに低下する。モデルの能力の問題ではなく、注意力の問題だ。
+
+### English
+
+my-ai-workflow
+
+From One Bot to Four AI Assistants
+
+Last summer, I started running a Claude instance on OpenClaw to handle daily chores—replying to emails, organizing notes, occasionally helping me look things up. That phase was wonderful, like having an infinitely patient assistant.
+
+Then the business started expanding.
+
+Cat shelter client inquiries kept increasing, Instagram needed regular updates, the medical AI project started requiring daily follow-ups, and the code repository was piling up with issues. I found one AI instance becoming a jack-of-all-trades—today helping me write cat introduction copy, tomorrow reviewing Python code for the medical system, the day after researching TikTok algorithms.
+
+**The problem wasn't whether AI could do it—it was severe context pollution.** An instance focused on writing Instagram Japanese copy, if simultaneously handling compliance issues for medical AI, would noticeably degrade in performance. Not a model capability issue—an attention issue.
+
+> AI 翻译 | 2026-03-21

@@ -39,3 +39,30 @@ excerpt:
 ---
 
 你们大阪的花见通常去哪里？欢迎分享。
+
+
+---
+
+## 日英翻译（Kimi K2.5）
+
+### 日本語
+
+osaka-sakura-2026
+
+今年の桜は少し遅め
+
+日本気象庁の予報によると、2026年の大阪のソメイヨシノの開花予想は3月25日頃で、昨年より約4日遅い。3月初旬の続いた低温が主な原因だ。
+
+針中野に住む私が毎年最も楽しみにしているのは、大和川沿いと長居公園の桜だ——大阪城に人混みを避けて行かなくても、自転車で10分の距離に同じくらいきれいな景色がある。
+
+### English
+
+osaka-sakura-2026
+
+This year's cherry blossoms are arriving slightly later than usual.
+
+According to the Japan Meteorological Agency's forecast, the Somei Yoshino (Yoshino cherry) in Osaka is expected to bloom around March 25, 2026—approximately four days later than last year. The persistent low temperatures in early March are the main cause.
+
+Living in Harinakano, what I look forward to most each year is the cherry blossoms along the Yamato River and at Nagai Park—no need to join the crowds at Osaka Castle; a 10-minute bike ride brings me to equally beautiful scenery.
+
+> AI 翻译 | 2026-03-21

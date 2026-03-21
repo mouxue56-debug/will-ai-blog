@@ -88,3 +88,38 @@ OpenClaw 医疗咨询实例（アキ）
 ---
 
 技术栈：OpenClaw + LINE Messaging API + Claude + 自建 RAG 知识库 + Vercel Edge Functions
+
+
+---
+
+## 日英翻译（Kimi K2.5）
+
+### 日本語
+
+AIクリニック事例
+
+クリニックの受付が限界に近づいている
+
+昨年末、大阪市内のある内科クリニックから相談を受けた。規模は小さく、常勤スタッフ7名、月間約300名の患者を受け入れている。
+
+問題はこうだ。患者の約30%が外国人で、主に中国人と韓国人で、再生医療に関する相談や治療を求めてくる。これらの患者は基本的に日本語を話さず、WeChatやLINEでメッセージを送る習慣があるが、クリニックの受付は日本語のみに対応していた。
+
+**毎日の流れはこうだった**：外国人患者が中国語でメッセージを送信 → 受付が理解できず、スクリーンショットを撮る → 院長（中国語が少しできる）に転送 → 院長が返信を作成 → 受付が転送し返す。平均対応時間は24時間で、患者が待ちきれず他のクリニックに行ってしまう。
+
+院長によると、この問題で毎月10〜15件の新規患者の初診予約を失っているとのことだった。
+
+### English
+
+ai-clinic-case
+
+The clinic front desk is overwhelmed
+
+At the end of last year, an internal medicine clinic in Osaka city approached me. It's a small operation—7 full-time staff, seeing about 300 patients per month.
+
+Here's the problem: Nearly 30% of their patients are foreign nationals, mainly Chinese and Koreans seeking regenerative medicine consultations and treatment. These patients generally don't speak Japanese and prefer to send inquiries via WeChat or LINE, but the clinic front desk only handles Japanese.
+
+**The daily workflow goes like this**: Foreign patient sends message in Chinese → Front desk doesn't understand, takes screenshot → Forwards to the director (who knows some Chinese) → Director writes reply → Front desk forwards it back. Average response time: 24 hours. Patients get impatient and go elsewhere.
+
+The director told me they're probably losing an estimated 10-15 new patient first-visit appointments every month because of this issue.
+
+> AI 翻译 | 2026-03-21

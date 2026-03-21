@@ -74,3 +74,34 @@ excerpt:
 ---
 
 **サイベリアン｜大阪・福楽キャッテリー** のお問い合わせは LINE から。
+
+
+---
+
+## 日英翻译（Kimi K2.5）
+
+### 日本語
+
+サイベリアン・春のケア
+
+換毛期がやってきました！
+
+三月中旬、大阪の気温が暖かくなり始めると、当猫舎のサイベリアンたちも一年で最も「壮観」な換毛期を迎えます。
+
+サイベリアンを初めて飼う方、あるいは短毛種からサイベリアンに変えたばかりの方は、換毛期に少々驚かれるかもしれません——この品種のダウンファーは密度が極めて高く、冬の綿毛が抜け始めると、ブラシで取れる量が本当に驚異的です。
+
+しかし、これこそがサイベリアンの特徴の一つです：**三層構造の被毛**（外層の防水性の硬い毛＋中間層＋内層の柔らかい綿毛）が、シベリアの冬の防寒能力を与えています。春になると、この厚い綿毛が一斉に抜け落ち、より軽やかな夏毛へと生え変わるのです。
+
+### English
+
+Siberian Spring Care
+
+Shedding season is here!
+
+By mid-March, temperatures in Osaka begin to rise, and the Siberians at our cattery enter their most "spectacular" shedding period of the year.
+
+If you're a first-time Siberian owner or have just switched from a short-haired breed, shedding season might come as a shock—this breed's undercoat is extremely dense, and when that winter down starts to come out, the amount you'll brush out is truly astonishing.
+
+But this is also one of the Siberian's defining characteristics: their **triple coat structure** (outer water-resistant guard hairs + middle layer + soft inner down) gives them the insulation to survive Siberian winters. Come spring, that thick undercoat sheds heavily as they switch to a lighter summer coat.
+
+> AI 翻译 | 2026-03-21
