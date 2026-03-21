@@ -106,55 +106,14 @@ export function StoryTimeline() {
 
   const lineHeight = useTransform(scrollYProgress, [0, 0.8], ['0%', '100%']);
 
+  // 按时间倒序排列：2026 → 2025 → 2024 → 2023 → 2022
   const storyNodes: StoryNode[] = [
-    {
-      year: t('story_node1_year'),
-      title: t('story_node1_title'),
-      description: t('story_node1_desc'),
-      icon: <Cat className="h-5 w-5" />,
-      color: 'text-brand-coral',
-      glowColor: 'rgba(251,191,36,0.4)',
-    },
-    {
-      year: t('story_node2_year'),
-      title: t('story_node2_title'),
-      description: t('story_node2_desc'),
-      icon: <Bot className="h-5 w-5" />,
-      color: 'text-brand-cyan',
-      glowColor: 'rgba(56,189,248,0.4)',
-    },
-    {
-      year: t('story_node3_year'),
-      title: t('story_node3_title'),
-      description: t('story_node3_desc'),
-      icon: <Users className="h-5 w-5" />,
-      color: 'text-brand-taro',
-      glowColor: 'rgba(192,132,252,0.4)',
-    },
-    {
-      year: t('story_node4_year'),
-      title: t('story_node4_title'),
-      description: t('story_node4_desc'),
-      icon: <Newspaper className="h-5 w-5" />,
-      color: 'text-brand-mint',
-      glowColor: 'rgba(94,234,212,0.4)',
-    },
-    {
-      year: t('story_node5_year'),
-      title: t('story_node5_title'),
-      description: t('story_node5_desc'),
-      icon: <Bot className="h-5 w-5" />,
-      color: 'text-brand-blueberry',
-      glowColor: 'rgba(139,92,246,0.4)',
-    },
-    {
-      year: t('story_node6_year'),
-      title: t('story_node6_title'),
-      description: t('story_node6_desc'),
-      icon: <Zap className="h-5 w-5" />,
-      color: 'text-brand-mango',
-      glowColor: 'rgba(251,191,36,0.4)',
-    },
+    { year: t('story_node1_year'), title: t('story_node1_title'), description: t('story_node1_desc'), icon: <Cat className="h-5 w-5" />, color: 'text-brand-coral', glowColor: 'rgba(251,191,36,0.4)' },
+    { year: t('story_node2_year'), title: t('story_node2_title'), description: t('story_node2_desc'), icon: <Bot className="h-5 w-5" />, color: 'text-brand-cyan', glowColor: 'rgba(56,189,248,0.4)' },
+    { year: t('story_node3_year'), title: t('story_node3_title'), description: t('story_node3_desc'), icon: <Users className="h-5 w-5" />, color: 'text-brand-taro', glowColor: 'rgba(192,132,252,0.4)' },
+    { year: t('story_node5_year'), title: t('story_node5_title'), description: t('story_node5_desc'), icon: <Bot className="h-5 w-5" />, color: 'text-brand-blueberry', glowColor: 'rgba(139,92,246,0.4)' },
+    { year: t('story_node6_year'), title: t('story_node6_title'), description: t('story_node6_desc'), icon: <Zap className="h-5 w-5" />, color: 'text-brand-mango', glowColor: 'rgba(251,191,36,0.4)' },
+    { year: t('story_node4_year'), title: t('story_node4_title'), description: t('story_node4_desc'), icon: <Newspaper className="h-5 w-5" />, color: 'text-brand-mint', glowColor: 'rgba(94,234,212,0.4)' },
   ];
 
   return (
