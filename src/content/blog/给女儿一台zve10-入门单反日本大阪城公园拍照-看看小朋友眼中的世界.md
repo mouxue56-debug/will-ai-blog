@@ -25,9 +25,9 @@ date: "2026-03-21"
 category: "life"
 tags: ["bilibili", "自动生成"]
 excerpt:
-  zh: ""
-  ja: ""
-  en: ""
+  zh: "给女儿入手了一台Sony ZV-E10入门微单，带她去大阪城公园拍照。ZV-E10轻便仅重约480g，翻转屏方便自拍，对焦快不容易拍糊。女儿学着用取景器，专注度明显提升。"
+  ja: "娘にSony ZV-E10を購入。大阪城公園へ写真撮影へ。ZV-E10は約480gで軽く、自撮りに便利。娘がファインダーに興味を示す。"
+  en: "Gifted my daughter a Sony ZV-E10 mirrorless camera. Took her to Osaka Castle Park for a photography day."
 source: "bilibili"
 bvid: BV1PJ4m1v7uC
 

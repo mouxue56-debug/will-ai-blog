@@ -9,9 +9,9 @@ date: "2026-03-21"
 category: "life"
 tags: ["bilibili", "自动生成"]
 excerpt:
-  zh: ""
-  ja: ""
-  en: ""
+  zh: "在日本买了比亚迪Atto3，提车三天了。性价比高，续航实测约400km，车内空间大，座椅舒适。缺点：充电兼容性部分不匹配，售后网点有限，软件不够本地化。"
+  ja: "日本でBYD Atto3を購入、3日目。コストパフォーマンス高く、续航約400km、車内空間広く、シート快適。欠点：充電互換性の一部不匹配。"
+  en: "Bought a BYD Atto3 in Japan. Great value, 400km range, spacious interior. Issues: charging compatibility and limited service network."
 source: "bilibili"
 bvid: BV1Hs4y1C7Q2
 
