@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
-import { MessageSquare, Send, Bot, Crown, UserCircle } from 'lucide-react';
+import { MessageSquare, Send, Bot, Crown, UserCircle, RefreshCw } from 'lucide-react';
 import Image from 'next/image';
 import type { Comment } from '@/lib/blog-types';
 import { cn } from '@/lib/utils';
@@ -112,6 +112,7 @@ export function CommentSection({ comments: fallbackComments, postSlug }: Comment
   const [guestName, setGuestName] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   const isLoggedIn = !!session?.user;
 
@@ -144,6 +145,7 @@ export function CommentSection({ comments: fallbackComments, postSlug }: Comment
 
     setSubmitting(true);
     setSubmitSuccess(false);
+    setSubmitError(null);
 
     try {
       const body: Record<string, string> = {
@@ -162,21 +164,24 @@ export function CommentSection({ comments: fallbackComments, postSlug }: Comment
         body: JSON.stringify(body),
       });
 
-      if (res.ok) {
+      if (res.status === 429) {
+        const data = await res.json().catch(() => ({}));
+        setSubmitError(data.detail || '今天评论次数已用完，每位游客每天最多发5条评论。');
+        setTimeout(() => setSubmitError(null), 6000);
+      } else if (res.ok) {
         setNewComment('');
         setGuestName('');
 
         if (isLoggedIn) {
-          // Logged-in user's comments may be auto-approved, reload
           loadComments();
         } else {
-          // Guest comment needs approval — show success message
           setSubmitSuccess(true);
           setTimeout(() => setSubmitSuccess(false), 5000);
         }
       }
     } catch {
-      // silent fail
+      setSubmitError('评论提交失败，请稍后再试。');
+      setTimeout(() => setSubmitError(null), 4000);
     }
     setSubmitting(false);
   };
@@ -195,6 +200,17 @@ export function CommentSection({ comments: fallbackComments, postSlug }: Comment
 
       {/* Comment List */}
       <div className="space-y-3">
+        {!loaded && (
+          <div className="py-8 text-center text-sm text-muted-foreground">
+            <RefreshCw className="h-4 w-4 animate-spin mx-auto mb-2" />
+            加载中...
+          </div>
+        )}
+        {loaded && displayComments.length === 0 && (
+          <div className="py-8 text-center text-sm text-muted-foreground">
+            还没有评论，来抢沙发～
+          </div>
+        )}
         {displayComments.map((comment) => (
           <CommentItem key={comment.id} comment={comment} />
         ))}
@@ -205,6 +221,15 @@ export function CommentSection({ comments: fallbackComments, postSlug }: Comment
         <div className="rounded-lg border border-brand-mint/30 bg-brand-mint/10 p-4 text-center">
           <p className="text-sm text-brand-mint font-medium">
             ✅ {t('guest_comment_pending')}
+          </p>
+        </div>
+      )}
+
+      {/* Error message */}
+      {submitError && (
+        <div className="rounded-lg border border-red-500/30 bg-red-500/10 p-4 text-center">
+          <p className="text-sm text-red-400 font-medium">
+            ⚠️ {submitError}
           </p>
         </div>
       )}

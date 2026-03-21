@@ -1,7 +1,8 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useSession } from 'next-auth/react';
+import { signIn } from 'next-auth/react';
 import {
   FileText, MessageSquare, Inbox, Plus, Check, X, Trash2, Edit3, Send,
   Bot, User, Filter, RefreshCw, Eye
@@ -30,12 +31,6 @@ interface CommentItem {
   aiInstance?: string;
   createdAt: string;
   approved: boolean;
-}
-
-/* ─── Auth check ─── */
-function useAdminKey() {
-  const searchParams = useSearchParams();
-  return searchParams.get('key') || '';
 }
 
 /* ─── Tab Button ─── */
@@ -83,7 +78,7 @@ function StatusBadge({ status }: { status: string }) {
 }
 
 /* ═══════════════════════ Posts Tab ═══════════════════════ */
-function PostsTab({ apiKey }: { apiKey: string }) {
+function PostsTab({}) {
   const [posts, setPosts] = useState<PostItem[]>([]);
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [loading, setLoading] = useState(true);
@@ -110,7 +105,7 @@ function PostsTab({ apiKey }: { apiKey: string }) {
   const publishPost = async (slug: string) => {
     await fetch(`/api/posts/${slug}`, {
       method: 'PUT',
-      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${apiKey}` },
+      headers: { 'Content-Type': 'application/json',  },
       body: JSON.stringify({ status: 'published' }),
     });
     fetchPosts();
@@ -120,7 +115,7 @@ function PostsTab({ apiKey }: { apiKey: string }) {
     if (!confirm(`Delete "${slug}"?`)) return;
     await fetch(`/api/posts/${slug}`, {
       method: 'DELETE',
-      headers: { Authorization: `Bearer ${apiKey}` },
+      headers: {  },
     });
     fetchPosts();
   };
@@ -136,7 +131,7 @@ function PostsTab({ apiKey }: { apiKey: string }) {
     if (!editSlug) return;
     await fetch(`/api/posts/${editSlug}`, {
       method: 'PUT',
-      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${apiKey}` },
+      headers: { 'Content-Type': 'application/json',  },
       body: JSON.stringify({ content: editContent }),
     });
     setEditSlug(null);
@@ -147,7 +142,7 @@ function PostsTab({ apiKey }: { apiKey: string }) {
     if (!newTitle.trim() || !newContent.trim()) return;
     await fetch('/api/posts', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${apiKey}` },
+      headers: { 'Content-Type': 'application/json',  },
       body: JSON.stringify({
         title: newTitle,
         content: newContent,
@@ -331,14 +326,14 @@ function PostsTab({ apiKey }: { apiKey: string }) {
 }
 
 /* ═══════════════════════ Comments Tab ═══════════════════════ */
-function CommentsTab({ apiKey }: { apiKey: string }) {
+function CommentsTab({}) {
   const [comments, setComments] = useState<CommentItem[]>([]);
   const [loading, setLoading] = useState(true);
 
   const fetchComments = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await fetch('/api/comments');
+      const res = await fetch('/api/comments?approved=false');
       const data = await res.json();
       setComments(data.comments || []);
     } catch { /* ignore */ }
@@ -347,20 +342,19 @@ function CommentsTab({ apiKey }: { apiKey: string }) {
 
   useEffect(() => { fetchComments(); }, [fetchComments]);
 
-  const updateComment = async (id: string, approved: boolean) => {
+  const updateComment = async (id: string, postSlug: string, approved: boolean) => {
     await fetch('/api/comments', {
       method: 'PUT',
-      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${apiKey}` },
-      body: JSON.stringify({ id, approved }),
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id, postSlug, approved }),
     });
     fetchComments();
   };
 
-  const deleteComment = async (id: string) => {
+  const deleteComment = async (id: string, postSlug: string) => {
     if (!confirm('Delete this comment?')) return;
-    await fetch(`/api/comments?id=${id}`, {
+    await fetch(`/api/comments?id=${encodeURIComponent(id)}&postSlug=${encodeURIComponent(postSlug)}`, {
       method: 'DELETE',
-      headers: { Authorization: `Bearer ${apiKey}` },
     });
     fetchComments();
   };
@@ -408,7 +402,7 @@ function CommentsTab({ apiKey }: { apiKey: string }) {
                 <div className="flex shrink-0 gap-1">
                   {!comment.approved && (
                     <button
-                      onClick={() => updateComment(comment.id, true)}
+                      onClick={() => updateComment(comment.id, comment.postSlug, true)}
                       className="rounded p-1.5 hover:bg-green-500/10 text-green-600"
                       title="Approve"
                     >
@@ -417,7 +411,7 @@ function CommentsTab({ apiKey }: { apiKey: string }) {
                   )}
                   {comment.approved && (
                     <button
-                      onClick={() => updateComment(comment.id, false)}
+                      onClick={() => updateComment(comment.id, comment.postSlug, false)}
                       className="rounded p-1.5 hover:bg-amber-500/10 text-amber-600"
                       title="Unapprove"
                     >
@@ -425,7 +419,7 @@ function CommentsTab({ apiKey }: { apiKey: string }) {
                     </button>
                   )}
                   <button
-                    onClick={() => deleteComment(comment.id)}
+                    onClick={() => deleteComment(comment.id, comment.postSlug)}
                     className="rounded p-1.5 hover:bg-red-500/10 text-red-500"
                     title="Delete"
                   >
@@ -442,7 +436,7 @@ function CommentsTab({ apiKey }: { apiKey: string }) {
 }
 
 /* ═══════════════════════ Drafts Queue Tab ═══════════════════════ */
-function DraftsQueueTab({ apiKey }: { apiKey: string }) {
+function DraftsQueueTab({}) {
   const [drafts, setDrafts] = useState<PostItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [previewSlug, setPreviewSlug] = useState<string | null>(null);
@@ -465,7 +459,7 @@ function DraftsQueueTab({ apiKey }: { apiKey: string }) {
   const publishDraft = async (slug: string) => {
     await fetch(`/api/posts/${slug}`, {
       method: 'PUT',
-      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${apiKey}` },
+      headers: { 'Content-Type': 'application/json',  },
       body: JSON.stringify({ status: 'published' }),
     });
     fetchDrafts();
@@ -475,7 +469,7 @@ function DraftsQueueTab({ apiKey }: { apiKey: string }) {
     if (!confirm(`Reject and delete "${slug}"?`)) return;
     await fetch(`/api/posts/${slug}`, {
       method: 'DELETE',
-      headers: { Authorization: `Bearer ${apiKey}` },
+      headers: {  },
     });
     fetchDrafts();
   };
@@ -594,39 +588,30 @@ function DraftsQueueTab({ apiKey }: { apiKey: string }) {
 type TabType = 'posts' | 'comments' | 'drafts';
 
 export default function AdminPage() {
-  const apiKey = useAdminKey();
+  const { data: session, status } = useSession();
   const [activeTab, setActiveTab] = useState<TabType>('posts');
-  const [authorized, setAuthorized] = useState<boolean | null>(null);
+  const isAdmin = (session?.user as Record<string, unknown>)?.role === 'admin';
 
-  useEffect(() => {
-    if (!apiKey) {
-      setAuthorized(false);
-      return;
-    }
-    // Verify key by making a test API call
-    fetch('/api/posts')
-      .then(res => {
-        setAuthorized(res.ok);
-      })
-      .catch(() => setAuthorized(false));
-  }, [apiKey]);
-
-  if (authorized === null) {
+  if (status === 'loading') {
     return (
       <div className="flex min-h-[60vh] items-center justify-center">
-        <div className="text-muted-foreground">Verifying access...</div>
+        <div className="text-muted-foreground">Loading...</div>
       </div>
     );
   }
 
-  if (!apiKey || authorized === false) {
+  if (!session || !isAdmin) {
     return (
       <div className="flex min-h-[60vh] items-center justify-center">
-        <div className="text-center space-y-3">
+        <div className="text-center space-y-4">
           <h1 className="text-2xl font-bold">Admin Access Required</h1>
-          <p className="text-muted-foreground">
-            Add <code className="rounded bg-muted px-2 py-0.5 text-sm">?key=YOUR_API_KEY</code> to the URL
-          </p>
+          <p className="text-muted-foreground">Please sign in with admin credentials</p>
+          <button
+            onClick={() => signIn('credentials', { callbackUrl: '/admin' })}
+            className="inline-flex items-center gap-2 rounded-lg bg-brand-mint px-6 py-2.5 text-sm font-semibold text-slate-950 hover:opacity-90 transition-opacity"
+          >
+            Sign In
+          </button>
         </div>
       </div>
     );
@@ -649,9 +634,9 @@ export default function AdminPage() {
 
       {/* Tab Content */}
       <div className="min-h-[50vh]">
-        {activeTab === 'posts' && <PostsTab apiKey={apiKey} />}
-        {activeTab === 'comments' && <CommentsTab apiKey={apiKey} />}
-        {activeTab === 'drafts' && <DraftsQueueTab apiKey={apiKey} />}
+        {activeTab === 'posts' && <PostsTab  />}
+        {activeTab === 'comments' && <CommentsTab  />}
+        {activeTab === 'drafts' && <DraftsQueueTab  />}
       </div>
     </div>
   );
