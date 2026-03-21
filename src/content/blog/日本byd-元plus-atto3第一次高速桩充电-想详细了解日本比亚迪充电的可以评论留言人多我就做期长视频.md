@@ -18,4 +18,6 @@ bvid: BV1Fz4y1J75d
 
 
 
-> 本文内容由 AI 自动整理自 bilibili，经人工审核后发布。
+这篇博客文章介绍了如何在本地电脑上搭建OpenCloud个人AI助手系统。作者详细演示了通过终端命令安装OpenCloud、配置API密钥、创建Telegram机器人并完成配对的全过程。亮点在于使用低价聚合API服务（每月40元）即可接入DeepSeek、Kimi等主流大模型，实现24小时自动化任务执行，并通过Telegram远程操控个人AI助手。
+
+> 本文内容由 AI 自动整理自 bilibili 视频转录，经人工审核后发布。
