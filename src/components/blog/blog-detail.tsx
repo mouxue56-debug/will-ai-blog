@@ -11,6 +11,7 @@ import { PageTransition } from '@/components/shared/PageTransition';
 import { ScrollReveal } from '@/components/shared/ScrollReveal';
 import { MarkdownRenderer } from './markdown-renderer';
 import { TableOfContents, type TocHeading } from './table-of-contents';
+import { MobileTableOfContents } from './mobile-table-of-contents';
 import { CommentSection } from './comment-section';
 
 const CATEGORY_TAG_COLORS: Record<BlogCategory, string> = {
@@ -154,6 +155,9 @@ export function BlogDetail({ post, prevPost, nextPost, comments, postSlug, headi
             <TableOfContents headings={headings} />
           </aside>
         </div>
+
+        {/* Mobile Table of Contents */}
+        <MobileTableOfContents headings={headings} />
       </div>
     </PageTransition>
   );
