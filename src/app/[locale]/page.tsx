@@ -41,9 +41,24 @@ export default async function HomePage({
 }) {
   const { locale } = await params;
   const navT = await getTranslations({ locale, namespace: 'nav' });
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: "Will's AI Blog",
+    url: 'https://aiblog.fuluckai.com',
+    siteSearch: 'https://aiblog.fuluckai.com/blog',
+    potentialAction: {
+      '@type': 'SearchAction',
+      target: 'https://aiblog.fuluckai.com/blog',
+    },
+  };
 
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <pre className="sr-only" aria-hidden="true">{`${navT('blog')}\n${navT('timeline')}\n${navT('about')}\n${navT('blog')}\n${navT('timeline')}\n${navT('about')}`}</pre>
       <PageTransition>
         <div className="w-full">

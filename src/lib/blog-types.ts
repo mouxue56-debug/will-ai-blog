@@ -5,10 +5,12 @@ export interface BlogPost {
   title: Record<string, string>;
   category: BlogCategory;
   date: string;
+  updated?: string;
   author: string;
   locale: string;
   coverImage: string;
   excerpt: Record<string, string>;
+  tags?: string[];
   readingTime: number;
   content: string;
 }
