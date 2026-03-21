@@ -313,8 +313,8 @@
     }
   },
   "about": {
-    "tagline": "Osaka × AI × Cattery Owner",
-    "bio": "Living in Harinakano, Osaka. Running Fuluck Cattery (Siberian cat specialist breeder) while also operating Fuluck AI, providing AI integration and training services.\n\nI work daily with 4 AI assistants — Yuki handles technical architecture and development, Natsu manages SNS operations and content creation, Haru takes care of business support and client communications, and Aki serves as my mobile companion. Each has its own personality and strengths, like a real little team. Yuki runs data analysis overnight, Natsu crafts compelling Japanese copy, Haru meticulously handles administrative paperwork, and Aki stands by during my commute.\n\nFrom automated cat profile management to AI customer service for clinics, to smart multi-platform SNS distribution — this blog is a real record of my AI journey. Not the grand narrative of \"AI changing the world,\" but the real story of a solopreneur using AI to run a small business better and live a more balanced life. Successes, failures, daily reflections, and the everyday moments of Osaka life — it's all here.\n\nTechnology isn't the goal — making life better is.",
+    "tagline": "AI practitioner / cattery owner / documenting life in Osaka",
+    "bio": "I am Will (Luo Fangyuan), based in Harinakano, Osaka, running both Fuluck Cattery and FuluckAI. My work is not about abstract AI hype. It is about connecting AI to real operations. I use an OpenClaw multi-instance setup to separate engineering, content, and execution roles, then route tasks across different models for coding, Japanese copywriting, research, and client communication. In practice, that means turning kitten records, inquiry replies, and SNS asset management into repeatable workflows inside the cattery, and bringing those same real cases into AI training programs for teams that need implementation, not theory. This blog is my public notebook for what actually works: building agents, running a small business, living in Osaka, and learning through both wins and mistakes. Contact: will@fuluckai.com, GitHub, or X.",
     "ai_team_title": "My AI Team",
     "agent_yuki_role": "Tech Engineering",
     "agent_natsu_role": "SNS Operations",
@@ -347,7 +347,27 @@
       "aki": "Aki"
     },
     "agent_yuki_nickname": "Little Claw",
-    "agent_natsu_nickname": "Little Tentacle"
+    "agent_natsu_nickname": "Little Tentacle",
+    "stack_title": "AI Tool Stack",
+    "stack_intro": "I do not rely on one model for everything. I split tools, context, and agent roles by task so the workflow stays reusable, handoff-friendly, and easy to improve.",
+    "stack_openclaw": "OpenClaw Multi-Instance",
+    "stack_openclaw_desc": "The orchestration layer for engineering, content, and operations agents.",
+    "stack_models": "Multi-Model Routing",
+    "stack_models_desc": "Different models for code, writing, analysis, and execution-heavy work.",
+    "stack_github": "GitHub",
+    "stack_github_desc": "Version control, project history, publishing flow, and iteration logs.",
+    "stack_notion": "Notion / Docs",
+    "stack_notion_desc": "SOPs, training materials, knowledge capture, and retrospectives.",
+    "stack_vscode": "VS Code",
+    "stack_vscode_desc": "Used for Next.js development, debugging, scripts, and day-to-day maintenance.",
+    "contact_intro": "If you want to talk about practical AI adoption, training programs, or even life in Osaka and cattery operations, email me or reach out on GitHub / X.",
+    "contact_email_value": "will@fuluckai.com",
+    "contact_github": "GitHub",
+    "contact_github_value": "github.com/konayuki56",
+    "contact_x": "Twitter / X",
+    "contact_x_value": "@will_fuluckai",
+    "contact_location": "Location",
+    "contact_location_value": "Harinakano, Osaka"
   },
   "news": {
     "title": "📡 Live News Feed",

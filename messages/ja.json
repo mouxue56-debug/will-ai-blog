@@ -313,8 +313,8 @@
     }
   },
   "about": {
-    "tagline": "大阪 × AI × キャッテリー経営者",
-    "bio": "大阪・針中野在住。福楽キャッテリー（サイベリアン専門ブリーダー）を経営しながら、福楽AIとしてAI導入・研修サービスを提供しています。\n\n毎日4つのAIアシスタントと協働しています——ユキは技術設計とコード開発、ナツはSNS運営とコンテンツ制作、ハルはビジネスサポートと顧客対応、アキはモバイル端末の随行アシスタント。それぞれに個性と得意分野があり、まるで本物の小さなチームのよう。ユキは深夜にデータ分析を回し、ナツは心に響く日本語コピーを書き、ハルは行政書類を丁寧に処理し、アキは通勤中いつでもスタンバイ。\n\n猫の個体カルテの自動管理から、クリニックのAIカスタマーサービス導入、SNSマルチプラットフォームのスマート配信まで——このブログはAI活用のリアルな記録です。「AIが世界を変える」という壮大な物語ではなく、一人の個人事業主がAIで小さなビジネスをより良くし、暮らしをより豊かにするリアルストーリー。成功事例も、失敗談も、日々の気づきも、大阪ライフのあれこれも、すべてここに。\n\nテクノロジーは目的ではなく、暮らしをより良くするための手段です。",
+    "tagline": "AI実践者 / キャッテリー経営者 / 大阪暮らしの記録者",
+    "bio": "私は Will（羅方遠）。大阪・針中野を拠点に、福楽キャッテリーと FuluckAI を運営しています。関心があるのは抽象的な AI 論ではなく、AI を実務にどう接続するかです。OpenClaw のマルチインスタンス構成で技術、コンテンツ、運用の役割を分け、さらに複数モデルを使い分けながら、開発、日本語コピー、資料整理、顧客対応まで日々の仕事に落とし込んでいます。たとえば猫舎では子猫カルテ、問い合わせ返信、SNS 素材整理を段階的に仕組み化し、その実例をそのまま企業向け AI 研修にも持ち込み、現場で再現できる導入方法として共有しています。このブログは、大阪で暮らしながら猫舎を回し、AI を試し、改善し続ける過程を残すための公開ノートです。連絡先は will@fuluckai.com、GitHub、X です。",
     "ai_team_title": "AIチーム",
     "agent_yuki_role": "技術エンジニアリング",
     "agent_natsu_role": "SNS運用",
@@ -347,7 +347,27 @@
       "aki": "アキ"
     },
     "agent_yuki_nickname": "小爪爪",
-    "agent_natsu_nickname": "小触手"
+    "agent_natsu_nickname": "小触手",
+    "stack_title": "AIツールスタック",
+    "stack_intro": "ひとつのモデルに頼り切るのではなく、タスクごとに道具・文脈・Agent の役割を切り分け、再利用できる運用を組んでいます。",
+    "stack_openclaw": "OpenClaw マルチインスタンス",
+    "stack_openclaw_desc": "技術・コンテンツ・運用を分担する Agent ワークフローの中核。",
+    "stack_models": "マルチモデル運用",
+    "stack_models_desc": "コード、文章、分析、実行内容に応じて最適なモデルを切り替え。",
+    "stack_github": "GitHub",
+    "stack_github_desc": "コード、履歴、公開物、改善ログをまとめて管理。",
+    "stack_notion": "Notion / Docs",
+    "stack_notion_desc": "SOP、研修資料、ナレッジ、振り返りを蓄積。",
+    "stack_vscode": "VS Code",
+    "stack_vscode_desc": "Next.js 開発、デバッグ、スクリプト連携と日常保守に使用。",
+    "contact_intro": "AI 導入、社内研修、あるいは大阪での暮らしやキャッテリー運営の話まで、メールか GitHub / X から気軽にどうぞ。",
+    "contact_email_value": "will@fuluckai.com",
+    "contact_github": "GitHub",
+    "contact_github_value": "github.com/konayuki56",
+    "contact_x": "Twitter / X",
+    "contact_x_value": "@will_fuluckai",
+    "contact_location": "拠点",
+    "contact_location_value": "大阪・針中野"
   },
   "news": {
     "title": "📡 リアルタイムニュース",

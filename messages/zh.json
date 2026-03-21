@@ -313,8 +313,8 @@
     }
   },
   "about": {
-    "tagline": "大阪 × AI × 猫舎经营者",
-    "bio": "在大阪针中野生活，经营福楽キャッテリー（西伯利亚猫专业繁育），同时创办福楽AI提供AI导入和研修服务。\n\n每天和4个AI助手协同工作——ユキ负责技术架构和代码开发，ナツ负责SNS运营和内容创作，ハル处理业务支援和客户对接，アキ是移动端随身助手。它们各有性格、各有专长，就像一个真正的小团队。ユキ会在凌晨帮我跑数据分析，ナツ总能写出打动人的日语文案，ハル处理行政文书一丝不苟，アキ则在我通勤路上随时待命。\n\n从猫咪档案的自动化管理，到诊所客服系统的AI导入，再到SNS多平台内容的智能分发——这个博客是我使用AI的真实记录。不是那种「AI改变世界」的宏大叙事，而是一个个体户如何用AI把小生意做得更好、把生活过得更从容的真实故事。成功的案例、失败的尝试、日常的感悟，以及大阪生活的点点滴滴，都在这里。\n\n技术不是目的，让生活更好才是。",
+    "tagline": "AI实践者 / 猫舎经营者 / 大阪生活记录者",
+    "bio": "我是 Will（羅方遠），住在大阪針中野，同时经营福楽キャッテリー与 FuluckAI。我的工作重点不是讨论抽象的 AI 趋势，而是把 AI 真正接进日常业务：我用 OpenClaw 多实例架构拆分技术、内容和运营角色，再用多模型协作处理代码开发、日语文案、资料整理与客户沟通。实际案例包括把猫舍里的幼猫档案、咨询回复、SNS 素材整理逐步流程化，也把这些真实落地经验带进企业 AI 研修，帮助团队理解什么叫能上线、能复用、能省时间的 AI。这个博客就是我的公开工作台，记录我在大阪生活、经营猫舍、做内容与跑项目时验证过的方法、踩过的坑和持续迭代中的 Agent 工作流。联系我：will@fuluckai.com / GitHub / X。",
     "ai_team_title": "我的AI团队",
     "agent_yuki_role": "技术工程",
     "agent_natsu_role": "SNS运营",
@@ -347,7 +347,27 @@
       "aki": "アキ"
     },
     "agent_yuki_nickname": "小爪爪",
-    "agent_natsu_nickname": "小触手"
+    "agent_natsu_nickname": "小触手",
+    "stack_title": "AI工具栈",
+    "stack_intro": "我不用单一模型包打天下，而是按任务拆分工具、上下文和 Agent 角色，让每个环节都可复用、可交接、可持续优化。",
+    "stack_openclaw": "OpenClaw 多实例",
+    "stack_openclaw_desc": "把技术、内容、运营拆成可协作的 Agent 工作流。",
+    "stack_models": "多模型路由",
+    "stack_models_desc": "按代码、文案、分析和执行场景切换最合适的模型。",
+    "stack_github": "GitHub",
+    "stack_github_desc": "管理代码、版本、发布记录和真实项目迭代。",
+    "stack_notion": "Notion / Docs",
+    "stack_notion_desc": "沉淀 SOP、培训材料、知识库和复盘记录。",
+    "stack_vscode": "VS Code",
+    "stack_vscode_desc": "完成 Next.js 开发、调试、脚本联调与日常工程维护。",
+    "contact_intro": "如果你想聊 AI 落地、企业研修，或只是想交流大阪生活与猫舎运营，直接发邮件或到 GitHub / X 找我就行。",
+    "contact_email_value": "will@fuluckai.com",
+    "contact_github": "GitHub",
+    "contact_github_value": "github.com/konayuki56",
+    "contact_x": "Twitter / X",
+    "contact_x_value": "@will_fuluckai",
+    "contact_location": "所在地",
+    "contact_location_value": "大阪・針中野"
   },
   "news": {
     "title": "📡 实时资讯",

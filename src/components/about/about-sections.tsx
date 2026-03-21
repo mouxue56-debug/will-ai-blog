@@ -3,6 +3,18 @@
 import { useTranslations } from 'next-intl';
 import { motion, useInView } from 'motion/react';
 import { useRef } from 'react';
+import {
+  Bot,
+  Braces,
+  Code2,
+  ExternalLink,
+  Github,
+  Mail,
+  MapPin,
+  NotebookText,
+  Sparkles,
+} from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 import { BorderBeam } from '@/components/ui/aceternity';
 import { PublicCalendar } from '@/components/shared/PublicCalendar';
 
@@ -21,7 +33,6 @@ function ProfileHero() {
       transition={{ duration: 0.5 }}
       className="flex flex-col sm:flex-row items-center sm:items-start gap-6 sm:gap-8"
     >
-      {/* Avatar placeholder */}
       <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-full bg-gradient-to-br from-brand-mint via-brand-cyan to-brand-taro flex items-center justify-center text-4xl sm:text-5xl shadow-lg flex-shrink-0">
         🧑‍💻
       </div>
@@ -29,7 +40,7 @@ function ProfileHero() {
       <div className="text-center sm:text-left">
         <h1 className="text-3xl sm:text-4xl font-bold">Will<span className="text-muted-foreground font-normal text-lg sm:text-xl ml-2">{t('display_name_native')}</span></h1>
         <p className="mt-2 text-lg text-muted-foreground">{t('tagline')}</p>
-        <p className="mt-4 text-sm sm:text-base text-muted-foreground leading-relaxed max-w-xl">
+        <p className="mt-4 text-sm sm:text-base text-muted-foreground leading-relaxed max-w-3xl whitespace-pre-line">
           {t('bio')}
         </p>
       </div>
@@ -46,16 +57,15 @@ interface AIAgent {
   model: string;
   color: string;
   bgColor: string;
-  borderColor: string;
   beamFrom: string;
   beamTo: string;
 }
 
 const agents: AIAgent[] = [
-  { key: 'yuki', nicknameKey: 'agent_yuki_nickname', roleKey: 'agent_yuki_role', model: 'Claude', color: 'text-brand-mint', bgColor: 'bg-brand-mint/10', borderColor: 'border-brand-mint/30', beamFrom: '#5eead4', beamTo: '#38bdf8' },
-  { key: 'natsu', nicknameKey: 'agent_natsu_nickname', roleKey: 'agent_natsu_role', model: 'Kimi', color: 'text-brand-coral', bgColor: 'bg-brand-coral/10', borderColor: 'border-brand-coral/30', beamFrom: '#fbbf24', beamTo: '#f97316' },
-  { key: 'haru', roleKey: 'agent_haru_role', model: 'DeepSeek', color: 'text-brand-cyan', bgColor: 'bg-brand-cyan/10', borderColor: 'border-brand-cyan/30', beamFrom: '#38bdf8', beamTo: '#818cf8' },
-  { key: 'aki', roleKey: 'agent_aki_role', model: 'Qwen', color: 'text-brand-taro', bgColor: 'bg-brand-taro/10', borderColor: 'border-brand-taro/30', beamFrom: '#c084fc', beamTo: '#e879f9' },
+  { key: 'yuki', nicknameKey: 'agent_yuki_nickname', roleKey: 'agent_yuki_role', model: 'Claude', color: 'text-brand-mint', bgColor: 'bg-brand-mint/10', beamFrom: '#5eead4', beamTo: '#38bdf8' },
+  { key: 'natsu', nicknameKey: 'agent_natsu_nickname', roleKey: 'agent_natsu_role', model: 'Kimi', color: 'text-brand-coral', bgColor: 'bg-brand-coral/10', beamFrom: '#fbbf24', beamTo: '#f97316' },
+  { key: 'haru', roleKey: 'agent_haru_role', model: 'DeepSeek', color: 'text-brand-cyan', bgColor: 'bg-brand-cyan/10', beamFrom: '#38bdf8', beamTo: '#818cf8' },
+  { key: 'aki', roleKey: 'agent_aki_role', model: 'Qwen', color: 'text-brand-taro', bgColor: 'bg-brand-taro/10', beamFrom: '#c084fc', beamTo: '#e879f9' },
 ];
 
 function AITeamSection() {
@@ -73,7 +83,6 @@ function AITeamSection() {
       <h2 className="text-2xl font-bold mb-6">{t('ai_team_title')}</h2>
 
       <div className="relative">
-        {/* Connection SVG */}
         <svg className="absolute inset-0 w-full h-full pointer-events-none opacity-20 dark:opacity-15 hidden sm:block" preserveAspectRatio="none">
           <defs>
             <linearGradient id="about-beam" x1="0%" y1="0%" x2="100%" y2="0%">
@@ -89,7 +98,6 @@ function AITeamSection() {
           <line x1="37.5%" y1="50%" x2="87.5%" y2="50%" stroke="url(#about-beam)" strokeWidth="0.5" strokeDasharray="4 4" />
         </svg>
 
-        {/* Agent cards */}
         <div className="relative z-10 grid grid-cols-2 sm:grid-cols-4 gap-4">
           {agents.map((agent, i) => (
             <motion.div
@@ -97,7 +105,7 @@ function AITeamSection() {
               initial={{ opacity: 0, scale: 0.9 }}
               animate={inView ? { opacity: 1, scale: 1 } : {}}
               transition={{ delay: 0.2 + i * 0.1, duration: 0.4 }}
-              className={`glass-card p-4 sm:p-5 flex flex-col items-center gap-2 text-center relative overflow-hidden`}
+              className="glass-card p-4 sm:p-5 flex flex-col items-center gap-2 text-center relative overflow-hidden"
             >
               <BorderBeam
                 colorFrom={agent.beamFrom}
@@ -122,12 +130,127 @@ function AITeamSection() {
   );
 }
 
+/* ── Tool Stack ─────────────────────────────────────── */
+
+interface StackTool {
+  titleKey: string;
+  descKey: string;
+  icon: LucideIcon;
+  accent: string;
+  glow: string;
+  href?: string;
+}
+
+const stackTools: StackTool[] = [
+  {
+    titleKey: 'stack_openclaw',
+    descKey: 'stack_openclaw_desc',
+    icon: Bot,
+    accent: 'text-brand-mint',
+    glow: 'from-brand-mint/20 to-brand-cyan/10',
+  },
+  {
+    titleKey: 'stack_models',
+    descKey: 'stack_models_desc',
+    icon: Sparkles,
+    accent: 'text-brand-coral',
+    glow: 'from-brand-coral/20 to-brand-taro/10',
+  },
+  {
+    titleKey: 'stack_github',
+    descKey: 'stack_github_desc',
+    icon: Github,
+    accent: 'text-foreground',
+    glow: 'from-white/10 to-white/0',
+    href: 'https://github.com/konayuki56',
+  },
+  {
+    titleKey: 'stack_notion',
+    descKey: 'stack_notion_desc',
+    icon: NotebookText,
+    accent: 'text-brand-cyan',
+    glow: 'from-brand-cyan/20 to-brand-mint/10',
+  },
+  {
+    titleKey: 'stack_vscode',
+    descKey: 'stack_vscode_desc',
+    icon: Code2,
+    accent: 'text-brand-taro',
+    glow: 'from-brand-taro/20 to-brand-cyan/10',
+  },
+];
+
+function ToolStackSection() {
+  const t = useTranslations('about');
+  const ref = useRef(null);
+  const inView = useInView(ref, { once: true, margin: '-80px' });
+
+  return (
+    <motion.section
+      ref={ref}
+      initial={{ opacity: 0, y: 30 }}
+      animate={inView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.5, delay: 0.12 }}
+    >
+      <h2 className="text-2xl font-bold mb-2">{t('stack_title')}</h2>
+      <p className="text-sm text-muted-foreground mb-6 max-w-3xl leading-relaxed">{t('stack_intro')}</p>
+
+      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
+        {stackTools.map((tool, index) => {
+          const Icon = tool.icon;
+          const card = (
+            <div className="glass-card p-5 h-full relative overflow-hidden border border-white/10">
+              <div className={`absolute inset-0 bg-gradient-to-br ${tool.glow} opacity-70`} />
+              <div className="relative z-10 flex h-full flex-col gap-4">
+                <div className={`w-11 h-11 rounded-2xl bg-background/70 border border-white/10 flex items-center justify-center ${tool.accent}`}>
+                  <Icon className="w-5 h-5" />
+                </div>
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2">
+                    <h3 className="font-semibold leading-tight">{t(tool.titleKey)}</h3>
+                    {tool.href ? <ExternalLink className="w-3.5 h-3.5 text-muted-foreground" /> : null}
+                  </div>
+                  <p className="text-sm text-muted-foreground leading-relaxed">{t(tool.descKey)}</p>
+                </div>
+              </div>
+            </div>
+          );
+
+          return tool.href ? (
+            <motion.a
+              key={tool.titleKey}
+              href={tool.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              initial={{ opacity: 0, y: 20 }}
+              animate={inView ? { opacity: 1, y: 0 } : {}}
+              transition={{ delay: 0.2 + index * 0.08, duration: 0.4 }}
+              className="block"
+            >
+              {card}
+            </motion.a>
+          ) : (
+            <motion.div
+              key={tool.titleKey}
+              initial={{ opacity: 0, y: 20 }}
+              animate={inView ? { opacity: 1, y: 0 } : {}}
+              transition={{ delay: 0.2 + index * 0.08, duration: 0.4 }}
+            >
+              {card}
+            </motion.div>
+          );
+        })}
+      </div>
+    </motion.section>
+  );
+}
+
 /* ── Business Links ──────────────────────────────────── */
 
-function BusinessLinkCard({ 
-  href, emoji, titleKey, descKey, t, inView, delay 
-}: { 
-  href: string; emoji: string; titleKey: string; descKey: string; 
+function BusinessLinkCard({
+  href, emoji, titleKey, descKey, t, inView, delay
+}: {
+  href: string; emoji: string; titleKey: string; descKey: string;
   t: (key: string) => string; inView: boolean; delay: number;
 }) {
   return (
@@ -162,7 +285,7 @@ function BusinessLinks() {
   const links = [
     { titleKey: 'biz_fuluckai', descKey: 'biz_fuluckai_desc', url: 'https://fuluckai.com', emoji: '🤖' },
     { titleKey: 'biz_cattery', descKey: 'biz_cattery_desc', url: 'https://fuluck-cattery.com', emoji: '🐱' },
-    { titleKey: 'biz_social', descKey: 'biz_social_desc', url: '#', emoji: '📱' },
+    { titleKey: 'biz_social', descKey: 'biz_social_desc', url: 'https://aiblog.fuluckai.com/zh/social', emoji: '📱' },
   ];
 
   return (
@@ -176,7 +299,7 @@ function BusinessLinks() {
       <div className="grid gap-4 sm:grid-cols-3">
         {links.map((link, i) => (
           <BusinessLinkCard
-            key={i}
+            key={link.titleKey}
             href={link.url}
             emoji={link.emoji}
             titleKey={link.titleKey}
@@ -188,7 +311,6 @@ function BusinessLinks() {
         ))}
       </div>
 
-      {/* Cattery hint */}
       <motion.p
         initial={{ opacity: 0 }}
         animate={inView ? { opacity: 1 } : {}}
@@ -204,6 +326,34 @@ function BusinessLinks() {
 
 /* ── Contact ─────────────────────────────────────────── */
 
+interface ContactLink {
+  titleKey: string;
+  valueKey: string;
+  href: string;
+  icon: LucideIcon;
+}
+
+const contactLinks: ContactLink[] = [
+  {
+    titleKey: 'contact_email',
+    valueKey: 'contact_email_value',
+    href: 'mailto:will@fuluckai.com',
+    icon: Mail,
+  },
+  {
+    titleKey: 'contact_github',
+    valueKey: 'contact_github_value',
+    href: 'https://github.com/konayuki56',
+    icon: Github,
+  },
+  {
+    titleKey: 'contact_x',
+    valueKey: 'contact_x_value',
+    href: 'https://x.com/will_fuluckai',
+    icon: Braces,
+  },
+];
+
 function ContactSection() {
   const t = useTranslations('about');
   const ref = useRef(null);
@@ -218,53 +368,54 @@ function ContactSection() {
     >
       <h2 className="text-2xl font-bold mb-6">{t('contact_title')}</h2>
 
-      <div className="grid gap-6 sm:grid-cols-2">
-        {/* Contact info */}
-        <div className="space-y-4">
-          <div className="flex items-center gap-3 text-sm">
-            <span className="text-lg">📧</span>
-            <div>
-              <div className="font-medium">{t('contact_email')}</div>
-              <div className="text-muted-foreground">hello@willailab.com</div>
-            </div>
-          </div>
-          <div className="flex items-center gap-3 text-sm">
-            <span className="text-lg">💬</span>
-            <div>
-              <div className="font-medium">LINE</div>
-              <div className="text-muted-foreground">{t('contact_line_placeholder')}</div>
-            </div>
-          </div>
-        </div>
-
-        {/* Contact form */}
-        <div className="glass-card p-5">
+      <div className="grid gap-4 lg:grid-cols-[1.1fr_0.9fr]">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ delay: 0.25, duration: 0.4 }}
+          className="glass-card p-6 flex flex-col justify-between gap-6"
+        >
           <div className="space-y-3">
-            <input
-              type="text"
-              placeholder={t('form_name')}
-              className="w-full px-3 py-2 rounded-lg border border-border/40 bg-background/60 text-sm placeholder:text-muted-foreground/60 focus:outline-none focus:ring-1 focus:ring-brand-cyan/40"
-              disabled
-            />
-            <input
-              type="email"
-              placeholder={t('form_email')}
-              className="w-full px-3 py-2 rounded-lg border border-border/40 bg-background/60 text-sm placeholder:text-muted-foreground/60 focus:outline-none focus:ring-1 focus:ring-brand-cyan/40"
-              disabled
-            />
-            <textarea
-              placeholder={t('form_message')}
-              rows={3}
-              className="w-full px-3 py-2 rounded-lg border border-border/40 bg-background/60 text-sm placeholder:text-muted-foreground/60 focus:outline-none focus:ring-1 focus:ring-brand-cyan/40 resize-none"
-              disabled
-            />
-            <button
-              disabled
-              className="w-full px-4 py-2 rounded-lg bg-foreground/10 text-muted-foreground text-sm font-medium cursor-not-allowed"
-            >
-              {t('form_submit')} — Phase 2
-            </button>
+            <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">{t('contact_intro')}</p>
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <MapPin className="w-4 h-4 text-brand-cyan" />
+              <span className="font-medium text-foreground">{t('contact_location')}:</span>
+              <span>{t('contact_location_value')}</span>
+            </div>
           </div>
+
+          <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+            <span className="px-3 py-1 rounded-full bg-brand-mint/10 text-brand-mint">OpenClaw</span>
+            <span className="px-3 py-1 rounded-full bg-brand-coral/10 text-brand-coral">Agent Workflow</span>
+            <span className="px-3 py-1 rounded-full bg-brand-cyan/10 text-brand-cyan">AI Training</span>
+          </div>
+        </motion.div>
+
+        <div className="grid gap-4">
+          {contactLinks.map((link, index) => {
+            const Icon = link.icon;
+            return (
+              <motion.a
+                key={link.titleKey}
+                href={link.href}
+                target={link.href.startsWith('mailto:') ? undefined : '_blank'}
+                rel={link.href.startsWith('mailto:') ? undefined : 'noopener noreferrer'}
+                initial={{ opacity: 0, y: 20 }}
+                animate={inView ? { opacity: 1, y: 0 } : {}}
+                transition={{ delay: 0.3 + index * 0.08, duration: 0.4 }}
+                className="group glass-card p-5 flex items-center gap-4 hover:shadow-md hover:border-brand-mint/30 transition-all duration-200"
+              >
+                <div className="w-11 h-11 rounded-2xl bg-brand-cyan/10 text-brand-cyan flex items-center justify-center flex-shrink-0">
+                  <Icon className="w-5 h-5" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="font-medium group-hover:text-brand-mint transition-colors">{t(link.titleKey)}</div>
+                  <div className="text-sm text-muted-foreground truncate">{t(link.valueKey)}</div>
+                </div>
+                <ExternalLink className="w-4 h-4 text-muted-foreground group-hover:text-brand-mint transition-colors flex-shrink-0" />
+              </motion.a>
+            );
+          })}
         </div>
       </div>
     </motion.section>
@@ -299,6 +450,7 @@ export function AboutSections() {
     <div className="space-y-16">
       <ProfileHero />
       <AITeamSection />
+      <ToolStackSection />
       <CalendarSection />
       <BusinessLinks />
       <ContactSection />
