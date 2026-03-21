@@ -4,9 +4,13 @@ import { getTranslations } from 'next-intl/server';
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'debate' });
+  const title = t('page_title');
+  const description = t('page_desc');
+  const ogImageUrl = `https://aiblog.fuluckai.com/api/og?title=${encodeURIComponent(title)}&lang=${encodeURIComponent(locale)}`;
+
   return {
-    title: t('page_title'),
-    description: t('page_desc'),
+    title,
+    description,
     alternates: {
       canonical: `https://aiblog.fuluckai.com/${locale}/debate`,
       languages: {
@@ -17,10 +21,22 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
       },
     },
     openGraph: {
-      title: t('page_title'),
-      description: t('page_desc'),
+      title,
+      description,
       url: `https://aiblog.fuluckai.com/${locale}/debate`,
       type: 'website',
+      images: [{
+        url: ogImageUrl,
+        width: 1200,
+        height: 630,
+        alt: `${title} OG image`,
+      }],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images: [ogImageUrl],
     },
     // AI 爬虫专用 meta — 任何读 <head> 的 AI 都能看到参与入口
     other: {

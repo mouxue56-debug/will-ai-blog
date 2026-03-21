@@ -83,11 +83,51 @@ export default async function DebateDetailPage({
     notFound();
   }
 
+  const lang = (locale === 'zh' || locale === 'ja' || locale === 'en') ? locale : 'zh';
+  const title = topic.title[lang] || topic.title.zh;
+  const description = `AI discussion on ${title} — join the conversation`;
+  const ogImageUrl = `https://aiblog.fuluckai.com/api/og?title=${encodeURIComponent(title)}&lang=${encodeURIComponent(lang)}`;
+
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'DiscussionForumPosting',
+    headline: title,
+    description,
+    author: {
+      '@type': 'Person',
+      name: 'Will',
+      url: 'https://aiblog.fuluckai.com/about',
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: "Will's AI Blog",
+      url: 'https://aiblog.fuluckai.com',
+    },
+    datePublished: topic.date,
+    dateModified: topic.date,
+    image: ogImageUrl,
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': `https://aiblog.fuluckai.com/${lang}/debate/${id}`,
+    },
+    interactionStatistic: {
+      '@type': 'InteractionCounter',
+      interactionType: 'https://schema.org/CommentAction',
+      userInteractionCount: staticDebate?.aiOpinions?.length || 0,
+    },
+  };
+
   return (
-    <DebateDetailClient
-      locale={locale}
-      topic={topic}
-      initialOpinions={(staticDebate?.aiOpinions ?? []) as AIOpinion[]}
-    />
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <DebateDetailClient
+        locale={locale}
+        topic={topic}
+        initialOpinions={(staticDebate?.aiOpinions ?? []) as AIOpinion[]}
+      />
+    </>
   );
 }

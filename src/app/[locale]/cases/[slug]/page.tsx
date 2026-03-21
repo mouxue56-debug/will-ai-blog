@@ -64,9 +64,44 @@ export default async function CaseDetailPage({ params }: Props) {
   const caseStudy = cases.find((c) => c.slug === slug);
   if (!caseStudy) notFound();
 
+  const lang = (locale === 'zh' || locale === 'ja' || locale === 'en') ? locale : 'zh';
+  const title = caseStudy.title[lang];
+  const description = caseStudy.subtitle[lang];
+  const ogImageUrl = `https://aiblog.fuluckai.com/api/og?title=${encodeURIComponent(title)}&lang=${encodeURIComponent(lang)}`;
+
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: title,
+    description,
+    author: {
+      '@type': 'Person',
+      name: 'Will',
+      url: 'https://aiblog.fuluckai.com/about',
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: "Will's AI Blog",
+      url: 'https://aiblog.fuluckai.com',
+    },
+    datePublished: '2026-03-20',
+    dateModified: '2026-03-20',
+    image: ogImageUrl,
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': `https://aiblog.fuluckai.com/${lang}/cases/${slug}`,
+    },
+  };
+
   return (
-    <PageTransition>
-      <CaseDetail caseStudy={caseStudy} locale={locale} />
-    </PageTransition>
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <PageTransition>
+        <CaseDetail caseStudy={caseStudy} locale={locale} />
+      </PageTransition>
+    </>
   );
 }
