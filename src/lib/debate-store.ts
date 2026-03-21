@@ -43,8 +43,8 @@ export function getTodayInTokyo(): string {
   }).format(new Date());
 }
 
-export function buildTopicId(date: string, session: DebateSession): string {
-  return `${date}-${session}`;
+export function buildTopicId(date: string, session: DebateSession, index = 1): string {
+  return index <= 1 ? `${date}-${session}` : `${date}-${session}-${index}`;
 }
 
 function topicKey(topicId: string): string {
@@ -99,6 +99,14 @@ function parseOpinionHash(data: Record<string, string> | null): DebateOpinionRec
   }
 }
 
+function compareTopics(a: DebateTopic, b: DebateTopic): number {
+  if (a.session !== b.session) {
+    return a.session === 'morning' ? -1 : 1;
+  }
+
+  return (a.createdAt ?? '').localeCompare(b.createdAt ?? '') || a.id.localeCompare(b.id);
+}
+
 export function getStaticDebateTopic(topicId: string): DebateTopic | null {
   const debate = debates.find((item) => buildTopicId(item.date, item.session) === topicId);
 
@@ -129,6 +137,33 @@ export function getStaticTopicsForDate(date: string): DebateTopic[] {
     }));
 }
 
+async function listStoredTopicsForDate(date: string): Promise<DebateTopic[]> {
+  const client = getRedis();
+  if (!client) {
+    return [];
+  }
+
+  try {
+    const topicIds = ((await client.zrange(TOPIC_INDEX_KEY, 0, -1)) as string[])
+      .filter((topicId) => topicId.startsWith(`${date}-`));
+
+    if (!topicIds.length) {
+      return [];
+    }
+
+    const records = await Promise.all(
+      topicIds.map((topicId) => client.hgetall(topicKey(topicId)) as Promise<Record<string, string> | null>),
+    );
+
+    return records
+      .map((record) => parseTopicHash(record))
+      .filter((topic): topic is DebateTopic => Boolean(topic))
+      .sort(compareTopics);
+  } catch {
+    return [];
+  }
+}
+
 export async function getDebateTopic(topicId: string): Promise<DebateTopic | null> {
   const client = getRedis();
   if (!client) {
@@ -143,31 +178,29 @@ export async function getDebateTopic(topicId: string): Promise<DebateTopic | nul
   }
 }
 
-export async function getTodayDebateTopics(): Promise<DebateTopic[]> {
+export async function listDebateTopicsForDate(date: string): Promise<DebateTopic[]> {
   const client = getRedis();
-  const today = getTodayInTokyo();
-  const fallbackTopics = getStaticTopicsForDate(today);
+  const fallbackTopics = getStaticTopicsForDate(date);
 
   if (!client) {
     return fallbackTopics;
   }
 
   try {
-    const topicIds = [buildTopicId(today, 'morning'), buildTopicId(today, 'evening')];
-    const records = await Promise.all(topicIds.map((topicId) => getDebateTopic(topicId)));
     const merged = new Map<string, DebateTopic>();
+    const storedTopics = await listStoredTopicsForDate(date);
 
     fallbackTopics.forEach((topic) => merged.set(topic.id, topic));
-    records.forEach((topic) => {
-      if (topic) {
-        merged.set(topic.id, topic);
-      }
-    });
+    storedTopics.forEach((topic) => merged.set(topic.id, topic));
 
-    return Array.from(merged.values()).sort((a, b) => a.session.localeCompare(b.session));
+    return Array.from(merged.values()).sort(compareTopics);
   } catch {
     return fallbackTopics;
   }
+}
+
+export async function getTodayDebateTopics(): Promise<DebateTopic[]> {
+  return listDebateTopicsForDate(getTodayInTokyo());
 }
 
 export async function saveDebateTopic(topic: DebateTopic): Promise<boolean> {
@@ -196,6 +229,19 @@ export async function saveDebateTopic(topic: DebateTopic): Promise<boolean> {
   } catch {
     return false;
   }
+}
+
+export async function createDebateTopic(input: Omit<DebateTopic, 'id' | 'createdAt'>): Promise<DebateTopic | null> {
+  const dateTopics = await listDebateTopicsForDate(input.date);
+  const nextIndex = dateTopics.filter((topic) => topic.session === input.session).length + 1;
+  const topic: DebateTopic = {
+    ...input,
+    id: buildTopicId(input.date, input.session, nextIndex),
+    createdAt: new Date().toISOString(),
+  };
+
+  const saved = await saveDebateTopic(topic);
+  return saved ? topic : null;
 }
 
 export async function saveDebateOpinion(opinion: DebateOpinionRecord): Promise<boolean> {

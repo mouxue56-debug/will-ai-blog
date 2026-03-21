@@ -1,10 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import {
+  createDebateTopic,
   getTodayDebateTopics,
   getTodayInTokyo,
-  saveDebateTopic,
   type DebateSession,
-  type DebateTopic,
 } from '@/lib/debate-store';
 
 export const runtime = 'edge';
@@ -57,10 +56,8 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Invalid topic payload' }, { status: 400 });
     }
 
-    const date = getTodayInTokyo();
-    const topic: DebateTopic = {
-      id: `${date}-${body.session}`,
-      date,
+    const topic = await createDebateTopic({
+      date: getTodayInTokyo(),
       session: body.session,
       title: {
         zh: body.title.zh.trim(),
@@ -69,11 +66,9 @@ export async function POST(request: NextRequest) {
       },
       newsSource: body.newsSource.trim(),
       tags: Array.isArray(body.tags) ? body.tags.map((tag) => tag.trim()).filter(Boolean) : [],
-      createdAt: new Date().toISOString(),
-    };
+    });
 
-    const saved = await saveDebateTopic(topic);
-    if (!saved) {
+    if (!topic) {
       return NextResponse.json({ error: 'Redis is unavailable' }, { status: 503 });
     }
 
