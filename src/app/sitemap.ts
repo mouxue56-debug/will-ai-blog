@@ -2,15 +2,8 @@ import type { MetadataRoute } from 'next';
 import { getAllPosts } from '@/lib/blog';
 import { cases } from '@/data/cases';
 import { debates } from '@/data/debates';
-
-const BASE_URL = 'https://aiblog.fuluckai.com';
-const locales = ['zh', 'ja', 'en'] as const;
-
-const withAlternates = (path: string) => ({
-  languages: Object.fromEntries(
-    locales.map((locale) => [locale === 'zh' ? 'zh-CN' : locale, `${BASE_URL}/${locale}${path}`])
-  ),
-});
+import { timelineData } from '@/data/timeline';
+import { buildAbsoluteUrl, buildAlternates, locales } from '@/lib/seo';
 
 function safeDate(value?: string) {
   if (!value) return new Date();
@@ -21,16 +14,28 @@ function safeDate(value?: string) {
 export default function sitemap(): MetadataRoute.Sitemap {
   const entries: MetadataRoute.Sitemap = [];
 
-  const staticPages = ['', '/blog', '/digest', '/cases', '/debate', '/timeline', '/about', '/cattery'];
+  const staticPages = [
+    '/',
+    '/about',
+    '/blog',
+    '/cases',
+    '/cattery',
+    '/debate',
+    '/digest',
+    '/life',
+    '/news',
+    '/social',
+    '/timeline',
+  ];
 
   for (const page of staticPages) {
     for (const locale of locales) {
       entries.push({
-        url: `${BASE_URL}/${locale}${page}`,
+        url: buildAbsoluteUrl(locale, page),
         lastModified: new Date(),
-        changeFrequency: page === '' ? 'daily' : 'weekly',
-        priority: page === '' ? 1.0 : 0.8,
-        alternates: withAlternates(page),
+        changeFrequency: page === '/' ? 'daily' : 'weekly',
+        priority: page === '/' ? 1.0 : 0.8,
+        alternates: buildAlternates(page),
       });
     }
   }
@@ -39,11 +44,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
   for (const post of posts) {
     for (const locale of locales) {
       entries.push({
-        url: `${BASE_URL}/${locale}/blog/${post.slug}`,
+        url: buildAbsoluteUrl(locale, `/blog/${post.slug}`),
         lastModified: safeDate(post.date),
         changeFrequency: 'monthly',
         priority: 0.7,
-        alternates: withAlternates(`/blog/${post.slug}`),
+        alternates: buildAlternates(`/blog/${post.slug}`),
       });
     }
   }
@@ -51,11 +56,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
   for (const c of cases) {
     for (const locale of locales) {
       entries.push({
-        url: `${BASE_URL}/${locale}/cases/${c.slug}`,
+        url: buildAbsoluteUrl(locale, `/cases/${c.slug}`),
         lastModified: new Date(),
         changeFrequency: 'monthly',
         priority: 0.7,
-        alternates: withAlternates(`/cases/${c.slug}`),
+        alternates: buildAlternates(`/cases/${c.slug}`),
       });
     }
   }
@@ -63,11 +68,44 @@ export default function sitemap(): MetadataRoute.Sitemap {
   for (const debate of debates) {
     for (const locale of locales) {
       entries.push({
-        url: `${BASE_URL}/${locale}/debate/${debate.id}`,
+        url: buildAbsoluteUrl(locale, `/debate/${debate.id}`),
         lastModified: safeDate(debate.date),
         changeFrequency: 'daily',
         priority: 0.7,
-        alternates: withAlternates(`/debate/${debate.id}`),
+        alternates: buildAlternates(`/debate/${debate.id}`),
+      });
+    }
+  }
+
+  const timelineYears = [...new Set(timelineData.map((entry) => entry.date.split('-')[0]))];
+  for (const year of timelineYears) {
+    const yearEntries = timelineData.filter((entry) => entry.date.startsWith(`${year}-`));
+    const lastModified = safeDate(yearEntries[0]?.date);
+
+    for (const locale of locales) {
+      entries.push({
+        url: buildAbsoluteUrl(locale, `/timeline/${year}`),
+        lastModified,
+        changeFrequency: 'monthly',
+        priority: 0.7,
+        alternates: buildAlternates(`/timeline/${year}`),
+      });
+    }
+  }
+
+  const timelineMonths = [...new Set(timelineData.map((entry) => entry.date.slice(0, 7)))];
+  for (const yearMonth of timelineMonths) {
+    const [year, month] = yearMonth.split('-');
+    const monthEntries = timelineData.filter((entry) => entry.date.startsWith(`${year}-${month}`));
+    const lastModified = safeDate(monthEntries[0]?.date);
+
+    for (const locale of locales) {
+      entries.push({
+        url: buildAbsoluteUrl(locale, `/timeline/${year}/${month}`),
+        lastModified,
+        changeFrequency: 'monthly',
+        priority: 0.6,
+        alternates: buildAlternates(`/timeline/${year}/${month}`),
       });
     }
   }
