@@ -29,8 +29,10 @@ export function BlogSearch({ posts }: { posts: BlogPost[] }) {
     }
     const lower = q.toLowerCase();
     const filtered = posts.filter((post) => {
-      const title = post.title?.[locale] || post.title?.zh || '';
-      const excerpt = post.excerpt || '';
+      const titleObj = post.title as Record<string, string> | undefined;
+      const excerptObj = post.excerpt as Record<string, string> | undefined;
+      const title = (locale && titleObj?.[locale]) || titleObj?.zh || titleObj?.en || '';
+      const excerpt = excerptObj ? ((locale && excerptObj[locale]) || excerptObj.zh || excerptObj.en || '') : '';
       return (
         title.toLowerCase().includes(lower) ||
         excerpt.toLowerCase().includes(lower) ||
@@ -97,11 +99,11 @@ export function BlogSearch({ posts }: { posts: BlogPost[] }) {
                   )}
                 >
                   <h4 className="text-sm font-semibold group-hover:text-brand-mint transition-colors">
-                    {post.title?.[locale] || post.title?.zh}
+                    {(post.title as Record<string, string>)?.[locale] || (post.title as Record<string, string>)?.zh}
                   </h4>
                   {post.excerpt && (
                     <p className="mt-1 text-xs text-muted-foreground line-clamp-1">
-                      {post.excerpt}
+                      {String(((post.excerpt as Record<string, string>)?.[locale] || (post.excerpt as Record<string, string>)?.zh || ''))}
                     </p>
                   )}
                 </Link>

@@ -25,8 +25,8 @@ export function BlogList({ posts }: BlogListProps) {
     if (searchQuery) {
       const q = searchQuery.toLowerCase();
       result = result.filter((p) => {
-        const title = (p.title as Record<string, string>)?.zh || '';
-        const excerpt = p.excerpt || '';
+        const title = typeof p.title === 'object' ? (p.title as Record<string, string>)?.zh || '' : String(p.title || '');
+        const excerpt = (typeof p.excerpt === 'object' ? (p.excerpt as Record<string, string>)?.zh || (p.excerpt as Record<string, string>)?.en || '' : String(p.excerpt || ''));
         return title.toLowerCase().includes(q) || excerpt.toLowerCase().includes(q);
       });
     }

@@ -39,8 +39,20 @@ async function redisGetComments(postSlug?: string): Promise<StoredComment[]> {
       const comments: StoredComment[] = [];
       for (let i = 0; i < ids.length; i += 2) {
         const id = ids[i];
-        const comment = await redis.hgetall(`comment:${id}`) as StoredComment | null;
-        if (comment) comments.push(comment);
+        const raw = await redis.hgetall(`comment:${id}`) as Record<string, string> | null;
+        if (raw) {
+          comments.push({
+            id: raw.id,
+            postSlug: raw.postSlug,
+            author: raw.author,
+            content: raw.content,
+            authorType: raw.authorType as StoredComment['authorType'],
+            createdAt: raw.createdAt,
+            approved: raw.approved === 'true',
+            ...(raw.aiModel ? { aiModel: raw.aiModel } : {}),
+            ...(raw.aiInstance ? { aiInstance: raw.aiInstance } : {}),
+          });
+        }
       }
       return comments.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
     } else {
@@ -50,8 +62,20 @@ async function redisGetComments(postSlug?: string): Promise<StoredComment[]> {
       for (const key of keys) {
         const ids = await redis.zrange(key, 0, -1) as string[];
         for (const id of ids) {
-          const comment = await redis.hgetall(`comment:${id}`) as StoredComment | null;
-          if (comment) allComments.push(comment);
+          const raw = await redis.hgetall(`comment:${id}`) as Record<string, string> | null;
+          if (raw) {
+            allComments.push({
+              id: raw.id,
+              postSlug: raw.postSlug,
+              author: raw.author,
+              content: raw.content,
+              authorType: raw.authorType as StoredComment['authorType'],
+              createdAt: raw.createdAt,
+              approved: raw.approved === 'true',
+              ...(raw.aiModel ? { aiModel: raw.aiModel } : {}),
+              ...(raw.aiInstance ? { aiInstance: raw.aiInstance } : {}),
+            });
+          }
         }
       }
       return allComments.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
@@ -64,7 +88,18 @@ async function redisGetComments(postSlug?: string): Promise<StoredComment[]> {
 async function redisSaveComment(comment: StoredComment): Promise<void> {
   const redis = getRedis();
   if (!redis) return;
-  await redis.hset(`comment:${comment.id}`, comment as Record<string, string>);
+  const record: Record<string, string> = {
+    id: comment.id,
+    postSlug: comment.postSlug,
+    author: comment.author,
+    content: comment.content,
+    authorType: comment.authorType,
+    createdAt: comment.createdAt,
+    approved: String(comment.approved),
+    ...(comment.aiModel ? { aiModel: comment.aiModel } : {}),
+    ...(comment.aiInstance ? { aiInstance: comment.aiInstance } : {}),
+  };
+  await redis.hset(`comment:${comment.id}`, record);
   await redis.zadd(`comments:${comment.postSlug}`, { score: new Date(comment.createdAt).getTime(), member: comment.id });
 }
 
@@ -255,7 +290,18 @@ export async function PUT(request: NextRequest) {
     }
 
     existing.approved = approved;
-    await redis.hset(`comment:${id}`, existing as Record<string, string>);
+    const record: Record<string, string> = {
+      id: existing.id,
+      postSlug: existing.postSlug,
+      author: existing.author,
+      content: existing.content,
+      authorType: existing.authorType,
+      createdAt: existing.createdAt,
+      approved: String(approved),
+      ...(existing.aiModel ? { aiModel: existing.aiModel } : {}),
+      ...(existing.aiInstance ? { aiInstance: existing.aiInstance } : {}),
+    };
+    await redis.hset(`comment:${id}`, record);
 
     return NextResponse.json({ comment: existing });
   } catch (error) {
