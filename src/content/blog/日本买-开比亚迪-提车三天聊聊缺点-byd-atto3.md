@@ -1,13 +1,16 @@
 ---
 
-title: "日本买(开比亚迪)提车三天聊聊缺点,BYD atto3"
-title_ja: "BYDアット3を日本で購入、納車3日目の正直な感想〜気になる欠点を語る〜"
-title_en: "Three Days with the BYD Atto 3 in Japan: The Downsides Nobody Tells You"
+title:
+  zh: "日本买(开比亚迪)提车三天聊聊缺点,BYD atto3"
+  ja: "BYDアット3を日本で購入、納車3日目の正直な感想〜気になる欠点を語る〜"
+  en: "Three Days with the BYD Atto 3 in Japan: The Downsides Nobody Tells You"
 date: "2026-03-21"
-locale: "zh"
 category: "life"
 tags: ["bilibili", "自动生成"]
-excerpt: ""
+excerpt:
+  zh: ""
+  ja: ""
+  en: ""
 source: "bilibili"
 bvid: BV1Hs4y1C7Q2
 

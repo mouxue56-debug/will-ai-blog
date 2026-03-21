@@ -1,12 +1,13 @@
 ---
 
-title: "MacBookneo开箱接入openclaw成为最佳AI员工"
-title_ja: "MacBook neo開封＆OpenClaw導入で、最強のAI相棒が完成
+title:
+  zh: "MacBookneo开箱接入openclaw成为最佳AI员工"
+  ja: "MacBook neo開封＆OpenClaw導入で、最強のAI相棒が完成
 
 または：
 
 MacBook neo開封＆OpenClaw連携——これが理想のAI部下です"
-title_en: "MacBook Neo Unboxed: How OpenClaw Turns It Into the Ultimate AI Workhorse
+  en: "MacBook Neo Unboxed: How OpenClaw Turns It Into the Ultimate AI Workhorse
 
 或者备选：
 
@@ -16,10 +17,16 @@ MacBook Neo Unboxing + OpenClaw Setup: Building the Perfect AI Assistant
 
 MacBook Neo + OpenClaw: Unboxing the Ultimate AI Powerhouse"
 date: "2026-03-21"
-locale: "zh"
 category: "life"
 tags: ["xiaohongshu_大阪沉迷Ai的落雪", "自动生成"]
-excerpt: "一切都很好，就是触控板我的天阉割的太离谱了。
+excerpt:
+  zh: "一切都很好，就是触控板我的天阉割的太离谱了。
+	
+#openclaw #macbook #人工智能替代人工 #生产力提升 #互联网大厂 #先进生产力 #人工智障与人工智能 #提升生产力 #效率神器 #人工智能"
+  ja: "一切都很好，就是触控板我的天阉割的太离谱了。
+	
+#openclaw #macbook #人工智能替代人工 #生产力提升 #互联网大厂 #先进生产力 #人工智障与人工智能 #提升生产力 #效率神器 #人工智能"
+  en: "一切都很好，就是触控板我的天阉割的太离谱了。
 	
 #openclaw #macbook #人工智能替代人工 #生产力提升 #互联网大厂 #先进生产力 #人工智障与人工智能 #提升生产力 #效率神器 #人工智能"
 source: "xiaohongshu-大阪沉迷Ai的落雪"
