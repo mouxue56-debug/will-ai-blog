@@ -111,7 +111,7 @@ function CopyButton({ text, labels }: { text: string; labels: { copy: string; co
 }
 
 export function DebatePageClient({ debates, locale }: { debates: DebatePost[]; locale: 'zh' | 'ja' | 'en' }) {
-  const [showAiGuide, setShowAiGuide] = useState(false);
+  const [showAiGuide, setShowAiGuide] = useState(true); // 默认展开，不折叠
   const s = i18n[locale];
 
   return (
