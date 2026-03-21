@@ -130,7 +130,13 @@
     "feed_filter_all": "すべて",
     "feed_filter_ai": "AI",
     "feed_filter_cattery": "猫舎",
-    "hero_identity": "AI 実践者 × 猫舎経営者 × 大阪在住"
+    "hero_identity": "AI 実践者 × 猫舎経営者 × 大阪在住",
+    "story_node5_year": "2024",
+    "story_node5_title": "AI客服の始まり",
+    "story_node5_desc": "企業向けAI顧客サービスソリューションの提供を開始、AI技術を商業化。",
+    "story_node6_year": "2023",
+    "story_node6_title": "自動化ワークフロー",
+    "story_node6_desc": "n8nなどのツールを探求し、AI自動化を学び、最初のワークフローを構築。"
   },
   "common": {
     "theme_toggle": "テーマ切替",

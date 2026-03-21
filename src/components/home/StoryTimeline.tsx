@@ -2,7 +2,7 @@
 
 import { useRef } from 'react';
 import { motion, useInView, useScroll, useTransform } from 'motion/react';
-import { Cat, Bot, Users, Newspaper } from 'lucide-react';
+import { Cat, Bot, Users, Newspaper, Zap } from 'lucide-react';
 import { LampEffect } from '@/components/ui/aceternity';
 import { useTranslations } from 'next-intl';
 
@@ -138,6 +138,22 @@ export function StoryTimeline() {
       icon: <Newspaper className="h-5 w-5" />,
       color: 'text-brand-mint',
       glowColor: 'rgba(94,234,212,0.4)',
+    },
+    {
+      year: t('story_node5_year'),
+      title: t('story_node5_title'),
+      description: t('story_node5_desc'),
+      icon: <Bot className="h-5 w-5" />,
+      color: 'text-brand-blueberry',
+      glowColor: 'rgba(139,92,246,0.4)',
+    },
+    {
+      year: t('story_node6_year'),
+      title: t('story_node6_title'),
+      description: t('story_node6_desc'),
+      icon: <Zap className="h-5 w-5" />,
+      color: 'text-brand-mango',
+      glowColor: 'rgba(251,191,36,0.4)',
     },
   ];
 

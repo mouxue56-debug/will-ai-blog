@@ -130,7 +130,13 @@
     "feed_filter_all": "全部",
     "feed_filter_ai": "AI",
     "feed_filter_cattery": "猫舎",
-    "hero_identity": "AI 実践者 × 猫舎経営者 × 大阪在住"
+    "hero_identity": "AI 実践者 × 猫舎経営者 × 大阪在住",
+    "story_node5_year": "2024",
+    "story_node5_title": "AI客服启航",
+    "story_node5_desc": "开始为企业提供AI客服解决方案，将AI技术商业化落地。",
+    "story_node6_year": "2023",
+    "story_node6_title": "自动化工作流",
+    "story_node6_desc": "开始探索n8n等工具，学习AI自动化，搭建第一个工作流。"
   },
   "common": {
     "theme_toggle": "切换主题",
