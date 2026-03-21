@@ -2,7 +2,7 @@
 
 title: "日本买(开比亚迪)提车三天聊聊缺点,BYD atto3"
 title_ja: "日本买(开比亚迪)提车三天聊聊缺点,BYD atto3 [JA]"
-title_en: "日本买(开比亚迪)提车三天聊聊缺点,BYD atto3 [EN]"
+title_en: "Three Days with the BYD Atto 3 in Japan: The Downsides Nobody Tells You"
 date: "2026-03-21"
 locale: "zh"
 category: "life"
@@ -11,7 +11,7 @@ excerpt: ""
 source: "bilibili"
 bvid: BV1Hs4y1C7Q2
 
----
+------
 
 
 # 日本买(开比亚迪)提车三天聊聊缺点,BYD atto3

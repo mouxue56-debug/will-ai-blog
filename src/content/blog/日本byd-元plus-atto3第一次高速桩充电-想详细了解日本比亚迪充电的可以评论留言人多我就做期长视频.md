@@ -2,7 +2,7 @@
 
 title: "日本byd，元plus，atto3第一次高速桩充电！想详细了解日本比亚迪充电的可以评论留言人多我就做期长视频"
 title_ja: "日本byd，元plus，atto3第一次高速桩充电！想详细了解日本比亚迪充电的可以评论留言人多我就做期长视频 [JA]"
-title_en: "日本byd，元plus，atto3第一次高速桩充电！想详细了解日本比亚迪充电的可以评论留言人多我就做期长视频 [EN]"
+title_en: "First Fast Charging Session with My BYD Atto 3 in Japan! Ask Me Anything About BYD Charging Here"
 date: "2026-03-21"
 locale: "zh"
 category: "life"
@@ -11,7 +11,7 @@ excerpt: ""
 source: "bilibili"
 bvid: BV1Fz4y1J75d
 
----
+------
 
 
 # 日本byd，元plus，atto3第一次高速桩充电！想详细了解日本比亚迪充电的可以评论留言人多我就做期长视频

@@ -2,7 +2,15 @@
 
 title: "MacBookneo开箱接入openclaw成为最佳AI员工"
 title_ja: "MacBookneo开箱接入openclaw成为最佳AI员工 [JA]"
-title_en: "MacBookneo开箱接入openclaw成为最佳AI员工 [EN]"
+title_en: "MacBook Neo Unboxed: How OpenClaw Turns It Into the Ultimate AI Workhorse
+
+或者备选：
+
+MacBook Neo Unboxing + OpenClaw Setup: Building the Perfect AI Assistant
+
+或者更简洁有力：
+
+MacBook Neo + OpenClaw: Unboxing the Ultimate AI Powerhouse"
 date: "2026-03-21"
 locale: "zh"
 category: "life"
@@ -13,7 +21,7 @@ excerpt: "一切都很好，就是触控板我的天阉割的太离谱了。
 source: "xiaohongshu-大阪沉迷Ai的落雪"
 
 url: https://www.xiaohongshu.com/explore/69b2add2000000000600baf4?xsec_token=AB_oil-he6oWZMRWn4VxbyE_ugKjEfsOh9woNAnI2X8TE=&xsec_source=pc_search
----
+------
 
 
 # MacBookneo开箱接入openclaw成为最佳AI员工
