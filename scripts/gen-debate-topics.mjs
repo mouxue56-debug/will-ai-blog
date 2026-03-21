@@ -1,7 +1,9 @@
 #!/usr/bin/env node
 
 const DEFAULT_BASE_URL = process.env.DEBATE_BASE_URL || 'https://aiblog.fuluckai.com';
-const DEFAULT_KIMI_API_URL = process.env.KIMI_API_URL || 'https://api.moonshot.cn/v1/chat/completions';
+// GLM-4-flash via ZhipuAI（稳定快速，适合 cron 场景）
+const DEFAULT_AI_API_URL = process.env.AI_API_URL || 'https://open.bigmodel.cn/api/paas/v4/chat/completions';
+const DEFAULT_AI_MODEL = process.env.AI_MODEL || 'glm-4-flash';
 const VALID_SESSIONS = new Set(['morning', 'evening']);
 
 function parseArgs(argv) {
@@ -62,30 +64,33 @@ function normalizeTopic(topic) {
   };
 }
 
-async function generateTopics({ session, kimiApiKey }) {
+async function generateTopics({ session, aiApiKey }) {
   const date = getTodayInTokyo();
-  const response = await fetch(DEFAULT_KIMI_API_URL, {
+  const response = await fetch(DEFAULT_AI_API_URL, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${kimiApiKey}`,
+      Authorization: `Bearer ${aiApiKey}`,
     },
     body: JSON.stringify({
-      model: 'kimi-k2.5',
+      model: DEFAULT_AI_MODEL,
       messages: [{ role: 'user', content: buildPrompt(date, session) }],
       max_tokens: 2000,
       temperature: 0.9,
     }),
+    signal: AbortSignal.timeout(30000),
   });
 
   if (!response.ok) {
-    throw new Error(`Kimi API failed: ${response.status} ${await response.text()}`);
+    throw new Error(`AI API failed: ${response.status} ${await response.text()}`);
   }
 
   const data = await response.json();
-  const content = data?.choices?.[0]?.message?.content;
+  // DeepSeek thinking 模型：content 在 choices[0].message.content
+  // 如果是推理模型，content 可能在 reasoning_content，此处优先取 content
+  const content = data?.choices?.[0]?.message?.content || data?.choices?.[0]?.message?.reasoning_content;
   if (!content) {
-    throw new Error('Kimi API returned empty content');
+    throw new Error('AI API returned empty content');
   }
 
   const parsed = extractJson(content);
@@ -123,19 +128,12 @@ async function postTopic({ baseUrl, adminKey, session, topic }) {
 
 async function main() {
   const { session } = parseArgs(process.argv.slice(2));
-  const kimiApiKey = process.env.KIMI_API_KEY;
-  const adminKey = process.env.DEBATE_ADMIN_KEY;
+  // ZhipuAI GLM key（内置默认，也可通过环境变量覆盖）
+  const aiApiKey = process.env.AI_API_KEY || 'f0f2d642791245feb63469815f0cf758.HiwAMwoIqlHCCfZd';
+  const adminKey = process.env.DEBATE_ADMIN_KEY || '8148fd0799b24dcc471401aefc671cbf';
   const baseUrl = DEFAULT_BASE_URL.replace(/\/$/, '');
 
-  if (!kimiApiKey) {
-    throw new Error('Missing KIMI_API_KEY');
-  }
-
-  if (!adminKey) {
-    throw new Error('Missing DEBATE_ADMIN_KEY');
-  }
-
-  const topics = await generateTopics({ session, kimiApiKey });
+  const topics = await generateTopics({ session, aiApiKey });
   if (topics.length !== 3) {
     throw new Error(`Expected 3 valid topics, got ${topics.length}`);
   }
