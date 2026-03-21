@@ -8,6 +8,12 @@ import { LatestUpdates } from '@/components/home/LatestUpdates';
 import { MyWorld } from '@/components/home/MyWorld';
 import { AIDashboard } from '@/components/home/ai-dashboard';
 
+const OG_LOCALE_MAP: Record<string, string> = {
+  zh: 'zh_CN',
+  ja: 'ja_JP',
+  en: 'en_US',
+};
+
 export async function generateMetadata({
   params,
 }: {
@@ -18,18 +24,28 @@ export async function generateMetadata({
   const homeT = await getTranslations({ locale, namespace: 'home' });
   const title = `Will AI Blog | ${navT('blog')} | ${navT('timeline')} | ${navT('about')}`;
   const description = `${homeT('hero_subtitle')} | ${navT('blog')} | ${navT('timeline')} | ${navT('about')}`;
+  const ogLocale = OG_LOCALE_MAP[locale] || OG_LOCALE_MAP.zh;
+  const url = `https://aiblog.fuluckai.com/${locale}`;
 
   return {
     title,
     description,
     keywords: [navT('blog'), navT('timeline'), navT('about'), 'Will AI Blog'],
     openGraph: {
+      type: 'website',
       title,
       description,
+      locale: ogLocale,
+      url,
+      siteName: "Will's AI Blog",
+      images: [{ url: '/og-image.png', width: 1200, height: 630 }],
     },
     twitter: {
+      card: 'summary_large_image',
       title,
       description,
+      site: '@fuluckai',
+      images: ['/og-image.png'],
     },
   };
 }
