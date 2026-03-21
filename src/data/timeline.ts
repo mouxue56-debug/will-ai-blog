@@ -1276,4 +1276,70 @@ export const timelineData: TimelineEntry[] = [
       en: 'Celebrating Chinese New Year in Japan. Not much festive atmosphere around, but wanted to make a full Chinese meal. Had AI plan the menu and research recipes: braised pork belly, steamed fish, twice-cooked pork, cucumber salad, egg drop soup. Most ingredients available at Osaka\'s Chinese grocery stores. Akiwata made dumplings with pork and cabbage filling. Not quite like celebrating at home, but eating these dishes abroad is satisfying enough. The cats were very interested in the braised pork, but of course that\'s off-limits.',
     },
   },
+  {
+    id: 'tl-035',
+    date: '2017-01-01',
+    category: 'milestone',
+    isMilestone: true,
+    tags: ['Japan', 'Life', 'Immigration'],
+    title: {
+      zh: '来到日本，开始新生活',
+      ja: '日本へ渡り、新しい生活をスタート',
+      en: 'Moved to Japan — Starting a New Life',
+    },
+    summary: {
+      zh: '从中国来到日本，大阪成为第二故乡。',
+      ja: '中国から日本へ渡り、大阪が第二の故郷に。',
+      en: 'Moved from China to Japan — Osaka became a second home.',
+    },
+    content: {
+      zh: '2017年，来到日本大阪，开始了全新的生活。初到日本时一切都不容易——语言障碍、文化差异、重新建立社交圈。但大阪这座城市很包容，半年后就渐渐适应了。从事过贸易工作，后来转型做宠物贸易，再到现在经营猫舍——这条路走了很多年，但每一步都算数。',
+      ja: '2017年、日本大阪へ渡り、新しい生活をスタートした。日本に着いたばかりの頃は全てが大変だった——言語の壁、文化的差異、ソーシャルサークルの再構築。しかし大阪という街は包容力があって、半年後には徐々に慣れていった。貿易の仕事に始まり、ペット貿易に転身、そして現在 のキャッテリー経営へ——この道は長かったが、一歩一歩が実を結んでいる。',
+      en: 'In 2017, moved to Osaka, Japan, and started a completely new life. Everything was difficult at first — language barrier, cultural differences, rebuilding a social circle. But Osaka is a welcoming city, and after half a year, things gradually fell into place. Worked in trading, then transitioned to pet trading, and now run a cattery — the path has been long, but every step has counted.',
+    },
+  },
+  {
+    id: 'tl-036',
+    date: '2023-01-01',
+    category: 'milestone',
+    isMilestone: true,
+    tags: ['AI', 'Learning', 'Start'],
+    title: {
+      zh: '开始系统学习 AI，找到新方向',
+      ja: 'AIの体系的な学習を開始、新しい方向性を見つける',
+      en: 'Started Systematic AI Learning — Found a New Direction',
+    },
+    summary: {
+      zh: '从AI爱好者到系统学习，开始探索AI在工作中的应用。',
+      ja: 'AI愛好家から体系的な学習へ、AIの業務応用を考え始める。',
+      en: 'From AI enthusiast to systematic learning — began exploring AI applications in work.',
+    },
+    content: {
+      zh: '2023年，开始认真系统学习AI。不是追热点的那种学法，而是真正去理解大语言模型的工作原理、提示词工程的技巧、AI Agent的架构设计。学习的收获很快就用到了实际工作中——用AI辅助写文案、用AI分析数据、用AI自动化日常任务。猫舍的运营效率因此提升了不少。',
+      ja: '2023年、気軽にAIを学ぶ時代から、AIの体系的な学習始めた。大言語モデルの動作原理、プロンプトエンジニアリングのテクニック、AIエージェントの設計など、本当に理解することを目指した。学習の成果はすぐに実務に活かした——AIを活用した文案作成、データ分析、日常タスクの自動化など。キャッテリーの運営効率も大幅に向上した。',
+      en: 'In 2023, began serious systematic learning of AI. Not the superficial kind chasing trends, but truly understanding how large language models work, prompt engineering techniques, and AI agent architecture. The learning quickly applied to real work — using AI to assist writing, analyze data, and automate daily tasks. The cattery operations became significantly more efficient.',
+    },
+  },
+  {
+    id: 'tl-037',
+    date: '2024-01-01',
+    category: 'milestone',
+    isMilestone: true,
+    tags: ['AI', 'Business', 'Client'],
+    title: {
+      zh: '开展 AI 客服业务，服务企业客户',
+      ja: 'AI顧客サービスビジネスを開始、企業クライアント向けサービス提供',
+      en: 'Launched AI Customer Service Business — Serving Enterprise Clients',
+    },
+    summary: {
+      zh: '将 AI 技术商业化，开始为企业客户提供 AI 客服解决方案。',
+      ja: 'AI技術の商業化を開始、企業クライアントにAI顧客サービスソリューションを提供。',
+      en: 'Commercialized AI technology — began providing AI customer service solutions to business clients.',
+    },
+    content: {
+      zh: '2024年，将AI技术商业化，开始为企业客户提供AI客服解决方案。不是卖软件的那种模式，而是真正的AI辅助服务——帮助企业用AI处理客户问询、自动生成回复、优化客服流程。第一个客户是大阪的一家医疗机构，后来陆续有了更多案例。AI客服不仅降低了人力成本，还提升了响应速度和服务一致性。',
+      ja: '2024年、AI技術を商業化、企業クライアントにAI顧客サービスソリューションの提供を開始した。ソフトウェア販売型ではなく、本当のAI支援サービス——企業にAIを使って顧客対応を助け、返信の自動生成、カスタマーサービスプロセスの最適化を支援。最初のクライアントは大阪の医療機関で、その後次々と事例的增加。AI顧客月は人力资源のコストを削減し、応答速度和服务の一貫性も向上させた。',
+      en: 'In 2024, commercialized AI technology and began providing AI customer service solutions to business clients. Not a software sales model, but true AI-assisted services — helping businesses use AI to handle customer inquiries, auto-generate responses, and optimize service processes. The first client was a medical institution in Osaka, followed by more cases. AI customer service not only reduced labor costs but also improved response speed and service consistency.',
+    },
+  },
 ];

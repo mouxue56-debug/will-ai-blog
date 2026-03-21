@@ -44,86 +44,30 @@ excerpt:
 - 部署在另一台机器上，与本机通信
 
 **アキ — 医疗咨询辅助**
-- 专门处理再生医疗クリニックの多语言咨询
+- 专门处理再生医疗诊所的多语言咨询
 - 隔离部署，不与其他实例共享上下文
 - 严格的 APPI 合规限制
 
 ## 四个实例的技术架构
 
-```
-Mac Mini M4 (192.168.1.100)
-├── Port 18789: ユキ（技术）
-├── Port 18790: ナツ（内容）
-└── Port 18791: 预留
-
-MacBook Neo (192.168.1.161)  
-└── Port 18789: ハル（客服）
-
-VPS (Tokyo Region)
-└── Port 18789: アキ（医疗，隔离）
-```
-
-每个实例有自己的：
-- 独立工作目录（`workspace-yuki` / `workspace-natsu` / ...）
+每个实例独立运行，有自己的：
+- 独立工作目录
 - 独立的 cron 任务
 - 独立的 Telegram 频道（不同 bot）
-- 共享知识库（`~/.openclaw/shared-knowledge/`）
+- 共享知识库（跨实例通信用）
+
+实例之间通过任务看板（task-board.md）互相委派工作，而不是直接调用——这样可以保留完整的执行记录，也方便人工监督。
 
 ## 实际运行了多久？
 
 这套架构从 2025 年 12 月开始搭建，到现在运行了大约 3 个月。
 
-**稳定性**：watchdog 自动监控，重启次数个位数。偶尔因为 macOS 更新重启全部实例，5 分钟内恢复正常。
+**稳定性**： watchdog 自动监控，重启次数个位数。偶尔因为系统更新重启全部实例，5 分钟内恢复正常。
 
 **实际省了多少时间**：很难精确计算，但 Instagram 日语文案从「我花一小时写」变成了「ナツ出初稿我改10分钟」；代码 debug 从「我自己翻 Stack Overflow」变成了「ユキ先跑一遍，有思路再找我」。
 
-**最大的挑战**：边界管理。四个实例互相委派任务时，偶尔会出现「两个实例都在做同一件事」或「谁也没做」的情况。解决方案是引入任务看板（`shared-knowledge/task-board.md`），强制所有跨实例委派都写到那里。
-
-## 什么时候该多开一个实例？
-
-不是越多越好。我自己的判断标准：
-
-1. **上下文污染明显**：一个实例开始在完全不同的领域之间切换，表现下降
-2. **有明确隔离需求**：比如医疗数据，不能和其他业务混在一起
-3. **并行需求**：两件事需要同时进行，不能排队等待
-
-如果只是「任务有点多」，先优化 prompt 和工作流，不要急着开新实例。实例多了，管理成本是真实存在的。
+**最大的挑战**：边界管理。四个实例互相委派任务时，偶尔会出现「两个实例都在做同一件事」或「谁也没做」的情况。解决方案是引入任务看板，强制所有跨实例委派都写到那里。
 
 ---
 
-下一篇：[OpenClaw 多实例踩坑记录](/blog/openclaw-multi-instance) — 配置隔离、端口冲突、共享缓存那些坑。
-
-
----
-
-## 日英翻译（Kimi K2.5）
-
-### 日本語
-
-my-ai-workflow
-
-1つのBotから4人のAIアシスタントへ
-
-去年の夏、私はOpenClawでClaudeインスタンスを1つ動かし始めた。日常の雑務——メール返信、メモ整理、たまに調べ物を手伝ってもらう——を処理するためだ。その時期は素晴らしかった。無限に忍耐強いアシスタントがもう1人いるような感じだった。
-
-そして事業が拡大し始めた。
-
-猫舎の顧客問い合わせが増え、Instagramは定期的な更新が必要になり、医療AIプロジェクトは毎日のフォローアップを求め始め、コードリポジトリにはissueが山積みになった。私は1つのAIインスタンスが雑用係になっていくのを目の当たりにした——今日は猫の紹介文案を書き、明日は医療システムのPythonコードを見て、明後日はTikTokアルゴリズムを調べる。
-
-**問題はAIができるかどうかではなく、コンテキスト汚染が深刻すぎることだ。** Instagramの日本語文案に集中しているインスタンスが、同時に医療AIのコンプライアンス問題も処理しなければならないと、パフォーマンスが明らかに低下する。モデルの能力の問題ではなく、注意力の問題だ。
-
-### English
-
-my-ai-workflow
-
-From One Bot to Four AI Assistants
-
-Last summer, I started running a Claude instance on OpenClaw to handle daily chores—replying to emails, organizing notes, occasionally helping me look things up. That phase was wonderful, like having an infinitely patient assistant.
-
-Then the business started expanding.
-
-Cat shelter client inquiries kept increasing, Instagram needed regular updates, the medical AI project started requiring daily follow-ups, and the code repository was piling up with issues. I found one AI instance becoming a jack-of-all-trades—today helping me write cat introduction copy, tomorrow reviewing Python code for the medical system, the day after researching TikTok algorithms.
-
-**The problem wasn't whether AI could do it—it was severe context pollution.** An instance focused on writing Instagram Japanese copy, if simultaneously handling compliance issues for medical AI, would noticeably degrade in performance. Not a model capability issue—an attention issue.
-
-> AI 翻译 | 2026-03-21
+> ⚠️ **技术细节已脱敏处理**：本文仅展示架构思路，不包含任何 IP 地址、端口号、文件路径等敏感信息。
