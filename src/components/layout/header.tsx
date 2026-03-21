@@ -9,7 +9,8 @@ import { UserMenu } from '@/components/shared/user-menu';
 
 const navItems = [
   { key: 'blog', href: '/blog' },
-  { key: 'forum', href: '/debate' },
+  { key: 'digest', href: '/digest' },
+  { key: 'debate', href: '/debate' },
   { key: 'cases', href: '/cases' },
   { key: 'timeline', href: '/timeline' },
   { key: 'about', href: '/about' },

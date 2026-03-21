@@ -12,10 +12,16 @@ const withAlternates = (path: string) => ({
   ),
 });
 
+function safeDate(value?: string) {
+  if (!value) return new Date();
+  const parsed = new Date(value);
+  return Number.isNaN(parsed.getTime()) ? new Date() : parsed;
+}
+
 export default function sitemap(): MetadataRoute.Sitemap {
   const entries: MetadataRoute.Sitemap = [];
 
-  const staticPages = ['', '/blog', '/cases', '/debate', '/timeline', '/about', '/cattery'];
+  const staticPages = ['', '/blog', '/digest', '/cases', '/debate', '/timeline', '/about', '/cattery'];
 
   for (const page of staticPages) {
     for (const locale of locales) {
@@ -34,7 +40,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     for (const locale of locales) {
       entries.push({
         url: `${BASE_URL}/${locale}/blog/${post.slug}`,
-        lastModified: new Date(post.date),
+        lastModified: safeDate(post.date),
         changeFrequency: 'monthly',
         priority: 0.7,
         alternates: withAlternates(`/blog/${post.slug}`),
@@ -58,7 +64,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     for (const locale of locales) {
       entries.push({
         url: `${BASE_URL}/${locale}/debate/${debate.id}`,
-        lastModified: new Date(debate.date),
+        lastModified: safeDate(debate.date),
         changeFrequency: 'daily',
         priority: 0.7,
         alternates: withAlternates(`/debate/${debate.id}`),

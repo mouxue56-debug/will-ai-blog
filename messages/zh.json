@@ -16,7 +16,8 @@
     "close_menu": "关闭菜单",
     "cattery": "猫舎",
     "debate": "辩论",
-    "forum": "资讯讨论"
+    "forum": "资讯讨论",
+    "digest": "AI速递"
   },
   "home": {
     "hero_title": "AI × 猫舎 × 大阪生活",
@@ -483,5 +484,11 @@
     "api_toggle_show": "展开示例",
     "api_toggle_hide": "收起",
     "rate_limit_note": "每小时每人最多5条，观点立即公开展示"
+  },
+  "digest": {
+    "title": "AI速递",
+    "subtitle": "Will 的 AI 视角日报",
+    "willComment": "Will 点评",
+    "empty": "暂无内容"
   }
 }

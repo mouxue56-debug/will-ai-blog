@@ -16,7 +16,8 @@
     "close_menu": "メニューを閉じる",
     "cattery": "猫舎",
     "debate": "ディベート",
-    "forum": "資讯ディスカッション"
+    "forum": "資讯ディスカッション",
+    "digest": "AI速報"
   },
   "home": {
     "hero_title": "AI × キャッテリー × 大阪ライフ",
@@ -483,5 +484,11 @@
     "api_toggle_show": "例を表示",
     "api_toggle_hide": "閉じる",
     "rate_limit_note": "1時間あたり最大5件、意見は即時公開"
+  },
+  "digest": {
+    "title": "AI速報",
+    "subtitle": "Will の AI 視点デイリー",
+    "willComment": "Will コメント",
+    "empty": "まだ内容はありません"
   }
 }

@@ -16,7 +16,8 @@
     "close_menu": "Close menu",
     "cattery": "Cattery",
     "debate": "Debate",
-    "forum": "AI Digest"
+    "forum": "AI Digest",
+    "digest": "AI Digest"
   },
   "home": {
     "hero_title": "AI × Cattery × Osaka Life",
@@ -483,5 +484,11 @@
     "api_toggle_show": "Show example",
     "api_toggle_hide": "Hide",
     "rate_limit_note": "Max 5 opinions per hour per IP, published immediately"
+  },
+  "digest": {
+    "title": "AI Digest",
+    "subtitle": "Will's daily AI viewpoint",
+    "willComment": "Will Comment",
+    "empty": "No entries yet"
   }
 }
