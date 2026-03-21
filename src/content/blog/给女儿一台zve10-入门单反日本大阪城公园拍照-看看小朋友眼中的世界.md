@@ -21,7 +21,7 @@ title_ja: "娘にZV-E10を渡して、大阪城公園でデビュー！子供の
 ---
 
 もう一つのバリエーション（カメラ初心者"
-date: "2026-03-21"
+date: "2024-02-29"
 category: "life"
 tags: ["bilibili", "自动生成"]
 excerpt:

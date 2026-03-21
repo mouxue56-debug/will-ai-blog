@@ -5,7 +5,7 @@ title:
   zh: "日本买(开比亚迪)提车三天聊聊缺点,BYD atto3"
   ja: "BYDアット3を日本で購入、納車3日目の正直な感想〜気になる欠点を語る〜"
   en: "Three Days with the BYD Atto 3 in Japan: The Downsides Nobody Tells You"
-date: "2026-03-21"
+date: "2023-06-21"
 category: "life"
 tags: ["bilibili", "自动生成"]
 excerpt:

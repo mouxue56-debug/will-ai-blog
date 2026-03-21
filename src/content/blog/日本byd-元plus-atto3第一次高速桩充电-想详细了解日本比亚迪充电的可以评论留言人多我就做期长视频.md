@@ -10,7 +10,7 @@ title:
 
 日本でBYDアット3（元PLUS）初めての高速充電！充電事情気になる人はコ"
   en: "Build Your Personal AI Assistant with OpenCloud — Low-Cost API + Telegram Bot"
-date: "2026-03-21"
+date: "2023-07-07"
 category: "life"
 tags: ["bilibili", "自动生成"]
 excerpt:

@@ -4,7 +4,7 @@ title:
   zh: "AI视频批量生成实战：用OpenCloud+NotebookLM自动化9国语言宣传片"
   ja: "AI動画批量生成の実践：OpenCloud + NotebookLMで9カ国のプロモ影片を自動化"
   en: "Batch AI Video Generation: OpenCloud + NotebookLM for Automated Multilingual Promos"
-date: "2026-03-21"
+date: "2026-03-17"
 category: AI
 tags: ["OpenCloud", "AI自动化", "视频生成", "NotebookLM"]
 excerpt:
