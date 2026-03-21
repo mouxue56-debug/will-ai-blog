@@ -1,14 +1,15 @@
 import { notFound } from 'next/navigation';
 import { setRequestLocale, getTranslations } from 'next-intl/server';
+import { PageTransition } from '@/components/shared/PageTransition';
+import { ScrollReveal } from '@/components/shared/ScrollReveal';
 import { timelineData } from '@/data/timeline';
-import { TimelinePageClient } from '@/components/timeline/TimelinePageClient';
 import { Link } from '@/i18n/navigation';
 import { ChevronRight } from 'lucide-react';
 
 type Params = { locale: string; year: string };
 
 export async function generateStaticParams() {
-  const years = [...new Set(timelineData.map((e) => e.date.split('-')[0]))];
+  const years = [...new Set(timelineData.map((entry) => entry.date.split('-')[0]))];
   const locales = ['zh', 'ja', 'en'];
   return locales.flatMap((locale) => years.map((year) => ({ locale, year })));
 }
@@ -18,45 +19,101 @@ export default async function TimelineYearPage({ params }: { params: Promise<Par
   setRequestLocale(locale);
   const t = await getTranslations({ locale, namespace: 'timeline' });
 
-  const events = timelineData.filter((e) => e.date.startsWith(year));
-  if (events.length === 0) notFound();
+  const events = timelineData.filter((entry) => entry.date.startsWith(year));
+  if (events.length === 0) {
+    notFound();
+  }
 
-  // Get months in this year
-  const months = [...new Set(events.map((e) => e.date.split('-')[1]))].sort();
+  const monthGroups = new Map<string, typeof events>();
+  events.forEach((entry) => {
+    const month = entry.date.split('-')[1];
+    const current = monthGroups.get(month) ?? [];
+    current.push(entry);
+    monthGroups.set(month, current);
+  });
 
   return (
-    <div className="mx-auto max-w-5xl px-4 sm:px-6 py-12">
-      {/* Breadcrumb */}
-      <nav className="flex items-center gap-1.5 text-sm text-muted-foreground mb-8">
-        <Link href="/timeline" className="hover:text-foreground transition-colors">{t('title')}</Link>
-        <ChevronRight className="w-3.5 h-3.5" />
-        <span className="text-foreground font-medium">{year}</span>
-      </nav>
+    <PageTransition>
+      <div className="mx-auto max-w-5xl px-4 sm:px-6 py-12 sm:py-16">
+        <nav className="flex items-center gap-1.5 text-sm text-muted-foreground mb-8">
+          <Link href="/timeline" className="hover:text-foreground transition-colors">
+            {t('title')}
+          </Link>
+          <ChevronRight className="w-3.5 h-3.5" />
+          <span className="text-foreground font-medium">{year}</span>
+        </nav>
 
-      <h1 className="text-2xl sm:text-3xl font-bold mb-2">{year}</h1>
-      <p className="text-muted-foreground mb-8">
-        {events.length} {t('events_count') || 'events'} · {months.length} {t('months_count') || 'months'}
-      </p>
+        <ScrollReveal direction="fadeUp" className="mb-10">
+          <h1
+            className="text-3xl sm:text-4xl font-bold mb-3"
+            style={{
+              background: 'linear-gradient(135deg, #5eead4, #22d3ee, #c084fc)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text',
+            }}
+          >
+            {t('yearView', { year })}
+          </h1>
+          <p className="text-muted-foreground">
+            {events.length} {t('events_count')} · {monthGroups.size} {t('months_count')}
+          </p>
+        </ScrollReveal>
 
-      {/* Month quick nav */}
-      <div className="flex flex-wrap gap-2 mb-10">
-        {months.map((m) => {
-          const count = events.filter((e) => e.date.split('-')[1] === m).length;
-          return (
-            <Link
-              key={m}
-              href={`/timeline/${year}/${m}`}
-              className="px-3 py-1.5 rounded-full glass-card text-sm hover:border-brand-mint/40 transition-all"
-            >
-              {parseInt(m)}{locale === 'ja' ? '月' : locale === 'en' ? '' : '月'}
-              {locale === 'en' && ` (${count})`}
-              {locale !== 'en' && `（${count}）`}
-            </Link>
-          );
-        })}
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 sm:gap-4">
+          {Array.from({ length: 12 }, (_, index) => {
+            const monthNumber = String(index + 1);
+            const paddedMonth = monthNumber.padStart(2, '0');
+            const monthEvents = monthGroups.get(paddedMonth) ?? [];
+            const hasData = monthEvents.length > 0;
+            const monthName = t(`monthNames.${monthNumber}`);
+            const content = (
+              <div
+                className={[
+                  'glass-card p-4 sm:p-5 transition-all duration-200 h-full',
+                  hasData ? 'shadow-sm hover:shadow-md hover:scale-[1.02]' : 'opacity-40',
+                ].join(' ')}
+              >
+                <h2
+                  className="text-xl sm:text-2xl font-bold mb-2"
+                  style={hasData ? {
+                    background: 'linear-gradient(135deg, #5eead4, #22d3ee)',
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
+                    backgroundClip: 'text',
+                  } : undefined}
+                >
+                  {monthName}
+                </h2>
+
+                {hasData ? (
+                  <>
+                    <div className="flex items-center gap-2 mb-2 text-xs text-muted-foreground">
+                      <span>{monthEvents.length} {t('events_count')}</span>
+                      <span className="text-yellow-500">🏆 {monthEvents.filter((entry) => entry.isMilestone).length}</span>
+                    </div>
+                    <p className="text-sm text-muted-foreground leading-snug line-clamp-2">
+                      {monthEvents[0]?.title[locale as 'zh' | 'ja' | 'en']}
+                    </p>
+                  </>
+                ) : (
+                  <p className="text-xs text-muted-foreground/40">{t('noEvents')}</p>
+                )}
+              </div>
+            );
+
+            if (!hasData) {
+              return <div key={paddedMonth}>{content}</div>;
+            }
+
+            return (
+              <Link key={paddedMonth} href={`/timeline/${year}/${paddedMonth}` as `/${string}`} className="block group">
+                {content}
+              </Link>
+            );
+          })}
+        </div>
       </div>
-
-      <TimelinePageClient events={events} locale={locale as 'zh' | 'ja' | 'en'} />
-    </div>
+    </PageTransition>
   );
 }
