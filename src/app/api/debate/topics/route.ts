@@ -6,7 +6,7 @@ import {
   type DebateSession,
 } from '@/lib/debate-store';
 
-export const runtime = 'edge';
+export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
 function isDebateSession(value: string): value is DebateSession {
