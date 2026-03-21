@@ -10,7 +10,7 @@ import { Link } from '@/i18n/navigation';
 import { PageTransition } from '@/components/shared/PageTransition';
 import { ScrollReveal } from '@/components/shared/ScrollReveal';
 import { MarkdownRenderer } from './markdown-renderer';
-import { TableOfContents } from './table-of-contents';
+import { TableOfContents, type TocHeading } from './table-of-contents';
 import { CommentSection } from './comment-section';
 
 const CATEGORY_TAG_COLORS: Record<BlogCategory, string> = {
@@ -27,6 +27,7 @@ interface BlogDetailProps {
   nextPost: BlogPost | null;
   comments: Comment[];
   postSlug?: string;
+  headings: TocHeading[];
 }
 
 function formatReadingTime(minutes: number, locale: string): string {
@@ -41,7 +42,7 @@ function formatReadingTime(minutes: number, locale: string): string {
   return `About ${minutes} min read`;
 }
 
-export function BlogDetail({ post, prevPost, nextPost, comments, postSlug }: BlogDetailProps) {
+export function BlogDetail({ post, prevPost, nextPost, comments, postSlug, headings }: BlogDetailProps) {
   const locale = useLocale();
   const t = useTranslations('blog');
   const title = post.title[locale] || post.title.zh || post.title.en || '';
@@ -50,7 +51,7 @@ export function BlogDetail({ post, prevPost, nextPost, comments, postSlug }: Blo
 
   return (
     <PageTransition>
-      <div className="mx-auto max-w-5xl px-4 sm:px-6 py-12">
+      <div className="mx-auto max-w-[1400px] px-4 py-12 sm:px-6">
         <Link
           href="/blog"
           className="mb-6 inline-flex items-center gap-1 text-sm text-muted-foreground transition-colors hover:text-foreground"
@@ -59,8 +60,8 @@ export function BlogDetail({ post, prevPost, nextPost, comments, postSlug }: Blo
           {t('title')}
         </Link>
 
-        <div className="lg:grid lg:grid-cols-[1fr_220px] lg:gap-8">
-          <article className="min-w-0">
+        <div className="xl:grid xl:grid-cols-[minmax(0,1fr)_280px] xl:items-start xl:gap-12">
+          <article className="min-w-0 max-w-4xl">
             <motion.header
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
@@ -102,10 +103,6 @@ export function BlogDetail({ post, prevPost, nextPost, comments, postSlug }: Blo
 
               <hr className="border-border" />
             </motion.header>
-
-            <div className="mb-8 lg:hidden">
-              <TableOfContents content={post.content} />
-            </div>
 
             <ScrollReveal direction="fadeUp" delay={0.2} duration={0.6}>
               <div className="glass-card p-6 sm:p-8">
@@ -153,8 +150,8 @@ export function BlogDetail({ post, prevPost, nextPost, comments, postSlug }: Blo
             </div>
           </article>
 
-          <aside className="hidden lg:block">
-            <TableOfContents content={post.content} />
+          <aside className="hidden xl:block">
+            <TableOfContents headings={headings} />
           </aside>
         </div>
       </div>

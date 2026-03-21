@@ -1,130 +1,80 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { List, ChevronDown, ChevronUp } from 'lucide-react';
+import { List } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-interface TocItem {
+export interface TocHeading {
   id: string;
   text: string;
-  level: number;
+  level: 2 | 3;
 }
 
 interface TableOfContentsProps {
-  content: string;
+  headings: TocHeading[];
 }
 
-function extractHeadings(content: string): TocItem[] {
-  const headingRegex = /^(#{2,3})\s+(.+)$/gm;
-  const headings: TocItem[] = [];
-  let match;
-
-  while ((match = headingRegex.exec(content)) !== null) {
-    const level = match[1].length;
-    const text = match[2].trim();
-    const id = text
-      .toLowerCase()
-      .replace(/[^\w\u4e00-\u9fff\u3040-\u30ff]+/g, '-')
-      .replace(/^-|-$/g, '');
-    headings.push({ id, text, level });
-  }
-
-  return headings;
-}
-
-export function TableOfContents({ content }: TableOfContentsProps) {
+export function TableOfContents({ headings }: TableOfContentsProps) {
   const t = useTranslations('blog');
-  const [isOpen, setIsOpen] = useState(false);
   const [activeId, setActiveId] = useState<string>('');
-  const headings = extractHeadings(content);
 
   useEffect(() => {
+    if (headings.length === 0) {
+      return;
+    }
+
     const observer = new IntersectionObserver(
       (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) {
-            setActiveId(entry.target.id);
-          }
+        const visibleHeading = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top)[0];
+
+        if (visibleHeading) {
+          setActiveId(visibleHeading.target.id);
         }
       },
-      { rootMargin: '-80px 0px -70% 0px' }
+      { rootMargin: '-96px 0px -60% 0px', threshold: [0, 1] }
     );
 
     headings.forEach(({ id }) => {
-      const el = document.getElementById(id);
-      if (el) observer.observe(el);
+      const element = document.getElementById(id);
+      if (element) {
+        observer.observe(element);
+      }
     });
 
     return () => observer.disconnect();
   }, [headings]);
 
-  if (headings.length === 0) return null;
+  if (headings.length === 0) {
+    return null;
+  }
 
   return (
-    <>
-      {/* Desktop: sidebar */}
-      <nav className="hidden lg:block sticky top-24 max-h-[calc(100vh-8rem)] overflow-y-auto glass-card p-4">
-        <h4 className="mb-3 flex items-center gap-2 text-sm font-semibold text-muted-foreground">
-          <List className="h-4 w-4" />
-          {t('table_of_contents')}
-        </h4>
-        <ul className="space-y-1 border-l border-border">
-          {headings.map((heading) => (
-            <li key={heading.id}>
-              <a
-                href={`#${heading.id}`}
-                className={cn(
-                  'block border-l-2 py-1 text-sm transition-colors',
-                  heading.level === 2 ? 'pl-4' : 'pl-6',
-                  activeId === heading.id
-                    ? 'border-brand-cyan text-brand-cyan font-medium'
-                    : 'border-transparent text-muted-foreground hover:text-foreground hover:border-muted-foreground'
-                )}
-              >
-                {heading.text}
-              </a>
-            </li>
-          ))}
-        </ul>
-      </nav>
-
-      {/* Mobile: collapsible */}
-      <div className="lg:hidden glass-card p-3">
-        <button
-          onClick={() => setIsOpen(!isOpen)}
-          className="flex w-full items-center justify-between text-sm font-semibold"
-        >
-          <span className="flex items-center gap-2">
-            <List className="h-4 w-4" />
-            {t('table_of_contents')}
-          </span>
-          {isOpen ? (
-            <ChevronUp className="h-4 w-4" />
-          ) : (
-            <ChevronDown className="h-4 w-4" />
-          )}
-        </button>
-        {isOpen && (
-          <ul className="mt-3 space-y-1 border-l border-border">
-            {headings.map((heading) => (
-              <li key={heading.id}>
-                <a
-                  href={`#${heading.id}`}
-                  onClick={() => setIsOpen(false)}
-                  className={cn(
-                    'block border-l-2 py-1 text-sm transition-colors',
-                    heading.level === 2 ? 'pl-4' : 'pl-6',
-                    'border-transparent text-muted-foreground hover:text-foreground hover:border-muted-foreground'
-                  )}
-                >
-                  {heading.text}
-                </a>
-              </li>
-            ))}
-          </ul>
-        )}
-      </div>
-    </>
+    <nav className="sticky top-24 max-h-[calc(100vh-8rem)] overflow-y-auto rounded-2xl border border-border/60 bg-background/80 p-5 backdrop-blur">
+      <h4 className="mb-4 flex items-center gap-2 text-sm font-semibold text-muted-foreground">
+        <List className="h-4 w-4" />
+        {t('table_of_contents')}
+      </h4>
+      <ul className="space-y-1 border-l border-border/70">
+        {headings.map((heading) => (
+          <li key={heading.id}>
+            <a
+              href={`#${heading.id}`}
+              className={cn(
+                'block border-l-2 py-1.5 pr-2 text-sm transition-colors',
+                heading.level === 2 ? 'pl-4' : 'pl-7 text-[13px]',
+                activeId === heading.id
+                  ? 'border-brand-cyan text-brand-cyan font-medium'
+                  : 'border-transparent text-muted-foreground hover:border-foreground/30 hover:text-foreground'
+              )}
+            >
+              {heading.text}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
   );
 }

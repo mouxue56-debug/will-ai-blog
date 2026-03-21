@@ -150,6 +150,7 @@ export default async function LocaleLayout({
               attribute="class"
               defaultTheme="dark"
               enableSystem
+              storageKey="theme"
             >
               <NextIntlClientProvider messages={messages}>
                 <Header />

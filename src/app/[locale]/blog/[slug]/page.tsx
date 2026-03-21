@@ -16,6 +16,34 @@ type Props = {
   params: Promise<{ locale: string; slug: string }>;
 };
 
+function slugifyHeading(text: string) {
+  return text
+    .toLowerCase()
+    .replace(/[^\w\u4e00-\u9fff\u3040-\u30ff]+/g, '-')
+    .replace(/^-|-$/g, '');
+}
+
+function extractHeadings(content: string) {
+  const headingRegex = /^(#{2,3})\s+(.+)$/gm;
+  const headings: Array<{ id: string; text: string; level: 2 | 3 }> = [];
+  let match: RegExpExecArray | null;
+
+  while ((match = headingRegex.exec(content)) !== null) {
+    const level = match[1].length;
+    const text = match[2].trim();
+
+    if (level === 2 || level === 3) {
+      headings.push({
+        id: slugifyHeading(text),
+        text,
+        level,
+      });
+    }
+  }
+
+  return headings;
+}
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale, slug } = await params;
   const post = getPostBySlug(slug);
@@ -71,6 +99,7 @@ export default async function BlogPostPage({ params }: Props) {
 
   const { prev, next } = getAdjacentPosts(slug);
   const comments = getSampleComments();
+  const headings = extractHeadings(post.content);
   const lang = (locale === 'zh' || locale === 'ja' || locale === 'en') ? locale : 'zh';
   const titleZh = post.title.zh || post.title[lang] || slug;
   const titleJa = post.title.ja || titleZh;
@@ -120,6 +149,7 @@ export default async function BlogPostPage({ params }: Props) {
         nextPost={next}
         comments={comments}
         postSlug={slug}
+        headings={headings}
       />
     </>
   );
