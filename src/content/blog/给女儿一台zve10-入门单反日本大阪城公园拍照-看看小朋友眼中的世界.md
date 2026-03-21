@@ -1,7 +1,17 @@
 ---
 
 title: "给女儿一台zve10，入门单反日本大阪城公园拍照，看看小朋友眼中的世界"
-title_ja: "给女儿一台zve10，入门单反日本大阪城公园拍照，看看小朋友眼中的世界 [JA]"
+title_ja: "娘にZV-E10を渡して、大阪城公園でデビュー！子供の目に映る世界を覗いてみた
+
+---
+
+または、より親しみやすいブログ調に：
+
+娘にZV-E10デビュー！大阪城公園で"子供目線"の写真を撮らせてみた結果
+
+---
+
+もう一つのバリエーション（カメラ初心者"
 title_en: "Gifting My Daughter a ZV-E10: A Beginner's Photo Walk Through Osaka Castle Park, Seen Through a Child's Lens"
 date: "2026-03-21"
 locale: "zh"
@@ -11,7 +21,7 @@ excerpt: ""
 source: "bilibili"
 bvid: BV1PJ4m1v7uC
 
-------
+---------
 
 
 # 给女儿一台zve10，入门单反日本大阪城公园拍照，看看小朋友眼中的世界
