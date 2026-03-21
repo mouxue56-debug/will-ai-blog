@@ -97,14 +97,26 @@ export function getAllPosts(): BlogPost[] {
 
     return {
       slug: (data.slug as string) || filename.replace(/\.md$/, ''),
-      title: (data.title as Record<string, string>) || { zh: '', ja: '', en: '' },
+      // Handle both string titles and {zh, ja, en} object titles
+      title: (() => {
+        const t = data.title as string | Record<string, string>;
+        if (!t) return { zh: '', ja: '', en: '' };
+        if (typeof t === 'string') return { zh: t, ja: t, en: t };
+        return t;
+      })(),
       category: (data.category as BlogCategory) || 'ai',
       date: (data.date as string) || '',
       updated: (data.updated as string) || '',
       author: (data.author as string) || 'Will',
       locale: (data.locale as string) || 'zh',
       coverImage: (data.coverImage as string) || '',
-      excerpt: (data.excerpt as Record<string, string>) || { zh: '', ja: '', en: '' },
+      // Handle both string excerpts and {zh, ja, en} object excerpts
+      excerpt: (() => {
+        const e = data.excerpt as string | Record<string, string>;
+        if (!e) return { zh: '', ja: '', en: '' };
+        if (typeof e === 'string') return { zh: e, ja: e, en: e };
+        return e;
+      })(),
       tags: typeof data.tags === 'string'
         ? (data.tags as string).split(',').map(tag => tag.trim()).filter(Boolean)
         : Array.isArray(data.tags)
