@@ -220,7 +220,7 @@ export async function POST(request: NextRequest) {
     // Guest rate limiting
     if (commentAuthorType === 'guest') {
       const ip = getClientIp(request);
-      const { allowed, remaining } = await checkRateLimit(ip);
+      const { allowed } = await checkRateLimit(ip);
       if (!allowed) {
         return NextResponse.json(
           {

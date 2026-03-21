@@ -7,7 +7,6 @@ import { Link } from '@/i18n/navigation';
 import {
   Home,
   BookOpen,
-  Newspaper,
   Clock,
   MoreHorizontal,
   Briefcase,

@@ -7,19 +7,10 @@ import { cn } from '@/lib/utils';
 import type { BlogPost } from '@/lib/blog-types';
 import { Link } from '@/i18n/navigation';
 
-interface SearchResult {
-  id: string;
-  title: string;
-  excerpt: string;
-  url: string;
-  date?: string;
-}
-
 export function BlogSearch({ posts }: { posts: BlogPost[] }) {
   const locale = useLocale() as 'zh' | 'ja' | 'en';
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<BlogPost[]>([]);
-  const [isSearching, setIsSearching] = useState(false);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const search = useCallback((q: string) => {

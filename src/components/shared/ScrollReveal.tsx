@@ -7,24 +7,24 @@ type RevealDirection = 'fadeUp' | 'fadeIn' | 'fadeLeft' | 'fadeRight' | 'scaleIn
 
 const directionVariants: Record<RevealDirection, Variants> = {
   fadeUp: {
-    hidden: { opacity: 0 },
-    visible: { opacity: 1 },
+    hidden: { opacity: 0, y: 24 },
+    visible: { opacity: 1, y: 0 },
   },
   fadeIn: {
     hidden: { opacity: 0 },
     visible: { opacity: 1 },
   },
   fadeLeft: {
-    hidden: { opacity: 0 },
-    visible: { opacity: 1 },
+    hidden: { opacity: 0, x: -24 },
+    visible: { opacity: 1, x: 0 },
   },
   fadeRight: {
-    hidden: { opacity: 0 },
-    visible: { opacity: 1 },
+    hidden: { opacity: 0, x: 24 },
+    visible: { opacity: 1, x: 0 },
   },
   scaleIn: {
-    hidden: { opacity: 0 },
-    visible: { opacity: 1 },
+    hidden: { opacity: 0, scale: 0.95 },
+    visible: { opacity: 1, scale: 1 },
   },
 };
 
