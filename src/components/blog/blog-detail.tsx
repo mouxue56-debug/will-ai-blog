@@ -29,6 +29,18 @@ interface BlogDetailProps {
   postSlug?: string;
 }
 
+function formatReadingTime(minutes: number, locale: string): string {
+  if (locale === 'zh') {
+    return `约 ${minutes} 分钟阅读`;
+  }
+
+  if (locale === 'ja') {
+    return `約 ${minutes} 分で読めます`;
+  }
+
+  return `About ${minutes} min read`;
+}
+
 export function BlogDetail({ post, prevPost, nextPost, comments, postSlug }: BlogDetailProps) {
   const locale = useLocale();
   const t = useTranslations('blog');
@@ -39,7 +51,6 @@ export function BlogDetail({ post, prevPost, nextPost, comments, postSlug }: Blo
   return (
     <PageTransition>
       <div className="mx-auto max-w-5xl px-4 sm:px-6 py-12">
-        {/* Back to blog */}
         <Link
           href="/blog"
           className="mb-6 inline-flex items-center gap-1 text-sm text-muted-foreground transition-colors hover:text-foreground"
@@ -49,16 +60,13 @@ export function BlogDetail({ post, prevPost, nextPost, comments, postSlug }: Blo
         </Link>
 
         <div className="lg:grid lg:grid-cols-[1fr_220px] lg:gap-8">
-          {/* Main Content */}
           <article className="min-w-0">
-            {/* Article Header */}
             <motion.header
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4 }}
               className="mb-8 space-y-4"
             >
-              {/* Category Badge */}
               <span
                 className={cn(
                   'inline-flex rounded-full px-3 py-1 text-xs font-medium',
@@ -68,12 +76,10 @@ export function BlogDetail({ post, prevPost, nextPost, comments, postSlug }: Blo
                 {t(CATEGORY_KEYS[post.category])}
               </span>
 
-              {/* Title */}
               <h1 className="text-3xl font-bold leading-tight sm:text-4xl">
                 {title}
               </h1>
 
-              {/* Meta */}
               <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
                 <span className="flex items-center gap-1.5">
                   <User className="h-4 w-4" />
@@ -90,29 +96,25 @@ export function BlogDetail({ post, prevPost, nextPost, comments, postSlug }: Blo
                 </span>
                 <span className="flex items-center gap-1.5">
                   <Clock className="h-4 w-4" />
-                  {post.readingTime} {t('min_read')}
+                  {formatReadingTime(post.readingTime, locale)}
                 </span>
               </div>
 
               <hr className="border-border" />
             </motion.header>
 
-            {/* Mobile TOC */}
             <div className="mb-8 lg:hidden">
               <TableOfContents content={post.content} />
             </div>
 
-            {/* Article Body */}
             <ScrollReveal direction="fadeUp" delay={0.2} duration={0.6}>
               <div className="glass-card p-6 sm:p-8">
                 <MarkdownRenderer content={post.content} />
               </div>
             </ScrollReveal>
 
-            {/* Separator */}
             <hr className="my-10 border-border" />
 
-            {/* Prev / Next Navigation */}
             <nav className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               {prevPost ? (
                 <Link
@@ -146,13 +148,11 @@ export function BlogDetail({ post, prevPost, nextPost, comments, postSlug }: Blo
               )}
             </nav>
 
-            {/* Comments */}
             <div className="mt-12">
               <CommentSection comments={comments} postSlug={postSlug} />
             </div>
           </article>
 
-          {/* Desktop TOC Sidebar */}
           <aside className="hidden lg:block">
             <TableOfContents content={post.content} />
           </aside>

@@ -7,6 +7,30 @@ export { CATEGORY_COLORS, CATEGORY_KEYS, ALL_CATEGORIES, getSampleComments } fro
 
 const BLOG_DIR = path.join(process.cwd(), 'src/content/blog');
 
+function stripMarkdown(content: string): string {
+  return content
+    .replace(/```[\s\S]*?```/g, ' ')
+    .replace(/`[^`]*`/g, ' ')
+    .replace(/!\[[^\]]*\]\([^)]+\)/g, ' ')
+    .replace(/\[[^\]]*\]\([^)]+\)/g, ' ')
+    .replace(/^#{1,6}\s+/gm, '')
+    .replace(/[*_~>-]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+export function calculateReadingTime(content: string): number {
+  const plainText = stripMarkdown(content);
+  const cjkChars = (plainText.match(/[\u3400-\u9FFF\uF900-\uFAFF]/g) || []).length;
+  const englishWords = (plainText.match(/\b[a-zA-Z][a-zA-Z'-]*\b/g) || []).length;
+
+  if (cjkChars > englishWords) {
+    return Math.max(1, Math.ceil(cjkChars / 400));
+  }
+
+  return Math.max(1, Math.ceil(englishWords / 200));
+}
+
 function parseFrontmatter(fileContent: string): { data: Record<string, unknown>; content: string } {
   const frontmatterRegex = /^---\s*\n([\s\S]*?)\n---\s*\n([\s\S]*)$/;
   const match = fileContent.match(frontmatterRegex);
@@ -76,11 +100,17 @@ export function getAllPosts(): BlogPost[] {
       title: (data.title as Record<string, string>) || { zh: '', ja: '', en: '' },
       category: (data.category as BlogCategory) || 'ai',
       date: (data.date as string) || '',
+      updated: (data.updated as string) || '',
       author: (data.author as string) || 'Will',
       locale: (data.locale as string) || 'zh',
       coverImage: (data.coverImage as string) || '',
       excerpt: (data.excerpt as Record<string, string>) || { zh: '', ja: '', en: '' },
-      readingTime: Number(data.readingTime) || 5,
+      tags: typeof data.tags === 'string'
+        ? (data.tags as string).split(',').map(tag => tag.trim()).filter(Boolean)
+        : Array.isArray(data.tags)
+          ? (data.tags as string[]).map(tag => tag.trim()).filter(Boolean)
+          : [],
+      readingTime: calculateReadingTime(content),
       content,
     } as BlogPost;
   });

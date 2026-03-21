@@ -4,6 +4,8 @@ import { setRequestLocale } from 'next-intl/server';
 import { getAllPosts, getPostBySlug, getAdjacentPosts, getSampleComments } from '@/lib/blog';
 import { BlogDetail } from '@/components/blog/blog-detail';
 
+const SITE_URL = 'https://aiblog.fuluckai.com';
+
 export function generateStaticParams() {
   const posts = getAllPosts();
   const locales = ['zh', 'ja', 'en'];
@@ -23,8 +25,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 
   const lang = (locale === 'zh' || locale === 'ja' || locale === 'en') ? locale : 'zh';
-  const title = post.title[lang] || post.title['zh'] || post.slug;
-  const description = post.excerpt[lang] || post.excerpt['zh'] || '';
+  const title = post.title[lang] || post.title.zh || post.slug;
+  const description = post.excerpt[lang] || post.excerpt.zh || '';
+  const ogImageUrl = `${SITE_URL}/api/og?title=${encodeURIComponent(title)}&lang=${encodeURIComponent(lang)}`;
 
   return {
     title,
@@ -35,12 +38,18 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       type: 'article',
       publishedTime: post.date,
       authors: [post.author],
-      ...(post.coverImage ? { images: [{ url: post.coverImage }] } : {}),
+      images: [{
+        url: ogImageUrl,
+        width: 1200,
+        height: 630,
+        alt: `${title} OG image`,
+      }],
     },
     twitter: {
       card: 'summary_large_image',
       title,
       description,
+      images: [ogImageUrl],
     },
     alternates: {
       languages: {
@@ -63,29 +72,40 @@ export default async function BlogPostPage({ params }: Props) {
   const { prev, next } = getAdjacentPosts(slug);
   const comments = getSampleComments();
   const lang = (locale === 'zh' || locale === 'ja' || locale === 'en') ? locale : 'zh';
+  const titleZh = post.title.zh || post.title[lang] || slug;
+  const titleJa = post.title.ja || titleZh;
+  const titleEn = post.title.en || titleZh;
+  const description = post.excerpt[lang] || post.excerpt.zh || titleZh;
+  const ogImageUrl = `${SITE_URL}/api/og?title=${encodeURIComponent(post.title[lang] || post.title.zh || slug)}&lang=${encodeURIComponent(lang)}`;
 
   const jsonLd = {
     '@context': 'https://schema.org',
-    '@type': 'BlogPosting',
-    headline: post.title[lang] || post.title['zh'],
-    description: post.excerpt[lang] || post.excerpt['zh'],
+    '@type': 'Article',
+    headline: titleZh,
+    alternativeHeadline: {
+      '@type': 'ItemList',
+      itemListElement: [
+        { '@type': 'ListItem', name: titleJa },
+        { '@type': 'ListItem', name: titleEn },
+      ],
+    },
     datePublished: post.date,
+    dateModified: post.updated || post.date,
     author: {
       '@type': 'Person',
-      name: post.author,
-      url: 'https://aiblog.fuluckai.com/about',
+      name: 'Will',
+      url: `${SITE_URL}/about`,
     },
     publisher: {
       '@type': 'Organization',
       name: "Will's AI Blog",
-      url: 'https://aiblog.fuluckai.com',
+      url: SITE_URL,
     },
-    mainEntityOfPage: {
-      '@type': 'WebPage',
-      '@id': `https://aiblog.fuluckai.com/${locale}/blog/${slug}`,
-    },
-    inLanguage: locale === 'ja' ? 'ja' : locale === 'en' ? 'en' : 'zh-CN',
-    ...(post.coverImage ? { image: post.coverImage } : {}),
+    description,
+    inLanguage: ['zh', 'ja', 'en'],
+    url: `${SITE_URL}/${lang}/blog/${slug}`,
+    keywords: post.tags?.length ? post.tags.join(', ') : undefined,
+    image: ogImageUrl,
   };
 
   return (
