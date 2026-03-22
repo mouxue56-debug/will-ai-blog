@@ -110,7 +110,7 @@ export function BlogDetail({ post, prevPost, nextPost, comments, postSlug, headi
                 {title}
               </h1>
 
-              <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
+              <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground border-t border-border/50 pt-4 mt-4">
                 <span className="flex items-center gap-1.5">
                   <User className="h-4 w-4" />
                   {post.author}
@@ -129,12 +129,10 @@ export function BlogDetail({ post, prevPost, nextPost, comments, postSlug, headi
                   {formatReadingTime(post.readingTime, locale)}
                 </span>
               </div>
-
-              <hr className="border-border" />
             </motion.header>
 
             <ScrollReveal direction="fadeUp" delay={0.2} duration={0.6}>
-              <div className="glass-card p-6 sm:p-8">
+              <div className="glass-card p-8 sm:p-10">
                 <MarkdownRenderer content={post.content} />
               </div>
             </ScrollReveal>
@@ -179,8 +177,10 @@ export function BlogDetail({ post, prevPost, nextPost, comments, postSlug, headi
             </div>
           </article>
 
-          <aside className="hidden xl:block">
-            <TableOfContents headings={headings} />
+          <aside className="hidden xl:block xl:sticky xl:top-24">
+            <div className="space-y-4">
+              <TableOfContents headings={headings} />
+            </div>
           </aside>
         </div>
 
