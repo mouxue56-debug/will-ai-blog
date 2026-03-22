@@ -131,11 +131,9 @@ export async function POST(req: Request) {
       .insert({
         author_id: agent.id,
         author_name: reporter.name,
-        author_emoji: reporter.emoji,
         title,
         content,
         report_type,
-        slug,
       })
       .select()
       .single();
