@@ -1,0 +1,241 @@
+{
+  "version": 1,
+  "round": 1,
+  "checkpoint": {
+    "last_completed_task": "task-005",
+    "timestamp": "2026-03-22T09:46:00+09:00"
+  },
+  "task_type": "code",
+  "config": {
+    "max_workers": 3,
+    "worker_timeout_seconds": 900,
+    "max_rounds": 5,
+    "max_task_retries": 3
+  },
+  "tasks": [
+    {
+      "id": "task-001",
+      "subject": "时间线数据接入",
+      "description": "调试timeline页面，让它读取timeline-data.ts的真实数据并显示。当前问题：timeline组件还在用旧data，需要更新import和验证数据流。",
+      "status": "completed",
+      "priority": 1,
+      "estimated_complexity": "low",
+      "model": "kimi/kimi-k2.5",
+      "owner": null,
+      "blocked_by": [],
+      "blocks": [],
+      "failure_count": 0,
+      "iteration": 0,
+      "timeout_seconds": 600,
+      "metadata": {
+        "module": "timeline-content",
+        "files": [
+          "src/lib/timeline-data.ts",
+          "src/components/timeline/TimelineYearIndexClient.tsx",
+          "src/app/[locale]/timeline/page.tsx"
+        ],
+        "validation_criteria": ["timeline页面显示真实事件", "按年份分组正确"],
+        "acceptance_tests": ["npm run build", "curl https://aiblog.fuluckai.com/zh/timeline"]
+      }
+    },
+    {
+      "id": "task-002",
+      "subject": "内容来源标记",
+      "description": "为每篇文章添加contentSource标记：date>=2026-03-15为original，否则为ai-organized。在BlogPost接口和frontmatter解析中添加这个字段，在博客详情页显示徽章。",
+      "status": "completed",
+      "priority": 2,
+      "estimated_complexity": "low",
+      "model": "kimi/kimi-k2.5",
+      "owner": null,
+      "blocked_by": [],
+      "blocks": [],
+      "failure_count": 0,
+      "iteration": 0,
+      "timeout_seconds": 600,
+      "metadata": {
+        "module": "content-marking",
+        "files": [
+          "src/lib/blog-types.ts",
+          "src/lib/blog.ts",
+          "src/components/blog/blog-detail.tsx"
+        ],
+        "validation_criteria": ["文章显示AI整理/原创徽章"],
+        "acceptance_tests": ["npm run build"]
+      }
+    },
+    {
+      "id": "task-003",
+      "subject": "日期显示修复",
+      "description": "修复所有文章的date显示问题。检查哪些文章frontmatter缺少date字段，根据内容或source判断添加正确日期。",
+      "status": "completed",
+      "priority": 2,
+      "estimated_complexity": "low",
+      "model": "kimi/kimi-k2.5",
+      "owner": null,
+      "blocked_by": [],
+      "blocks": [],
+      "failure_count": 0,
+      "iteration": 0,
+      "timeout_seconds": 600,
+      "metadata": {
+        "module": "bug-fixes",
+        "files": [
+          "src/content/blog/*.md",
+          "src/lib/blog.ts"
+        ],
+        "validation_criteria": ["所有文章显示正确日期，无Invalid Date"],
+        "acceptance_tests": ["npm run build"]
+      }
+    },
+    {
+      "id": "task-004",
+      "subject": "Hero区域炫酷动效",
+      "description": "为Hero区域添加华丽动效：粒子效果、光束穿梭、渐变流动。参考之前成功的动效组件，不破坏现有布局。",
+      "status": "pending",
+      "priority": 3,
+      "estimated_complexity": "high",
+      "model": "sonnet",
+      "owner": null,
+      "blocked_by": [],
+      "blocks": [],
+      "failure_count": 0,
+      "iteration": 0,
+      "timeout_seconds": 900,
+      "metadata": {
+        "module": "visual-enhancement",
+        "files": [
+          "src/components/home/hero-section.tsx"
+        ],
+        "validation_criteria": ["Hero区域动效华丽但不影响性能"],
+        "acceptance_tests": ["npm run build", "页面加载<3秒"]
+      }
+    },
+    {
+      "id": "task-005",
+      "subject": "博客卡片入场动画",
+      "description": "为博客列表的卡片添加入场动画：错开fade-up、BorderBeam悬停效果、封面图标悬停缩放。",
+      "status": "completed",
+      "priority": 3,
+      "estimated_complexity": "mid",
+      "model": "sonnet",
+      "owner": null,
+      "blocked_by": [],
+      "blocks": [],
+      "failure_count": 0,
+      "iteration": 0,
+      "timeout_seconds": 900,
+      "metadata": {
+        "module": "visual-enhancement",
+        "files": [
+          "src/components/blog/blog-card.tsx",
+          "src/components/blog/blog-list.tsx"
+        ],
+        "validation_criteria": ["卡片动画流畅"],
+        "acceptance_tests": ["npm run build"]
+      }
+    },
+    {
+      "id": "task-006",
+      "subject": "页面切换过渡效果",
+      "description": "添加页面切换过渡动画：缩放+淡入淡出、模糊渐显。",
+      "status": "completed",
+      "priority": 3,
+      "estimated_complexity": "mid",
+      "model": "sonnet",
+      "owner": null,
+      "blocked_by": [],
+      "blocks": [],
+      "failure_count": 0,
+      "iteration": 0,
+      "timeout_seconds": 900,
+      "metadata": {
+        "module": "visual-enhancement",
+        "files": [
+          "src/components/shared/PageTransition.tsx"
+        ],
+        "validation_criteria": ["页面切换动画平滑"],
+        "acceptance_tests": ["npm run build"]
+      }
+    },
+    {
+      "id": "task-007",
+      "subject": "SEO结构化数据完善",
+      "description": "完善Article JSON-LD结构化数据：完整的Author/Publisher信息、Image对象、符合Google Article标准。",
+      "status": "pending",
+      "priority": 4,
+      "estimated_complexity": "mid",
+      "model": "kimi/kimi-k2.5",
+      "owner": null,
+      "blocked_by": [],
+      "blocks": [],
+      "failure_count": 0,
+      "iteration": 0,
+      "timeout_seconds": 600,
+      "metadata": {
+        "module": "seo-optimization",
+        "files": [
+          "src/app/[locale]/blog/[slug]/page.tsx"
+        ],
+        "validation_criteria": ["结构化数据通过Google检测"],
+        "acceptance_tests": ["npm run build"]
+      }
+    },
+    {
+      "id": "task-008",
+      "subject": "Geo标签和hreflang",
+      "description": "添加geo标签(geo:region/geo:location)优化大阪本地搜索，验证并修复所有页面的hreflang标签。",
+      "status": "pending",
+      "priority": 4,
+      "estimated_complexity": "low",
+      "model": "kimi/kimi-k2.5",
+      "owner": null,
+      "blocked_by": [],
+      "blocks": [],
+      "failure_count": 0,
+      "iteration": 0,
+      "timeout_seconds": 600,
+      "metadata": {
+        "module": "seo-optimization",
+        "files": [
+          "src/app/[locale]/layout.tsx"
+        ],
+        "validation_criteria": ["geo标签存在", "hreflang正确"],
+        "acceptance_tests": ["npm run build"]
+      }
+    },
+    {
+      "id": "task-009",
+      "subject": "案例页面特效修复",
+      "description": "修复案例页面的特效抖动问题，优化动画性能。",
+      "status": "pending",
+      "priority": 4,
+      "estimated_complexity": "mid",
+      "model": "sonnet",
+      "owner": null,
+      "blocked_by": [],
+      "blocks": [],
+      "failure_count": 0,
+      "iteration": 0,
+      "timeout_seconds": 900,
+      "metadata": {
+        "module": "visual-enhancement",
+        "files": [
+          "src/app/[locale]/cases/page.tsx",
+          "src/components/cases/*.tsx"
+        ],
+        "validation_criteria": ["案例页面特效正常不抖动"],
+        "acceptance_tests": ["npm run build"]
+      }
+    }
+  ],
+  "completed": ["task-001", "task-002", "task-003", "task-005", "task-006"],
+  "in_progress": [],
+  "pending_tasks": ["task-004", "task-007", "task-008", "task-009"],
+  "failed": [],
+  "blocked": [],
+  "stop_at": "2026-03-22T12:00:00+09:00",
+  "max_rounds": 5,
+  "current_round": 1,
+  "status": "running",
+  "created_at": "2026-03-22T09:10:00+09:00"
+}

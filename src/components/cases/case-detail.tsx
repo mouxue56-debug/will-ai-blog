@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence, useInView } from 'motion/react';
+import { motion, AnimatePresence, useInView, useReducedMotion } from 'motion/react';
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 import type { CaseStudy } from '@/data/cases';
@@ -61,6 +61,7 @@ function ExpandableSection({
   defaultOpen?: boolean;
 }) {
   const [isOpen, setIsOpen] = useState(defaultOpen);
+  const prefersReducedMotion = useReducedMotion();
 
   if (defaultOpen) {
     return (
@@ -81,7 +82,7 @@ function ExpandableSection({
       >
         <motion.svg
           animate={{ rotate: isOpen ? 90 : 0 }}
-          transition={{ duration: 0.2 }}
+          transition={{ duration: prefersReducedMotion ? 0 : 0.2 }}
           className="h-4 w-4"
           fill="none"
           viewBox="0 0 24 24"
@@ -97,14 +98,18 @@ function ExpandableSection({
         {title}
       </button>
 
-      <AnimatePresence>
+      <AnimatePresence initial={false}>
         {isOpen && (
           <motion.div
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.3, ease: 'easeInOut' }}
+            transition={{ 
+              duration: prefersReducedMotion ? 0 : 0.3, 
+              ease: [0.25, 0.1, 0.25, 1] 
+            }}
             className="overflow-hidden"
+            style={{ willChange: 'height, opacity' }}
           >
             <div className="pt-2 pb-1">
               <p className="text-muted-foreground leading-relaxed whitespace-pre-line">
@@ -121,22 +126,45 @@ function ExpandableSection({
 function MetricsGrid({ metrics, locale }: { metrics: CaseStudy['metrics']; locale: Locale }) {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: '-50px' });
+  const prefersReducedMotion = useReducedMotion();
+
+  if (prefersReducedMotion) {
+    return (
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-12">
+        {metrics.map((m, i) => (
+          <div
+            key={i}
+            className="glass-card p-4 text-center space-y-1"
+          >
+            <div className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-brand-cyan to-brand-mint bg-clip-text text-transparent">
+              {m.value}
+            </div>
+            <div className="text-xs sm:text-sm text-muted-foreground">
+              {m.label[locale]}
+            </div>
+          </div>
+        ))}
+      </div>
+    );
+  }
 
   return (
     <motion.div
       ref={ref}
       initial={{ opacity: 0, y: 16 }}
       animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.4, delay: 0.15 }}
+      transition={{ duration: 0.4, delay: 0.15, ease: [0.25, 0.1, 0.25, 1] }}
       className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-12"
+      style={{ willChange: 'transform, opacity' }}
     >
       {metrics.map((m, i) => (
         <motion.div
           key={i}
           initial={{ opacity: 0, scale: 0.9 }}
           animate={inView ? { opacity: 1, scale: 1 } : {}}
-          transition={{ duration: 0.4, delay: 0.2 + i * 0.1 }}
+          transition={{ duration: 0.4, delay: 0.2 + i * 0.1, ease: [0.25, 0.1, 0.25, 1] }}
           className="glass-card p-4 text-center space-y-1"
+          style={{ willChange: 'transform, opacity' }}
         >
           <div className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-brand-cyan to-brand-mint bg-clip-text text-transparent">
             <CountUpValue value={m.value} inView={inView} />
@@ -159,6 +187,7 @@ export function CaseDetail({
 }) {
   const t = useTranslations('cases');
   const loc = locale as Locale;
+  const prefersReducedMotion = useReducedMotion();
 
   return (
     <div className="mx-auto max-w-4xl px-4 sm:px-6 pb-16">
@@ -171,10 +200,11 @@ export function CaseDetail({
 
         <div className="relative px-6 sm:px-10 py-14 sm:py-20 text-white">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
+            transition={{ duration: prefersReducedMotion ? 0 : 0.5, ease: [0.25, 0.1, 0.25, 1] }}
             className="space-y-4"
+            style={{ willChange: 'transform, opacity' }}
           >
             <span className="text-6xl sm:text-7xl">{caseStudy.icon}</span>
             <h1 className="text-3xl sm:text-4xl font-bold tracking-tight">
@@ -204,10 +234,11 @@ export function CaseDetail({
 
       {/* Content layers */}
       <motion.div
-        initial={{ opacity: 0, y: 16 }}
+        initial={prefersReducedMotion ? {} : { opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4, delay: 0.25 }}
+        transition={{ duration: prefersReducedMotion ? 0 : 0.4, delay: 0.25, ease: [0.25, 0.1, 0.25, 1] }}
         className="space-y-8"
+        style={{ willChange: 'transform, opacity' }}
       >
         {/* Story layer - always open */}
         <div className="glass-card p-6 sm:p-8 space-y-6">
@@ -235,9 +266,9 @@ export function CaseDetail({
 
       {/* Back button */}
       <motion.div
-        initial={{ opacity: 0 }}
+        initial={prefersReducedMotion ? {} : { opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 0.4 }}
+        transition={{ delay: prefersReducedMotion ? 0 : 0.4 }}
         className="mt-10"
       >
         <Link

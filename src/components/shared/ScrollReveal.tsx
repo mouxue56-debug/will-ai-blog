@@ -1,7 +1,7 @@
 'use client';
 
-import { motion, type Variants } from 'motion/react';
-import { Children, type ReactNode } from 'react';
+import { motion, type Variants, useReducedMotion } from 'motion/react';
+import { Children, type ReactNode, memo } from 'react';
 
 type RevealDirection = 'fadeUp' | 'fadeIn' | 'fadeLeft' | 'fadeRight' | 'scaleIn';
 
@@ -40,6 +40,27 @@ interface ScrollRevealProps {
   as?: 'div' | 'section' | 'article' | 'ul';
 }
 
+// Memoized child wrapper to prevent unnecessary re-renders
+const RevealChild = memo(function RevealChild({
+  child,
+  variants,
+  duration,
+}: {
+  child: ReactNode;
+  variants: Variants;
+  duration: number;
+}) {
+  return (
+    <motion.div
+      variants={variants}
+      transition={{ duration, ease: [0.25, 0.1, 0.25, 1] }}
+      style={{ willChange: 'transform, opacity' }}
+    >
+      {child}
+    </motion.div>
+  );
+});
+
 export function ScrollReveal({
   children,
   direction = 'fadeUp',
@@ -53,6 +74,12 @@ export function ScrollReveal({
 }: ScrollRevealProps) {
   const variants = directionVariants[direction];
   const Tag = motion[as] as typeof motion.div;
+  const prefersReducedMotion = useReducedMotion();
+
+  // If user prefers reduced motion, render without animation
+  if (prefersReducedMotion) {
+    return <div className={className}>{children}</div>;
+  }
 
   if (stagger !== undefined) {
     const childArray = Children.toArray(children);
@@ -60,7 +87,7 @@ export function ScrollReveal({
     return (
       <Tag
         className={className}
-        style={{ willChange: 'opacity' }}
+        style={{ willChange: 'transform, opacity' }}
         initial="hidden"
         whileInView="visible"
         viewport={{ once, margin }}
@@ -75,13 +102,7 @@ export function ScrollReveal({
         }}
       >
         {childArray.map((child, i) => (
-          <motion.div
-            key={i}
-            variants={variants}
-            transition={{ duration, ease: 'easeOut' }}
-          >
-            {child}
-          </motion.div>
+          <RevealChild key={i} child={child} variants={variants} duration={duration} />
         ))}
       </Tag>
     );
@@ -90,12 +111,12 @@ export function ScrollReveal({
   return (
     <Tag
       className={className}
-      style={{ willChange: 'opacity' }}
+      style={{ willChange: 'transform, opacity' }}
       initial="hidden"
       whileInView="visible"
       viewport={{ once, margin }}
       variants={variants}
-      transition={{ duration, delay, ease: 'easeOut' }}
+      transition={{ duration, delay, ease: [0.25, 0.1, 0.25, 1] }}
     >
       {children}
     </Tag>

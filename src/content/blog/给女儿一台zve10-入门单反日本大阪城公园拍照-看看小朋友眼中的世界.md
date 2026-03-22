@@ -1,10 +1,17 @@
 ---
-
 title:
   zh: "给女儿一台zve10，入门单反日本大阪城公园拍照，看看小朋友眼中的世界"
-  ja: "娘にZV-E10を渡して、大阪城公園でデビュー！子供の目に映る世界を覗いてみた
-
-
+  ja: "娘にZV-E10を渡して、大阪城公園でデビュー。子供の目に映る世界を覗いてみた"
+  en: "Gifting My Daughter a ZV-E10: A Beginner's Photo Walk Through Osaka Castle Park"
+date: "2024-02-29"
+category: "life"
+tags: ["bilibili", "自动生成"]
+excerpt:
+  zh: "给女儿买了第一台 Sony ZV-E10，带她去大阪城公园练习拍照。轻便机身、快速对焦和翻转屏都很适合孩子入门摄影。"
+  ja: "娘の初カメラとしてSony ZV-E10を購入し、大阪城公園で撮影デビュー。軽さと扱いやすさで子どもの入門機に向いている。"
+  en: "A first photography outing with my daughter and her new Sony ZV-E10 in Osaka Castle Park."
+source: "bilibili"
+bvid: "BV1zr421n7a4"
 ---
 
 作为一个喜欢摄影的爸爸，我一直希望女儿也能感受到用相机记录生活的乐趣。手机拍照虽然方便，但总觉得少了点什么——那种通过取景框观察世界、调整参数、等待最佳拍摄时机的仪式感，是手机给不了的。今年女儿上小学三年级了，我觉得是时候给她一台属于自己的相机了。经过一番研究，最终选择了Sony的ZV-E10，一个周末带她去大阪城公园，开启了她的摄影初体验。

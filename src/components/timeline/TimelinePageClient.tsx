@@ -2,9 +2,15 @@
 
 import { motion } from 'motion/react';
 import { useTranslations } from 'next-intl';
-import { type TimelineEntry, categoryConfig } from '@/data/timeline';
 import { Link } from '@/i18n/navigation';
-import { aiInstanceColors } from '@/data/news';
+import { type TimelineEvent } from '@/lib/timeline-data';
+
+const categoryConfig: Record<TimelineEvent['category'], { color: string; icon: string }> = {
+  cattery: { color: '#f59e0b', icon: '🐾' },
+  tech: { color: '#22d3ee', icon: '🔧' },
+  ai: { color: '#8b5cf6', icon: '🤖' },
+  life: { color: '#fb7185', icon: '🌸' },
+};
 
 function formatDate(dateStr: string, locale: string) {
   const date = new Date(dateStr);
@@ -14,11 +20,16 @@ function formatDate(dateStr: string, locale: string) {
   }).format(date);
 }
 
+function normalizeTimelineLink(link: string, locale: 'zh' | 'ja' | 'en') {
+  if (!link.startsWith('/')) return link;
+  return link.replace(/^\/(zh|ja|en)(?=\/)/, `/${locale}`);
+}
+
 export function TimelinePageClient({
   events,
   locale,
 }: {
-  events: TimelineEntry[];
+  events: TimelineEvent[];
   locale: 'zh' | 'ja' | 'en';
 }) {
   const t = useTranslations('timeline');
@@ -39,7 +50,7 @@ export function TimelinePageClient({
 
           return (
             <motion.div
-              key={entry.id}
+              key={`${entry.date}-${entry.title.en}`}
               initial={{ opacity: 0, y: 24, x: isLeft ? -20 : 20 }}
               animate={{ opacity: 1, y: 0, x: 0 }}
               transition={{ duration: 0.4, delay: index * 0.05, ease: 'easeOut' }}
@@ -65,12 +76,7 @@ export function TimelinePageClient({
                 ].join(' ')}
               >
                 <div
-                  className={[
-                    'glass-card shadow-sm transition-all duration-200 hover:shadow-md p-4 sm:p-5',
-                    entry.isMilestone ? 'border-l-4' : '',
-                    entry.isMilestone && isLeft ? 'md:border-r-4 md:border-l-0' : '',
-                  ].join(' ')}
-                  style={entry.isMilestone ? { borderColor: category.color } : undefined}
+                  className="glass-card shadow-sm transition-all duration-200 hover:shadow-md p-4 sm:p-5"
                 >
                   <div className="flex flex-wrap items-center gap-2 mb-2">
                     <span
@@ -81,27 +87,10 @@ export function TimelinePageClient({
                       {t(`category.${entry.category}`)}
                     </span>
                     <span className="text-xs text-muted-foreground">{formatDate(entry.date, locale)}</span>
-                    {entry.isMilestone && (
-                      <span className="inline-flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded-full bg-brand-coral/15 text-brand-coral">
-                        ⭐ {t('filter.milestone')}
-                      </span>
-                    )}
                   </div>
 
-                  {entry.aiInstance && (
-                    <div className="flex items-center gap-1.5 mb-2">
-                      <span
-                        className="w-5 h-5 rounded-full flex items-center justify-center text-[10px] text-white font-bold flex-shrink-0"
-                        style={{ backgroundColor: aiInstanceColors[entry.aiInstance] || '#94A3B8' }}
-                      >
-                        {entry.aiInstance.charAt(0)}
-                      </span>
-                      <span className="text-xs text-muted-foreground">{entry.aiInstance}</span>
-                    </div>
-                  )}
-
                   <h3 className="font-semibold text-base sm:text-lg mb-1.5">{entry.title[locale]}</h3>
-                  <p className="text-sm text-muted-foreground leading-relaxed">{entry.summary[locale]}</p>
+                  <p className="text-sm text-muted-foreground leading-relaxed">{entry.description[locale]}</p>
 
                   {entry.tags && entry.tags.length > 0 && (
                     <div className="mt-3 flex flex-wrap gap-2">
@@ -116,22 +105,24 @@ export function TimelinePageClient({
                     </div>
                   )}
 
-                  {(entry.blogSlug || entry.newsId || entry.link) && (
+                  {entry.link && (
                     <div className="mt-3 flex flex-wrap gap-3 text-sm">
-                      {entry.blogSlug && (
-                        <Link href={`/blog/${entry.blogSlug}` as `/${string}`} className="text-brand-mint hover:underline">
+                      {entry.link.startsWith('/') ? (
+                        <Link
+                          href={normalizeTimelineLink(entry.link, locale) as `/${string}`}
+                          className="text-brand-mint hover:underline"
+                        >
                           {t('readMore')} →
                         </Link>
-                      )}
-                      {entry.newsId && (
-                        <Link href={`/news/${entry.newsId}` as `/${string}`} className="text-brand-mint hover:underline">
-                          {t('viewNews')} →
-                        </Link>
-                      )}
-                      {entry.link && !entry.blogSlug && !entry.newsId && (
-                        <Link href={entry.link as `/${string}`} className="text-brand-mint hover:underline">
+                      ) : (
+                        <a
+                          href={entry.link}
+                          className="text-brand-mint hover:underline"
+                          target="_blank"
+                          rel="noreferrer"
+                        >
                           {t('readMore')} →
-                        </Link>
+                        </a>
                       )}
                     </div>
                   )}

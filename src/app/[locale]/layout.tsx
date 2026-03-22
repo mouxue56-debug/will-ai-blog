@@ -12,6 +12,7 @@ import { MobileNav } from '@/components/layout/mobile-nav';
 import { ScrollToTop } from '@/components/shared/ScrollToTop';
 import { AIChatWidget } from '@/components/shared/AIChatWidget';
 import { Analytics } from '@/components/shared/analytics';
+import { PageTransition } from '@/components/shared/PageTransition';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -79,6 +80,12 @@ export async function generateMetadata({
         en: 'https://aiblog.fuluckai.com/en',
         'x-default': 'https://aiblog.fuluckai.com/zh',
       },
+    },
+    other: {
+      'geo.region': 'JP-27',
+      'geo.placename': 'Osaka',
+      'geo.position': '34.6937;135.5023',
+      'ICBM': '34.6937, 135.5023',
     },
   };
 }
@@ -156,7 +163,9 @@ export default async function LocaleLayout({
               <NextIntlClientProvider messages={messages}>
                 <Header />
                 <main className="flex-1 pt-8 md:pt-0 pb-16 md:pb-0">
-                  {children}
+                  <PageTransition>
+                    {children}
+                  </PageTransition>
                 </main>
                 <Footer />
                 <MobileNav />

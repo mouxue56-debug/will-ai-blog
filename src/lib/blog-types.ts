@@ -1,9 +1,11 @@
 export type BlogCategory = 'ai' | 'tech' | 'life' | 'cats' | 'business';
+export type BlogContentSource = 'original' | 'ai-organized';
 
 export interface BlogPost {
   slug: string;
   title: Record<string, string>;
   category: BlogCategory;
+  contentSource: BlogContentSource;
   date: string;
   updated?: string;
   author: string;

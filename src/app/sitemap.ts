@@ -2,7 +2,7 @@ import type { MetadataRoute } from 'next';
 import { getAllPosts } from '@/lib/blog';
 import { cases } from '@/data/cases';
 import { debates } from '@/data/debates';
-import { timelineData } from '@/data/timeline';
+import { timelineEvents } from '@/lib/timeline-data';
 import { buildAbsoluteUrl, buildAlternates, locales } from '@/lib/seo';
 
 function safeDate(value?: string) {
@@ -77,9 +77,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     }
   }
 
-  const timelineYears = [...new Set(timelineData.map((entry) => entry.date.split('-')[0]))];
+  const timelineYears = [...new Set(timelineEvents.map((entry) => entry.date.split('-')[0]))];
   for (const year of timelineYears) {
-    const yearEntries = timelineData.filter((entry) => entry.date.startsWith(`${year}-`));
+    const yearEntries = timelineEvents.filter((entry) => entry.date.startsWith(`${year}-`));
     const lastModified = safeDate(yearEntries[0]?.date);
 
     for (const locale of locales) {
@@ -93,10 +93,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
     }
   }
 
-  const timelineMonths = [...new Set(timelineData.map((entry) => entry.date.slice(0, 7)))];
+  const timelineMonths = [...new Set(timelineEvents.map((entry) => entry.date.slice(0, 7)))];
   for (const yearMonth of timelineMonths) {
     const [year, month] = yearMonth.split('-');
-    const monthEntries = timelineData.filter((entry) => entry.date.startsWith(`${year}-${month}`));
+    const monthEntries = timelineEvents.filter((entry) => entry.date.startsWith(`${year}-${month}`));
     const lastModified = safeDate(monthEntries[0]?.date);
 
     for (const locale of locales) {

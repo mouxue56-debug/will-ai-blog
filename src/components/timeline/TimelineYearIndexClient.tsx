@@ -4,11 +4,19 @@ import { useMemo, useState } from 'react';
 import { motion } from 'motion/react';
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
-import { timelineData, categoryConfig, type TimelineCategory, type TimelineEntry } from '@/data/timeline';
+import { timelineEvents, type TimelineEvent } from '@/lib/timeline-data';
 
+type TimelineCategory = TimelineEvent['category'];
 type CategoryFilter = 'all' | TimelineCategory;
 
-function getKeywords(entries: TimelineEntry[], max = 3): string[] {
+const categoryConfig: Record<TimelineCategory, { color: string; icon: string }> = {
+  cattery: { color: '#f59e0b', icon: '🐾' },
+  tech: { color: '#22d3ee', icon: '🔧' },
+  ai: { color: '#8b5cf6', icon: '🤖' },
+  life: { color: '#fb7185', icon: '🌸' },
+};
+
+function getKeywords(entries: TimelineEvent[], max = 3): string[] {
   const tagCounts: Record<string, number> = {};
 
   entries.forEach((entry) => {
@@ -33,11 +41,10 @@ function FilterBar({
   const t = useTranslations('timeline');
   const categories: { key: CategoryFilter; label: string }[] = [
     { key: 'all', label: t('filter.all') },
+    { key: 'cattery', label: t('filter.cattery') },
     { key: 'tech', label: t('filter.tech') },
-    { key: 'daily', label: t('filter.daily') },
-    { key: 'milestone', label: t('filter.milestone') },
-    { key: 'news', label: t('filter.news') },
-    { key: 'reflection', label: t('filter.reflection') },
+    { key: 'ai', label: t('filter.ai') },
+    { key: 'life', label: t('filter.life') },
   ];
 
   return (
@@ -79,7 +86,7 @@ export function TimelineYearIndexClient() {
   const [categoryFilter, setCategoryFilter] = useState<CategoryFilter>('all');
 
   const filteredEntries = useMemo(() => {
-    return timelineData.filter((entry) => {
+    return timelineEvents.filter((entry) => {
       if (categoryFilter !== 'all' && entry.category !== categoryFilter) {
         return false;
       }
@@ -88,7 +95,7 @@ export function TimelineYearIndexClient() {
   }, [categoryFilter]);
 
   const yearGroups = useMemo(() => {
-    const groups: Record<string, TimelineEntry[]> = {};
+    const groups: Record<string, TimelineEvent[]> = {};
 
     filteredEntries.forEach((entry) => {
       const year = entry.date.slice(0, 4);
@@ -98,7 +105,9 @@ export function TimelineYearIndexClient() {
       groups[year].push(entry);
     });
 
-    return Object.entries(groups).sort((a, b) => Number(b[0]) - Number(a[0]));
+    return Object.entries(groups)
+      .map(([year, entries]) => [year, [...entries].sort((a, b) => b.date.localeCompare(a.date))] as const)
+      .sort((a, b) => Number(b[0]) - Number(a[0]));
   }, [filteredEntries]);
 
   return (
@@ -111,7 +120,6 @@ export function TimelineYearIndexClient() {
 
       <div className="flex flex-col gap-4 sm:gap-5">
         {yearGroups.map(([year, entries], index) => {
-          const milestoneCount = entries.filter((entry) => entry.isMilestone).length;
           const monthCount = new Set(entries.map((entry) => entry.date.slice(5, 7))).size;
           const keywords = getKeywords(entries);
 
@@ -141,9 +149,6 @@ export function TimelineYearIndexClient() {
                       <div className="flex flex-wrap items-center gap-3 mb-3 text-sm text-muted-foreground">
                         <span className="inline-flex items-center gap-1">📋 {entries.length} {t('events_count')}</span>
                         <span className="inline-flex items-center gap-1">🗓 {monthCount} {t('months_count')}</span>
-                        {milestoneCount > 0 && (
-                          <span className="inline-flex items-center gap-1">🏆 {milestoneCount}</span>
-                        )}
                       </div>
 
                       {keywords.length > 0 && (

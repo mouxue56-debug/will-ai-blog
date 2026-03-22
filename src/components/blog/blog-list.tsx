@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { motion } from 'motion/react';
 import { useLocale, useTranslations } from 'next-intl';
 import { PageTransition } from '@/components/shared/PageTransition';
 import { ScrollReveal } from '@/components/shared/ScrollReveal';
@@ -40,6 +41,18 @@ const paginationCopy = {
     next: 'Next',
   },
 } as const;
+
+// Stagger container variants
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1, // 0.1s delay between each card
+      delayChildren: 0.1,
+    },
+  },
+};
 
 export function BlogList({ posts }: BlogListProps) {
   const locale = useLocale() as keyof typeof paginationCopy;
@@ -142,10 +155,13 @@ export function BlogList({ posts }: BlogListProps) {
 
         {filteredPosts.length > 0 ? (
           <>
-            <ScrollReveal
-              direction="fadeIn"
-              stagger={0.06}
+            {/* Blog cards grid with stagger animation */}
+            <motion.div
               className="grid grid-cols-1 gap-6 md:grid-cols-2"
+              variants={containerVariants}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: '-50px' }}
             >
               {paginatedPosts.map((post, index) => (
                 <BlogCard
@@ -154,7 +170,7 @@ export function BlogList({ posts }: BlogListProps) {
                   isLatest={safeCurrentPage === 1 && index === 0}
                 />
               ))}
-            </ScrollReveal>
+            </motion.div>
 
             <div className="mt-8 flex flex-col gap-4 rounded-2xl border border-white/8 bg-card/50 px-4 py-4 backdrop-blur-sm sm:flex-row sm:items-center sm:justify-between">
               <p className="text-sm text-muted-foreground">{currentCopy.page(safeCurrentPage, totalPages)}</p>

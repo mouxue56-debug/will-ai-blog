@@ -1,11 +1,16 @@
 import fs from 'fs';
 import path from 'path';
-import type { BlogPost, BlogCategory } from './blog-types';
+import type { BlogPost, BlogCategory, BlogContentSource } from './blog-types';
 
 export type { BlogPost, BlogCategory, Comment } from './blog-types';
 export { CATEGORY_COLORS, CATEGORY_KEYS, ALL_CATEGORIES, getSampleComments } from './blog-types';
 
 const BLOG_DIR = path.join(process.cwd(), 'src/content/blog');
+const ORIGINAL_CONTENT_CUTOFF = '2026-03-15';
+
+function getContentSource(date: string): BlogContentSource {
+  return date >= ORIGINAL_CONTENT_CUTOFF ? 'original' : 'ai-organized';
+}
 
 function stripMarkdown(content: string): string {
   return content
@@ -83,6 +88,11 @@ function parseFrontmatter(fileContent: string): { data: Record<string, unknown>;
   return { data, content };
 }
 
+function getSafeDateValue(date: string): number {
+  const timestamp = Date.parse(date);
+  return Number.isNaN(timestamp) ? 0 : timestamp;
+}
+
 export function getAllPosts(): BlogPost[] {
   if (!fs.existsSync(BLOG_DIR)) {
     return [];
@@ -94,6 +104,7 @@ export function getAllPosts(): BlogPost[] {
     const filePath = path.join(BLOG_DIR, filename);
     const fileContent = fs.readFileSync(filePath, 'utf-8');
     const { data, content } = parseFrontmatter(fileContent);
+    const date = (data.date as string) || '';
 
     return {
       slug: (data.slug as string) || filename.replace(/\.md$/, ''),
@@ -105,7 +116,8 @@ export function getAllPosts(): BlogPost[] {
         return t;
       })(),
       category: (data.category as BlogCategory) || 'ai',
-      date: (data.date as string) || '',
+      contentSource: getContentSource(date),
+      date,
       updated: (data.updated as string) || '',
       author: (data.author as string) || 'Will',
       locale: (data.locale as string) || 'zh',
@@ -127,7 +139,7 @@ export function getAllPosts(): BlogPost[] {
     } as BlogPost;
   });
 
-  return posts.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  return posts.sort((a, b) => getSafeDateValue(b.date) - getSafeDateValue(a.date));
 }
 
 export function getPostBySlug(slug: string): BlogPost | null {

@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, type ElementType, type ReactNode } from "react";
+import { useRef, useState, useCallback, useEffect, type ElementType, type ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
 interface SpotlightCardProps {
@@ -15,25 +15,44 @@ export function SpotlightCard({
   as: Component = "div",
 }: SpotlightCardProps & Record<string, unknown>) {
   const divRef = useRef<HTMLDivElement>(null);
+  const positionRef = useRef({ x: 0, y: 0 });
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [opacity, setOpacity] = useState(0);
+  const rafRef = useRef<number | null>(null);
 
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+  const updatePosition = useCallback(() => {
+    setPosition({ ...positionRef.current });
+    rafRef.current = null;
+  }, []);
+
+  const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
     if (!divRef.current) return;
     const rect = divRef.current.getBoundingClientRect();
-    setPosition({
+    positionRef.current = {
       x: e.clientX - rect.left,
       y: e.clientY - rect.top,
-    });
-  };
+    };
+    // Use requestAnimationFrame to throttle state updates
+    if (!rafRef.current) {
+      rafRef.current = requestAnimationFrame(updatePosition);
+    }
+  }, [updatePosition]);
 
-  const handleMouseEnter = () => {
+  const handleMouseEnter = useCallback(() => {
     setOpacity(1);
-  };
+  }, []);
 
-  const handleMouseLeave = () => {
+  const handleMouseLeave = useCallback(() => {
     setOpacity(0);
-  };
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      if (rafRef.current) {
+        cancelAnimationFrame(rafRef.current);
+      }
+    };
+  }, []);
 
   const Tag = Component as ElementType;
 
@@ -50,7 +69,7 @@ export function SpotlightCard({
     >
       {/* Spotlight gradient */}
       <div
-        className="pointer-events-none absolute -inset-px rounded-xl transition-opacity duration-300"
+        className="pointer-events-none absolute -inset-px rounded-xl transition-opacity duration-300 will-change-[opacity]"
         style={{
           opacity,
           background: `radial-gradient(600px circle at ${position.x}px ${position.y}px, rgba(255,255,255,0.06), transparent 40%)`,
@@ -58,7 +77,7 @@ export function SpotlightCard({
       />
       {/* Border glow */}
       <div
-        className="pointer-events-none absolute -inset-px rounded-xl transition-opacity duration-300"
+        className="pointer-events-none absolute -inset-px rounded-xl transition-opacity duration-300 will-change-[opacity]"
         style={{
           opacity,
           background: `radial-gradient(400px circle at ${position.x}px ${position.y}px, rgba(255,255,255,0.1), transparent 40%)`,

@@ -193,14 +193,20 @@
     "subtitle": "Documenting AI practice, Osaka life, and cattery stories. Tech explorations, life reflections, and key milestones — the journey so far.",
     "filter": {
       "all": "All",
+      "cattery": "Cattery",
       "tech": "Tech",
+      "ai": "AI",
+      "life": "Life",
       "daily": "Daily",
       "milestone": "Milestone",
       "reflection": "Thoughts",
       "news": "News"
     },
     "category": {
+      "cattery": "Cattery",
       "tech": "Tech",
+      "ai": "AI",
+      "life": "Life",
       "daily": "Daily",
       "milestone": "Milestone",
       "reflection": "Thoughts",

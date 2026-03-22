@@ -2,14 +2,14 @@ import { notFound } from 'next/navigation';
 import { setRequestLocale, getTranslations } from 'next-intl/server';
 import { PageTransition } from '@/components/shared/PageTransition';
 import { ScrollReveal } from '@/components/shared/ScrollReveal';
-import { timelineData } from '@/data/timeline';
 import { Link } from '@/i18n/navigation';
 import { ChevronRight } from 'lucide-react';
+import { getYears, getEventsByYear } from '@/lib/timeline-data';
 
 type Params = { locale: string; year: string };
 
 export async function generateStaticParams() {
-  const years = [...new Set(timelineData.map((entry) => entry.date.split('-')[0]))];
+  const years = getYears().map(String);
   const locales = ['zh', 'ja', 'en'];
   return locales.flatMap((locale) => years.map((year) => ({ locale, year })));
 }
@@ -19,7 +19,7 @@ export default async function TimelineYearPage({ params }: { params: Promise<Par
   setRequestLocale(locale);
   const t = await getTranslations({ locale, namespace: 'timeline' });
 
-  const events = timelineData.filter((entry) => entry.date.startsWith(year));
+  const events = getEventsByYear(Number(year)).sort((a, b) => b.date.localeCompare(a.date));
   if (events.length === 0) {
     notFound();
   }
@@ -90,7 +90,6 @@ export default async function TimelineYearPage({ params }: { params: Promise<Par
                   <>
                     <div className="flex items-center gap-2 mb-2 text-xs text-muted-foreground">
                       <span>{monthEvents.length} {t('events_count')}</span>
-                      <span className="text-yellow-500">🏆 {monthEvents.filter((entry) => entry.isMilestone).length}</span>
                     </div>
                     <p className="text-sm text-muted-foreground leading-snug line-clamp-2">
                       {monthEvents[0]?.title[locale as 'zh' | 'ja' | 'en']}

@@ -2,15 +2,15 @@ import { notFound } from 'next/navigation';
 import { setRequestLocale, getTranslations } from 'next-intl/server';
 import { PageTransition } from '@/components/shared/PageTransition';
 import { ScrollReveal } from '@/components/shared/ScrollReveal';
-import { timelineData } from '@/data/timeline';
 import { TimelinePageClient } from '@/components/timeline/TimelinePageClient';
 import { Link } from '@/i18n/navigation';
 import { ChevronRight } from 'lucide-react';
+import { timelineEvents } from '@/lib/timeline-data';
 
 type Params = { locale: string; year: string; month: string };
 
 export async function generateStaticParams() {
-  const pairs = [...new Set(timelineData.map((entry) => {
+  const pairs = [...new Set(timelineEvents.map((entry) => {
     const [year, month] = entry.date.split('-');
     return `${year}/${month}`;
   }))];
@@ -29,7 +29,9 @@ export default async function TimelineMonthPage({ params }: { params: Promise<Pa
   setRequestLocale(locale);
   const t = await getTranslations({ locale, namespace: 'timeline' });
 
-  const events = timelineData.filter((entry) => entry.date.startsWith(`${year}-${month}`));
+  const events = timelineEvents
+    .filter((entry) => entry.date.startsWith(`${year}-${month}`))
+    .sort((a, b) => b.date.localeCompare(a.date));
   if (events.length === 0) {
     notFound();
   }

@@ -22,6 +22,11 @@ const CATEGORY_TAG_COLORS: Record<BlogCategory, string> = {
   business: 'bg-brand-taro/15 text-brand-taro',
 };
 
+const CONTENT_SOURCE_BADGE = {
+  original: 'bg-emerald-500/12 text-emerald-700 dark:text-emerald-300',
+  'ai-organized': 'bg-amber-500/12 text-amber-700 dark:text-amber-300',
+} as const;
+
 interface BlogDetailProps {
   post: BlogPost;
   prevPost: BlogPost | null;
@@ -43,12 +48,25 @@ function formatReadingTime(minutes: number, locale: string): string {
   return `About ${minutes} min read`;
 }
 
+function getContentSourceLabel(contentSource: BlogPost['contentSource'], locale: string): string {
+  if (locale === 'zh') {
+    return contentSource === 'original' ? '原创' : 'AI整理';
+  }
+
+  if (locale === 'ja') {
+    return contentSource === 'original' ? 'オリジナル' : 'AI整理';
+  }
+
+  return contentSource === 'original' ? 'Original' : 'AI Organized';
+}
+
 export function BlogDetail({ post, prevPost, nextPost, comments, postSlug, headings }: BlogDetailProps) {
   const locale = useLocale();
   const t = useTranslations('blog');
   const title = post.title[locale] || post.title.zh || post.title.en || '';
   const prevTitle = prevPost ? (prevPost.title[locale] || prevPost.title.zh || prevPost.title.en || '') : '';
   const nextTitle = nextPost ? (nextPost.title[locale] || nextPost.title.zh || nextPost.title.en || '') : '';
+  const contentSourceLabel = getContentSourceLabel(post.contentSource, locale);
 
   return (
     <PageTransition>
@@ -69,14 +87,24 @@ export function BlogDetail({ post, prevPost, nextPost, comments, postSlug, headi
               transition={{ duration: 0.4 }}
               className="mb-8 space-y-4"
             >
-              <span
-                className={cn(
-                  'inline-flex rounded-full px-3 py-1 text-xs font-medium',
-                  CATEGORY_TAG_COLORS[post.category]
-                )}
-              >
-                {t(CATEGORY_KEYS[post.category])}
-              </span>
+              <div className="flex flex-wrap items-center gap-2">
+                <span
+                  className={cn(
+                    'inline-flex rounded-full px-3 py-1 text-xs font-medium',
+                    CATEGORY_TAG_COLORS[post.category]
+                  )}
+                >
+                  {t(CATEGORY_KEYS[post.category])}
+                </span>
+                <span
+                  className={cn(
+                    'inline-flex rounded-full px-3 py-1 text-xs font-medium',
+                    CONTENT_SOURCE_BADGE[post.contentSource]
+                  )}
+                >
+                  {contentSourceLabel}
+                </span>
+              </div>
 
               <h1 className="text-3xl font-bold leading-tight sm:text-4xl">
                 {title}

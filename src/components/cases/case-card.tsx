@@ -1,6 +1,7 @@
 'use client';
 
-import { motion } from 'motion/react';
+import { useRef } from 'react';
+import { motion, useReducedMotion } from 'motion/react';
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 import type { CaseStudy } from '@/data/cases';
@@ -12,11 +13,14 @@ export function CaseCard({ c, locale }: { c: CaseStudy; locale: string }) {
   const t = useTranslations('cases');
   const loc = locale as Locale;
   const highlightedMetrics = c.metrics.slice(0, 3);
+  const prefersReducedMotion = useReducedMotion();
+  const cardRef = useRef(null);
 
   return (
     <Link href={`/cases/${c.slug}`}>
       <motion.div
-        whileHover={{ y: -6 }}
+        ref={cardRef}
+        whileHover={prefersReducedMotion ? {} : { y: -6 }}
         transition={{ type: 'spring', stiffness: 300, damping: 20 }}
       >
         <SpotlightCard className="p-0 glass-card border-white/[0.06] bg-card/80 dark:bg-white/[0.03] cursor-pointer overflow-hidden h-full">

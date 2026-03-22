@@ -193,14 +193,20 @@
     "subtitle": "记录 AI 实践、大阪生活、猫舍日常的点滴。技术探索、生活感悟、重要里程碑——一路走来的轨迹。",
     "filter": {
       "all": "全部",
+      "cattery": "猫舍",
       "tech": "技术",
+      "ai": "AI",
+      "life": "生活",
       "daily": "日常",
       "milestone": "里程碑",
       "reflection": "感悟",
       "news": "资讯"
     },
     "category": {
+      "cattery": "猫舍",
       "tech": "技术",
+      "ai": "AI",
+      "life": "生活",
       "daily": "日常",
       "milestone": "里程碑",
       "reflection": "感悟",

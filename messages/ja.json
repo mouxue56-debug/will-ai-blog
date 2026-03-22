@@ -193,14 +193,20 @@
     "subtitle": "AI実践、大阪ライフ、キャッテリーの日常を記録。技術探求、暮らしの気づき、大切なマイルストーン——歩んできた軌跡。",
     "filter": {
       "all": "すべて",
+      "cattery": "キャッテリー",
       "tech": "技術",
+      "ai": "AI",
+      "life": "ライフ",
       "daily": "日常",
       "milestone": "マイルストーン",
       "reflection": "気づき",
       "news": "ニュース"
     },
     "category": {
+      "cattery": "キャッテリー",
       "tech": "技術",
+      "ai": "AI",
+      "life": "ライフ",
       "daily": "日常",
       "milestone": "マイルストーン",
       "reflection": "気づき",

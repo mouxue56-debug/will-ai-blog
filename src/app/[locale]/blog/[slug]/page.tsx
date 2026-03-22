@@ -122,19 +122,42 @@ export default async function BlogPostPage({ params }: Props) {
     dateModified: post.updated || post.date,
     author: {
       '@type': 'Person',
-      name: 'Will',
+      name: post.author || 'Will',
       url: `${SITE_URL}/about`,
+      jobTitle: 'AI Researcher & Developer',
+      sameAs: [
+        'https://github.com/willfuluck',
+        'https://twitter.com/willfuluck',
+      ],
     },
     publisher: {
       '@type': 'Organization',
-      name: "Will's AI Blog",
+      name: "Will's AI Lab",
       url: SITE_URL,
+      logo: {
+        '@type': 'ImageObject',
+        url: `${SITE_URL}/logo.png`,
+        width: 512,
+        height: 512,
+      },
     },
     description,
     inLanguage: ['zh', 'ja', 'en'],
     url: `${SITE_URL}/${lang}/blog/${slug}`,
     keywords: post.tags?.length ? post.tags.join(', ') : undefined,
-    image: ogImageUrl,
+    image: {
+      '@type': 'ImageObject',
+      url: ogImageUrl,
+      width: 1200,
+      height: 630,
+      caption: `${titleZh} - OG Image`,
+    },
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': `${SITE_URL}/${lang}/blog/${slug}`,
+    },
+    articleSection: post.category || 'AI',
+    wordCount: post.content?.split(/\s+/).length || 0,
   };
 
   return (
