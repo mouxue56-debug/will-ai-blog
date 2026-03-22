@@ -15,7 +15,6 @@ import {
   LogIn,
   Swords,
   GraduationCap,
-  MessageSquare,
 } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
 import { useSession, signOut } from 'next-auth/react';
@@ -23,7 +22,6 @@ import { useSession, signOut } from 'next-auth/react';
 const mainTabs = [
   { key: 'home', href: '/', icon: Home },
   { key: 'blog', href: '/blog', icon: BookOpen },
-  { key: 'digest', href: '/digest', icon: MessageSquare },
   { key: 'debate', href: '/debate', icon: Swords },
   { key: 'timeline', href: '/timeline', icon: Clock },
 ] as const;

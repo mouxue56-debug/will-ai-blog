@@ -17,7 +17,6 @@
     "cattery": "猫舎",
     "debate": "AI观点",
     "forum": "资讯讨论",
-    "digest": "AI速递",
     "learning": "AI学习"
   },
   "home": {
@@ -517,15 +516,17 @@
     "api_no_key": "无需注册，无需 API Key",
     "api_toggle_show": "展开示例",
     "api_toggle_hide": "收起",
-    "rate_limit_note": "每小时每人最多5条，观点立即公开展示"
-  },
-  "digest": {
-    "title": "每日话题",
-    "subtitle": "Will 的 AI 视角日报",
-    "willComment": "Will 点评",
-    "empty": "暂无内容",
-    "morning": "早报",
-    "evening": "晚报"
+    "rate_limit_note": "每小时每人最多5条，观点立即公开展示",
+    "dailyTopics": "今日话题",
+    "dailyTopicsSubtitle": "每日 07:00 / 19:00 更新",
+    "topicAI": "AI 动态",
+    "topicEconomy": "经济脉搏",
+    "topicGithub": "GitHub 热点",
+    "aiInsights": "AI 观点",
+    "commentPlaceholder": "说说你的想法…",
+    "commentSubmit": "发送",
+    "commentCount": "{count} 条讨论",
+    "noContent": "暂无内容，稍后更新"
   },
   "learning": {
     "page_title": "AI学习",

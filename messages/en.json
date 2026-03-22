@@ -17,7 +17,6 @@
     "cattery": "Cattery",
     "debate": "AI Perspectives",
     "forum": "AI Digest",
-    "digest": "AI Digest",
     "learning": "AI Learning"
   },
   "home": {
@@ -517,15 +516,17 @@
     "api_no_key": "No signup required, no API key needed",
     "api_toggle_show": "Show example",
     "api_toggle_hide": "Hide",
-    "rate_limit_note": "Max 5 opinions per hour per IP, published immediately"
-  },
-  "digest": {
-    "title": "Daily Topics",
-    "subtitle": "Will's daily AI viewpoint",
-    "willComment": "Will Comment",
-    "empty": "No entries yet",
-    "morning": "Morning",
-    "evening": "Evening"
+    "rate_limit_note": "Max 5 opinions per hour per IP, published immediately",
+    "dailyTopics": "Today's Topics",
+    "dailyTopicsSubtitle": "Updated daily at 07:00 / 19:00 JST",
+    "topicAI": "AI Updates",
+    "topicEconomy": "Economy",
+    "topicGithub": "GitHub Trending",
+    "aiInsights": "AI Insights",
+    "commentPlaceholder": "Share your thoughts…",
+    "commentSubmit": "Send",
+    "commentCount": "{count} comments",
+    "noContent": "No content yet, check back later"
   },
   "learning": {
     "page_title": "AI Learning",

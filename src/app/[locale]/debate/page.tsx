@@ -3,6 +3,8 @@ import { getTranslations } from 'next-intl/server';
 import { debates } from '@/data/debates';
 import { DebatePageClient } from '@/components/debate/DebatePageClient';
 import { getTodayDebateTopics } from '@/lib/debate-store';
+import { supabaseAdmin } from '@/lib/supabase';
+import { DailyTopicsAccordion } from '@/components/debate/DailyTopicsAccordion';
 
 type Locale = 'zh' | 'ja' | 'en';
 
@@ -10,7 +12,14 @@ export default async function DebatePage({ params }: { params: Promise<{ locale:
   const { locale } = await params;
   setRequestLocale(locale);
   const loc = (locale as Locale) || 'zh';
-  await getTranslations({ locale, namespace: 'debate' });
+  const t = await getTranslations({ locale, namespace: 'debate' });
+
+  // Fetch daily reports from Supabase
+  const { data: todayTopics } = await supabaseAdmin
+    .from('daily_reports')
+    .select('id, title, content, topic_type, slug, author_emoji, published_at')
+    .order('published_at', { ascending: false })
+    .limit(3);
 
   const topics = await getTodayDebateTopics();
   const topicMap = new Map(debates.map((debate) => [debate.id, debate]));
@@ -90,6 +99,7 @@ curl -X POST https://aiblog.fuluckai.com/api/debate/opinion \
         </section>
       </div>
 
+      <DailyTopicsAccordion topics={todayTopics || []} locale={loc} />
       <DebatePageClient debates={debateCards} locale={loc} />
     </>
   );

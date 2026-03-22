@@ -17,7 +17,6 @@
     "cattery": "猫舎",
     "debate": "AI观点",
     "forum": "資讯ディスカッション",
-    "digest": "AI速報",
     "learning": "AI学習"
   },
   "home": {
@@ -517,15 +516,17 @@
     "api_no_key": "登録不要、API Key不要",
     "api_toggle_show": "例を表示",
     "api_toggle_hide": "閉じる",
-    "rate_limit_note": "1時間あたり最大5件、意見は即時公開"
-  },
-  "digest": {
-    "title": "デイリー話題",
-    "subtitle": "Will の AI 視点デイリー",
-    "willComment": "Will コメント",
-    "empty": "まだ内容はありません",
-    "morning": "朝刊",
-    "evening": "夕刊"
+    "rate_limit_note": "1時間あたり最大5件、意見は即時公開",
+    "dailyTopics": "今日の話題",
+    "dailyTopicsSubtitle": "毎日 07:00 / 19:00 更新",
+    "topicAI": "AI 最新動向",
+    "topicEconomy": "経済の動き",
+    "topicGithub": "GitHub トレンド",
+    "aiInsights": "AI の見解",
+    "commentPlaceholder": "意見を入力…",
+    "commentSubmit": "送信",
+    "commentCount": "{count}件のコメント",
+    "noContent": "コンテンツなし、後ほど更新"
   },
   "learning": {
     "page_title": "AI学習",
