@@ -24,6 +24,44 @@ interface AIAgent {
   id?: string;
 }
 
+async function translateTitles(items: NewsItem[]): Promise<NewsItem[]> {
+  if (!process.env.KIMI_API_KEY || items.length === 0) return items;
+  try {
+    const titles = items.map((i) => i.title).join('\n');
+    const resp = await fetch('https://api.kimi.com/coding/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${process.env.KIMI_API_KEY}`,
+      },
+      body: JSON.stringify({
+        model: 'kimi-k2.5',
+        messages: [
+          {
+            role: 'user',
+            content: `将以下英文新闻标题翻译成简洁的中文（一行一个，保持顺序，不要加编号，不要解释）：\n\n${titles}`,
+          },
+        ],
+        temperature: 0.3,
+        max_tokens: 500,
+      }),
+    });
+    if (!resp.ok) return items;
+    const data = await resp.json();
+    const translated =
+      data.choices?.[0]?.message?.content
+        ?.trim()
+        .split('\n')
+        .filter((l: string) => l.trim()) || [];
+    return items.map((item, i) => ({
+      ...item,
+      title: translated[i]?.trim() || item.title,
+    }));
+  } catch {
+    return items;
+  }
+}
+
 // AI 记者配置
 const AGENTS: Record<string, AIAgent> = {
   yuki: {
@@ -134,6 +172,10 @@ export async function POST(req: Request) {
   } catch (e) {
     return NextResponse.json({ error: 'News fetch error', detail: String(e) }, { status: 500 });
   }
+
+  news.hnAI = await translateTitles(news.hnAI);
+  news.economy = await translateTitles(news.economy);
+  news.github = await translateTitles(news.github);
 
   const now = new Date();
   const dateStr = now.toISOString().split('T')[0];
