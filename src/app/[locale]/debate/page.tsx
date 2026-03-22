@@ -16,7 +16,7 @@ export default async function DebatePage({ params }: { params: Promise<{ locale:
   // Fetch daily reports from Supabase (3 days, filtered by topic_type)
   const { data: todayTopics } = await supabaseAdmin
     .from('daily_reports')
-    .select('id, title, content, content_zh, content_ja, content_en, topic_type, slug, author_emoji, published_at')
+    .select('id, title, content, topic_type, slug, author_emoji, published_at')
     .in('topic_type', ['ai', 'economy', 'github'])
     .order('published_at', { ascending: false })
     .limit(9);

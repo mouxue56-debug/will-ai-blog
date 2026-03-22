@@ -22,9 +22,10 @@ export async function GET(request: NextRequest) {
     const topics = await getTodayDebateTopics();
     if (topics.length === 0) {
       const today = getTodayInTokyo();
+      // Select base fields; translation fields may not exist yet
       const { data: reports, error } = await supabaseAdmin
         .from('daily_reports')
-        .select('id,title,title_ja,title_en,content,content_zh,content_ja,content_en,topic_type,slug,published_at')
+        .select('id,title,content,topic_type,slug,published_at')
         .in('topic_type', ['ai', 'economy', 'github'])
         .order('published_at', { ascending: false })
         .limit(limit);
@@ -33,19 +34,34 @@ export async function GET(request: NextRequest) {
         throw error;
       }
 
+      const titleTranslations: Record<string, Record<string, string>> = {
+        'AI动态': { ja: 'AIニュース', en: 'AI News' },
+        '经济动态': { ja: '経済ニュース', en: 'Economy News' },
+        'GitHub热点': { ja: 'GitHubトレンド', en: 'GitHub Trending' },
+        '晚报': { ja: '夕刊', en: 'Evening' },
+        '早报': { ja: '朝刊', en: 'Morning' },
+      };
+      
+      function translateTitle(title: string, lang: string): string {
+        let result = title;
+        for (const [zh, map] of Object.entries(titleTranslations)) {
+          if (result.includes(zh) && map[lang]) {
+            result = result.replace(zh, map[lang]);
+          }
+        }
+        return result;
+      }
+
       const mappedTopics = (reports ?? []).map((r) => ({
         id: r.id,
         date: r.published_at?.slice(0, 10) || today,
         session: 'evening' as const,
         title: {
           zh: r.title,
-          ja: r.title_ja || r.title,
-          en: r.title_en || r.title,
+          ja: translateTitle(r.title, 'ja'),
+          en: translateTitle(r.title, 'en'),
         },
         content: r.content,
-        content_zh: r.content_zh || r.content,
-        content_ja: r.content_ja || null,
-        content_en: r.content_en || null,
         newsSource: 'https://aiblog.fuluckai.com/debate',
         tags: [r.topic_type || 'ai'],
         slug: r.slug,
