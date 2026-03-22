@@ -69,10 +69,10 @@ export function MyWorld() {
                   <motion.div
                     whileHover={{ scale: 1.04, y: -2 }}
                     transition={{ type: 'spring', stiffness: 400, damping: 25 }}
-                    className={`glass-card flex flex-col items-center justify-center gap-3 p-6 sm:p-8 cursor-pointer ${card.borderColor}`}
+                    className={`glass-card flex flex-col items-center justify-center gap-3 p-6 sm:p-8 cursor-pointer bg-card/60 hover:bg-card/80 border border-white/[0.08] hover:border-brand-cyan/30 transition-colors duration-300`}
                   >
                     <div
-                      className={`w-12 h-12 rounded-xl flex items-center justify-center ${card.color}`}
+                      className={`w-12 h-12 rounded-xl flex items-center justify-center ${card.color} hover:scale-110 transition-transform duration-300`}
                       style={{ background: card.glowColor }}
                     >
                       <Icon className="h-6 w-6" />
@@ -95,9 +95,9 @@ export function MyWorld() {
               href="https://fuluck-cattery.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="group glass-card p-5 flex items-center gap-4 hover:shadow-md hover:border-brand-mint/30 transition-all duration-200"
+              className="group glass-card p-5 flex items-center gap-4 hover:shadow-md border border-white/[0.08] hover:border-brand-cyan/30 bg-card/60 hover:bg-card/80 transition-all duration-300"
             >
-              <div className="w-12 h-12 rounded-xl bg-brand-mint/10 flex items-center justify-center text-2xl flex-shrink-0">
+              <div className="w-12 h-12 rounded-xl bg-brand-mint/10 flex items-center justify-center text-2xl flex-shrink-0 hover:scale-110 transition-transform duration-300">
                 🐱
               </div>
               <div className="flex-1 min-w-0">
@@ -117,9 +117,9 @@ export function MyWorld() {
               href="https://fuluckai.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="group glass-card p-5 flex items-center gap-4 hover:shadow-md hover:border-brand-mint/30 transition-all duration-200"
+              className="group glass-card p-5 flex items-center gap-4 hover:shadow-md border border-white/[0.08] hover:border-brand-cyan/30 bg-card/60 hover:bg-card/80 transition-all duration-300"
             >
-              <div className="w-12 h-12 rounded-xl bg-brand-mint/10 flex items-center justify-center text-2xl flex-shrink-0">
+              <div className="w-12 h-12 rounded-xl bg-brand-mint/10 flex items-center justify-center text-2xl flex-shrink-0 hover:scale-110 transition-transform duration-300">
                 🤖
               </div>
               <div className="flex-1 min-w-0">

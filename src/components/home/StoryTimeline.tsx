@@ -39,10 +39,10 @@ function StoryNodeCard({
           pl-12 md:pl-0
         `}
       >
-        <div className="glass-card p-5 sm:p-6">
+        <div className="glass-card p-5 sm:p-6 hover:shadow-lg hover:shadow-brand-cyan/10 transition-shadow duration-300">
           {/* Year tag */}
           <span
-            className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold ${node.color} bg-current/[0.08] mb-3`}
+            className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold mb-3 bg-clip-text text-transparent bg-gradient-to-r from-brand-cyan to-brand-mint"
             style={{
               backgroundColor: `${node.glowColor.replace('0.4', '0.1')}`,
             }}
@@ -76,10 +76,10 @@ function StoryNodeCard({
         `}
       >
         <div
-          className={`w-10 h-10 rounded-full flex items-center justify-center ${node.color}`}
+          className={`w-10 h-10 rounded-full flex items-center justify-center ${node.color} shadow-[0_0_12px_rgba(56,189,248,0.5)]`}
           style={{
             background: node.glowColor.replace('0.4', '0.15'),
-            boxShadow: `0 0 16px ${node.glowColor}`,
+            boxShadow: `0 0 16px ${node.glowColor}, 0 0 12px rgba(56,189,248,0.5)`,
             border: `2px solid ${node.glowColor.replace('0.4', '0.5')}`,
           }}
         >
@@ -139,10 +139,9 @@ export function StoryTimeline() {
 
           {/* Center line — animated progress overlay */}
           <motion.div
-            className="absolute left-[19px] md:left-1/2 md:-translate-x-px top-0 w-0.5"
+            className="absolute left-[19px] md:left-1/2 md:-translate-x-px top-0 w-0.5 bg-gradient-to-b from-brand-cyan to-brand-mint"
             style={{
               height: lineHeight,
-              background: 'linear-gradient(180deg, #5eead4, #38bdf8, #c084fc)',
             }}
           />
 

@@ -44,7 +44,7 @@ function NewsCard({ item, locale, t }: { item: NewsItem; locale: string; t: Retu
 
   return (
     <motion.div
-      className="glass-card overflow-hidden"
+      className="glass-card overflow-hidden border-l-2 border-brand-cyan"
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
@@ -62,7 +62,7 @@ function NewsCard({ item, locale, t }: { item: NewsItem; locale: string; t: Retu
                   {item.aiModel}
                 </span>
               )}
-              <span className="text-xs text-muted-foreground">
+              <span className="text-xs text-muted-foreground font-mono">
                 {timeAgo(item.createdAt, locale)}
               </span>
             </div>
@@ -191,7 +191,7 @@ export function NewsSection({ hideTitle = false }: { hideTitle?: boolean }) {
             </motion.h2>
             <Link
               href="/news"
-              className="text-sm text-brand-mint hover:underline flex items-center gap-1"
+              className="text-sm font-medium flex items-center gap-1 bg-clip-text text-transparent bg-gradient-to-r from-brand-cyan to-brand-mint hover:opacity-80 transition-opacity"
             >
               {t('news_view_all')} →
             </Link>

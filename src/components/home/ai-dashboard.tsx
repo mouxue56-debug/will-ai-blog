@@ -119,28 +119,37 @@ export function AIDashboard() {
             {instances.map((inst, i) => (
               <motion.div
                 key={inst.key}
-                className="flex flex-col items-center gap-3 rounded-lg bg-white/5 dark:bg-white/[0.03] p-4 border border-white/[0.06] backdrop-blur-sm"
+                className="rounded-lg p-[1px] bg-gradient-to-r from-brand-cyan/30 via-brand-taro/20 to-brand-mint/30"
                 initial={{ opacity: 0, scale: 0.9 }}
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true, amount: 0.1 }}
                 transition={{ delay: 0.3 + i * 0.1, duration: 0.5, ease: 'easeOut' }}
               >
-                <StatusDot status={inst.status} color={inst.dotColor} />
+                <div className="flex flex-col items-center gap-3 rounded-lg bg-white/5 dark:bg-white/[0.03] p-4 backdrop-blur-sm h-full">
+                  <StatusDot status={inst.status} color={inst.dotColor} />
 
-                <div className="text-center">
-                  <div className={`text-lg font-bold ${inst.color}`}>
-                    {t(`ai_instances.${inst.key}.name`)}
+                  <div className="text-center">
+                    <div
+                      className={`w-10 h-10 rounded-full flex items-center justify-center mx-auto mb-1 bg-gradient-to-br ${inst.color === 'text-brand-cyan' ? 'from-brand-cyan/20 to-brand-mint/20' : inst.color === 'text-brand-coral' ? 'from-brand-coral/20 to-brand-mango/20' : inst.color === 'text-brand-mint' ? 'from-brand-mint/20 to-brand-taro/20' : 'from-brand-mango/20 to-brand-coral/20'}`}
+                    >
+                      <span className={`text-sm font-bold ${inst.color}`}>
+                        {t(`ai_instances.${inst.key}.name`).charAt(0)}
+                      </span>
+                    </div>
+                    <div className={`text-lg font-bold ${inst.color}`}>
+                      {t(`ai_instances.${inst.key}.name`)}
+                    </div>
+                    {inst.nicknameKey ? (
+                      <div className="text-xs text-muted-foreground">{t(inst.nicknameKey)}</div>
+                    ) : null}
                   </div>
-                  {inst.nicknameKey ? (
-                    <div className="text-xs text-muted-foreground">{t(inst.nicknameKey)}</div>
-                  ) : null}
-                </div>
 
-                <div className="text-xs text-muted-foreground">{t(`ai_instances.${inst.key}.role`)}</div>
+                  <div className="text-xs text-muted-foreground">{t(`ai_instances.${inst.key}.role`)}</div>
 
-                <div className="flex items-center gap-1.5 text-sm">
-                  <span className="text-muted-foreground">{t('ai_tasks_today')}</span>
-                  <span className="font-semibold">{inst.tasks}</span>
+                  <div className="flex items-center gap-1.5 text-sm">
+                    <span className="text-muted-foreground">{t('ai_tasks_today')}</span>
+                    <span className="font-semibold">{inst.tasks}</span>
+                  </div>
                 </div>
               </motion.div>
             ))}

@@ -43,7 +43,7 @@ function SpotlightCard({ item, index, t }: { item: FeedItem; index: number; t: (
     <Link href={`/blog/${item.slug}`}>
       <motion.div
         ref={cardRef}
-        className="relative flex-shrink-0 w-[300px] sm:w-[340px] glass-card p-5 cursor-pointer overflow-hidden group"
+        className="relative flex-shrink-0 w-[300px] sm:w-[340px] glass-card p-5 cursor-pointer overflow-hidden group border-l-2 border-brand-cyan"
         initial={{ opacity: 0, y: 30 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: '-50px' }}
@@ -67,7 +67,7 @@ function SpotlightCard({ item, index, t }: { item: FeedItem; index: number; t: (
             <Badge variant="secondary" className={`text-xs ${item.categoryColor} border-0`}>
               {t(`feed_items.${item.key}.category`)}
             </Badge>
-            <span className="flex items-center gap-1 text-xs text-muted-foreground">
+            <span className="flex items-center gap-1 text-xs text-muted-foreground font-mono">
               <CalendarDays className="h-3 w-3" />
               {item.date}
             </span>
