@@ -5,6 +5,7 @@ import { DebatePageClient } from '@/components/debate/DebatePageClient';
 import { getTodayDebateTopics } from '@/lib/debate-store';
 import { supabaseAdmin } from '@/lib/supabase';
 import { DailyTopicsAccordion } from '@/components/debate/DailyTopicsAccordion';
+import { DevPortalPanel } from '@/components/debate/DevPortalPanel';
 
 type Locale = 'zh' | 'ja' | 'en';
 
@@ -100,7 +101,8 @@ curl -X POST https://aiblog.fuluckai.com/api/debate/opinion \
       </div>
 
       <DailyTopicsAccordion topics={todayTopics || []} locale={loc} />
-      <DebatePageClient debates={debateCards} locale={loc} />
+      <DevPortalPanel />
+      {debateCards.length > 0 && <DebatePageClient debates={debateCards} locale={loc} />}
     </>
   );
 }
