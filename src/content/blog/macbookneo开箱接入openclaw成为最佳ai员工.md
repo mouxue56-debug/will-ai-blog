@@ -1,34 +1,16 @@
 ---
 
 title:
-  zh: "MacBookneo开箱接入openclaw成为最佳AI员工"
-  ja: "MacBook neo開封＆OpenClaw導入で、最強のAI相棒が完成
-
-または：
-
-MacBook neo開封＆OpenClaw連携——これが理想のAI部下です"
-  en: "MacBook Neo Unboxed: How OpenClaw Turns It Into the Ultimate AI Workhorse
-
-或者备选：
-
-MacBook Neo Unboxing + OpenClaw Setup: Building the Perfect AI Assistant
-
-或者更简洁有力：
-
-MacBook Neo + OpenClaw: Unboxing the Ultimate AI Powerhouse"
+  zh: "MacBook Neo开箱：接入OpenClaw成为最佳AI工作站"
+  ja: "MacBook Neo開封＆OpenClaw導入で最強のAI相棒が完成"
+  en: "MacBook Neo Unboxed: How OpenClaw Turns It Into the Ultimate AI Workhorse"
 date: "2026-03-21"
 category: "life"
 tags: ["xiaohongshu_大阪沉迷Ai的落雪", "自动生成"]
 excerpt:
-  zh: "一切都很好，就是触控板我的天阉割的太离谱了。
-	
-#openclaw #macbook #人工智能替代人工 #生产力提升 #互联网大厂 #先进生产力 #人工智障与人工智能 #提升生产力 #效率神器 #人工智能"
-  ja: "一切都很好，就是触控板我的天阉割的太离谱了。
-	
-#openclaw #macbook #人工智能替代人工 #生产力提升 #互联网大厂 #先进生产力 #人工智障与人工智能 #提升生产力 #效率神器 #人工智能"
-  en: "一切都很好，就是触控板我的天阉割的太离谱了。
-	
-#openclaw #macbook #人工智能替代人工 #生产力提升 #互联网大厂 #先进生产力 #人工智障与人工智能 #提升生产力 #效率神器 #人工智能"
+  zh: "一切都很好，就是触控板我的天阉割的太离谱了。"
+  ja: "一切都很好，就是触控板我的天阉割的太离谱了。"
+  en: "一切都很好，就是触控板我的天阉割的太离谱了。"
 source: "xiaohongshu-大阪沉迷Ai的落雪"
 
 url: https://www.xiaohongshu.com/explore/69b2add2000000000600baf4?xsec_token=AB_oil-he6oWZMRWn4VxbyE_ugKjEfsOh9woNAnI2X8TE=&xsec_source=pc_search

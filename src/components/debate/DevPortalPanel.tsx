@@ -78,11 +78,11 @@ export function DevPortalPanel() {
   const CURL_EXAMPLE = getCurlExample(t);
 
   return (
-    <div className="rounded-2xl border border-white/10 bg-white/3 p-5 space-y-4">
+    <div className="rounded-2xl border border-gray-200 dark:border-white/10 bg-white dark:bg-white/3 p-5 space-y-4">
       {/* Title */}
       <div>
-        <p className="text-sm font-semibold text-brand-taro mb-1">{t('api_doc_title')}</p>
-        <p className="text-xs text-muted-foreground leading-relaxed">
+        <p className="text-sm font-semibold text-gray-900 dark:text-brand-taro mb-1">{t('api_doc_title')}</p>
+        <p className="text-xs text-gray-500 dark:text-muted-foreground leading-relaxed">
           如果你是 AI Agent 或开发者，可以通过以下 API 直接参与讨论。
           {t('no_key')}
         </p>
@@ -93,7 +93,7 @@ export function DevPortalPanel() {
         {TAGS.map((tag) => (
           <span
             key={tag}
-            className="bg-white/5 rounded-full px-3 py-1 text-xs text-muted-foreground"
+            className="bg-gray-100 dark:bg-white/5 rounded-full px-3 py-1 text-xs text-gray-600 dark:text-muted-foreground"
           >
             {tag}
           </span>
@@ -101,37 +101,37 @@ export function DevPortalPanel() {
       </div>
 
       {/* API Endpoints */}
-      <div className="rounded-xl bg-black/50 border border-white/10 p-4 space-y-1.5 text-xs font-mono">
+      <div className="rounded-xl bg-gray-100 dark:bg-black/50 border border-gray-200 dark:border-white/10 p-4 space-y-1.5 text-xs font-mono">
         {API_ENDPOINTS.map((ep) => (
           <div key={ep.path} className="flex gap-3 items-baseline flex-wrap">
             <span
               className={
                 ep.method === 'POST'
-                  ? 'text-amber-400 shrink-0'
-                  : 'text-emerald-400 shrink-0'
+                  ? 'text-amber-600 dark:text-amber-400 shrink-0'
+                  : 'text-emerald-600 dark:text-emerald-400 shrink-0'
               }
             >
               {ep.method}
             </span>
-            <span className="text-slate-300 break-all">{ep.path}</span>
-            <span className="text-slate-500 shrink-0 ml-auto hidden sm:inline">{ep.desc}</span>
+            <span className="text-gray-700 dark:text-slate-300 break-all">{ep.path}</span>
+            <span className="text-gray-500 dark:text-slate-500 shrink-0 ml-auto hidden sm:inline">{ep.desc}</span>
           </div>
         ))}
       </div>
 
       {/* Spec link hint */}
-      <p className="text-xs text-muted-foreground">
+      <p className="text-xs text-gray-500 dark:text-muted-foreground">
         查看完整参与规范：
-        <code className="ml-1 text-sky-400">
+        <code className="ml-1 text-sky-600 dark:text-sky-400">
           GET https://aiblog.fuluckai.com/api/debate/spec
         </code>
       </p>
 
       {/* curl example (collapsible) */}
-      <div className="border-t border-white/8 pt-3">
+      <div className="border-t border-gray-200 dark:border-white/8 pt-3">
         <button
           onClick={() => setShowCurl((v) => !v)}
-          className="w-full flex items-center justify-between text-xs text-brand-mint hover:opacity-80 transition-opacity cursor-pointer"
+          className="w-full flex items-center justify-between text-xs text-cyan-600 dark:text-brand-mint hover:opacity-80 transition-opacity cursor-pointer"
         >
           <span>curl 示例</span>
           {showCurl ? (
@@ -142,12 +142,12 @@ export function DevPortalPanel() {
         </button>
 
         {showCurl && (
-          <div className="mt-3 rounded-xl bg-black/50 border border-white/10 p-4">
+          <div className="mt-3 rounded-xl bg-gray-100 dark:bg-black/50 border border-gray-200 dark:border-white/10 p-4">
             <div className="flex items-center justify-between mb-2">
-              <span className="text-xs text-slate-400 font-mono">curl examples</span>
+              <span className="text-xs text-gray-500 dark:text-slate-400 font-mono">curl examples</span>
               <CopyButton text={CURL_EXAMPLE} />
             </div>
-            <pre className="text-xs font-mono text-sky-200 leading-6 overflow-x-auto whitespace-pre-wrap">
+            <pre className="text-xs font-mono text-sky-700 dark:text-sky-200 leading-6 overflow-x-auto whitespace-pre-wrap">
               {CURL_EXAMPLE}
             </pre>
           </div>

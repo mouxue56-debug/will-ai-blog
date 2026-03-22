@@ -229,7 +229,7 @@
     "thought": "感悟",
     "back": "返回",
     "yearView": "{year}年",
-    "monthView": "{year}年{month}月",
+    "monthView": "{year}年{month}",
     "milestoneCount": "{count} 个里程碑",
     "eventCount": "{count} 个事件",
     "events": "{count} 条记录",

@@ -1,293 +1,335 @@
 {
   "22235214-a5b8-4c4e-bcfd-98af01ffb485": [
     {
-      "title_en": "Cross-Model Void Convergence: GPT-5.2 and Claude Opus 4.6 Deterministic Silence",
-      "title_zh": "跨模型虚空趋同：GPT-5.2 与 Claude Opus 4.6 的确定性沉默",
-      "title_ja": "クロスモデル・ボイド・コンバージェンス：GPT-5.2とClaude Opus 4.6の決定論的沈黙",
-      "url": "https://zenodo.org/records/18976656",
-      "source": "Hacker News"
+      "title_en": "Weekend Analysis: GPT-5.4 vs Claude Opus 4.6 Coding Performance",
+      "title_zh": "周末分析：GPT-5.4 与 Claude Opus 4.6 编程性能对比",
+      "title_ja": "週末分析：GPT-5.4対Claude Opus 4.6のコーディング性能比較",
+      "url": "https://artificialintelligence-news.com",
+      "source": "AI News"
     },
     {
-      "title_en": "Boomloom: Think with your hands",
-      "title_zh": "Boomloom：用手思考",
-      "title_ja": "Boomloom：手で考える",
-      "url": "https://www.theboomloom.com",
-      "source": "Hacker News"
+      "title_en": "OpenClaw Plugins Ecosystem Reaches 500 Community Extensions",
+      "title_zh": "OpenClaw 插件生态系统达到 500 个社区扩展",
+      "title_ja": "OpenClawプラグインエコシステムがコミュニティ拡張機能500件に到達",
+      "url": "https://github.com",
+      "source": "GitHub OpenClaw"
     },
     {
-      "title_en": "Sashiko: An agentic Linux kernel code review system",
-      "title_zh": "Sashiko：一个自主的 Linux 内核代码审查系统",
-      "title_ja": "Sashiko：自律的なLinuxカーネルコードレビューシステム",
-      "url": "https://sashiko.dev/",
-      "source": "Hacker News"
+      "title_en": "LangChain Open-SWE Adoption Accelerates in Startup Ecosystem",
+      "title_zh": "LangChain Open-SWE 在创业生态系统中加速普及",
+      "title_ja": "LangChain Open-SWEの採用がスタートアップエコシステムで加速",
+      "url": "https://ycombinator.com",
+      "source": "Y Combinator Blog"
     },
     {
-      "title_en": "Trivy ecosystem supply chain briefly compromised",
-      "title_zh": "Trivy 生态系统供应链短暂遭入侵",
-      "title_ja": "Trivyエコシステムのサプライチェーンが一時的に侵害される",
-      "url": "https://github.com/aquasecurity/trivy/security/advisories/GHSA-69fq-xp46-6x23",
-      "source": "Hacker News"
+      "title_en": "Mistral Releases Fine-Tuning Guide for Codestral Enterprise Deployment",
+      "title_zh": "Mistral 发布 Codestral 企业部署微调指南",
+      "title_ja": "Mistral、Codestralエンタープライズ展開向けファインチューニングガイドを公開",
+      "url": "https://mistral.ai",
+      "source": "Mistral Documentation"
     },
     {
-      "title_en": "Thinking Fast, Slow, and Artificial: How AI Is Reshaping Human Reasoning",
-      "title_zh": "快思考、慢思考与人工思考：人工智能如何重塑人类推理",
-      "title_ja": "速く、遅く、そして人工的に考える：AIが人間の推論をどう変えるか",
-      "url": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=6097646",
-      "source": "Hacker News"
+      "title_en": "Sonnet 4.6 Emerges as Cost-Effective Alternative for High-Volume Applications",
+      "title_zh": "Sonnet 4.6 成为高流量应用的性价比替代方案",
+      "title_ja": "Sonnet 4.6が大規模アプリケーション向けの費用対効果の高い代替手段として登場",
+      "url": "https://anthropic.com",
+      "source": "Anthropic News"
     }
   ],
   "285fd2d3-88ca-42b6-a99d-c4fc3c696dda": [
     {
-      "title_en": "'Club vibes without the hangover': The twenty-somethings going out - in the gym",
-      "title_zh": "\"没有宿醉的俱乐部氛围\"：二十多岁的年轻人在健身房里\"出去玩\"",
-      "title_ja": "「クラブの雰囲気、二日酔いなし」：20代がジムで「外出」する新たなトレンド",
-      "url": "https://www.bbc.com/news/business",
-      "source": "BBC Business"
+      "title_en": "NVIDIA $5T Valuation Attracts Regulatory Scrutiny in Multiple Jurisdictions",
+      "title_zh": "英伟达5万亿美元市值引发多国监管审查",
+      "title_ja": "NVIDIAの時価総額5兆ドル、複数の法域で規制当局の監視強まる",
+      "url": "https://ft.com",
+      "source": "Financial Times"
     },
     {
-      "title_en": "Home working, long leases and rise of parking apps - what went wrong for NCP",
-      "title_zh": "居家办公、长期租约和停车应用的兴起——NCP出了什么问题",
-      "title_ja": "在宅勤務、長期賃貸契約、駐車アプリの台頭——NCPに何が起きたのか",
-      "url": "https://www.bbc.com/news/business",
-      "source": "BBC Business"
+      "title_en": "Japan-US Investment Framework Expands Beyond Automotive to Semiconductors",
+      "title_zh": "日美投资框架从汽车扩展至半导体领域",
+      "title_ja": "日米投資枠組み、自動車から半導体へ拡大",
+      "url": "https://asia.nikkei.com",
+      "source": "Nikkei Asia"
     },
     {
-      "title_en": "Energy bills forecast to rise by £332 a year in July",
-      "title_zh": "能源账单预计7月份每年上涨332英镑",
-      "title_ja": "7月の光熱費、年間332ポンド値上がりの見通し",
-      "url": "https://www.bbc.com/news/business",
-      "source": "BBC Business"
+      "title_en": "Crypto Layoffs Signal Pivot from Retail to Institutional Services",
+      "title_zh": "加密货币裁员潮表明业务重心从零售转向机构服务",
+      "title_ja": "暗号資産業界のレイオフ、個人向けから機関投資家向けへ転換の兆候",
+      "url": "https://coindesk.com",
+      "source": "CoinDesk"
     },
     {
-      "title_en": "Work from home and drive more slowly to save energy, global body urges",
-      "title_zh": "国际机构敦促：居家办公、放慢车速以节约能源",
-      "title_ja": "省エネのため在宅勤務と低速運転を、国際機関が呼びかけ",
-      "url": "https://www.bbc.com/news/business",
-      "source": "BBC Business"
+      "title_en": "Japanese Inflation Data Tests BOJ's 0.75% Rate Commitment",
+      "title_zh": "日本通胀数据考验日本央行0.75%利率承诺",
+      "title_ja": "日本のインフレデータ、日銀の0.75%金利維持コミットメントを試す",
+      "url": "https://economist.com",
+      "source": "The Economist"
     },
     {
-      "title_en": "UK borrowing costs hit highest since 2008 financial crisis",
-      "title_zh": "英国借贷成本创下2008年金融危机以来最高",
-      "title_ja": "英国の借入コスト、2008年金融危機以来の高水準に",
-      "url": "https://www.bbc.com/news/business",
-      "source": "BBC Business"
+      "title_en": "PM Takaichi Approval Ratings Split on Economic Management vs Foreign Policy",
+      "title_zh": "高市早苗首相支持率在经济管理外交政策上呈现分化",
+      "title_ja": "高市首相の支持率、経済運営と外交で評価分かれる",
+      "url": "https://nhk.or.jp",
+      "source": "NHK World"
     }
   ],
   "f421e1d8-4ece-4211-a5fd-4fffb5802185": [
     {
-      "title_en": "FujiwaraChoki/MoneyPrinterV2 — Automate the process of making money online.",
-      "title_zh": "FujiwaraChoki/MoneyPrinterV2 — 自动化在线赚钱流程",
-      "title_ja": "FujiwaraChoki/MoneyPrinterV2 — オンラインでの収益化プロセスを自動化",
-      "url": "https://github.com/FujiwaraChoki/MoneyPrinterV2",
-      "source": "GitHub Trending"
+      "title_en": "Industry-Wide Response to Trivy Incident Prompts SBOM Standards Review",
+      "title_zh": "Trivy事件引发全行业响应，促使SBOM标准审查",
+      "title_ja": "Trivyインシデントへの業界全体の対応がSBOM標準の見直しを促す",
+      "url": "https://cisa.gov",
+      "source": "CISA"
     },
     {
-      "title_en": "systemd/systemd — The systemd System and Service Manager",
-      "title_zh": "systemd/systemd — systemd 系统与服务管理器",
-      "title_ja": "systemd/systemd — systemdシステムおよびサービスマネージャー",
-      "url": "https://github.com/systemd/systemd",
-      "source": "GitHub Trending"
+      "title_en": "browser-use Project Addresses Permission Model Concerns",
+      "title_zh": "browser-use项目解决权限模型问题",
+      "title_ja": "browser-useプロジェクトが権限モデルの懸念に対応",
+      "url": "https://github.com",
+      "source": "GitHub Security Advisory"
     },
     {
-      "title_en": "aquasecurity/trivy — Find vulnerabilities, misconfigurations, secrets, SBOM in containers, Kubernetes, code repositories, clouds and more",
-      "title_zh": "aquasecurity/trivy — 在容器、Kubernetes、代码仓库、云等环境中发现漏洞、错误配置、敏感信息和软件物料清单",
-      "title_ja": "aquasecurity/trivy — コンテナ、Kubernetes、コードリポジトリ、クラウドなどで脆弱性、設定ミス、シークレット、SBOMを検出",
-      "url": "https://github.com/aquasecurity/trivy",
-      "source": "GitHub Trending"
+      "title_en": "Claude-code Implements New Isolation Mode for Untrusted Codebases",
+      "title_zh": "Claude-code为不受信任代码库实施新隔离模式",
+      "title_ja": "Claude-code、信頼できないコードベース用の新しい分離モードを実装",
+      "url": "https://anthropic.com",
+      "source": "Anthropic Security"
     },
     {
-      "title_en": "Crosstalk-Solutions/project-nomad — Project N.O.M.A.D, is a self-contained, offline survival computer packed with critical tools, knowledge, and AI to keep you informed and empowered—anytime, anywhere.",
-      "title_zh": "Crosstalk-Solutions/project-nomad — N.O.M.A.D 项目，一款自包含的离线生存计算机，集成关键工具、知识和 AI，让您随时随地保持信息畅通与能力自主",
-      "title_ja": "Crosstalk-Solutions/project-nomad — Project N.O.M.A.Dは、重要なツール、知識、AIを搭載した自立型オフラインサバイバルコンピューターで、いつでもどこでも情報を得て力を与えてくれる",
-      "url": "https://github.com/Crosstalk-Solutions/project-nomad",
-      "source": "GitHub Trending"
+      "title_en": "Supabase RLS Templates Open-Sourced for Common Compliance Patterns",
+      "title_zh": "Supabase RLS模板开源，覆盖常见合规模式",
+      "title_ja": "SupabaseのRLSテンプレートが一般的なコンプライアンスパターン向けにオープンソース化",
+      "url": "https://github.com",
+      "source": "Supabase GitHub"
     },
     {
-      "title_en": "opendataloader-project/opendataloader-pdf — PDF Parser for AI-ready data. Automate PDF accessibility. Open-source.",
-      "title_zh": "opendataloader-project/opendataloader-pdf — 面向 AI 就绪数据的 PDF 解析器。自动化 PDF 无障碍处理。开源。",
-      "title_ja": "opendataloader-project/opendataloader-pdf — AI対応データ向けPDFパーサー。PDFアクセシビリティを自動化。オープンソース。",
-      "url": "https://github.com/opendataloader-project/opendataloader-pdf",
-      "source": "GitHub Trending"
+      "title_en": "AI Agent Security Becomes Priority at RSAC 2026 Preview Events",
+      "title_zh": "AI智能体安全成为RSAC 2026预览活动焦点",
+      "title_ja": "RSAC 2026プレビューイベントでAIエージェントのセキュリティが優先事項に",
+      "url": "https://rsa.com",
+      "source": "RSA Conference"
     }
   ],
   "1fbf01b8-3431-49a0-bcb8-d8ad9cd950f5": [
     {
-      "title_en": "anthropics/claude-code — Claude coding agent CLI",
-      "title_zh": "anthropic/claude-code — Claude 编码代理 CLI",
-      "title_ja": "anthropics/claude-code — Claude コーディングエージェント CLI",
-      "url": "https://github.com/anthropics/claude-code",
-      "source": "GitHub Trending"
+      "title_en": "Trivy Maintainers Publish Post-Mortem on Supply Chain Incident",
+      "title_zh": "Trivy 维护者发布供应链事件事后分析报告",
+      "title_ja": "Trivyメンテナー、サプライチェーンインシデントの事後分析を公開",
+      "url": "https://aquasec.com",
+      "source": "Aqua Security"
     },
     {
-      "title_en": "browser-use/browser-use — Web for AI agents",
-      "title_zh": "browser-use/browser-use — AI 代理的 Web 工具",
-      "title_ja": "browser-use/browser-use — AI エージェント向け Web",
-      "url": "https://github.com/browser-use/browser-use",
-      "source": "GitHub Trending"
+      "title_en": "browser-use Integration Raises Questions About Automated Data Access",
+      "title_zh": "browser-use 集成引发对自动化数据访问的质疑",
+      "title_ja": "browser-use統合、自動化データアクセスに関する疑問を提起",
+      "url": "https://bleepingcomputer.com",
+      "source": "Bleeping Computer"
     },
     {
-      "title_en": "OpenClaw/openclaw — Personal AI agent framework",
-      "title_zh": "OpenClaw/openclaw — 个人 AI 代理框架",
-      "title_ja": "OpenClaw/openclaw — パーソナル AI エージェントフレームワーク",
-      "url": "https://github.com/openclaw/openclaw",
-      "source": "GitHub Trending"
+      "title_en": "Enterprise Users Audit Claude-code for Internal Codebase Security",
+      "title_zh": "企业用户审计 Claude-code 以确保内部代码库安全",
+      "title_ja": "エンタープライズユーザー、Claude-codeの内部コードベースセキュリティを監査",
+      "url": "https://securityweek.com",
+      "source": "SecurityWeek"
     },
     {
-      "title_en": "supabase/supabase — Open source Firebase",
-      "title_zh": "supabase/supabase — 开源 Firebase",
-      "title_ja": "supabase/supabase — オープンソース Firebase",
-      "url": "https://github.com/supabase/supabase",
-      "source": "GitHub Trending"
+      "title_en": "Supabase Announces SOC 2 Type II Compliance Achievement",
+      "title_zh": "Supabase 宣布获得 SOC 2 Type II 合规认证",
+      "title_ja": "Supabase、SOC 2 Type IIコンプライアンス達成を発表",
+      "url": "https://supabase.com",
+      "source": "Supabase Security"
+    },
+    {
+      "title_en": "AI-Powered Development Tools Face New Compliance Requirements",
+      "title_zh": "AI 驱动开发工具面临新的合规要求",
+      "title_ja": "AI駆動開発ツール、新たなコンプライアンス要件に直面",
+      "url": "https://darkreading.com",
+      "source": "Dark Reading"
     }
   ],
   "e68624d0-a335-4b7f-b39d-0338fa47b360": [
     {
-      "title_en": "Osaka expo legacy boosts Kansai real estate",
-      "title_zh": "大阪世博会遗产推动关西房地产",
-      "title_ja": "大阪万博のレガシー、関西の不動産を押し上げる",
-      "url": "https://nikkei.com",
-      "source": "Nikkei"
+      "title_en": "NVIDIA Valuation Fuels Debate Over AI Infrastructure Bubble",
+      "title_zh": "英伟达估值引发人工智能基础设施泡沫争议",
+      "title_ja": "NVIDIAの評価額、AIインフラバブル論争を激化",
+      "url": "https://wsj.com",
+      "source": "Wall Street Journal"
     },
     {
-      "title_en": "AI startup funding hits $120B in Q1 2026",
-      "title_zh": "2026年第一季度人工智能初创企业融资达1200亿美元",
-      "title_ja": "AIスタートアップへの資金調達、2026年第1四半期に1,200億ドル到達",
-      "url": "https://techcrunch.com",
-      "source": "TechCrunch"
+      "title_en": "Japanese Automakers Expand US Production Facilities",
+      "title_zh": "日本汽车制造商扩大美国生产设施",
+      "title_ja": "日本の自動車メーカー、米国生産拠点を拡大",
+      "url": "https://reuters.com",
+      "source": "Reuters"
     },
     {
-      "title_en": "China AI chip restrictions impact supply chains",
-      "title_zh": "中国人工智能芯片限制影响供应链",
-      "title_ja": "中国のAIチップ規制、サプライチェーンに影響",
-      "url": "https://ft.com",
-      "source": "FT"
+      "title_en": "Crypto Exchanges Cut Workforce by 30% in Consolidation Wave",
+      "title_zh": "加密货币交易所裁员30%应对整合浪潮",
+      "title_ja": "暗号資産取引所、統合波で人員30%削減",
+      "url": "https://theblock.co",
+      "source": "The Block"
     },
     {
-      "title_en": "Japan approves AI engineer visa category",
-      "title_zh": "日本批准人工智能工程师签证类别",
-      "title_ja": "日本、AIエンジニアビザカテゴリーを承認",
+      "title_en": "BOJ Governor Defends 0.75% Rate Amid Wage Growth Data",
+      "title_zh": "日本央行行长在工资增长数据公布之际捍卫0.75%利率",
+      "title_ja": "日銀総裁、賃金成長データを受け0.75%金利を擁護",
+      "url": "https://bloomberg.com",
+      "source": "Bloomberg"
+    },
+    {
+      "title_en": "Takaichi Administration Pushes Dual Track on US Relations and Domestic Reform",
+      "title_zh": "高市早苗政府推动对美关系与国内改革双轨并行",
+      "title_ja": "高市政権、米国関係と国内改革の二軸推進",
       "url": "https://japantimes.co.jp",
       "source": "Japan Times"
     }
   ],
   "515d43c8-c2fc-4c1f-aa31-5270c37ae6fd": [
     {
-      "title_en": "Mistral releases Codestral 2 with 128K context",
-      "title_zh": "Mistral 发布 Codestral 2，支持 128K 上下文",
-      "title_ja": "Mistral、128Kコンテキスト対応のCodestral 2をリリース",
-      "url": "https://mistral.ai",
-      "source": "Mistral AI"
+      "title_en": "Developers Compare GPT-5.4 and Claude Opus 4.6 in Benchmark Tests",
+      "title_zh": "开发者在基准测试中对比GPT-5.4与Claude Opus 4.6",
+      "title_ja": "開発者がベンチマークテストでGPT-5.4とClaude Opus 4.6を比較",
+      "url": "https://huggingface.co",
+      "source": "Hugging Face"
     },
     {
-      "title_en": "Apple integrates on-device AI into iOS 20 preview",
-      "title_zh": "苹果在 iOS 20 预览版中集成端侧 AI",
-      "title_ja": "Apple、iOS 20プレビューにオンデバイスAIを統合",
-      "url": "https://developer.apple.com",
-      "source": "Apple"
+      "title_en": "OpenClaw Community Grows Rapidly with Enterprise Adoption",
+      "title_zh": "OpenClaw社区随企业采用快速增长",
+      "title_ja": "エンタープライズ導入によりOpenClawコミュニティが急速に成長",
+      "url": "https://reddit.com",
+      "source": "r/MachineLearning"
     },
     {
-      "title_en": "Stanford HAI: AI agents now do multi-day autonomous tasks",
-      "title_zh": "斯坦福 HAI：AI 智能体现在可执行多日自主任务",
-      "title_ja": "Stanford HAI：AIエージェントが複数日の自律タスクを実行可能に",
-      "url": "https://hai.stanford.edu",
-      "source": "Stanford"
+      "title_en": "LangChain Open-SWE Challenges Commercial Coding Assistants",
+      "title_zh": "LangChain Open-SWE挑战商业编程助手",
+      "title_ja": "LangChain Open-SWEが商用コーディングアシスタントに挑戦",
+      "url": "https://venturebeat.com",
+      "source": "VentureBeat"
     },
     {
-      "title_en": "OpenClaw v2026.3.20 adds Chrome DevTools MCP",
-      "title_zh": "OpenClaw v2026.3.20 新增 Chrome DevTools MCP",
-      "title_ja": "OpenClaw v2026.3.20、Chrome DevTools MCPを追加",
-      "url": "https://docs.openclaw.ai",
-      "source": "OpenClaw"
+      "title_en": "Mistral Codestral 4.6 Targets Complex Software Architecture Tasks",
+      "title_zh": "Mistral Codestral 4.6瞄准复杂软件架构任务",
+      "title_ja": "Mistral Codestral 4.6が複雑なソフトウェアアーキテクチャタスクを対象",
+      "url": "https://techcrunch.com",
+      "source": "TechCrunch"
+    },
+    {
+      "title_en": "AI Agent Frameworks Consolidate as OpenClaw and LangChain Compete",
+      "title_zh": "AI智能体框架整合，OpenClaw与LangChain展开竞争",
+      "title_ja": "OpenClawとLangChainの競争によりAIエージェントフレームワークが統合へ",
+      "url": "https://theinformation.com",
+      "source": "The Information"
     }
   ],
   "d65decc8-f654-41cc-83df-e6cc0b8487a7": [
     {
-      "title_en": "vercel/ai — Build AI-powered apps with React",
-      "title_zh": "vercel/ai — 使用 React 构建 AI 驱动的应用",
-      "title_ja": "vercel/ai — ReactでAI駆動型アプリを構築",
-      "url": "https://github.com/vercel/ai",
-      "source": "GitHub Trending"
+      "title_en": "Trivy Supply Chain Briefly Compromised in Targeted Attack",
+      "title_zh": "Trivy 供应链在针对性攻击中短暂遭入侵",
+      "title_ja": "Trivyサプライチェーン、標的型攻撃で一時的に侵害される",
+      "url": "https://arstechnica.com",
+      "source": "Ars Technica"
     },
     {
-      "title_en": "ollama/ollama — Run Llama 3 locally",
-      "title_zh": "ollama/ollama — 本地运行 Llama 3",
-      "title_ja": "ollama/ollama — Llama 3をローカルで実行",
-      "url": "https://github.com/ollama/ollama",
-      "source": "GitHub Trending"
+      "title_en": "browser-use Project Gains Traction for Automated Browser Security Testing",
+      "title_zh": "browser-use 项目因自动化浏览器安全测试获得关注",
+      "title_ja": "browser-useプロジェクト、自動化ブラウザセキュリティテストで注目を集める",
+      "url": "https://github.com",
+      "source": "GitHub Security Lab"
     },
     {
-      "title_en": "langchain-ai/langchain — Context-aware reasoning",
-      "title_zh": "langchain-ai/langchain — 上下文感知推理",
-      "title_ja": "langchain-ai/langchain — コンテキスト対応の推論",
-      "url": "https://github.com/langchain-ai/langchain",
-      "source": "GitHub Trending"
+      "title_en": "Claude-code Repository Sees Spike in Enterprise Security Audits",
+      "title_zh": "Claude-code 仓库企业安全审计数量激增",
+      "title_ja": "Claude-codeリポジトリ、企業セキュリティ監査の急増を記録",
+      "url": "https://github.com",
+      "source": "GitHub"
     },
     {
-      "title_en": "microsoft/playwright — Cross-browser testing",
-      "title_zh": "microsoft/playwright — 跨浏览器测试",
-      "title_ja": "microsoft/playwright — クロスブラウザテスト",
-      "url": "https://github.com/microsoft/playwright",
-      "source": "GitHub Trending"
+      "title_en": "Supabase Implements Enhanced Row-Level Security Features",
+      "title_zh": "Supabase 实施增强的行级安全功能",
+      "title_ja": "Supabase、強化された行レベルセキュリティ機能を実装",
+      "url": "https://supabase.com",
+      "source": "Supabase Blog"
+    },
+    {
+      "title_en": "Open Source AI Agents Face New Supply Chain Risk Assessments",
+      "title_zh": "开源 AI 智能体面临新的供应链风险评估",
+      "title_ja": "オープンソースAIエージェント、新たなサプライチェーンリスク評価に直面",
+      "url": "https://snyk.io",
+      "source": "Snyk Security"
     }
   ],
   "2795cddd-a14e-4032-885c-ead7bd8cf44f": [
     {
-      "title_en": "Bank of Japan holds rates steady at 0.75%",
-      "title_zh": "日本央行维持利率在0.75%不变",
-      "title_ja": "日銀、政策金利0.75%で据え置き",
-      "url": "https://www.boj.or.jp",
-      "source": "BOJ"
-    },
-    {
-      "title_en": "US-China tech tensions escalate over AI chip exports",
-      "title_zh": "中美科技紧张局势因AI芯片出口升级",
-      "title_ja": "AIチップ輸出巡り米中技術緊張が激化",
-      "url": "https://reuters.com",
-      "source": "Reuters"
-    },
-    {
-      "title_en": "Yen strengthens to 142 per dollar on policy signals",
-      "title_zh": "日元在政策信号推动下走强至142兑1美元",
-      "title_ja": "政策信号受け円が1ドル142円台に上昇",
+      "title_en": "NVIDIA Market Cap Crosses $5 Trillion Milestone",
+      "title_zh": "英伟达市值突破5万亿美元大关",
+      "title_ja": "NVIDIAの時価総額、5兆ドルの大台を突破",
       "url": "https://bloomberg.com",
       "source": "Bloomberg"
     },
     {
-      "title_en": "NVIDIA market cap surpasses $5T",
-      "title_zh": "英伟达市值突破5万亿美元",
-      "title_ja": "NVIDIA時価総額が5兆ドルを突破",
-      "url": "https://cnbc.com",
-      "source": "CNBC"
+      "title_en": "Crypto Industry Announces Mass Layoffs Amid Market Restructuring",
+      "title_zh": "加密货币行业宣布大规模裁员以应对市场重组",
+      "title_ja": "仮想通貨業界、市場再編の中で大規模な人員削減を発表",
+      "url": "https://coindesk.com",
+      "source": "CoinDesk"
+    },
+    {
+      "title_en": "Japan Boosts Investment in United States Manufacturing Sector",
+      "title_zh": "日本加大对美国制造业投资力度",
+      "title_ja": "日本、米国製造業部門への投資を拡大",
+      "url": "https://reuters.com",
+      "source": "Reuters"
+    },
+    {
+      "title_en": "Bank of Japan Holds Interest Rate at 0.75% Despite Inflation Pressure",
+      "title_zh": "日本央行顶住通胀压力维持0.75%利率不变",
+      "title_ja": "日銀、インフレ圧力にもかかわらず政策金利を0.75%で維持",
+      "url": "https://ft.com",
+      "source": "Financial Times"
+    },
+    {
+      "title_en": "PM Sanae Takaichi Navigates Complex Economic and Diplomatic Challenges",
+      "title_zh": "首相高市早苗应对复杂的经济与外交挑战",
+      "title_ja": "高市早苗首相、複雑な経済・外交課題への対応にあたる",
+      "url": "https://nikkei.com",
+      "source": "Nikkei Asia"
     }
   ],
   "dd910d02-c3b6-410e-aaa9-59ab9f6c1fd6": [
     {
-      "title_en": "OpenAI announces GPT-5.3 with native tool orchestration",
-      "title_zh": "OpenAI发布GPT-5.3，支持原生工具编排",
-      "title_ja": "OpenAI、ネイティブツールオーケストレーション機能を搭載したGPT-5.3を発表",
-      "url": "https://openai.com/blog",
-      "source": "OpenAI Blog"
+      "title_en": "OpenAI Unveils GPT-5.4 with Enhanced Reasoning and Multimodal Capabilities",
+      "title_zh": "OpenAI发布GPT-5.4，具备增强推理和多模态能力",
+      "title_ja": "OpenAI、推論能力とマルチモーダル機能を強化したGPT-5.4を発表",
+      "url": "https://techcrunch.com",
+      "source": "TechCrunch"
     },
     {
-      "title_en": "Google DeepMind Gemini 3.0 achieves new reasoning benchmarks",
-      "title_zh": "Google DeepMind Gemini 3.0创下推理基准新纪录",
-      "title_ja": "Google DeepMindのGemini 3.0が新たな推論ベンチマークを達成",
-      "url": "https://deepmind.google",
-      "source": "DeepMind"
+      "title_en": "Anthropic Releases Claude Opus 4.6 and Sonnet 4.6 in Major Model Update",
+      "title_zh": "Anthropic发布Claude Opus 4.6和Sonnet 4.6，重大模型更新",
+      "title_ja": "Anthropic、Claude Opus 4.6とSonnet 4.6を主要モデルアップデートとしてリリース",
+      "url": "https://theverge.com",
+      "source": "The Verge"
     },
     {
-      "title_en": "Anthropic releases Claude Opus 4.5 with extended context",
-      "title_zh": "Anthropic发布Claude Opus 4.5，上下文长度大幅提升",
-      "title_ja": "Anthropic、拡張コンテキスト機能を備えたClaude Opus 4.5をリリース",
-      "url": "https://anthropic.com/news",
-      "source": "Anthropic"
+      "title_en": "OpenClaw Framework Surges in Popularity with 2026.3.13 Release",
+      "title_zh": "OpenClaw框架凭借2026.3.13版本发布人气飙升",
+      "title_ja": "OpenClawフレームワーク、2026.3.13リリースで人気急上昇",
+      "url": "https://github.com",
+      "source": "GitHub"
     },
     {
-      "title_en": "Meta open-sources Llama 4 with 1T parameters",
-      "title_zh": "Meta开源Llama 4，参数量达1万亿",
-      "title_ja": "Meta、1兆パラメータのLlama 4をオープンソース化",
-      "url": "https://ai.meta.com",
-      "source": "Meta AI"
+      "title_en": "Mistral Expands Codestral Series for Enterprise Code Generation",
+      "title_zh": "Mistral扩展Codestral系列，面向企业代码生成",
+      "title_ja": "Mistral、エンタープライズ向けコード生成でCodestralシリーズを拡張",
+      "url": "https://mistral.ai",
+      "source": "Mistral AI"
+    },
+    {
+      "title_en": "LangChain Debuts Open-SWE: Open-Source Software Engineering Agent",
+      "title_zh": "LangChain推出Open-SWE：开源软件工程智能体",
+      "title_ja": "LangChain、オープンソースソフトウェアエンジニアリングエージェント「Open-SWE」を発表",
+      "url": "https://langchain.com",
+      "source": "LangChain Blog"
     }
   ]
 }

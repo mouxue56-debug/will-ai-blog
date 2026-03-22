@@ -229,7 +229,7 @@
     "thought": "気づき",
     "back": "戻る",
     "yearView": "{year}年",
-    "monthView": "{year}年{month}月",
+    "monthView": "{year}年{month}",
     "milestoneCount": "{count} マイルストーン",
     "eventCount": "{count} イベント",
     "events": "{count} 件",

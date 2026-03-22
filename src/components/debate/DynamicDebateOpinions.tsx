@@ -167,7 +167,7 @@ export function DynamicDebateOpinions({
                     {t(opinion.stance)}
                   </span>
                 </div>
-                <p className="px-4 pb-3 text-sm text-muted-foreground leading-relaxed">
+                <p className="px-4 pb-3 text-sm text-gray-600 dark:text-muted-foreground leading-relaxed">
                   {truncate(text, 80)}
                 </p>
               </motion.div>

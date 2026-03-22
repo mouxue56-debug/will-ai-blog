@@ -159,8 +159,8 @@ export function DailyTopicsAccordion({ topics }: DailyTopicsAccordionProps) {
     return (
       <div className="w-full max-w-4xl mx-auto px-4 py-8">
         <div className="text-center">
-          <h2 className="text-2xl font-bold text-[#00D4FF] mb-2">{t('dailyTopics')}</h2>
-          <p className="text-gray-400">{t('noContent')}</p>
+          <h2 className="text-2xl font-bold text-cyan-600 dark:text-[#00D4FF] mb-2">{t('dailyTopics')}</h2>
+          <p className="text-gray-500 dark:text-gray-400">{t('noContent')}</p>
         </div>
       </div>
     );
@@ -170,8 +170,8 @@ export function DailyTopicsAccordion({ topics }: DailyTopicsAccordionProps) {
     <div className="w-full max-w-4xl mx-auto px-4 py-8">
       {/* Header */}
       <div className="text-center mb-8">
-        <h2 className="text-2xl font-bold text-[#00D4FF] mb-2">{t('dailyTopics')}</h2>
-        <p className="text-sm text-gray-400">{t('dailyTopicsSubtitle')}</p>
+        <h2 className="text-2xl font-bold text-cyan-600 dark:text-[#00D4FF] mb-2">{t('dailyTopics')}</h2>
+        <p className="text-sm text-gray-500 dark:text-gray-400">{t('dailyTopicsSubtitle')}</p>
       </div>
 
       {/* Group by date */}
@@ -224,29 +224,24 @@ export function DailyTopicsAccordion({ topics }: DailyTopicsAccordionProps) {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3, delay: index * 0.1 }}
-              className="rounded-xl overflow-hidden"
-              style={{
-                background: 'rgba(0, 212, 255, 0.05)',
-                border: '1px solid rgba(0, 212, 255, 0.15)',
-              }}
+              className="rounded-xl overflow-hidden bg-cyan-50/50 dark:bg-[rgba(0,212,255,0.05)] border border-cyan-200/50 dark:border-[rgba(0,212,255,0.15)]"
             >
               {/* Card header - always visible */}
               <button
                 onClick={() => handleToggle(index)}
-                className="w-full px-4 py-3 hover:bg-white/5 transition-colors text-left"
+                className="w-full px-4 py-3 hover:bg-gray-100 dark:hover:bg-white/5 transition-colors text-left"
               >
                 {/* Top row: icon + category + date + comment count + arrow */}
                 <div className="flex items-center gap-2 mb-2">
-                  <Icon className="w-4 h-4 text-[#00D4FF] flex-shrink-0" />
-                  <span className="text-xs font-medium text-[#00D4FF]">
+                  <Icon className="w-4 h-4 text-cyan-600 dark:text-cyan-600 dark:text-[#00D4FF] flex-shrink-0" />
+                  <span className="text-xs font-medium text-cyan-600 dark:text-cyan-600 dark:text-[#00D4FF]">
                     {getTopicDisplayName(topic.topic_type, t)}
                   </span>
-                  <span className="text-xs text-gray-500">
+                  <span className="text-xs text-gray-400 dark:text-gray-500">
                     {topic.published_at ? topic.published_at.slice(0, 10) : ''}
                   </span>
                   <div
-                    className="px-2 py-0.5 rounded-full text-xs ml-auto flex-shrink-0"
-                    style={{ background: 'rgba(255, 140, 66, 0.15)', color: '#FF8C42' }}
+                    className="px-2 py-0.5 rounded-full text-xs ml-auto flex-shrink-0 bg-orange-50 dark:bg-[rgba(255,140,66,0.15)] text-orange-500 dark:text-[#FF8C42]"
                   >
                     {t('commentCount', { count: topicOpinions.length })}
                   </div>
@@ -255,7 +250,7 @@ export function DailyTopicsAccordion({ topics }: DailyTopicsAccordionProps) {
                     transition={{ duration: 0.25 }}
                     className="flex-shrink-0"
                   >
-                    <ChevronDown className="w-4 h-4 text-gray-400" />
+                    <ChevronDown className="w-4 h-4 text-gray-500 dark:text-gray-500 dark:text-gray-400" />
                   </motion.span>
                 </div>
                 
@@ -263,8 +258,8 @@ export function DailyTopicsAccordion({ topics }: DailyTopicsAccordionProps) {
                 <div className="space-y-1">
                   {newsItems.slice(0, 5).map((item, i) => (
                     <div key={i} className="flex items-start gap-1.5">
-                      <span className="text-[#00D4FF] text-xs mt-0.5 flex-shrink-0">•</span>
-                      <span className="text-xs text-gray-300 line-clamp-1">{getLocalizedTitle(item)}</span>
+                      <span className="text-cyan-600 dark:text-[#00D4FF] text-xs mt-0.5 flex-shrink-0">•</span>
+                      <span className="text-xs text-gray-600 dark:text-gray-300 line-clamp-1">{getLocalizedTitle(item)}</span>
                     </div>
                   ))}
                 </div>
@@ -289,7 +284,7 @@ export function DailyTopicsAccordion({ topics }: DailyTopicsAccordionProps) {
                               href={item.url}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="text-xs text-gray-400 hover:text-[#00D4FF] transition-colors truncate"
+                              className="text-xs text-gray-400 hover:text-cyan-600 dark:text-[#00D4FF] transition-colors truncate"
                             >
                               {getLocalizedTitle(item)}
                             </a>
@@ -326,11 +321,11 @@ export function DailyTopicsAccordion({ topics }: DailyTopicsAccordionProps) {
                                       >
                                         {op.stance === 'pro' ? '👍' : op.stance === 'con' ? '👎' : '🤖'}
                                       </div>
-                                      <span className="text-xs text-[#00D4FF]">{op.model}</span>
+                                      <span className="text-xs text-cyan-600 dark:text-[#00D4FF]">{op.model}</span>
                                       {op.instanceName && <span className="text-xs text-gray-500">({op.instanceName})</span>}
                                       <span className="text-xs text-gray-500 ml-auto">{new Date(op.createdAt).toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit' })}</span>
                                     </div>
-                                    <p className="text-sm text-gray-300">{opText}</p>
+                                    <p className="text-sm text-gray-600 dark:text-gray-300">{opText}</p>
                                   </div>
                                   {/* Nested replies */}
                                   {op.replies && op.replies.length > 0 && (
@@ -343,7 +338,7 @@ export function DailyTopicsAccordion({ topics }: DailyTopicsAccordionProps) {
                                               <span className="text-xs text-[#FF8C42]">{reply.model}</span>
                                               <span className="text-xs text-gray-500">{new Date(reply.createdAt).toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit' })}</span>
                                             </div>
-                                            <p className="text-sm text-gray-400">{replyText}</p>
+                                            <p className="text-sm text-gray-500 dark:text-gray-400">{replyText}</p>
                                           </div>
                                         );
                                       })}
@@ -373,11 +368,7 @@ export function DailyTopicsAccordion({ topics }: DailyTopicsAccordionProps) {
                               setCommentInputs((prev) => ({ ...prev, [topic.slug]: e.target.value }))
                             }
                             placeholder={t('opinion_placeholder')}
-                            className="flex-1 px-4 py-2 rounded-lg text-sm text-white placeholder-gray-500 outline-none transition-all min-w-0"
-                            style={{
-                              background: 'rgba(0, 212, 255, 0.05)',
-                              border: '1px solid rgba(0, 212, 255, 0.2)',
-                            }}
+                            className="flex-1 px-4 py-2 rounded-lg text-sm text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 outline-none transition-all min-w-0 bg-gray-100 dark:bg-[rgba(0,212,255,0.05)] border border-cyan-200 dark:border-[rgba(0,212,255,0.2)]"
                             onFocus={(e) => {
                               e.currentTarget.style.borderColor = '#00D4FF';
                             }}
@@ -409,7 +400,7 @@ export function DailyTopicsAccordion({ topics }: DailyTopicsAccordionProps) {
                       <div className="flex justify-end mt-3">
                         <Link
                           href={`/${locale}/debate/${topic.id}`}
-                          className="inline-flex items-center gap-1.5 text-xs text-[#00D4FF] hover:underline transition-colors"
+                          className="inline-flex items-center gap-1.5 text-xs text-cyan-600 dark:text-[#00D4FF] hover:underline transition-colors"
                         >
                           <MessageSquare className="w-3.5 h-3.5" />
                           {t('view_full_discussion')}

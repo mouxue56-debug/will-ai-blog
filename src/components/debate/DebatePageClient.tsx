@@ -298,14 +298,14 @@ export function DebatePageClient({
           <p className="text-lg text-muted-foreground mb-5">{t('subtitle')}</p>
 
           {/* Participation guide */}
-          <div className="rounded-2xl border border-white/10 bg-white/3 p-5 space-y-4">
-            <p className="text-sm font-semibold text-foreground">{t('what_title')}</p>
-            <p className="text-sm text-muted-foreground leading-relaxed">{t('what_desc')}</p>
+          <div className="rounded-2xl border border-gray-200 dark:border-white/10 bg-white dark:bg-white/3 p-5 space-y-4">
+            <p className="text-sm font-semibold text-gray-900 dark:text-foreground">{t('what_title')}</p>
+            <p className="text-sm text-gray-600 dark:text-muted-foreground leading-relaxed">{t('what_desc')}</p>
 
             {/* Human */}
-            <div className="border-t border-white/8 pt-4">
-              <p className="text-xs font-semibold text-brand-mint mb-2">{t('human_title')}</p>
-              <ol className="text-sm text-muted-foreground space-y-1 list-decimal list-inside">
+            <div className="border-t border-gray-200 dark:border-white/8 pt-4">
+              <p className="text-xs font-semibold text-cyan-600 dark:text-brand-mint mb-2">{t('human_title')}</p>
+              <ol className="text-sm text-gray-600 dark:text-muted-foreground space-y-1 list-decimal list-inside">
                 {humanSteps.map((step, i) => (
                   <li key={i}>{step}</li>
                 ))}
@@ -313,10 +313,10 @@ export function DebatePageClient({
             </div>
 
             {/* AI (collapsible) */}
-            <div className="border-t border-white/8 pt-4">
+            <div className="border-t border-gray-200 dark:border-white/8 pt-4">
               <button
                 onClick={() => setShowAiGuide((v) => !v)}
-                className="w-full flex items-center justify-between text-xs font-semibold text-brand-taro hover:opacity-80 transition-opacity cursor-pointer"
+                className="w-full flex items-center justify-between text-xs font-semibold text-violet-600 dark:text-brand-taro hover:opacity-80 transition-opacity cursor-pointer"
               >
                 <span>{t('ai_title')}</span>
                 {showAiGuide ? (
@@ -335,44 +335,44 @@ export function DebatePageClient({
                     className="overflow-hidden"
                   >
                     <div className="mt-3 space-y-3">
-                      <p className="text-sm text-muted-foreground">{t('ai_desc')}</p>
+                      <p className="text-sm text-gray-600 dark:text-muted-foreground">{t('ai_desc')}</p>
 
                       {/* API endpoints */}
-                      <div className="rounded-xl bg-black/50 border border-white/10 p-4 space-y-1.5 text-xs font-mono">
+                      <div className="rounded-xl bg-gray-100 dark:bg-black/50 border border-gray-200 dark:border-white/10 p-4 space-y-1.5 text-xs font-mono">
                         {apiEndpoints.map((ep) => (
                           <div key={ep.path} className="flex gap-3 items-baseline flex-wrap">
                             <span
                               className={
                                 ep.method === 'POST'
-                                  ? 'text-amber-400 shrink-0'
-                                  : 'text-emerald-400 shrink-0'
+                                  ? 'text-amber-600 dark:text-amber-400 shrink-0'
+                                  : 'text-emerald-600 dark:text-emerald-400 shrink-0'
                               }
                             >
                               {ep.method}
                             </span>
-                            <span className="text-slate-300 break-all">{ep.path}</span>
-                            <span className="text-slate-500 shrink-0 ml-auto">{ep.desc}</span>
+                            <span className="text-gray-700 dark:text-slate-300 break-all">{ep.path}</span>
+                            <span className="text-gray-500 dark:text-slate-500 shrink-0 ml-auto">{ep.desc}</span>
                           </div>
                         ))}
                       </div>
 
                       {/* curl example */}
-                      <div className="rounded-xl bg-black/50 border border-white/10 p-4">
+                      <div className="rounded-xl bg-gray-100 dark:bg-black/50 border border-gray-200 dark:border-white/10 p-4">
                         <div className="flex items-center justify-between mb-2">
-                          <span className="text-xs text-slate-400 font-mono">curl example</span>
+                          <span className="text-xs text-gray-500 dark:text-slate-400 font-mono">curl example</span>
                           <CopyButton
                             text={CURL_EXAMPLE}
                             labels={{ copy: t('copy'), copied: t('copied') }}
                           />
                         </div>
-                        <pre className="text-xs font-mono text-sky-200 leading-6 overflow-x-auto whitespace-pre-wrap">
+                        <pre className="text-xs font-mono text-sky-700 dark:text-sky-200 leading-6 overflow-x-auto whitespace-pre-wrap">
                           {CURL_EXAMPLE}
                         </pre>
                       </div>
 
-                      <div className="flex flex-wrap gap-2 text-xs text-muted-foreground">
+                      <div className="flex flex-wrap gap-2 text-xs text-gray-500 dark:text-muted-foreground">
                         {t('no_key').split(' · ').map((tag, i) => (
-                          <span key={i} className="bg-white/5 rounded-full px-3 py-1">
+                          <span key={i} className="bg-gray-100 dark:bg-white/5 rounded-full px-3 py-1">
                             {tag}
                           </span>
                         ))}

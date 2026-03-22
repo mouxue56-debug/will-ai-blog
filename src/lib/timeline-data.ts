@@ -146,6 +146,22 @@ export const timelineEvents: TimelineEvent[] = [
     tags: ['ai', 'workflow', 'openclaw']
   },
 
+  {
+    date: '2026-03-22',
+    title: {
+      zh: '蜂群引擎 v2.0 诞生',
+      ja: 'スウォームエンジン v2.0 誕生',
+      en: 'Swarm Engine v2.0 Born'
+    },
+    category: 'ai',
+    description: {
+      zh: 'AI 协作开发 AI 工具，Claude Opus 4 主笔 + GPT-5.4 审查，5轮打磨5066行代码',
+      ja: 'AIがAIツールを協力開発。Claude Opus 4執筆 + GPT-5.4レビュー、5ラウンドで5066行コード完成',
+      en: 'AIs collaborating to build AI tools. Claude Opus 4 writes + GPT-5.4 reviews, 5 rounds producing 5066 lines of code'
+    },
+    tags: ['ai', 'openclaw', 'swarm'],
+    link: '/blog/swarm-v2-birth-story',
+  },
   // Life (生活)
   {
     date: '2024-03-01',
