@@ -18,8 +18,7 @@ export function TikTokGrid() {
         <motion.div
           key={v.key}
           initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.1 }}
+          animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 + i * 0.1, duration: 0.4 }}
           className="rounded-xl overflow-hidden border border-border/20 cursor-pointer group"
         >

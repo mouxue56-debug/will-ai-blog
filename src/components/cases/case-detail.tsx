@@ -128,8 +128,7 @@ function MetricsGrid({ metrics, locale }: { metrics: CaseStudy['metrics']; local
   return (
     <motion.div
       initial={{ opacity: 0, y: 16 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.2 }}
+      animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay: 0.1, ease: [0.25, 0.1, 0.25, 1] }}
       className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-12"
     >
@@ -137,8 +136,7 @@ function MetricsGrid({ metrics, locale }: { metrics: CaseStudy['metrics']; local
         <motion.div
           key={i}
           initial={{ opacity: 0, scale: 0.9 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true, amount: 0.2 }}
+          animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.4, delay: 0.15 + i * 0.08, ease: [0.25, 0.1, 0.25, 1] }}
           className="glass-card p-4 text-center space-y-1"
         >

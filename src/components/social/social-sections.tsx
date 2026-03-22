@@ -22,8 +22,7 @@ function YouTubeSection() {
   return (
     <motion.section
       initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.1 }}
+      animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
       className="glass-card p-6 sm:p-8"
     >
@@ -43,8 +42,7 @@ function YouTubeSection() {
       {/* Featured video embed */}
       <motion.div
         initial={{ opacity: 0, scale: 0.97 }}
-        whileInView={{ opacity: 1, scale: 1 }}
-        viewport={{ once: true, amount: 0.1 }}
+        animate={{ opacity: 1, scale: 1 }}
         transition={{ delay: 0.2, duration: 0.4 }}
         className="mb-5"
       >
@@ -57,8 +55,7 @@ function YouTubeSection() {
           <motion.div
             key={i}
             initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.1 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 + i * 0.1, duration: 0.4 }}
             className="rounded-lg overflow-hidden bg-white/5 dark:bg-white/[0.03] border border-white/[0.06] backdrop-blur-sm"
           >
@@ -113,8 +110,7 @@ function InstagramSection() {
   return (
     <motion.section
       initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.1 }}
+      animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.1 }}
       className="glass-card p-6 sm:p-8"
     >
@@ -153,8 +149,7 @@ function TikTokSection() {
   return (
     <motion.section
       initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.1 }}
+      animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.2 }}
       className="glass-card p-6 sm:p-8"
     >

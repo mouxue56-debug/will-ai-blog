@@ -25,8 +25,7 @@ function ProfileHero() {
   return (
     <motion.section
       initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.1 }}
+      animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
       className="flex flex-col sm:flex-row items-center sm:items-start gap-6 sm:gap-8"
     >
@@ -71,8 +70,7 @@ function AITeamSection() {
   return (
     <motion.section
       initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.1 }}
+      animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.1 }}
     >
       <h2 className="text-2xl font-bold mb-6">{t('ai_team_title')}</h2>
@@ -98,8 +96,7 @@ function AITeamSection() {
             <motion.div
               key={agent.key}
               initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true, amount: 0.1 }}
+              animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.2 + i * 0.1, duration: 0.4 }}
               className="glass-card p-4 sm:p-5 flex flex-col items-center gap-2 text-center relative overflow-hidden"
             >
@@ -182,8 +179,7 @@ function ToolStackSection() {
   return (
     <motion.section
       initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.1 }}
+      animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.12 }}
     >
       <h2 className="text-2xl font-bold mb-2">{t('stack_title')}</h2>
@@ -217,8 +213,7 @@ function ToolStackSection() {
               target="_blank"
               rel="noopener noreferrer"
               initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.1 }}
+              animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 + index * 0.08, duration: 0.4 }}
               className="block"
             >
@@ -228,8 +223,7 @@ function ToolStackSection() {
             <motion.div
               key={tool.titleKey}
               initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.1 }}
+              animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 + index * 0.08, duration: 0.4 }}
             >
               {card}
@@ -255,8 +249,7 @@ function BusinessLinkCard({
       target="_blank"
       rel="noopener noreferrer"
       initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.1 }}
+      animate={{ opacity: 1, y: 0 }}
       transition={{ delay, duration: 0.4 }}
       className="group glass-card p-5 flex items-center gap-4 hover:shadow-md hover:border-brand-mint/30 transition-all duration-200"
     >
@@ -286,8 +279,7 @@ function BusinessLinks() {
   return (
     <motion.section
       initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.1 }}
+      animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.15 }}
     >
       <h2 className="text-2xl font-bold mb-6">{t('business_title')}</h2>
@@ -307,8 +299,7 @@ function BusinessLinks() {
 
       <motion.p
         initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        viewport={{ once: true, amount: 0.1 }}
+        animate={{ opacity: 1 }}
         transition={{ delay: 0.6, duration: 0.5 }}
         className="mt-4 text-xs text-muted-foreground flex items-center gap-1.5"
       >
@@ -355,8 +346,7 @@ function ContactSection() {
   return (
     <motion.section
       initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.1 }}
+      animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.2 }}
     >
       <h2 className="text-2xl font-bold mb-6">{t('contact_title')}</h2>
@@ -364,8 +354,7 @@ function ContactSection() {
       <div className="grid gap-4 lg:grid-cols-[1.1fr_0.9fr]">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.1 }}
+          animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.25, duration: 0.4 }}
           className="glass-card p-6 flex flex-col justify-between gap-6"
         >
@@ -395,8 +384,7 @@ function ContactSection() {
                 target={link.href.startsWith('mailto:') ? undefined : '_blank'}
                 rel={link.href.startsWith('mailto:') ? undefined : 'noopener noreferrer'}
                 initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.1 }}
+                animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3 + index * 0.08, duration: 0.4 }}
                 className="group glass-card p-5 flex items-center gap-4 hover:shadow-md hover:border-brand-mint/30 transition-all duration-200"
               >
@@ -425,8 +413,7 @@ function CalendarSection() {
   return (
     <motion.section
       initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.1 }}
+      animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.15 }}
     >
       <h2 className="text-2xl font-bold mb-2">{t('calendar_title')}</h2>
