@@ -25,17 +25,17 @@ interface AIAgent {
 }
 
 async function translateTitles(items: NewsItem[]): Promise<NewsItem[]> {
-  if (!process.env.INFINI_API_KEY || items.length === 0) return items;
+  if (!process.env.GLM_API_KEY || items.length === 0) return items;
   try {
     const titles = items.map((i) => i.title).join('\n');
-    const resp = await fetch('https://cloud.infini-ai.com/maas/coding/v1/chat/completions', {
+    const resp = await fetch('https://open.bigmodel.cn/api/paas/v4/chat/completions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${process.env.INFINI_API_KEY}`,
+        'Authorization': `Bearer ${process.env.GLM_API_KEY}`,
       },
       body: JSON.stringify({
-        model: 'deepseek-v3.2-thinking',
+        model: 'glm-4-flash',
         messages: [
           {
             role: 'user',
