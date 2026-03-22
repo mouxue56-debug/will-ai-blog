@@ -13,12 +13,13 @@ export default async function DebatePage({ params }: { params: Promise<{ locale:
   setRequestLocale(locale);
   const loc = (locale as Locale) || 'zh';
 
-  // Fetch daily reports from Supabase (with translations)
+  // Fetch daily reports from Supabase (3 days, filtered by topic_type)
   const { data: todayTopics } = await supabaseAdmin
     .from('daily_reports')
     .select('id, title, content, content_zh, content_ja, content_en, topic_type, slug, author_emoji, published_at')
+    .in('topic_type', ['ai', 'economy', 'github'])
     .order('published_at', { ascending: false })
-    .limit(3);
+    .limit(9);
 
   const topics = await getTodayDebateTopics();
   const topicMap = new Map(debates.map((debate) => [debate.id, debate]));

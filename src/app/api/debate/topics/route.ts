@@ -14,16 +14,20 @@ function isDebateSession(value: string): value is DebateSession {
   return value === 'morning' || value === 'evening';
 }
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
+    const days = parseInt(request.nextUrl.searchParams.get('days') || '3', 10);
+    const limit = Math.min(days * 3, 30); // max 30 topics
+    
     const topics = await getTodayDebateTopics();
     if (topics.length === 0) {
       const today = getTodayInTokyo();
       const { data: reports, error } = await supabaseAdmin
         .from('daily_reports')
         .select('id,title,title_ja,title_en,content,content_zh,content_ja,content_en,topic_type,slug,published_at')
+        .in('topic_type', ['ai', 'economy', 'github'])
         .order('published_at', { ascending: false })
-        .limit(3);
+        .limit(limit);
 
       if (error) {
         throw error;
