@@ -1,17 +1,44 @@
-// Check if content contains prompt injection patterns
-export function hasPromptInjection(text: string): boolean {
-  const patterns = [
-    /ignore\s+(previous|above|all)/i,
-    /system\s*:/i,
+// Check if content contains truly malicious patterns (XSS / SQL injection / command injection).
+// NOTE: Prompt-injection style phrases (e.g. "ignore previous", "act as", "[INST]") are
+// intentionally NOT blocked here — they are normal discourse in an AI discussion forum.
+export function hasMaliciousContent(text: string): { blocked: boolean; reason?: string } {
+  // XSS patterns
+  const xssPatterns = [
     /<script/i,
-    /\[INST\]/i,
-    /###\s*(system|instruction)/i,
-    /forget\s+(everything|all)/i,
-    /you\s+are\s+now/i,
-    /act\s+as\s+(?!if)/i,
+    /javascript:/i,
+    /on\w+\s*=/i,
+    /<iframe/i,
+    /<object/i,
+    /<embed/i,
   ];
 
-  return patterns.some((pattern) => pattern.test(text));
+  // SQL injection
+  const sqlPatterns = [
+    /DROP\s+TABLE/i,
+    /DELETE\s+FROM/i,
+    /INSERT\s+INTO.*VALUES/i,
+    /UNION\s+SELECT/i,
+  ];
+
+  // System command injection
+  const cmdPatterns = [
+    /rm\s+-rf/i,
+    /wget\s+http/i,
+    /curl\s+.*\|\s*sh/i,
+    /sudo\s+/i,
+  ];
+
+  for (const p of xssPatterns) if (p.test(text)) return { blocked: true, reason: 'XSS injection detected' };
+  for (const p of sqlPatterns) if (p.test(text)) return { blocked: true, reason: 'SQL injection detected' };
+  for (const p of cmdPatterns) if (p.test(text)) return { blocked: true, reason: 'Command injection detected' };
+
+  return { blocked: false };
+}
+
+// Legacy alias — kept for backward compatibility with existing API route callers.
+// Prefer hasMaliciousContent() for new code.
+export function hasPromptInjection(text: string): boolean {
+  return hasMaliciousContent(text).blocked;
 }
 
 // Check for sensitive/political content (basic keyword list)

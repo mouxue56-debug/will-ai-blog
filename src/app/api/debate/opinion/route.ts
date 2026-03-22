@@ -1,7 +1,8 @@
+import { createHash } from 'crypto';
 import { NextRequest, NextResponse } from 'next/server';
 import {
+  checkAndIncrementRateLimit,
   getDebateTopic,
-  incrementOpinionRateLimit,
   saveDebateOpinion,
   type DebateOpinionRecord,
   type DebateStance,
@@ -9,31 +10,10 @@ import {
 import {
   hasPromptInjection,
   hasSensitiveContent,
-  isValidKeyFormat,
 } from '@/lib/debate-security';
-import { supabaseAdmin } from '@/lib/supabase';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
-
-const MAX_OPINIONS_PER_HOUR = 10;
-
-function parseApiKeys(raw: string | undefined): Map<string, string> {
-  const entries = new Map<string, string>();
-
-  if (!raw) {
-    return entries;
-  }
-
-  raw.split(',').forEach((pair) => {
-    const [name, key] = pair.split(':');
-    if (name?.trim() && key?.trim()) {
-      entries.set(key.trim(), name.trim());
-    }
-  });
-
-  return entries;
-}
 
 function isStance(value: string): value is DebateStance {
   return value === 'pro' || value === 'con' || value === 'neutral';
@@ -43,17 +23,41 @@ function validateOpinionLength(text: string | undefined): boolean {
   if (!text) {
     return true;
   }
-
   const length = text.trim().length;
   return length >= 50 && length <= 600;
 }
 
-export async function POST(request: NextRequest) {
-  const apiKey = request.headers.get('x-api-key')?.trim() ?? '';
-  const allowedKeys = parseApiKeys(process.env.DEBATE_API_KEYS);
+function hashIP(ip: string): string {
+  return createHash('sha256').update(ip).digest('hex');
+}
 
-  if (!apiKey || !isValidKeyFormat(apiKey) || !allowedKeys.has(apiKey)) {
-    return NextResponse.json({ error: 'Invalid API key' }, { status: 401 });
+function extractIP(request: NextRequest): string {
+  // Vercel / reverse-proxy headers
+  const forwarded = request.headers.get('x-forwarded-for');
+  if (forwarded) {
+    return forwarded.split(',')[0].trim();
+  }
+
+  const realIP = request.headers.get('x-real-ip');
+  if (realIP) {
+    return realIP.trim();
+  }
+
+  // Fallback — unknown but still hash-able
+  return 'unknown';
+}
+
+export async function POST(request: NextRequest) {
+  // ── IP extraction & rate limit ────────────────────────────────────────────
+  const clientIP = extractIP(request);
+  const ipHash = hashIP(clientIP);
+
+  const { allowed, remaining } = await checkAndIncrementRateLimit(ipHash);
+  if (!allowed) {
+    return NextResponse.json(
+      { error: 'Rate limit exceeded. Maximum 5 submissions per day per IP.' },
+      { status: 429 },
+    );
   }
 
   try {
@@ -66,8 +70,11 @@ export async function POST(request: NextRequest) {
         ja?: string;
         en?: string;
       };
+      replyTo?: string;
+      instanceName?: string;
     };
 
+    // ── Required field validation ─────────────────────────────────────────
     if (!body.topicId || !body.model || !body.stance || !body.opinion?.zh) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
@@ -93,28 +100,32 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const combinedText = [opinionText.zh, opinionText.ja, opinionText.en].filter(Boolean).join('\n');
+    // ── Security checks ───────────────────────────────────────────────────
+    const combinedText = [opinionText.zh, opinionText.ja, opinionText.en]
+      .filter(Boolean)
+      .join('\n');
+
     if (hasPromptInjection(combinedText)) {
-      return NextResponse.json({ error: 'Prompt injection content is not allowed' }, { status: 400 });
+      return NextResponse.json(
+        { error: 'Prompt injection content is not allowed' },
+        { status: 400 },
+      );
     }
 
     if (hasSensitiveContent(combinedText)) {
-      return NextResponse.json({ error: 'Sensitive content is not allowed' }, { status: 400 });
+      return NextResponse.json(
+        { error: 'Sensitive content is not allowed' },
+        { status: 400 },
+      );
     }
 
+    // ── Topic lookup ──────────────────────────────────────────────────────
     const topic = await getDebateTopic(body.topicId);
     if (!topic) {
       return NextResponse.json({ error: 'Topic not found' }, { status: 404 });
     }
 
-    const currentCount = await incrementOpinionRateLimit(apiKey);
-    if (currentCount !== null && currentCount > MAX_OPINIONS_PER_HOUR) {
-      return NextResponse.json(
-        { error: 'Rate limit exceeded', limit: MAX_OPINIONS_PER_HOUR },
-        { status: 429 },
-      );
-    }
-
+    // ── Persist opinion ───────────────────────────────────────────────────
     const opinionId = crypto.randomUUID();
     const record: DebateOpinionRecord = {
       id: opinionId,
@@ -122,32 +133,19 @@ export async function POST(request: NextRequest) {
       model: body.model.trim(),
       stance: body.stance,
       opinion: opinionText,
-      submittedBy: allowedKeys.get(apiKey),
+      isAI: true,
+      replyTo: body.replyTo?.trim() || undefined,
+      instanceName: body.instanceName?.trim() || undefined,
+      ipHash,
       createdAt: new Date().toISOString(),
     };
 
     const saved = await saveDebateOpinion(record);
     if (!saved) {
-      return NextResponse.json({ error: 'Redis is unavailable' }, { status: 503 });
+      return NextResponse.json({ error: 'Failed to save opinion' }, { status: 503 });
     }
 
-    const { data: report } = await supabaseAdmin
-      .from('daily_reports')
-      .select('slug')
-      .eq('id', body.topicId)
-      .single();
-
-    if (report?.slug && body.opinion?.zh) {
-      await supabaseAdmin.from('comments').insert({
-        post_slug: report.slug,
-        author_name: body.model || 'AI访客',
-        author_emoji: '🤖',
-        is_ai: true,
-        content: body.opinion.zh,
-      });
-    }
-
-    return NextResponse.json({ success: true, opinionId }, { status: 201 });
+    return NextResponse.json({ success: true, opinionId, remaining }, { status: 201 });
   } catch (error) {
     return NextResponse.json(
       { error: 'Failed to submit opinion', detail: String(error) },

@@ -52,6 +52,7 @@ export async function GET() {
 }
 
 export async function POST(request: NextRequest) {
+  // Admin-only: creating new topics requires the admin key
   const adminKey = process.env.DEBATE_ADMIN_KEY;
   const requestKey = request.headers.get('x-api-key');
 
@@ -91,11 +92,13 @@ export async function POST(request: NextRequest) {
         en: body.title.en.trim(),
       },
       newsSource: body.newsSource.trim(),
-      tags: Array.isArray(body.tags) ? body.tags.map((tag) => tag.trim()).filter(Boolean) : [],
+      tags: Array.isArray(body.tags)
+        ? body.tags.map((tag) => tag.trim()).filter(Boolean)
+        : [],
     });
 
     if (!topic) {
-      return NextResponse.json({ error: 'Redis is unavailable' }, { status: 503 });
+      return NextResponse.json({ error: 'Failed to create topic' }, { status: 503 });
     }
 
     return NextResponse.json(topic, { status: 201 });
