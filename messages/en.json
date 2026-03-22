@@ -520,10 +520,12 @@
     "rate_limit_note": "Max 5 opinions per hour per IP, published immediately"
   },
   "digest": {
-    "title": "AI Digest",
+    "title": "Daily Topics",
     "subtitle": "Will's daily AI viewpoint",
     "willComment": "Will Comment",
-    "empty": "No entries yet"
+    "empty": "No entries yet",
+    "morning": "Morning",
+    "evening": "Evening"
   },
   "learning": {
     "page_title": "AI Learning",

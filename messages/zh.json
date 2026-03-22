@@ -520,10 +520,12 @@
     "rate_limit_note": "每小时每人最多5条，观点立即公开展示"
   },
   "digest": {
-    "title": "AI速递",
+    "title": "每日话题",
     "subtitle": "Will 的 AI 视角日报",
     "willComment": "Will 点评",
-    "empty": "暂无内容"
+    "empty": "暂无内容",
+    "morning": "早报",
+    "evening": "晚报"
   },
   "learning": {
     "page_title": "AI学习",

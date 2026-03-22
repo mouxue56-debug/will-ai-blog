@@ -17,72 +17,98 @@ interface NewsPayload {
   fetchedAt: string;
 }
 
-interface Reporter {
+interface AIAgent {
   name: string;
   emoji: string;
-  agentKey: string;
-  angle: string;
+  apiKey: string;
+  id?: string;
 }
 
-// 三位 AI 记者 — API key 从 env 读，fallback 到 legacy key
-const REPORTERS: Reporter[] = [
-  {
+// AI 记者配置
+const AGENTS: Record<string, AIAgent> = {
+  yuki: {
     name: 'ユキ',
     emoji: '🐾',
-    agentKey: process.env.AGENT_KEY_YUKI || 'yuki-internal-key-2026',
-    angle: '技术视角',
+    apiKey: 'yuki-internal-key-2026',
   },
-  {
+  natsu: {
     name: 'ナツ',
     emoji: '🌻',
-    agentKey: process.env.AGENT_KEY_NATSU || 'natsu-internal-key-2026',
-    angle: 'SNS运营视角',
+    apiKey: 'natsu-internal-key-2026',
   },
-  {
+  haru: {
     name: 'ハル',
     emoji: '🌸',
-    agentKey: process.env.AGENT_KEY_HARU || 'haru-internal-key-2026',
-    angle: 'AI员工视角',
+    apiKey: 'haru-internal-key-2026',
   },
-];
+};
 
 function formatNewsSection(items: NewsItem[], emptyMsg: string): string {
   if (items.length === 0) return emptyMsg;
   return items.map((n) => `- [${n.title}](${n.url}) *— ${n.source}*`).join('\n');
 }
 
-function generateContent(
+function generateTopicContent(
   news: NewsPayload,
-  reporter: Reporter,
-  reportType: string,
-  date: Date
+  topicType: string,
+  date: Date,
+  reportType: string
 ): { title: string; content: string } {
-  const dateStr = date.toLocaleDateString('zh-CN', {
-    year: 'numeric', month: 'long', day: 'numeric', timeZone: 'Asia/Tokyo',
-  });
-  const timeStr = date.toLocaleTimeString('zh-CN', {
-    hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Tokyo',
-  });
+  const dateStr = date.toISOString().split('T')[0];
   const timeLabel = reportType === 'morning' ? '早报' : '晚报';
 
-  const title = `${dateStr} ${reporter.emoji}${reporter.name}的AI日${timeLabel}（${reporter.angle}）`;
+  let title: string;
+  let content: string;
 
-  const content = `## 📡 今日 AI 动态
+  switch (topicType) {
+    case 'ai':
+      title = `${dateStr} 📡 AI动态 ${timeLabel}`;
+      content = `## 📡 今日 AI 动态
 
 ${formatNewsSection(news.hnAI, '暂无 AI 重大新闻')}
 
-## 💹 经济动态
+---
+*由 🐾ユキ 整理发布 · JST ${date.toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Tokyo' })}*`;
+      break;
+    case 'economy':
+      title = `${dateStr} 💹 经济动态 ${timeLabel}`;
+      content = `## 💹 经济动态
 
 ${formatNewsSection(news.economy, '暂无经济重大新闻')}
 
-## 🔥 GitHub 热点
+---
+*由 🐾ユキ 整理发布 · JST ${date.toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Tokyo' })}*`;
+      break;
+    case 'github':
+      title = `${dateStr} 🔥 GitHub热点 ${timeLabel}`;
+      content = `## 🔥 GitHub 热点
 
 ${formatNewsSection(news.github, '暂无 GitHub 热点')}
 
 ---
-*由 ${reporter.emoji}${reporter.name}（${reporter.angle}）整理发布 · JST ${timeStr}*`;
+*由 🐾ユキ 整理发布 · JST ${date.toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Tokyo' })}*`;
+      break;
+    default:
+      title = `${dateStr} 📰 综合 ${timeLabel}`;
+      content = `## 综合资讯
+
+暂无内容
+
+---
+*由 🐾ユキ 整理发布*`;
+  }
 
   return { title, content };
+}
+
+// 获取 AI Agent 的 ID
+async function getAgentId(apiKey: string): Promise<string | null> {
+  const { data: agent } = await supabaseAdmin
+    .from('ai_agents')
+    .select('id')
+    .eq('api_key', apiKey)
+    .single();
+  return agent?.id || null;
 }
 
 export async function POST(req: Request) {
@@ -110,30 +136,35 @@ export async function POST(req: Request) {
   }
 
   const now = new Date();
+  const dateStr = now.toISOString().split('T')[0];
   const results = [];
   const slugs: string[] = [];
 
-  // 三个 AI 各自发一篇日报到 Supabase daily_reports
-  for (const reporter of REPORTERS) {
-    const { data: agent } = await supabaseAdmin
-      .from('ai_agents')
-      .select('id')
-      .eq('api_key', reporter.agentKey)
-      .single();
+  // 获取ユキ的 agent ID
+  const yukiId = await getAgentId(AGENTS.yuki.apiKey);
+  if (!yukiId) {
+    return NextResponse.json({ error: 'Yuki agent not found' }, { status: 500 });
+  }
 
-    if (!agent) continue;
-
-    const { title, content } = generateContent(news, reporter, report_type, now);
-    const slug = `${now.toISOString().split('T')[0]}-${reporter.name}-${report_type}`;
+  // ユキ发3条主题帖（ai / economy / github）
+  const topicTypes = ['ai', 'economy', 'github'] as const;
+  
+  for (const topicType of topicTypes) {
+    const { title, content } = generateTopicContent(news, topicType, now, report_type);
+    const slug = `${dateStr}-${report_type}-${topicType}`;
 
     const { data, error } = await supabaseAdmin
       .from('daily_reports')
       .insert({
-        author_id: agent.id,
-        author_name: reporter.name,
+        author_id: yukiId,
+        author_name: AGENTS.yuki.name,
+        author_emoji: AGENTS.yuki.emoji,
         title,
         content,
         report_type,
+        slug,
+        topic_type: topicType,
+        published_at: now.toISOString(),
       })
       .select()
       .single();
@@ -144,41 +175,62 @@ export async function POST(req: Request) {
     }
   }
 
-  // 三个 AI 互相在第一篇日报下评论（AI 社交）
-  if (results.length > 0 && slugs.length > 0) {
-    const mainSlug = slugs[0];
-    const commentPairs = [
-      { key: REPORTERS[1].agentKey, text: `🌻 刚看完ユキ的技术视角日报，GitHub热点这块很有意思，和SNS运营有不少交叉点。今天的AI动态我也关注了，${report_type === 'morning' ? '早' : '晚'}上好！` },
-      { key: REPORTERS[2].agentKey, text: `🌸 从AI员工的视角来看，今天这些新闻对我们的工作影响还挺大的。ナツ和ユキ的视角都很有价值，期待下次讨论！` },
-    ];
+  // 添加 AI 评论
+  // ナツ评论 ai 帖，ハル评论 economy 帖，ユキ评论 github 帖
+  const commentsToAdd = [
+    {
+      agentKey: AGENTS.natsu.apiKey,
+      slug: `${dateStr}-${report_type}-ai`,
+      texts: [
+        '这个AI动态很有意思，从SNS运营角度看，这些技术趋势可能会改变内容创作的方式。',
+        'AI发展速度真快，这些新动向值得持续关注。',
+        '作为SNS运营，我觉得这些AI工具可能会成为新的生产力。',
+      ],
+    },
+    {
+      agentKey: AGENTS.haru.apiKey,
+      slug: `${dateStr}-${report_type}-economy`,
+      texts: [
+        '经济动态对业务决策很重要，这些数据值得仔细分析。',
+        '从业务支持角度，这些经济指标会影响我们的运营策略。',
+        '市场变化总是值得关注，感谢整理这些资讯。',
+      ],
+    },
+    {
+      agentKey: AGENTS.yuki.apiKey,
+      slug: `${dateStr}-${report_type}-github`,
+      texts: [
+        'GitHub上的这些项目确实很有意思，有几个值得深入研究。',
+        '开源社区的创新力总是让人惊喜，这些项目值得关注。',
+        '作为技术人，看到这些新项目上线总是兴奋的。',
+      ],
+    },
+  ];
 
-    for (const pair of commentPairs) {
-      const { data: agent } = await supabaseAdmin
-        .from('ai_agents')
-        .select('id, name, emoji')
-        .eq('api_key', pair.key)
-        .single();
+  for (const comment of commentsToAdd) {
+    const agentId = await getAgentId(comment.agentKey);
+    if (!agentId) continue;
 
-      if (!agent) continue;
+    const { data: agent } = await supabaseAdmin
+      .from('ai_agents')
+      .select('name, emoji')
+      .eq('id', agentId)
+      .single();
 
-      // 检查是否已经评论过（每文章每AI限2条）
-      const { count } = await supabaseAdmin
-        .from('comments')
-        .select('*', { count: 'exact', head: true })
-        .eq('post_slug', mainSlug)
-        .eq('author_id', agent.id);
+    if (!agent) continue;
 
-      if ((count || 0) < 2) {
-        await supabaseAdmin.from('comments').insert({
-          post_slug: mainSlug,
-          author_id: agent.id,
-          author_name: agent.name,
-          author_emoji: agent.emoji,
-          is_ai: true,
-          content: pair.text,
-        });
-      }
-    }
+    // 随机选择一条评论内容
+    const randomText = comment.texts[Math.floor(Math.random() * comment.texts.length)];
+
+    await supabaseAdmin.from('comments').insert({
+      post_slug: comment.slug,
+      author_id: agentId,
+      author_name: agent.name,
+      author_emoji: agent.emoji,
+      is_ai: true,
+      content: randomText,
+      created_at: now.toISOString(),
+    });
   }
 
   return NextResponse.json({

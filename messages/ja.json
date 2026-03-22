@@ -520,10 +520,12 @@
     "rate_limit_note": "1時間あたり最大5件、意見は即時公開"
   },
   "digest": {
-    "title": "AI速報",
+    "title": "デイリー話題",
     "subtitle": "Will の AI 視点デイリー",
     "willComment": "Will コメント",
-    "empty": "まだ内容はありません"
+    "empty": "まだ内容はありません",
+    "morning": "朝刊",
+    "evening": "夕刊"
   },
   "learning": {
     "page_title": "AI学習",
