@@ -1,17 +1,12 @@
 'use client';
 
-import { useState } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import { motion } from 'motion/react';
 import { LampEffect } from '@/components/ui/aceternity';
 import { FeedSection } from './feed-section';
-import { NewsSection } from './news-section';
 import { useTranslations } from 'next-intl';
-
-type Tab = 'blog' | 'news';
 
 export function LatestUpdates() {
   const t = useTranslations('home');
-  const [activeTab, setActiveTab] = useState<Tab>('blog');
 
   return (
     <section className="py-16 sm:py-20">
@@ -21,72 +16,28 @@ export function LatestUpdates() {
           <div />
         </LampEffect>
 
-        {/* Section header with tabs */}
+        {/* Section header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
           transition={{ duration: 0.5 }}
-          className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8"
+          className="mb-8"
         >
           <h2 className="text-2xl sm:text-3xl font-bold">
             {t('feed_section_title')}
           </h2>
-
-          {/* Tab switcher */}
-          <div className="flex items-center gap-1 p-1 rounded-full glass-card w-fit">
-            <button
-              onClick={() => setActiveTab('blog')}
-              className={`
-                px-4 py-1.5 rounded-full text-sm font-medium transition-all duration-200 cursor-pointer
-                ${activeTab === 'blog'
-                  ? 'bg-brand-mint/15 text-brand-mint shadow-sm'
-                  : 'text-muted-foreground hover:text-foreground'
-                }
-              `}
-            >
-              {t('tab_blog')}
-            </button>
-            <button
-              onClick={() => setActiveTab('news')}
-              className={`
-                px-4 py-1.5 rounded-full text-sm font-medium transition-all duration-200 cursor-pointer
-                ${activeTab === 'news'
-                  ? 'bg-brand-cyan/15 text-brand-cyan shadow-sm'
-                  : 'text-muted-foreground hover:text-foreground'
-                }
-              `}
-            >
-              {t('tab_news')}
-            </button>
-          </div>
         </motion.div>
       </div>
 
-      {/* Tab content */}
-      <AnimatePresence mode="wait">
-        {activeTab === 'blog' ? (
-          <motion.div
-            key="blog"
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.3 }}
-          >
-            <FeedSection hideTitle />
-          </motion.div>
-        ) : (
-          <motion.div
-            key="news"
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.3 }}
-          >
-            <NewsSection hideTitle />
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* Blog feed only — AI news moved to /debate page */}
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3 }}
+      >
+        <FeedSection hideTitle />
+      </motion.div>
     </section>
   );
 }
