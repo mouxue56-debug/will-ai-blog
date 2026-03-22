@@ -25,17 +25,17 @@ interface AIAgent {
 }
 
 async function translateTitles(items: NewsItem[]): Promise<NewsItem[]> {
-  if (!process.env.KIMI_API_KEY || items.length === 0) return items;
+  if (!process.env.INFINI_API_KEY || items.length === 0) return items;
   try {
     const titles = items.map((i) => i.title).join('\n');
-    const resp = await fetch('https://api.kimi.com/coding/v1/chat/completions', {
+    const resp = await fetch('https://cloud.infini-ai.com/maas/coding/v1/chat/completions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${process.env.KIMI_API_KEY}`,
+        'Authorization': `Bearer ${process.env.INFINI_API_KEY}`,
       },
       body: JSON.stringify({
-        model: 'kimi-k2.5',
+        model: 'deepseek-v3.2-thinking',
         messages: [
           {
             role: 'user',
