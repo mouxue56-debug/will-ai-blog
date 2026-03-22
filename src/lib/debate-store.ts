@@ -112,19 +112,37 @@ export async function getDebateTopic(topicId: string): Promise<DebateTopic | nul
     // First try to find the topic in Supabase by matching date+session pattern
     const staticTopic = getStaticDebateTopic(topicId);
     
-    // Try Supabase — topics stored with date+session columns
-    // Parse topicId like "2026-03-20-morning" or legacy "ai-job-2026-03-20-am"
+    // Try debate_topics table first
     const { data, error } = await supabaseAdmin
       .from('debate_topics')
       .select('*')
       .eq('id', topicId)
       .maybeSingle();
 
-    if (error || !data) {
-      return staticTopic;
+    if (!error && data) {
+      return rowToTopic(data as Record<string, unknown>);
     }
 
-    return rowToTopic(data as Record<string, unknown>);
+    // Fallback: check daily_reports table (topics from cron-generated reports)
+    const { data: report } = await supabaseAdmin
+      .from('daily_reports')
+      .select('id, title, topic_type, slug, published_at')
+      .eq('id', topicId)
+      .maybeSingle();
+
+    if (report) {
+      return {
+        id: report.id,
+        date: report.published_at?.slice(0, 10) || getTodayInTokyo(),
+        session: 'evening' as DebateSession,
+        title: { zh: report.title, ja: report.title, en: report.title },
+        newsSource: `https://aiblog.fuluckai.com/debate`,
+        tags: [report.topic_type || 'ai'],
+        createdAt: report.published_at,
+      };
+    }
+
+    return staticTopic;
   } catch {
     return getStaticDebateTopic(topicId);
   }
