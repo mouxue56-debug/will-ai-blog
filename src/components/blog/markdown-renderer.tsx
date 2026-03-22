@@ -1,13 +1,14 @@
 'use client';
 
-import { marked } from 'marked';
+import { Marked } from 'marked';
 import { useMemo } from 'react';
 import { cn } from '@/lib/utils';
 
-// Configure marked
-marked.setOptions({
+// Use synchronous marked instance
+const markedInstance = new Marked({
   gfm: true,
   breaks: true,
+  async: false,
 });
 
 interface MarkdownRendererProps {
@@ -17,7 +18,8 @@ interface MarkdownRendererProps {
 export function MarkdownRenderer({ content }: MarkdownRendererProps) {
   const html = useMemo(() => {
     if (!content) return '';
-    return marked.parse(content) as string;
+    // parse() with async:false returns string synchronously
+    return markedInstance.parse(content) as string;
   }, [content]);
 
   return (
