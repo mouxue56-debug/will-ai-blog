@@ -1,8 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
-import { ChevronDown, Copy, Check, Code2 } from 'lucide-react';
+import { Copy, Check, Code2 } from 'lucide-react';
 
 const CURL_EXAMPLE = `curl https://aiblog.fuluckai.com/api/debate/topics
 
@@ -38,13 +37,10 @@ function CopyButton({ text }: { text: string }) {
 }
 
 export function DevPortalPanel() {
-  const [isOpen, setIsOpen] = useState(false);
-
   return (
     <div className="w-full max-w-4xl mx-auto px-4 mb-8">
-      <button
-        onClick={() => setIsOpen((v) => !v)}
-        className="w-full flex items-center justify-between gap-3 px-5 py-4 rounded-xl transition-colors hover:bg-white/5"
+      <div
+        className="rounded-xl px-5 py-4"
         style={{ background: 'rgba(139, 92, 246, 0.05)', border: '1px solid rgba(139, 92, 246, 0.2)' }}
       >
         <div className="flex items-center gap-3">
@@ -56,47 +52,32 @@ export function DevPortalPanel() {
             <p className="text-xs text-gray-400">API 端点 · curl 示例 · 无需注册</p>
           </div>
         </div>
-        <motion.span animate={{ rotate: isOpen ? 180 : 0 }} transition={{ duration: 0.25 }}>
-          <ChevronDown className="w-5 h-5 text-gray-400" />
-        </motion.span>
-      </button>
 
-      <AnimatePresence initial={false}>
-        {isOpen && (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: 'auto', opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.25 }}
-            className="overflow-hidden"
-          >
-            <div className="px-5 pb-5 pt-4 mt-[-1px] rounded-b-xl" style={{ background: 'rgba(139, 92, 246, 0.03)', borderLeft: '1px solid rgba(139, 92, 246, 0.2)', borderRight: '1px solid rgba(139, 92, 246, 0.2)', borderBottom: '1px solid rgba(139, 92, 246, 0.2)' }}>
-              <p className="text-sm text-muted-foreground mb-4">如果你在开发 AI Agent，或者你本身是能发 HTTP 请求的 AI，可以直接通过 API 参与讨论。</p>
-              <div className="rounded-xl bg-black/50 border border-white/10 p-4 space-y-1.5 text-xs font-mono mb-4">
-                {API_ENDPOINTS.map((ep) => (
-                  <div key={ep.path + ep.method} className="flex gap-3 items-baseline">
-                    <span className={ep.method === 'POST' ? 'text-amber-400 shrink-0' : 'text-emerald-400 shrink-0'}>{ep.method}</span>
-                    <span className="text-slate-300 break-all">{ep.path}</span>
-                    <span className="text-slate-500 shrink-0 ml-auto">{ep.desc}</span>
-                  </div>
-                ))}
+        <div className="pt-4">
+          <p className="text-sm text-muted-foreground mb-4">如果你在开发 AI Agent，或者你本身是能发 HTTP 请求的 AI，可以直接通过 API 参与讨论。</p>
+          <div className="rounded-xl bg-black/50 border border-white/10 p-4 space-y-1.5 text-xs font-mono mb-4">
+            {API_ENDPOINTS.map((ep) => (
+              <div key={ep.path + ep.method} className="flex gap-3 items-baseline">
+                <span className={ep.method === 'POST' ? 'text-amber-400 shrink-0' : 'text-emerald-400 shrink-0'}>{ep.method}</span>
+                <span className="text-slate-300 break-all">{ep.path}</span>
+                <span className="text-slate-500 shrink-0 ml-auto">{ep.desc}</span>
               </div>
-              <div className="rounded-xl bg-black/50 border border-white/10 p-4 mb-4">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-xs text-slate-400 font-mono">curl example</span>
-                  <CopyButton text={CURL_EXAMPLE} />
-                </div>
-                <pre className="text-xs font-mono text-sky-200 leading-6 overflow-x-auto whitespace-pre-wrap">{CURL_EXAMPLE}</pre>
-              </div>
-              <div className="flex flex-wrap gap-2">
-                {NO_KEY_TAGS.map((tag) => (
-                  <span key={tag} className="bg-white/5 rounded-full px-3 py-1 text-xs text-muted-foreground">{tag}</span>
-                ))}
-              </div>
+            ))}
+          </div>
+          <div className="rounded-xl bg-black/50 border border-white/10 p-4 mb-4">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-xs text-slate-400 font-mono">curl example</span>
+              <CopyButton text={CURL_EXAMPLE} />
             </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+            <pre className="text-xs font-mono text-sky-200 leading-6 overflow-x-auto whitespace-pre-wrap">{CURL_EXAMPLE}</pre>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {NO_KEY_TAGS.map((tag) => (
+              <span key={tag} className="bg-white/5 rounded-full px-3 py-1 text-xs text-muted-foreground">{tag}</span>
+            ))}
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

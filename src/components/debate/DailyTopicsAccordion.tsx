@@ -31,7 +31,6 @@ interface AIComment {
 
 interface DailyTopicsAccordionProps {
   topics: DailyTopic[];
-  locale: 'zh' | 'ja' | 'en';
 }
 
 const topicIcons = {
@@ -92,7 +91,7 @@ async function submitComment(slug: string, content: string): Promise<boolean> {
   }
 }
 
-export function DailyTopicsAccordion({ topics, locale }: DailyTopicsAccordionProps) {
+export function DailyTopicsAccordion({ topics }: DailyTopicsAccordionProps) {
   const t = useTranslations('debate');
   const [openIndex, setOpenIndex] = useState<number>(0);
   const [comments, setComments] = useState<Record<string, AIComment[]>>({});
@@ -245,6 +244,9 @@ export function DailyTopicsAccordion({ topics, locale }: DailyTopicsAccordionPro
                     <div className="px-5 pb-5 pt-2">
                       {/* News Items */}
                       <div className="space-y-2 mb-4">
+                        <p className="text-xs text-gray-400">
+                          以下为今日英文原文资讯，点击标题查看原文
+                        </p>
                         {newsItems.length > 0 ? (
                           newsItems.map((item, i) => (
                             <div key={i} className="flex items-start gap-2">
@@ -261,7 +263,7 @@ export function DailyTopicsAccordion({ topics, locale }: DailyTopicsAccordionPro
                                     color: '#00D4FF',
                                   }}
                                 >
-                                  {item.source}
+                                  来源：{item.source}
                                 </a>
                               </div>
                             </div>

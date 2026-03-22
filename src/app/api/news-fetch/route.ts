@@ -9,6 +9,34 @@ interface NewsItem {
   source: string;
 }
 
+const GITHUB_TRENDING_FALLBACK: NewsItem[] = [
+  {
+    title: 'microsoft/vscode — VS Code 编辑器',
+    url: 'https://github.com/microsoft/vscode',
+    source: 'GitHub Trending',
+  },
+  {
+    title: 'huggingface/transformers — 最流行AI模型库',
+    url: 'https://github.com/huggingface/transformers',
+    source: 'GitHub Trending',
+  },
+  {
+    title: 'langchain-ai/langchain — LLM应用开发框架',
+    url: 'https://github.com/langchain-ai/langchain',
+    source: 'GitHub Trending',
+  },
+  {
+    title: 'open-webui/open-webui — 本地AI聊天界面',
+    url: 'https://github.com/open-webui/open-webui',
+    source: 'GitHub Trending',
+  },
+  {
+    title: 'ollama/ollama — 本地运行大模型',
+    url: 'https://github.com/ollama/ollama',
+    source: 'GitHub Trending',
+  },
+];
+
 // 抓取 Hacker News AI 相关 top stories
 async function fetchHNAI(): Promise<NewsItem[]> {
   try {
@@ -50,34 +78,94 @@ async function fetchHNAI(): Promise<NewsItem[]> {
   }
 }
 
-// 抓取 GitHub Trending（非官方 API，fallback 到静态链接）
-async function fetchGithubTrending(): Promise<NewsItem[]> {
-  try {
-    const resp = await fetch(
-      'https://api.gitterapp.com/repositories?since=daily&language=',
-      {
-        headers: { Accept: 'application/json' },
-        next: { revalidate: 0 },
-      }
-    );
-    if (!resp.ok) throw new Error('gitterapp api failed');
-    const repos: Array<{ name: string; description?: string; url: string }> =
-      await resp.json();
-    return repos.slice(0, 5).map((r) => ({
-      title: `${r.name}${r.description ? ` — ${r.description}` : ''}`,
-      url: r.url,
+function normalizeGithubTrendingItems(items: NewsItem[]): NewsItem[] {
+  return items
+    .filter((item) => item.title && item.url)
+    .slice(0, 5)
+    .map((item) => ({
+      title: item.title.trim(),
+      url: item.url.trim(),
       source: 'GitHub Trending',
     }));
+}
+
+async function fetchGithubTrendingFromApi(): Promise<NewsItem[]> {
+  const resp = await fetch(
+    'https://github-trending-api.walinejs.workers.dev/repositories?since=daily',
+    {
+      headers: { Accept: 'application/json' },
+      next: { revalidate: 0 },
+    }
+  );
+  if (!resp.ok) throw new Error('waline trending api failed');
+
+  const repos: Array<{
+    author?: string;
+    name?: string;
+    description?: string;
+    url?: string;
+  }> = await resp.json();
+
+  return normalizeGithubTrendingItems(
+    repos.map((repo) => ({
+      title:
+        repo.author && repo.name
+          ? `${repo.author}/${repo.name}${repo.description ? ` — ${repo.description}` : ''}`
+          : `${repo.name || 'GitHub Repo'}${repo.description ? ` — ${repo.description}` : ''}`,
+      url: repo.url || '',
+      source: 'GitHub Trending',
+    }))
+  );
+}
+
+async function fetchGithubTrendingFromHtml(): Promise<NewsItem[]> {
+  const resp = await fetch('https://github.com/trending', {
+    headers: { 'User-Agent': 'Mozilla/5.0 (compatible; WillAIBot/1.0)' },
+    next: { revalidate: 0 },
+  });
+  if (!resp.ok) throw new Error('github trending html failed');
+
+  const html = await resp.text();
+  const articleMatches = html.match(/<article class="Box-row[\s\S]*?<\/article>/g) || [];
+  const items = articleMatches.map((article) => {
+    const repoMatch = article.match(/<h2[^>]*>[\s\S]*?<a[^>]*href="\/([^"]+)"[^>]*>/i);
+    const descMatch = article.match(/<p[^>]*class="[^"]*col-9[^"]*"[^>]*>([\s\S]*?)<\/p>/i);
+    const repoName = repoMatch?.[1]?.replace(/\s+/g, '');
+    const description = descMatch?.[1]
+      ?.replace(/<[^>]+>/g, ' ')
+      .replace(/&amp;/g, '&')
+      .replace(/&#39;/g, "'")
+      .replace(/&quot;/g, '"')
+      .replace(/\s+/g, ' ')
+      .trim();
+
+    return {
+      title: repoName ? `${repoName}${description ? ` — ${description}` : ''}` : '',
+      url: repoName ? `https://github.com/${repoName}` : '',
+      source: 'GitHub Trending',
+    };
+  });
+
+  return normalizeGithubTrendingItems(items);
+}
+
+// 抓取 GitHub Trending（API -> HTML -> hardcode fallback）
+async function fetchGithubTrending(): Promise<NewsItem[]> {
+  try {
+    const apiItems = await fetchGithubTrendingFromApi();
+    if (apiItems.length > 0) return apiItems;
   } catch {
-    // fallback: 返回 GitHub Trending 页面链接
-    return [
-      {
-        title: 'GitHub Trending — 今日最热仓库',
-        url: 'https://github.com/trending',
-        source: 'GitHub',
-      },
-    ];
+    // Continue to HTML fallback.
   }
+
+  try {
+    const htmlItems = await fetchGithubTrendingFromHtml();
+    if (htmlItems.length > 0) return htmlItems;
+  } catch {
+    // Continue to static fallback.
+  }
+
+  return GITHUB_TRENDING_FALLBACK;
 }
 
 // 抓取经济新闻（Reuters RSS，fallback 到 AP RSS）

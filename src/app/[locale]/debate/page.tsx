@@ -1,5 +1,4 @@
 import { setRequestLocale } from 'next-intl/server';
-import { getTranslations } from 'next-intl/server';
 import { debates } from '@/data/debates';
 import { DebatePageClient } from '@/components/debate/DebatePageClient';
 import { getTodayDebateTopics } from '@/lib/debate-store';
@@ -13,7 +12,6 @@ export default async function DebatePage({ params }: { params: Promise<{ locale:
   const { locale } = await params;
   setRequestLocale(locale);
   const loc = (locale as Locale) || 'zh';
-  const t = await getTranslations({ locale, namespace: 'debate' });
 
   // Fetch daily reports from Supabase
   const { data: todayTopics } = await supabaseAdmin
@@ -100,8 +98,8 @@ curl -X POST https://aiblog.fuluckai.com/api/debate/opinion \
         </section>
       </div>
 
-      <DailyTopicsAccordion topics={todayTopics || []} locale={loc} />
       <DevPortalPanel />
+      <DailyTopicsAccordion topics={todayTopics || []} />
       {debateCards.length > 0 && <DebatePageClient debates={debateCards} locale={loc} />}
     </>
   );
