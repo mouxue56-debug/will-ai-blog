@@ -34,38 +34,63 @@ export async function GET(request: NextRequest) {
         throw error;
       }
 
-      const titleTranslations: Record<string, Record<string, string>> = {
-        'AI动态': { ja: 'AIニュース', en: 'AI News' },
-        '经济动态': { ja: '経済ニュース', en: 'Economy News' },
-        'GitHub热点': { ja: 'GitHubトレンド', en: 'GitHub Trending' },
-        '晚报': { ja: '夕刊', en: 'Evening' },
-        '早报': { ja: '朝刊', en: 'Morning' },
-      };
-      
-      function translateTitle(title: string, lang: string): string {
-        let result = title;
-        for (const [zh, map] of Object.entries(titleTranslations)) {
-          if (result.includes(zh) && map[lang]) {
-            result = result.replace(zh, map[lang]);
-          }
+      // Extract news items from markdown content
+      function extractNewsItems(content: string): Array<{title: string; url: string; source: string}> {
+        const regex = /- \[([^\]]+)\]\(([^)]+)\)\s*\*?—?\s*([^*\n]*)\*?/g;
+        const items: Array<{title: string; url: string; source: string}> = [];
+        let match;
+        while ((match = regex.exec(content)) !== null) {
+          items.push({
+            title: match[1].trim(),
+            url: match[2].trim(),
+            source: (match[3] || '').trim().replace(/\*$/, '').trim(),
+          });
         }
-        return result;
+        return items;
       }
 
-      const mappedTopics = (reports ?? []).map((r) => ({
-        id: r.id,
-        date: r.published_at?.slice(0, 10) || today,
-        session: 'evening' as const,
-        title: {
-          zh: r.title,
-          ja: translateTitle(r.title, 'ja'),
-          en: translateTitle(r.title, 'en'),
-        },
-        content: r.content,
-        newsSource: 'https://aiblog.fuluckai.com/debate',
-        tags: [r.topic_type || 'ai'],
-        slug: r.slug,
-      }));
+      // Load pre-translated news items
+      let translationsMap: Record<string, Array<{title_en: string; title_zh: string; title_ja: string; url: string; source: string}>> = {};
+      try {
+        translationsMap = (await import('@/data/news-translations.json')).default;
+      } catch { /* no translations file */ }
+
+      const mappedTopics = (reports ?? []).map((r) => {
+        const rawItems = extractNewsItems(r.content || '');
+        // Use translations if available, otherwise use raw items
+        const translated = translationsMap[r.id];
+        const newsItems = translated
+          ? translated.map((t) => ({
+              title_en: t.title_en,
+              title_zh: t.title_zh,
+              title_ja: t.title_ja,
+              url: t.url,
+              source: t.source,
+            }))
+          : rawItems.map((item) => ({
+              title_en: item.title,
+              title_zh: item.title,
+              title_ja: item.title,
+              url: item.url,
+              source: item.source,
+            }));
+
+        return {
+          id: r.id,
+          date: r.published_at?.slice(0, 10) || today,
+          session: 'evening' as const,
+          title: {
+            zh: r.title,
+            ja: r.title,
+            en: r.title,
+          },
+          content: r.content,
+          newsItems, // Pre-parsed + translated news items
+          newsSource: 'https://aiblog.fuluckai.com/debate',
+          tags: [r.topic_type || 'ai'],
+          slug: r.slug,
+        };
+      });
 
       return NextResponse.json({ topics: mappedTopics });
     }

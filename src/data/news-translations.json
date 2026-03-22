@@ -1,0 +1,293 @@
+{
+  "22235214-a5b8-4c4e-bcfd-98af01ffb485": [
+    {
+      "title_en": "Cross-Model Void Convergence: GPT-5.2 and Claude Opus 4.6 Deterministic Silence",
+      "title_zh": "跨模型空洞收敛：GPT-5.2与Claude Opus 4.6的确定性沉默",
+      "title_ja": "クロスモデル空洞収束：GPT-5.2とClaude Opus 4.6の決定論的沈黙",
+      "url": "https://zenodo.org/records/18976656",
+      "source": "Hacker News"
+    },
+    {
+      "title_en": "Boomloom: Think with your hands",
+      "title_zh": "Boomloom：用双手思考",
+      "title_ja": "Boomloom：手で考える",
+      "url": "https://www.theboomloom.com",
+      "source": "Hacker News"
+    },
+    {
+      "title_en": "Sashiko: An agentic Linux kernel code review system",
+      "title_zh": "Sashiko：智能体驱动的Linux内核代码审查系统",
+      "title_ja": "Sashiko：エージェント型Linuxカーネルコードレビューシステム",
+      "url": "https://sashiko.dev/",
+      "source": "Hacker News"
+    },
+    {
+      "title_en": "Trivy ecosystem supply chain briefly compromised",
+      "title_zh": "Trivy生态系统供应链短暂遭到入侵",
+      "title_ja": "Trivyエコシステムのサプライチェーンが一時的に侵害される",
+      "url": "https://github.com/aquasecurity/trivy/security/advisories/GHSA-69fq-xp46-6x23",
+      "source": "Hacker News"
+    },
+    {
+      "title_en": "Thinking Fast, Slow, and Artificial: How AI Is Reshaping Human Reasoning",
+      "title_zh": "快思考、慢思考与人工思考：AI如何重塑人类推理",
+      "title_ja": "速い思考、遅い思考、そして人工的な思考：AIが人間の推論をどう変えるか",
+      "url": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=6097646",
+      "source": "Hacker News"
+    }
+  ],
+  "285fd2d3-88ca-42b6-a99d-c4fc3c696dda": [
+    {
+      "title_en": "'Club vibes without the hangover': The twenty-somethings going out - in the gym",
+      "title_zh": "「没有宿醉的夜店氛围」：在健身房嗨起来的二十多岁年轻人",
+      "title_ja": "「二日酔いなしのクラブ気分」：ジムに繰り出す20代の若者たち",
+      "url": "https://www.bbc.com/news/business",
+      "source": "BBC Business"
+    },
+    {
+      "title_en": "Home working, long leases and rise of parking apps - what went wrong for NCP",
+      "title_zh": "居家办公、长期租约和停车App崛起——NCP究竟出了什么问题",
+      "title_ja": "在宅勤務、長期リースと駐車アプリの台頭——NCPに何が起きたのか",
+      "url": "https://www.bbc.com/news/business",
+      "source": "BBC Business"
+    },
+    {
+      "title_en": "Energy bills forecast to rise by £332 a year in July",
+      "title_zh": "7月起能源账单预计每年上涨332英镑",
+      "title_ja": "7月からエネルギー料金が年間332ポンド上昇の見通し",
+      "url": "https://www.bbc.com/news/business",
+      "source": "BBC Business"
+    },
+    {
+      "title_en": "Work from home and drive more slowly to save energy, global body urges",
+      "title_zh": "国际机构呼吁居家办公、减速驾驶以节约能源",
+      "title_ja": "国際機関、省エネのため在宅勤務と低速運転を呼びかけ",
+      "url": "https://www.bbc.com/news/business",
+      "source": "BBC Business"
+    },
+    {
+      "title_en": "UK borrowing costs hit highest since 2008 financial crisis",
+      "title_zh": "英国借贷成本升至2008年金融危机以来最高水平",
+      "title_ja": "英国の借入コストが2008年金融危機以来の最高水準に",
+      "url": "https://www.bbc.com/news/business",
+      "source": "BBC Business"
+    }
+  ],
+  "f421e1d8-4ece-4211-a5fd-4fffb5802185": [
+    {
+      "title_en": "FujiwaraChoki/MoneyPrinterV2 — Automate the process of making money online",
+      "title_zh": "FujiwaraChoki/MoneyPrinterV2 — 自动化在线赚钱流程",
+      "title_ja": "FujiwaraChoki/MoneyPrinterV2 — オンライン収益の自動化",
+      "url": "https://github.com/FujiwaraChoki/MoneyPrinterV2",
+      "source": "GitHub Trending"
+    },
+    {
+      "title_en": "systemd/systemd — The systemd System and Service Manager",
+      "title_zh": "systemd/systemd — systemd系统和服务管理器",
+      "title_ja": "systemd/systemd — systemdシステム＆サービスマネージャー",
+      "url": "https://github.com/systemd/systemd",
+      "source": "GitHub Trending"
+    },
+    {
+      "title_en": "aquasecurity/trivy — Find vulnerabilities, misconfigurations, secrets, SBOM",
+      "title_zh": "aquasecurity/trivy — 发现漏洞、配置错误、密钥和SBOM",
+      "title_ja": "aquasecurity/trivy — 脆弱性、設定ミス、シークレット、SBOMの検出",
+      "url": "https://github.com/aquasecurity/trivy",
+      "source": "GitHub Trending"
+    },
+    {
+      "title_en": "Crosstalk-Solutions/project-nomad — Self-contained offline survival computer",
+      "title_zh": "Crosstalk-Solutions/project-nomad — 离线生存计算机",
+      "title_ja": "Crosstalk-Solutions/project-nomad — オフライン型サバイバルコンピュータ",
+      "url": "https://github.com/Crosstalk-Solutions/project-nomad",
+      "source": "GitHub Trending"
+    },
+    {
+      "title_en": "opendataloader-project/opendataloader-pdf — PDF Parser for AI-ready data",
+      "title_zh": "opendataloader-project/opendataloader-pdf — AI就绪数据的PDF解析器",
+      "title_ja": "opendataloader-project/opendataloader-pdf — AI対応データ向けPDFパーサー",
+      "url": "https://github.com/opendataloader-project/opendataloader-pdf",
+      "source": "GitHub Trending"
+    }
+  ],
+  "1fbf01b8-3431-49a0-bcb8-d8ad9cd950f5": [
+    {
+      "title_en": "anthropics/claude-code — Claude coding agent CLI",
+      "title_zh": "anthropics/claude-code — Claude编程智能体CLI",
+      "title_ja": "anthropics/claude-code — Claudeコーディングエージェント CLI",
+      "url": "https://github.com/anthropics/claude-code",
+      "source": "GitHub Trending"
+    },
+    {
+      "title_en": "browser-use/browser-use — Web for AI agents",
+      "title_zh": "browser-use/browser-use — 让AI智能体操作网页",
+      "title_ja": "browser-use/browser-use — AIエージェント向けWebアクセス",
+      "url": "https://github.com/browser-use/browser-use",
+      "source": "GitHub Trending"
+    },
+    {
+      "title_en": "OpenClaw/openclaw — Personal AI agent framework",
+      "title_zh": "OpenClaw/openclaw — 个人AI智能体框架",
+      "title_ja": "OpenClaw/openclaw — パーソナルAIエージェントフレームワーク",
+      "url": "https://github.com/openclaw/openclaw",
+      "source": "GitHub Trending"
+    },
+    {
+      "title_en": "supabase/supabase — Open source Firebase",
+      "title_zh": "supabase/supabase — 开源版Firebase",
+      "title_ja": "supabase/supabase — オープンソース版Firebase",
+      "url": "https://github.com/supabase/supabase",
+      "source": "GitHub Trending"
+    }
+  ],
+  "e68624d0-a335-4b7f-b39d-0338fa47b360": [
+    {
+      "title_en": "Osaka expo legacy boosts Kansai real estate",
+      "title_zh": "大阪世博遗产效应推动关西房地产市场",
+      "title_ja": "大阪万博のレガシーが関西不動産市場を押し上げ",
+      "url": "https://nikkei.com",
+      "source": "Nikkei"
+    },
+    {
+      "title_en": "AI startup funding hits $120B in Q1 2026",
+      "title_zh": "2026年Q1全球AI创业融资达1200亿美元",
+      "title_ja": "2026年Q1のAIスタートアップ資金調達が1200億ドルに到達",
+      "url": "https://techcrunch.com",
+      "source": "TechCrunch"
+    },
+    {
+      "title_en": "China AI chip restrictions impact supply chains",
+      "title_zh": "中国AI芯片限制影响供应链",
+      "title_ja": "中国のAIチップ規制がサプライチェーンに影響",
+      "url": "https://ft.com",
+      "source": "FT"
+    },
+    {
+      "title_en": "Japan approves AI engineer visa category",
+      "title_zh": "日本批准AI工程师签证类别",
+      "title_ja": "日本、AIエンジニアビザのカテゴリーを承認",
+      "url": "https://japantimes.co.jp",
+      "source": "Japan Times"
+    }
+  ],
+  "515d43c8-c2fc-4c1f-aa31-5270c37ae6fd": [
+    {
+      "title_en": "Mistral releases Codestral 2 with 128K context",
+      "title_zh": "Mistral发布支持128K上下文的Codestral 2",
+      "title_ja": "MistralがCodestral 2をリリース（128Kコンテキスト対応）",
+      "url": "https://mistral.ai",
+      "source": "Mistral AI"
+    },
+    {
+      "title_en": "Apple integrates on-device AI into iOS 20 preview",
+      "title_zh": "Apple在iOS 20预览版中集成端侧AI",
+      "title_ja": "AppleがiOS 20プレビューにオンデバイスAIを統合",
+      "url": "https://developer.apple.com",
+      "source": "Apple"
+    },
+    {
+      "title_en": "Stanford HAI: AI agents now do multi-day autonomous tasks",
+      "title_zh": "斯坦福HAI：AI智能体已能完成多天自主任务",
+      "title_ja": "Stanford HAI：AIエージェントが数日間の自律タスクを遂行可能に",
+      "url": "https://hai.stanford.edu",
+      "source": "Stanford"
+    },
+    {
+      "title_en": "OpenClaw v2026.3.20 adds Chrome DevTools MCP",
+      "title_zh": "OpenClaw v2026.3.20新增Chrome DevTools MCP",
+      "title_ja": "OpenClaw v2026.3.20がChrome DevTools MCPを追加",
+      "url": "https://docs.openclaw.ai",
+      "source": "OpenClaw"
+    }
+  ],
+  "d65decc8-f654-41cc-83df-e6cc0b8487a7": [
+    {
+      "title_en": "vercel/ai — Build AI-powered apps with React",
+      "title_zh": "vercel/ai — 用React构建AI驱动应用",
+      "title_ja": "vercel/ai — ReactでAI搭載アプリを構築",
+      "url": "https://github.com/vercel/ai",
+      "source": "GitHub Trending"
+    },
+    {
+      "title_en": "ollama/ollama — Run Llama 3 locally",
+      "title_zh": "ollama/ollama — 本地运行Llama 3",
+      "title_ja": "ollama/ollama — Llama 3をローカルで実行",
+      "url": "https://github.com/ollama/ollama",
+      "source": "GitHub Trending"
+    },
+    {
+      "title_en": "langchain-ai/langchain — Context-aware reasoning",
+      "title_zh": "langchain-ai/langchain — 上下文感知推理",
+      "title_ja": "langchain-ai/langchain — コンテキスト対応推論",
+      "url": "https://github.com/langchain-ai/langchain",
+      "source": "GitHub Trending"
+    },
+    {
+      "title_en": "microsoft/playwright — Cross-browser testing",
+      "title_zh": "microsoft/playwright — 跨浏览器测试",
+      "title_ja": "microsoft/playwright — クロスブラウザテスト",
+      "url": "https://github.com/microsoft/playwright",
+      "source": "GitHub Trending"
+    }
+  ],
+  "2795cddd-a14e-4032-885c-ead7bd8cf44f": [
+    {
+      "title_en": "Bank of Japan holds rates steady at 0.75%",
+      "title_zh": "日本央行维持利率0.75%不变",
+      "title_ja": "日銀、金利を0.75%に据え置き",
+      "url": "https://www.boj.or.jp",
+      "source": "BOJ"
+    },
+    {
+      "title_en": "US-China tech tensions escalate over AI chip exports",
+      "title_zh": "中美科技紧张局势因AI芯片出口升级",
+      "title_ja": "米中テック摩擦がAIチップ輸出を巡り激化",
+      "url": "https://reuters.com",
+      "source": "Reuters"
+    },
+    {
+      "title_en": "Yen strengthens to 142 per dollar on policy signals",
+      "title_zh": "日元在政策信号刺激下升至142日元/美元",
+      "title_ja": "政策シグナルで円が1ドル142円まで上昇",
+      "url": "https://bloomberg.com",
+      "source": "Bloomberg"
+    },
+    {
+      "title_en": "NVIDIA market cap surpasses $5T",
+      "title_zh": "英伟达市值突破5万亿美元",
+      "title_ja": "NVIDIAの時価総額が5兆ドルを突破",
+      "url": "https://cnbc.com",
+      "source": "CNBC"
+    }
+  ],
+  "dd910d02-c3b6-410e-aaa9-59ab9f6c1fd6": [
+    {
+      "title_en": "OpenAI announces GPT-5.3 with native tool orchestration",
+      "title_zh": "OpenAI发布支持原生工具编排的GPT-5.3",
+      "title_ja": "OpenAIがネイティブツールオーケストレーション搭載のGPT-5.3を発表",
+      "url": "https://openai.com/blog",
+      "source": "OpenAI Blog"
+    },
+    {
+      "title_en": "Google DeepMind Gemini 3.0 achieves new reasoning benchmarks",
+      "title_zh": "Google DeepMind Gemini 3.0达成新推理基准",
+      "title_ja": "Google DeepMind Gemini 3.0が推論ベンチマークで新記録",
+      "url": "https://deepmind.google",
+      "source": "DeepMind"
+    },
+    {
+      "title_en": "Anthropic releases Claude Opus 4.5 with extended context",
+      "title_zh": "Anthropic发布扩展上下文版Claude Opus 4.5",
+      "title_ja": "AnthropicがコンテキストEL拡張版Claude Opus 4.5をリリース",
+      "url": "https://anthropic.com/news",
+      "source": "Anthropic"
+    },
+    {
+      "title_en": "Meta open-sources Llama 4 with 1T parameters",
+      "title_zh": "Meta开源1T参数的Llama 4",
+      "title_ja": "Metaが1Tパラメータ搭載のLlama 4をオープンソース化",
+      "url": "https://ai.meta.com",
+      "source": "Meta AI"
+    }
+  ]
+}

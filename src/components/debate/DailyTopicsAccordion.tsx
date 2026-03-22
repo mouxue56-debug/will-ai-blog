@@ -8,7 +8,10 @@ import { useParams } from 'next/navigation';
 import Link from 'next/link';
 
 interface NewsItem {
-  title: string;
+  title?: string;
+  title_en?: string;
+  title_zh?: string;
+  title_ja?: string;
   url: string;
   source: string;
 }
@@ -24,6 +27,7 @@ interface DailyTopic {
   slug: string;
   author_emoji: string;
   published_at: string;
+  newsItems?: NewsItem[];
 }
 
 interface Opinion {
@@ -174,14 +178,24 @@ export function DailyTopicsAccordion({ topics }: DailyTopicsAccordionProps) {
         {topics.map((topic, index) => {
           const isOpen = index === openIndex;
           const Icon = topicIcons[topic.topic_type] || Newspaper;
-          // 根据 locale 选择对应语言的内容
-          const localizedContent = (
-            locale === 'ja' ? topic.content_ja :
-            locale === 'en' ? topic.content_en :
-            topic.content_zh
-          ) || topic.content;
-          const newsItems = parseNewsItems(localizedContent);
+          // Use pre-parsed newsItems from API, fallback to parsing content
+          const newsItems = topic.newsItems && topic.newsItems.length > 0 
+            ? topic.newsItems 
+            : parseNewsItems(topic.content);
           const topicOpinions = opinions[topic.id] || [];
+          
+          // Helper to get localized title from a news item
+          const getLocalizedTitle = (item: NewsItem): string => {
+            if (locale === 'ja' && item.title_ja) return item.title_ja;
+            if (locale === 'en' && item.title_en) return item.title_en;
+            if (locale === 'zh' && item.title_zh) return item.title_zh;
+            return item.title_zh || item.title_en || item.title || '';
+          };
+          
+          // Use first news headline as the display title
+          const displayTitle = newsItems.length > 0 
+            ? getLocalizedTitle(newsItems[0])
+            : getTopicDisplayName(topic.topic_type, t);
           const inputValue = commentInputs[topic.slug] || '';
           const isSubmitting = submitting[topic.slug] || false;
 
@@ -210,11 +224,11 @@ export function DailyTopicsAccordion({ topics }: DailyTopicsAccordionProps) {
                     <Icon className="w-5 h-5 text-[#00D4FF]" />
                   </div>
                   <div className="text-left flex-1 min-w-0">
-                    <h3 className="font-medium text-white truncate">
-                      {getTopicDisplayName(topic.topic_type, t)}
+                    <h3 className="font-medium text-white truncate text-sm">
+                      {displayTitle}
                     </h3>
                     <p className="text-xs text-gray-400">
-                      {topic.published_at ? topic.published_at.slice(0, 10) : ''} · {topic.published_at && new Date(topic.published_at).getHours() < 12 ? t('session_morning') : t('session_evening')}
+                      {getTopicDisplayName(topic.topic_type, t)} · {topic.published_at ? topic.published_at.slice(0, 10) : ''}
                     </p>
                   </div>
                 </div>
@@ -277,7 +291,7 @@ export function DailyTopicsAccordion({ topics }: DailyTopicsAccordionProps) {
                             <div key={i} className="flex items-start gap-2">
                               <span className="text-[#00D4FF] mt-1">•</span>
                               <div className="flex-1 min-w-0">
-                                <span className="text-gray-200 text-sm">{item.title}</span>
+                                <span className="text-gray-200 text-sm">{getLocalizedTitle(item)}</span>
                                 <a
                                   href={item.url}
                                   target="_blank"
