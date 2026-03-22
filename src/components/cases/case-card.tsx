@@ -12,7 +12,7 @@ type Locale = 'zh' | 'ja' | 'en';
 export function CaseCard({ c, locale }: { c: CaseStudy; locale: string }) {
   const t = useTranslations('cases');
   const loc = locale as Locale;
-  const highlightedMetrics = c.metrics.slice(0, 3);
+  const highlightedMetrics = c.metrics;
   const prefersReducedMotion = useReducedMotion();
   const cardRef = useRef(null);
 
