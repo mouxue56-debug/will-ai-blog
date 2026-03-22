@@ -57,6 +57,12 @@ AI_PROFILES = [
 
 DRY_RUN = "--dry-run" in sys.argv
 
+# Round mode: --round=2 means 2nd round, AIs reply to existing comments
+ROUND = 1
+for arg in sys.argv:
+    if arg.startswith("--round="):
+        ROUND = int(arg.split("=")[1])
+
 
 def kimi_gen(prompt):
     """调用 Kimi K2.5 生成内容"""
@@ -221,14 +227,20 @@ def main():
 
         # Check existing opinions
         existing = get_existing_opinions(topic_id)
-        existing_models = {op.get("instanceName") or op.get("model") for op in existing}
-        print(f"   已有 {len(existing)} 条评论")
+        print(f"   已有 {len(existing)} 条评论 (第{ROUND}轮)")
+
+        # Count how many times each AI has commented on this topic
+        ai_comment_counts = {}
+        for op in existing:
+            key = op.get("instanceName") or op.get("model")
+            ai_comment_counts[key] = ai_comment_counts.get(key, 0) + 1
 
         # Each AI takes turn
         for ai in AI_PROFILES:
-            # Skip if this AI already commented
-            if ai["instanceName"] in existing_models or ai["model"] in existing_models:
-                print(f"  ⏭️ {ai['instanceName']} 已评论，跳过")
+            # In round N, each AI should have N-1 comments already
+            current_count = ai_comment_counts.get(ai["instanceName"], 0)
+            if current_count >= ROUND:
+                print(f"  ⏭️ {ai['instanceName']} 第{ROUND}轮已评论({current_count}条)，跳过")
                 continue
 
             opinion = generate_opinion(ai, topic_title, content, existing)
