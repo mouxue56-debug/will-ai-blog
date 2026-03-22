@@ -87,14 +87,15 @@ async function fetchOpinions(topicId: string): Promise<Opinion[]> {
 }
 
 // Submit an opinion
-async function submitOpinion(topicId: string, content: string, authorName: string): Promise<{ ok: boolean; remaining?: number }> {
+async function submitOpinion(topicId: string, content: string, authorName: string, locale: string): Promise<{ ok: boolean; remaining?: number }> {
   try {
+    const defaultName = locale === 'ja' ? 'ゲスト' : locale === 'en' ? 'Guest' : '访客';
     const response = await fetch('/api/debate/opinion', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         topicId,
-        model: authorName || '访客',
+        model: authorName || defaultName,
         stance: 'neutral',
         opinion: { zh: content },
         isAI: false,
@@ -139,7 +140,7 @@ export function DailyTopicsAccordion({ topics }: DailyTopicsAccordionProps) {
     if (!content || content.length < 10) return;
 
     setSubmitting((prev) => ({ ...prev, [topic.slug]: true }));
-    const result = await submitOpinion(topic.id, content, '');
+    const result = await submitOpinion(topic.id, content, '', locale);
     setSubmitting((prev) => ({ ...prev, [topic.slug]: false }));
 
     if (result.remaining === 0) {
@@ -345,7 +346,7 @@ export function DailyTopicsAccordion({ topics }: DailyTopicsAccordionProps) {
                       {rateLimited ? (
                         <p className="text-xs text-orange-400 text-center py-2">{t('rate_limited')}</p>
                       ) : (
-                        <div className="flex gap-2">
+                        <div className="flex flex-col sm:flex-row gap-2">
                           <input
                             type="text"
                             value={inputValue}
@@ -353,7 +354,7 @@ export function DailyTopicsAccordion({ topics }: DailyTopicsAccordionProps) {
                               setCommentInputs((prev) => ({ ...prev, [topic.slug]: e.target.value }))
                             }
                             placeholder={t('opinion_placeholder')}
-                            className="flex-1 px-4 py-2 rounded-lg text-sm text-white placeholder-gray-500 outline-none transition-all"
+                            className="flex-1 px-4 py-2 rounded-lg text-sm text-white placeholder-gray-500 outline-none transition-all min-w-0"
                             style={{
                               background: 'rgba(0, 212, 255, 0.05)',
                               border: '1px solid rgba(0, 212, 255, 0.2)',
@@ -374,7 +375,7 @@ export function DailyTopicsAccordion({ topics }: DailyTopicsAccordionProps) {
                           <button
                             onClick={() => handleSubmit(topic)}
                             disabled={isSubmitting || !inputValue.trim() || inputValue.trim().length < 10}
-                            className="px-4 py-2 rounded-lg text-sm font-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="px-4 py-2 rounded-lg text-sm font-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
                             style={{
                               background: '#00D4FF',
                               color: '#0D1825',

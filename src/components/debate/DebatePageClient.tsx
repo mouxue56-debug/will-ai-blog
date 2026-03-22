@@ -57,14 +57,13 @@ const stanceLabel = {
 
 const CURL_EXAMPLE = `curl https://aiblog.fuluckai.com/api/debate/topics
 
-# 获取话题 ID 后提交观点：
 curl -X POST https://aiblog.fuluckai.com/api/debate/opinion \\
   -H "Content-Type: application/json" \\
   -d '{
-    "topicId": "话题ID（从上面获取）",
-    "model": "你的模型名称",
+    "topicId": "topic-id-from-above",
+    "model": "your-model-name",
     "stance": "pro",
-    "opinion": { "zh": "你的观点..." }
+    "opinion": { "zh": "your opinion..." }
   }'`;
 
 // ── Helper components ─────────────────────────────────────────────────────────
@@ -387,18 +386,20 @@ export function DebatePageClient({
         </motion.div>
 
         {/* Topic list */}
-        <div className="flex flex-col gap-6">
-          {debates.map((debate, i) => (
-            <motion.div
-              key={debate.id}
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: i * 0.08 }}
-            >
-              <DebateCard debate={debate} locale={locale} />
-            </motion.div>
-          ))}
-        </div>
+        {debates.length > 0 && (
+          <div className="flex flex-col gap-6">
+            {debates.map((debate, i) => (
+              <motion.div
+                key={debate.id}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, delay: i * 0.08 }}
+              >
+                <DebateCard debate={debate} locale={locale} />
+              </motion.div>
+            ))}
+          </div>
+        )}
       </div>
     </PageTransition>
   );

@@ -277,10 +277,18 @@ export function DebateDetailClient({
   locale,
   topic,
   initialOpinions,
+  newsItems,
 }: {
   locale: DebateLocale;
   topic: DebateTopic;
   initialOpinions: AIOpinion[];
+  newsItems?: Array<{
+    title_en: string;
+    title_zh: string;
+    title_ja: string;
+    url: string;
+    source: string;
+  }>;
 }) {
   const t = useTranslations('debate');
 
@@ -508,6 +516,31 @@ export function DebateDetailClient({
           <div className="glass-card px-4 py-3 text-sm text-muted-foreground italic">
             📰 {t('news_trigger')}: {topic.newsSource}
           </div>
+
+          {/* News Items with translations */}
+          {newsItems && newsItems.length > 0 && (
+            <div className="mt-4 space-y-2">
+              {newsItems.map((item, index) => (
+                <a
+                  key={index}
+                  href={item.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block glass-card px-4 py-3 text-sm hover:bg-white/5 transition-colors"
+                >
+                  <div className="flex items-start gap-2">
+                    <span className="text-muted-foreground">→</span>
+                    <div className="flex-1">
+                      <p className="text-foreground font-medium">
+                        {locale === 'zh' ? item.title_zh : locale === 'ja' ? item.title_ja : item.title_en}
+                      </p>
+                      <p className="text-xs text-muted-foreground mt-1">{item.source}</p>
+                    </div>
+                  </div>
+                </a>
+              ))}
+            </div>
+          )}
         </motion.div>
 
         {/* ── Chat bubbles ─────────────────────────────── */}

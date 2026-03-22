@@ -4,6 +4,7 @@ import type { AIOpinion } from '@/data/debates';
 import { getDebateById } from '@/data/debates';
 import { DebateDetailClient } from '@/components/debate/DebateDetailClient';
 import { getDebateTopic, type DebateLocale } from '@/lib/debate-store';
+import newsTranslations from '@/data/news-translations.json';
 
 export async function generateMetadata({
   params,
@@ -117,6 +118,15 @@ export default async function DebateDetailPage({
     },
   };
 
+  // Get translated news items for this topic
+  const newsItems = (newsTranslations as Record<string, Array<{
+    title_en: string;
+    title_zh: string;
+    title_ja: string;
+    url: string;
+    source: string;
+  }>>)[id] || [];
+
   return (
     <>
       <script
@@ -127,6 +137,7 @@ export default async function DebateDetailPage({
         locale={locale}
         topic={topic}
         initialOpinions={(staticDebate?.aiOpinions ?? []) as AIOpinion[]}
+        newsItems={newsItems}
       />
     </>
   );

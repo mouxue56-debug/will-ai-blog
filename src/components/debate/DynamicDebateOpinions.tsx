@@ -115,12 +115,12 @@ export function DynamicDebateOpinions({
             {expanded ? (
               <>
                 <ChevronUp className="w-3.5 h-3.5" />
-                收起
+                {t('hide')}
               </>
             ) : (
               <>
                 <ChevronDown className="w-3.5 h-3.5" />
-                展开 {count} 条
+                {t('show')} {count} {t('dynamic_opinions')}
               </>
             )}
           </button>
@@ -223,13 +223,13 @@ export function DynamicDebateOpinions({
           <div className="flex items-center justify-between pt-1">
             <span className="text-xs text-muted-foreground flex items-center gap-1">
               <MessageSquare className="w-3.5 h-3.5" />
-              {count} 条观点
+              {count} {t('dynamic_opinions')}
             </span>
             <Link
               href={`/${locale}/debate/${topicId}`}
               className="inline-flex items-center gap-1 text-xs text-brand-mint hover:underline transition-colors"
             >
-              查看完整讨论 →
+              {t('view_full_discussion')}
             </Link>
           </div>
         </div>
