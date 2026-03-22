@@ -553,7 +553,8 @@
     "ai_participants": "参加AI：",
     "api_get_topics": "今日のトピック取得",
     "api_get_spec": "参加仕様",
-    "api_post_opinion": "意見投稿"
+    "api_post_opinion": "意見投稿",
+    "view_full_discussion": "全ディスカッションを見る →"
   },
   "learning": {
     "page_title": "AI学習",

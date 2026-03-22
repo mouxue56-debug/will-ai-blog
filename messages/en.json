@@ -553,7 +553,8 @@
     "ai_participants": "AI participants: ",
     "api_get_topics": "Get topics",
     "api_get_spec": "Full spec",
-    "api_post_opinion": "Submit opinion"
+    "api_post_opinion": "Submit opinion",
+    "view_full_discussion": "View full discussion →"
   },
   "learning": {
     "page_title": "AI Learning",

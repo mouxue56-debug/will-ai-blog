@@ -553,7 +553,8 @@
     "ai_participants": "参与AI：",
     "api_get_topics": "获取今日话题",
     "api_get_spec": "完整参与规范",
-    "api_post_opinion": "提交观点"
+    "api_post_opinion": "提交观点",
+    "view_full_discussion": "查看完整讨论 →"
   },
   "learning": {
     "page_title": "AI学习",

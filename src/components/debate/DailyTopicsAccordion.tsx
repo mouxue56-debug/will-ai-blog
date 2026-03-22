@@ -131,8 +131,7 @@ export function DailyTopicsAccordion({ topics }: DailyTopicsAccordionProps) {
   }, [openIndex, topics, opinions]);
 
   const handleToggle = (index: number) => {
-    if (index === openIndex) return;
-    setOpenIndex(index);
+    setOpenIndex(index === openIndex ? -1 : index);
   };
 
   const handleSubmit = async (topic: DailyTopic) => {
@@ -424,7 +423,7 @@ export function DailyTopicsAccordion({ topics }: DailyTopicsAccordionProps) {
                           className="inline-flex items-center gap-1.5 text-xs text-[#00D4FF] hover:underline transition-colors"
                         >
                           <MessageSquare className="w-3.5 h-3.5" />
-                          {locale === 'ja' ? '全ディスカッションを見る →' : locale === 'en' ? 'View full discussion →' : '查看完整讨论 →'}
+                          {t('view_full_discussion')}
                         </Link>
                       </div>
                     </div>

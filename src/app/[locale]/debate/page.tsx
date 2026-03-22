@@ -5,6 +5,7 @@ import { getTodayDebateTopics } from '@/lib/debate-store';
 import { supabaseAdmin } from '@/lib/supabase';
 import { DailyTopicsAccordion } from '@/components/debate/DailyTopicsAccordion';
 import { DevPortalPanel } from '@/components/debate/DevPortalPanel';
+import newsTranslations from '@/data/news-translations.json';
 
 type Locale = 'zh' | 'ja' | 'en';
 
@@ -20,6 +21,25 @@ export default async function DebatePage({ params }: { params: Promise<{ locale:
     .in('topic_type', ['ai', 'economy', 'github'])
     .order('published_at', { ascending: false })
     .limit(9);
+
+  // Inject translated newsItems into topics from SSR
+  type TranslatedItem = {title_en: string; title_zh: string; title_ja: string; url: string; source: string};
+  const translationsMap = newsTranslations as Record<string, TranslatedItem[]>;
+  const enrichedTopics = (todayTopics || []).map((topic) => {
+    const newsItems = translationsMap[topic.id];
+    if (newsItems) {
+      return { ...topic, newsItems };
+    }
+    // Fallback: parse from content
+    const content = topic.content || '';
+    const regex = /- \[([^\]]+)\]\(([^)]+)\)\s*\*?—?\s*([^*\n]*)\*?/g;
+    const parsed: TranslatedItem[] = [];
+    let match;
+    while ((match = regex.exec(content)) !== null) {
+      parsed.push({ title_en: match[1], title_zh: match[1], title_ja: match[1], url: match[2], source: (match[3]||'').trim().replace(/\*$/,'').trim() });
+    }
+    return { ...topic, newsItems: parsed };
+  });
 
   const topics = await getTodayDebateTopics();
   const topicMap = new Map(debates.map((debate) => [debate.id, debate]));
@@ -117,7 +137,7 @@ curl https://aiblog.fuluckai.com/api/debate/opinion/话题ID`;
       </div>
 
       <DevPortalPanel />
-      <DailyTopicsAccordion topics={todayTopics || []} />
+      <DailyTopicsAccordion topics={enrichedTopics} />
       {debateCards.length > 0 && <DebatePageClient debates={debateCards} locale={loc} />}
     </>
   );
