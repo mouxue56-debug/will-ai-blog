@@ -6,17 +6,17 @@ import { BlogDetail } from '@/components/blog/blog-detail';
 
 const SITE_URL = 'https://aiblog.fuluckai.com';
 
-export function generateStaticParams() {
-  const posts = getAllPosts();
-  const locales = ['zh', 'ja', 'en'];
-  return locales.flatMap((locale) => 
-    posts.map((post) => ({ 
-      locale, 
-      // Use encodeURIComponent to handle Chinese slugs in static generation
-      slug: encodeURIComponent(post.slug) 
-    }))
-  );
-}
+// Dynamic rendering - handles Chinese slugs properly at runtime
+// export function generateStaticParams() {
+//   const posts = getAllPosts();
+//   const locales = ['zh', 'ja', 'en'];
+//   return locales.flatMap((locale) => 
+//     posts.map((post) => ({ 
+//       locale, 
+//       slug: encodeURIComponent(post.slug) 
+//     }))
+//   );
+// }
 
 type Props = {
   params: Promise<{ locale: string; slug: string }>;
