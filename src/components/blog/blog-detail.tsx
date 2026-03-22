@@ -8,7 +8,6 @@ import type { BlogPost, Comment, BlogCategory } from '@/lib/blog-types';
 import { CATEGORY_KEYS } from '@/lib/blog-types';
 import { Link } from '@/i18n/navigation';
 import { PageTransition } from '@/components/shared/PageTransition';
-import { ScrollReveal } from '@/components/shared/ScrollReveal';
 import { MarkdownRenderer } from './markdown-renderer';
 import { TableOfContents, type TocHeading } from './table-of-contents';
 import { MobileTableOfContents } from './mobile-table-of-contents';
@@ -83,9 +82,9 @@ export function BlogDetail({ post, prevPost, nextPost, comments, postSlug, headi
         <div className="xl:grid xl:grid-cols-[minmax(0,1fr)_280px] xl:items-start xl:gap-12">
           <article className="min-w-0 max-w-4xl">
             <motion.header
-              initial={{ opacity: 0, y: 12 }}
+              initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4 }}
+              transition={{ duration: 0.6 }}
               className="mb-8 space-y-4"
             >
               <div className="flex flex-wrap items-center gap-2">
@@ -132,11 +131,14 @@ export function BlogDetail({ post, prevPost, nextPost, comments, postSlug, headi
               </div>
             </motion.header>
 
-            <ScrollReveal direction="fadeUp" delay={0.2} duration={0.6}>
-              <div className="glass-card p-8 sm:p-10">
-                <MarkdownRenderer content={post.content} />
-              </div>
-            </ScrollReveal>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.2, duration: 0.5 }}
+              className="glass-card p-8 sm:p-10"
+            >
+              <MarkdownRenderer content={post.content} />
+            </motion.div>
 
             <hr className="my-10 border-border" />
 
@@ -178,11 +180,16 @@ export function BlogDetail({ post, prevPost, nextPost, comments, postSlug, headi
             </div>
           </article>
 
-          <aside className="hidden xl:block xl:sticky xl:top-24">
+          <motion.aside
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.3 }}
+            className="hidden xl:block xl:sticky xl:top-24"
+          >
             <div className="space-y-4">
               <TableOfContents headings={headings} />
             </div>
-          </aside>
+          </motion.aside>
         </div>
 
         {/* Mobile Table of Contents */}

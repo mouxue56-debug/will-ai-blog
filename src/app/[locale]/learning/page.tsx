@@ -48,6 +48,23 @@ export default async function LearningPage({
   return (
     <main className="min-h-screen" style={{ background: '#080F18' }}>
       <style>{`
+        @keyframes fadeInUp {
+          from { opacity: 0; transform: translateY(20px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in-up { animation: fadeInUp 0.6s ease forwards; }
+        .animate-fade-in-up-delay-1 { animation: fadeInUp 0.6s 0.1s ease both; }
+        .animate-fade-in-up-delay-2 { animation: fadeInUp 0.6s 0.2s ease both; }
+        .animate-fade-in-up-card-0 { animation: fadeInUp 0.5s 0.3s ease both; }
+        .animate-fade-in-up-card-1 { animation: fadeInUp 0.5s 0.4s ease both; }
+        .animate-fade-in-up-card-2 { animation: fadeInUp 0.5s 0.5s ease both; }
+        .animate-fade-in-up-card-3 { animation: fadeInUp 0.5s 0.6s ease both; }
+        .animate-fade-in-up-card-4 { animation: fadeInUp 0.5s 0.7s ease both; }
+        .animate-fade-in-up-card-5 { animation: fadeInUp 0.5s 0.8s ease both; }
+        .animate-fade-in-up-card-6 { animation: fadeInUp 0.5s 0.9s ease both; }
+        .animate-fade-in-up-card-7 { animation: fadeInUp 0.5s 1.0s ease both; }
+        .animate-fade-in-up-card-8 { animation: fadeInUp 0.5s 1.1s ease both; }
+        .animate-fade-in-up-card-9 { animation: fadeInUp 0.5s 1.2s ease both; }
         .k2w-card:hover {
           border-color: rgba(0,212,255,0.35) !important;
           box-shadow: 0 0 24px rgba(0,212,255,0.08), 0 4px 20px rgba(0,0,0,0.4);
@@ -66,7 +83,7 @@ export default async function LearningPage({
 
         <div className="relative mx-auto max-w-4xl text-center">
           {/* Badge */}
-          <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-cyan-500/30 bg-cyan-500/10 px-4 py-1.5">
+          <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-cyan-500/30 bg-cyan-500/10 px-4 py-1.5 animate-fade-in-up">
             <BookOpen className="h-3.5 w-3.5 text-cyan-400" />
             <span className="text-xs font-medium text-cyan-400 tracking-wide uppercase">
               Learning Notes
@@ -75,7 +92,7 @@ export default async function LearningPage({
 
           {/* Title */}
           <h1
-            className="mb-4 text-4xl font-bold sm:text-5xl"
+            className="mb-4 text-4xl font-bold sm:text-5xl animate-fade-in-up-delay-1"
             style={{
               background: 'linear-gradient(135deg, #00D4FF 0%, #5EF0C8 50%, #00A8E8 100%)',
               WebkitBackgroundClip: 'text',
@@ -87,7 +104,7 @@ export default async function LearningPage({
           </h1>
 
           {/* Subtitle */}
-          <p className="mx-auto max-w-2xl text-base text-slate-400 leading-relaxed">
+          <p className="mx-auto max-w-2xl text-base text-slate-400 leading-relaxed animate-fade-in-up-delay-2">
             {t('subtitle')}
           </p>
 
@@ -128,7 +145,7 @@ export default async function LearningPage({
           </div>
         ) : (
           <div className="flex flex-col gap-4">
-            {learningPosts.map((post) => {
+            {learningPosts.map((post, cardIndex) => {
               const title =
                 typeof post.title === 'string'
                   ? post.title
@@ -143,6 +160,8 @@ export default async function LearningPage({
                     (post.excerpt as Record<string, string>).zh ||
                     '';
 
+              const cardAnimClass = `animate-fade-in-up-card-${Math.min(cardIndex, 9)}`;
+
               return (
                 <Link
                   key={post.slug}
@@ -150,7 +169,7 @@ export default async function LearningPage({
                   className="group block"
                 >
                   <article
-                    className="k2w-card relative rounded-2xl p-6 transition-all duration-300"
+                    className={`k2w-card relative rounded-2xl p-6 transition-all duration-300 ${cardAnimClass}`}
                     style={{
                       background: '#0D1825',
                       border: '1px solid rgba(0,212,255,0.12)',
