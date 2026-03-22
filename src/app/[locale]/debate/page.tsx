@@ -13,10 +13,10 @@ export default async function DebatePage({ params }: { params: Promise<{ locale:
   setRequestLocale(locale);
   const loc = (locale as Locale) || 'zh';
 
-  // Fetch daily reports from Supabase
+  // Fetch daily reports from Supabase (with translations)
   const { data: todayTopics } = await supabaseAdmin
     .from('daily_reports')
-    .select('id, title, content, topic_type, slug, author_emoji, published_at')
+    .select('id, title, content, content_zh, content_ja, content_en, topic_type, slug, author_emoji, published_at')
     .order('published_at', { ascending: false })
     .limit(3);
 

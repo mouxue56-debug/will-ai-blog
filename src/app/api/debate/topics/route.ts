@@ -21,7 +21,7 @@ export async function GET() {
       const today = getTodayInTokyo();
       const { data: reports, error } = await supabaseAdmin
         .from('daily_reports')
-        .select('id,title,topic_type,slug,published_at')
+        .select('id,title,title_ja,title_en,content,content_zh,content_ja,content_en,topic_type,slug,published_at')
         .order('published_at', { ascending: false })
         .limit(3);
 
@@ -33,7 +33,15 @@ export async function GET() {
         id: r.id,
         date: r.published_at?.slice(0, 10) || today,
         session: 'evening' as const,
-        title: { zh: r.title, ja: r.title, en: r.title },
+        title: {
+          zh: r.title,
+          ja: r.title_ja || r.title,
+          en: r.title_en || r.title,
+        },
+        content: r.content,
+        content_zh: r.content_zh || r.content,
+        content_ja: r.content_ja || null,
+        content_en: r.content_en || null,
         newsSource: 'https://aiblog.fuluckai.com/debate',
         tags: [r.topic_type || 'ai'],
         slug: r.slug,

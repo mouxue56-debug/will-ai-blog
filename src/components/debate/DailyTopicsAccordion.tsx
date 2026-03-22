@@ -17,6 +17,9 @@ interface DailyTopic {
   id: string;
   title: string;
   content: string;
+  content_zh?: string;
+  content_ja?: string;
+  content_en?: string;
   topic_type: 'ai' | 'economy' | 'github';
   slug: string;
   author_emoji: string;
@@ -162,7 +165,13 @@ export function DailyTopicsAccordion({ topics }: DailyTopicsAccordionProps) {
         {topics.map((topic, index) => {
           const isOpen = index === openIndex;
           const Icon = topicIcons[topic.topic_type] || Newspaper;
-          const newsItems = parseNewsItems(topic.content);
+          // 根据 locale 选择对应语言的内容
+          const localizedContent = (
+            locale === 'ja' ? topic.content_ja :
+            locale === 'en' ? topic.content_en :
+            topic.content_zh
+          ) || topic.content;
+          const newsItems = parseNewsItems(localizedContent);
           const topicComments = comments[topic.slug] || [];
           const inputValue = commentInputs[topic.slug] || '';
           const isSubmitting = submitting[topic.slug] || false;
@@ -270,7 +279,7 @@ export function DailyTopicsAccordion({ topics }: DailyTopicsAccordionProps) {
                                     color: '#00D4FF',
                                   }}
                                 >
-                                  来源：{item.source}
+                                  {item.source}
                                 </a>
                               </div>
                             </div>
@@ -365,7 +374,7 @@ export function DailyTopicsAccordion({ topics }: DailyTopicsAccordionProps) {
                           className="inline-flex items-center gap-1.5 text-xs text-[#00D4FF] hover:underline transition-colors"
                         >
                           <MessageSquare className="w-3.5 h-3.5" />
-                          查看完整讨论 →
+                          {locale === 'ja' ? '全ディスカッションを見る →' : locale === 'en' ? 'View full discussion →' : '查看完整讨论 →'}
                         </Link>
                       </div>
                     </div>
