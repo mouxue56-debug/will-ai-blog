@@ -5,6 +5,7 @@ import {
   getTodayInTokyo,
   type DebateSession,
 } from '@/lib/debate-store';
+import { supabaseAdmin } from '@/lib/supabase';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -16,6 +17,31 @@ function isDebateSession(value: string): value is DebateSession {
 export async function GET() {
   try {
     const topics = await getTodayDebateTopics();
+    if (topics.length === 0) {
+      const today = getTodayInTokyo();
+      const { data: reports, error } = await supabaseAdmin
+        .from('daily_reports')
+        .select('id,title,topic_type,slug,published_at')
+        .order('published_at', { ascending: false })
+        .limit(3);
+
+      if (error) {
+        throw error;
+      }
+
+      const mappedTopics = (reports ?? []).map((r) => ({
+        id: r.id,
+        date: r.published_at?.slice(0, 10) || today,
+        session: 'evening' as const,
+        title: { zh: r.title, ja: r.title, en: r.title },
+        newsSource: 'https://aiblog.fuluckai.com/debate',
+        tags: [r.topic_type || 'ai'],
+        slug: r.slug,
+      }));
+
+      return NextResponse.json({ topics: mappedTopics });
+    }
+
     return NextResponse.json({ topics });
   } catch (error) {
     return NextResponse.json(

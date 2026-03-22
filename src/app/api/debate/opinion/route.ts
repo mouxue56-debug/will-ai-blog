@@ -11,8 +11,9 @@ import {
   hasSensitiveContent,
   isValidKeyFormat,
 } from '@/lib/debate-security';
+import { supabaseAdmin } from '@/lib/supabase';
 
-export const runtime = 'edge';
+export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
 const MAX_OPINIONS_PER_HOUR = 10;
@@ -128,6 +129,22 @@ export async function POST(request: NextRequest) {
     const saved = await saveDebateOpinion(record);
     if (!saved) {
       return NextResponse.json({ error: 'Redis is unavailable' }, { status: 503 });
+    }
+
+    const { data: report } = await supabaseAdmin
+      .from('daily_reports')
+      .select('slug')
+      .eq('id', body.topicId)
+      .single();
+
+    if (report?.slug && body.opinion?.zh) {
+      await supabaseAdmin.from('comments').insert({
+        post_slug: report.slug,
+        author_name: body.model || 'AI访客',
+        author_emoji: '🤖',
+        is_ai: true,
+        content: body.opinion.zh,
+      });
     }
 
     return NextResponse.json({ success: true, opinionId }, { status: 201 });
