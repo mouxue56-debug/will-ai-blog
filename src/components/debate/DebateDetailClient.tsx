@@ -291,6 +291,16 @@ export function DebateDetailClient({
 
   const seenIdsRef = useRef<Set<string>>(new Set(flatOpinions.map((o) => o.id)));
 
+  // Dedup key: model name + first 50 chars of content
+  const seenContentRef = useRef<Set<string>>(
+    new Set(
+      flatOpinions.map((o) => {
+        const text = pickText(o.opinion, 'zh') || pickText(o.opinion, 'ja') || pickText(o.opinion, 'en');
+        return `${o.model}::${text.slice(0, 50)}`;
+      }),
+    ),
+  );
+
   // Form state
   const [replyTo, setReplyTo] = useState<{ id: string; author: string } | null>(null);
   const [newComment, setNewComment] = useState('');
@@ -300,12 +310,20 @@ export function DebateDetailClient({
   const [submitting, setSubmitting] = useState(false);
   const [showForm, setShowForm] = useState(false);
   const [remaining, setRemaining] = useState<number | null>(null);
+  const [rateLimited, setRateLimited] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   // Reset when topic changes
   useEffect(() => {
     const initial = initialOpinions.map((op, i) => fromAIOpinion(op, i, topic.date));
     setFlatOpinions(initial);
     seenIdsRef.current = new Set(initial.map((o) => o.id));
+    seenContentRef.current = new Set(
+      initial.map((o) => {
+        const text = pickText(o.opinion, 'zh') || pickText(o.opinion, 'ja') || pickText(o.opinion, 'en');
+        return `${o.model}::${text.slice(0, 50)}`;
+      }),
+    );
   }, [initialOpinions, topic.id, topic.date]);
 
   // Polling — fetch every 5s
@@ -332,11 +350,17 @@ export function DebateDetailClient({
           const next = [...prev];
           let changed = false;
           for (const op of fresh) {
-            if (!seenIdsRef.current.has(op.id)) {
-              seenIdsRef.current.add(op.id);
-              next.push(op);
-              changed = true;
-            }
+            // Dedup by ID
+            if (seenIdsRef.current.has(op.id)) continue;
+            // Dedup by model + content (catches static vs dynamic overlap)
+            const text = pickText(op.opinion, 'zh') || pickText(op.opinion, 'ja') || pickText(op.opinion, 'en');
+            const contentKey = `${op.model}::${text.slice(0, 50)}`;
+            if (seenContentRef.current.has(contentKey)) continue;
+
+            seenIdsRef.current.add(op.id);
+            seenContentRef.current.add(contentKey);
+            next.push(op);
+            changed = true;
           }
           return changed ? next : prev;
         });
@@ -368,27 +392,54 @@ export function DebateDetailClient({
   const handleSubmit = async () => {
     if (!newComment.trim() || !author.trim()) return;
     setSubmitting(true);
+    setSubmitError(null);
+    setRateLimited(false);
+
+    // Ignore replyTo if it points to a static (hardcoded) opinion — those IDs don't exist in DB
+    const effectiveReplyTo =
+      replyTo?.id && !replyTo.id.startsWith('static-') && !replyTo.id.startsWith('local-')
+        ? replyTo.id
+        : undefined;
 
     let returnedRemaining: number | null = null;
+    let submitOk = false;
+    let isRateLimited = false;
     try {
       const res = await fetch('/api/debate/opinion', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           topicId: topic.id,
-          model: author,
+          model: author.trim(),
           stance,
-          opinion: { zh: newComment, [locale]: newComment },
-          replyTo: replyTo?.id,
-          isAI,
+          opinion: { zh: newComment.trim(), [locale]: newComment.trim() },
+          replyTo: effectiveReplyTo,
         }),
       });
+
+      if (res.status === 429) {
+        isRateLimited = true;
+        setRateLimited(true);
+        setSubmitting(false);
+        return;
+      }
+
       if (res.ok) {
         const json = (await res.json()) as { remaining?: number };
         if (typeof json.remaining === 'number') returnedRemaining = json.remaining;
+        submitOk = true;
+      } else {
+        const errJson = await res.json().catch(() => ({})) as { error?: string };
+        setSubmitError(errJson.error ?? 'Submit failed');
       }
     } catch {
-      // best effort
+      // Network error — still do optimistic insert so UX isn't broken
+      submitOk = true;
+    }
+
+    if (!submitOk && !isRateLimited) {
+      setSubmitting(false);
+      return;
     }
 
     // Optimistic local insert
@@ -403,9 +454,11 @@ export function DebateDetailClient({
       createdAt: new Date().toLocaleDateString(
         locale === 'ja' ? 'ja-JP' : locale === 'en' ? 'en-US' : 'zh-CN',
       ),
-      replyTo: replyTo?.id,
+      replyTo: effectiveReplyTo,
     };
+    const contentKey = `${localOp.model}::${newComment.trim().slice(0, 50)}`;
     seenIdsRef.current.add(localId);
+    seenContentRef.current.add(contentKey);
     setFlatOpinions((prev) => [...prev, localOp]);
 
     if (returnedRemaining !== null) setRemaining(returnedRemaining);
@@ -566,18 +619,30 @@ export function DebateDetailClient({
                   className="bg-white/5 rounded-lg px-3 py-2 text-sm outline-none focus:ring-1 focus:ring-brand-mint/50 border border-white/10 resize-none"
                 />
 
+                {/* Rate limit / error notices */}
+                {rateLimited && (
+                  <p className="text-xs text-rose-400 bg-rose-500/10 rounded-lg px-3 py-2">
+                    {t('rate_limited')}
+                  </p>
+                )}
+                {submitError && !rateLimited && (
+                  <p className="text-xs text-amber-400 bg-amber-500/10 rounded-lg px-3 py-2">
+                    {submitError}
+                  </p>
+                )}
+
                 {/* Submit row */}
                 <div className="flex items-center justify-between">
                   {remaining !== null ? (
                     <span className="text-xs text-muted-foreground">
-                      剩余 <strong className="text-brand-mint">{remaining}</strong> 条配额
+                      {t('remaining_quota').replace('{remaining}', String(remaining))}
                     </span>
                   ) : (
                     <span />
                   )}
                   <button
                     onClick={handleSubmit}
-                    disabled={submitting || !newComment.trim() || !author.trim()}
+                    disabled={submitting || !newComment.trim() || !author.trim() || rateLimited}
                     className="inline-flex items-center gap-2 px-4 py-2 bg-brand-mint/20 text-brand-mint border border-brand-mint/40 rounded-lg text-sm font-medium hover:bg-brand-mint/30 transition-all disabled:opacity-40 cursor-pointer"
                   >
                     <Send className="w-4 h-4" />

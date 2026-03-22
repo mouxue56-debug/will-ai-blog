@@ -2,8 +2,10 @@
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { ChevronDown, Bot, Sparkles, TrendingUp, Newspaper } from 'lucide-react';
+import { ChevronDown, Bot, Sparkles, TrendingUp, Newspaper, MessageSquare } from 'lucide-react';
 import { useTranslations } from 'next-intl';
+import { useParams } from 'next/navigation';
+import Link from 'next/link';
 
 interface NewsItem {
   title: string;
@@ -39,11 +41,14 @@ const topicIcons = {
   github: Bot,
 };
 
-const topicDisplayName: Record<string, string> = {
-  ai: '📡 AI 动态',
-  economy: '💹 经济脉搏',
-  github: '🔥 GitHub 热点',
-};
+function getTopicDisplayName(type: string, t: (key: string) => string): string {
+  const map: Record<string, string> = {
+    ai: `📡 ${t('topicAI')}`,
+    economy: `💹 ${t('topicEconomy')}`,
+    github: `🔥 ${t('topicGithub')}`,
+  };
+  return map[type] || type;
+}
 
 // Parse markdown content to extract news items
 function parseNewsItems(content: string): NewsItem[] {
@@ -93,6 +98,8 @@ async function submitComment(slug: string, content: string): Promise<boolean> {
 
 export function DailyTopicsAccordion({ topics }: DailyTopicsAccordionProps) {
   const t = useTranslations('debate');
+  const params = useParams();
+  const locale = (params?.locale as string) || 'zh';
   const [openIndex, setOpenIndex] = useState<number>(0);
   const [comments, setComments] = useState<Record<string, AIComment[]>>({});
   const [commentInputs, setCommentInputs] = useState<Record<string, string>>({});
@@ -186,10 +193,10 @@ export function DailyTopicsAccordion({ topics }: DailyTopicsAccordionProps) {
                   </div>
                   <div className="text-left flex-1 min-w-0">
                     <h3 className="font-medium text-white truncate">
-                      {topicDisplayName[topic.topic_type] || topic.title}
+                      {getTopicDisplayName(topic.topic_type, t)}
                     </h3>
                     <p className="text-xs text-gray-400">
-                      {topic.published_at ? topic.published_at.slice(0, 10) : ''} · 晚报
+                      {topic.published_at ? topic.published_at.slice(0, 10) : ''} · {topic.published_at && new Date(topic.published_at).getHours() < 12 ? t('session_morning') : t('session_evening')}
                     </p>
                   </div>
                 </div>
@@ -245,7 +252,7 @@ export function DailyTopicsAccordion({ topics }: DailyTopicsAccordionProps) {
                       {/* News Items */}
                       <div className="space-y-2 mb-4">
                         <p className="text-xs text-gray-400">
-                          以下为今日英文原文资讯，点击标题查看原文
+                          {t('news_intro')}
                         </p>
                         {newsItems.length > 0 ? (
                           newsItems.map((item, i) => (
@@ -349,6 +356,17 @@ export function DailyTopicsAccordion({ topics }: DailyTopicsAccordionProps) {
                         >
                           {isSubmitting ? '...' : t('commentSubmit')}
                         </button>
+                      </div>
+
+                      {/* Link to debate detail page */}
+                      <div className="flex justify-end mt-3">
+                        <Link
+                          href={`/${locale}/debate/${topic.id}`}
+                          className="inline-flex items-center gap-1.5 text-xs text-[#00D4FF] hover:underline transition-colors"
+                        >
+                          <MessageSquare className="w-3.5 h-3.5" />
+                          查看完整讨论 →
+                        </Link>
                       </div>
                     </div>
                   </motion.div>
