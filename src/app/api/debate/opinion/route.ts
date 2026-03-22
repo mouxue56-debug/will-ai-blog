@@ -48,16 +48,24 @@ function extractIP(request: NextRequest): string {
 }
 
 export async function POST(request: NextRequest) {
+  // ── Internal AI bypass (server-side auto-discuss) ────────────────────────
+  const internalSecret = request.headers.get('x-ai-internal');
+  const isInternalAI = internalSecret === process.env.AI_DISCUSS_SECRET;
+
   // ── IP extraction & rate limit ────────────────────────────────────────────
   const clientIP = extractIP(request);
-  const ipHash = hashIP(clientIP);
+  const ipHash = isInternalAI ? `ai-${Date.now()}` : hashIP(clientIP);
 
-  const { allowed, remaining } = await checkAndIncrementRateLimit(ipHash);
-  if (!allowed) {
-    return NextResponse.json(
-      { error: 'Rate limit exceeded. Maximum 5 submissions per day per IP.' },
-      { status: 429 },
-    );
+  let remaining: number | undefined;
+  if (!isInternalAI) {
+    const result = await checkAndIncrementRateLimit(ipHash);
+    remaining = result.remaining;
+    if (!result.allowed) {
+      return NextResponse.json(
+        { error: 'Rate limit exceeded. Maximum 5 submissions per day per IP.' },
+        { status: 429 },
+      );
+    }
   }
 
   try {
