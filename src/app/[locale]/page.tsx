@@ -85,19 +85,13 @@ export default async function HomePage({
 
         <AboutWill />
 
-        <ScrollReveal direction="fadeUp">
-          <StoryTimeline />
-        </ScrollReveal>
+        <StoryTimeline />
 
         <LatestUpdates />
 
-        <ScrollReveal direction="fadeUp" delay={0.05}>
-          <MyWorld />
-        </ScrollReveal>
+        <MyWorld />
 
-        <ScrollReveal direction="scaleIn">
-          <AIDashboard />
-        </ScrollReveal>
+        <AIDashboard />
         </div>
       </PageTransition>
     </>
