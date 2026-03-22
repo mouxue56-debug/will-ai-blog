@@ -3,7 +3,7 @@ import fs from 'fs';
 import path from 'path';
 import { authenticate } from '@/lib/auth';
 
-const BLOG_DIR = path.join(process.cwd(), 'src/content/blog');
+const BLOG_DIR = path.resolve(process.cwd(), 'src/content/blog');
 
 function slugify(title: string): string {
   return title
@@ -177,12 +177,17 @@ export async function POST(request: NextRequest) {
 
     const fileContent = frontmatter + (typeof content === 'string' ? content : '');
 
-    // Write file
+    // Write file — verify resolved path is within BLOG_DIR (path traversal guard)
     if (!fs.existsSync(BLOG_DIR)) {
       fs.mkdirSync(BLOG_DIR, { recursive: true });
     }
 
-    fs.writeFileSync(path.join(BLOG_DIR, `${slug}.md`), fileContent, 'utf-8');
+    const targetPath = path.resolve(BLOG_DIR, `${slug}.md`);
+    if (!targetPath.startsWith(BLOG_DIR + path.sep) && targetPath !== BLOG_DIR) {
+      return NextResponse.json({ error: 'Invalid slug' }, { status: 400 });
+    }
+
+    fs.writeFileSync(targetPath, fileContent, 'utf-8');
 
     return NextResponse.json({ slug, status: 'draft' }, { status: 201 });
   } catch (error) {

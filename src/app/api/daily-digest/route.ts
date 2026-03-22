@@ -164,12 +164,18 @@ export async function POST(req: Request) {
   });
 }
 
-// GET 端点：手动触发（方便测试）
+// GET 端点：Vercel cron 触发 + 手动触发（测试用）
+// Vercel cron 自动携带 Authorization: Bearer <CRON_SECRET>
+// 手动触发可用 ?secret=<CRON_SECRET> query param
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
-  const secret = searchParams.get('secret');
+  const querySecret = searchParams.get('secret');
+  // Vercel cron sends Authorization: Bearer <CRON_SECRET>
+  const authHeader = req.headers.get('Authorization');
+  const bearerSecret = authHeader?.startsWith('Bearer ') ? authHeader.slice(7) : null;
 
-  if (!process.env.CRON_SECRET || secret !== process.env.CRON_SECRET) {
+  const cronSecret = process.env.CRON_SECRET;
+  if (!cronSecret || (querySecret !== cronSecret && bearerSecret !== cronSecret)) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
@@ -178,7 +184,7 @@ export async function GET(req: Request) {
   // 复用 POST 逻辑
   const fakeReq = new Request(req.url, {
     method: 'POST',
-    headers: { 'X-Cron-Secret': process.env.CRON_SECRET, 'Content-Type': 'application/json' },
+    headers: { 'X-Cron-Secret': cronSecret, 'Content-Type': 'application/json' },
     body: JSON.stringify({ report_type }),
   });
 

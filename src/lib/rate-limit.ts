@@ -2,14 +2,32 @@
 // 注：评论系统已用 Redis 做速率限制（见 comments/route.ts）
 // 本文件提供内容过滤逻辑，供 comments API 使用
 
+// XSS 注入模式（补全覆盖范围）
+const XSS_PATTERNS = [
+  /<script/i,
+  /javascript:/i,
+  /vbscript:/i,
+  /on\w+\s*=/i,           // onerror=, onclick=, onload= 等事件处理器
+  /data:text\/html/i,
+  /<iframe/i,
+  /<object/i,
+  /<embed/i,
+  /expression\s*\(/i,     // CSS expression()
+];
+
 // 敏感词列表
 const BLOCKED_WORDS = [
-  '垃圾', 'spam', 'hack', 'exploit', 'script', 'eval(',
-  'DROP TABLE', 'SELECT *', '<script', 'javascript:',
+  '垃圾', 'spam', 'hack', 'exploit', 'eval(',
+  'DROP TABLE', 'SELECT *',
   '他妈', '傻逼', '草泥马', 'fuck', 'shit',
 ];
 
 export function filterContent(content: string): { ok: boolean; reason?: string } {
+  // XSS 注入检测（优先于敏感词）
+  if (XSS_PATTERNS.some((p) => p.test(content))) {
+    return { ok: false, reason: '内容包含不允许的代码' };
+  }
+
   const lower = content.toLowerCase();
 
   // 检查敏感词

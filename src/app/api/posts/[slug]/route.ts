@@ -3,23 +3,46 @@ import fs from 'fs';
 import path from 'path';
 import { authenticate } from '@/lib/auth';
 
-const BLOG_DIR = path.join(process.cwd(), 'src/content/blog');
-const TRASH_DIR = path.join(BLOG_DIR, '_trash');
+const BLOG_DIR = path.resolve(process.cwd(), 'src/content/blog');
+const TRASH_DIR = path.resolve(BLOG_DIR, '_trash');
 
 type RouteContext = { params: Promise<{ slug: string }> };
 
+/**
+ * Sanitize a slug to prevent path traversal attacks.
+ * Only allows alphanumeric characters, hyphens, underscores, and CJK characters.
+ * Strips any path separators or dot sequences.
+ */
+function sanitizeSlug(slug: string): string {
+  return slug
+    .replace(/[^a-zA-Z0-9\-_\u4e00-\u9fa5\u3040-\u309f\u30a0-\u30ff]/g, '')
+    .slice(0, 100);
+}
+
 function findPostFile(slug: string): string | null {
   if (!fs.existsSync(BLOG_DIR)) return null;
-  const direct = path.join(BLOG_DIR, `${slug}.md`);
+
+  // Sanitize slug to prevent path traversal
+  const safeSlug = sanitizeSlug(slug);
+  if (!safeSlug) return null;
+
+  const direct = path.resolve(BLOG_DIR, `${safeSlug}.md`);
+  // Extra guard: verify resolved path is within BLOG_DIR
+  if (!direct.startsWith(BLOG_DIR + path.sep) && direct !== BLOG_DIR) {
+    return null;
+  }
   if (fs.existsSync(direct)) return direct;
 
-  // Search by slug in frontmatter
+  // Search by slug in frontmatter (files are already enumerated from BLOG_DIR)
   const files = fs.readdirSync(BLOG_DIR).filter(f => f.endsWith('.md'));
   for (const f of files) {
-    const content = fs.readFileSync(path.join(BLOG_DIR, f), 'utf-8');
+    const filePath = path.resolve(BLOG_DIR, f);
+    // Guard: ensure file is within BLOG_DIR (no symlink escapes)
+    if (!filePath.startsWith(BLOG_DIR + path.sep)) continue;
+    const content = fs.readFileSync(filePath, 'utf-8');
     const match = content.match(/^slug:\s*(.+)$/m);
-    if (match && match[1].trim() === slug) {
-      return path.join(BLOG_DIR, f);
+    if (match && match[1].trim() === safeSlug) {
+      return filePath;
     }
   }
   return null;
