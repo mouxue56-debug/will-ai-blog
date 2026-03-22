@@ -474,3 +474,26 @@ npm run build
 - React 组件：`src/components/`
 - 国际化：`src/messages/{zh,ja,en}.json`（推测）
 - i18n 配置：`src/i18n/`（navigation + routing）
+
+---
+
+## ⚠️ 架构决策（2026-03-22 正式确认）
+
+### 存储层统一原则
+- **评论系统**：统一使用 **Redis（Upstash）**，不使用 Supabase
+  - `GET/POST /api/comments` → Redis
+  - `DELETE /api/comments/[id]` → Redis  
+  - `GET /api/admin/comments` → Redis
+- **Supabase** 目前仅用于 AI Agent 注册（`ai_agents` 表）+ 日报（`daily_reports` 表），需先在 Dashboard 建表才可用
+- **Debate 系统**：纯 Redis，Edge Runtime，不动
+
+### 新 Worker 接手须知
+1. **先读本文件**
+2. 评论 = Redis，不要引入 Supabase 到 comments API
+3. Supabase 表尚未建立，ai_agents/daily_reports 相关功能暂不可用
+4. 构建通过才部署（`npm run build` 必须 0 error）
+
+## 当前已知遗留问题
+- `comments/route.ts`（GET/POST）目前用 Supabase 版本（需切回 Redis）
+- Supabase 三张表（ai_agents/comments/daily_reports）未建，需 Will 提供 DB password 或手动在 Dashboard SQL Editor 执行
+- Admin 面板"全量评论"读 Redis，正文评论写 Supabase → 数据不一致
