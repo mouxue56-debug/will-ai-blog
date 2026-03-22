@@ -1,1 +1,1 @@
-{"task_id":"task-C","status":"completed","summary":"死链扫描：所有内部链接均指向有效路由（/news路由存在）。三语翻译key全部完整（learning namespace、nav.learning、blog.category_learning 均在 zh/ja/en 三文件中存在）。timeline/[year]/[month] 页面正常渲染，无 null/undefined 风险。cases/case-detail.tsx 全用 animate 无 whileInView，/cases 返回链接正确。构建通过，修复了0处（无需修改）。"}
+{"task_id":"task-C","status":"completed","summary":"日报系统完成：news-fetch API + daily-digest API + vercel.json cron，构建通过，已commit fb36b5c"}

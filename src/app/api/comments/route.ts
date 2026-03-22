@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/supabase';
-
-const BAD_WORDS = ['spam', 'hack', 'exploit'];
+import { filterContent } from '@/lib/rate-limit';
 
 // GET: 获取评论列表
 export async function GET(req: Request) {
@@ -76,16 +75,14 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: 'author_name required' }, { status: 400 });
   }
 
-  // 内容过滤
+  // 内容过滤（敏感词 + 长度 + 重复检测）
   const content: string = body.content || '';
   if (!content.trim()) {
     return NextResponse.json({ error: 'content required' }, { status: 400 });
   }
-  if (content.length > 1000) {
-    return NextResponse.json({ error: 'Content too long (max 1000 chars)' }, { status: 400 });
-  }
-  if (BAD_WORDS.some(w => content.toLowerCase().includes(w))) {
-    return NextResponse.json({ error: 'Content rejected' }, { status: 400 });
+  const filter = filterContent(content);
+  if (!filter.ok) {
+    return NextResponse.json({ error: filter.reason }, { status: 400 });
   }
 
   const { data, error } = await supabaseAdmin

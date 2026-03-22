@@ -1,0 +1,1 @@
+{"task_id":"task-D","status":"completed","summary":"Admin管理功能完成：DELETE /api/comments/[id]（ADMIN_SECRET鉴权）、GET /api/admin/comments、CommentManager组件、admin页面新增全量评论Tab，构建通过，已commit"}
