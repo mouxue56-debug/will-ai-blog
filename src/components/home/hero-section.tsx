@@ -302,11 +302,7 @@ function AINetwork() {
                 stroke="url(#gradient-flow)"
                 strokeWidth="2"
                 strokeLinecap="round"
-                initial={{ pathLength: 0, opacity: 0 }}
-                animate={{ 
-                  pathLength: [0, 1, 0],
-                  opacity: [0, 0.8, 0],
-                }}
+                animate={{ opacity: [0.3, 0.7, 0.3] }}
                 transition={{
                   duration: 3,
                   delay: i * 0.3,
@@ -502,9 +498,9 @@ function AnimatedTitle({ text }: { text: string }) {
   return (
     <motion.h1
       className="bg-gradient-to-r from-brand-mint via-brand-cyan to-brand-taro bg-clip-text text-4xl font-bold tracking-tight text-transparent sm:text-5xl lg:text-6xl"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ delay: 0.05, duration: 0.45, ease: 'easeOut' }}
+      initial={{ opacity: 0, y: 30 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
     >
       {text.split('').map((char, i) => (
         <motion.span
@@ -539,6 +535,13 @@ export function HeroSection() {
 
   return (
     <section ref={sectionRef} className="relative overflow-hidden px-4 py-8 sm:px-6 sm:py-16 lg:py-20">
+      {/* Radial glow overlay — CSS only, no JS */}
+      <div
+        className="pointer-events-none absolute inset-0 -z-10"
+        style={{
+          background: 'radial-gradient(ellipse 60% 50% at 50% -10%, rgba(0,212,255,0.12) 0%, transparent 70%)',
+        }}
+      />
       {/* Animated background layers */}
       <motion.div style={{ y: backgroundY }} className="absolute inset-0">
         <AnimatedGradientBackground />
@@ -577,7 +580,7 @@ export function HeroSection() {
               className="mt-4 text-sm font-medium uppercase tracking-[0.2em] text-muted-foreground/80 sm:text-base"
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.3, duration: 0.45, ease: 'easeOut' }}
+              transition={{ delay: 0.15, duration: 0.7, ease: 'easeOut' }}
             >
               {t('hero_identity')}
             </motion.p>
@@ -586,7 +589,7 @@ export function HeroSection() {
               className="mt-4 max-w-2xl text-lg text-muted-foreground sm:text-xl"
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.4, duration: 0.45, ease: 'easeOut' }}
+              transition={{ delay: 0.25, duration: 0.7, ease: 'easeOut' }}
             >
               {t('hero_subtitle')}
             </motion.p>
@@ -604,16 +607,16 @@ export function HeroSection() {
               className="mt-6 flex flex-wrap gap-3"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.6, duration: 0.45, ease: 'easeOut' }}
+              transition={{ delay: 0.3, duration: 0.45, ease: 'easeOut' }}
             >
-              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }} transition={{ delay: 0.3 }}>
                 <Link href="/blog">
                   <span className="inline-flex items-center rounded-full border border-brand-mint/25 bg-brand-mint/[0.08] px-4 py-2 text-sm font-medium text-brand-mint transition-colors hover:bg-brand-mint/[0.14]">
                     {t('hero_cta_blog')}
                   </span>
                 </Link>
               </motion.div>
-              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }} transition={{ delay: 0.3 }}>
                 <Link href="/cases">
                   <span className="inline-flex items-center rounded-full border border-brand-taro/25 bg-brand-taro/[0.08] px-4 py-2 text-sm font-medium text-brand-taro transition-colors hover:bg-brand-taro/[0.14]">
                     {t('hero_cta_cases')}

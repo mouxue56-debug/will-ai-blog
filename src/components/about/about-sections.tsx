@@ -97,6 +97,7 @@ function AITeamSection() {
               key={agent.key}
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
+              whileHover={{ y: -4, boxShadow: '0 12px 40px rgba(0,212,255,0.15)' }}
               transition={{ delay: 0.2 + i * 0.1, duration: 0.4 }}
               className="glass-card p-4 sm:p-5 flex flex-col items-center gap-2 text-center relative overflow-hidden"
             >
@@ -368,9 +369,20 @@ function ContactSection() {
           </div>
 
           <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
-            <span className="px-3 py-1 rounded-full bg-brand-mint/10 text-brand-mint">OpenClaw</span>
-            <span className="px-3 py-1 rounded-full bg-brand-coral/10 text-brand-coral">Agent Workflow</span>
-            <span className="px-3 py-1 rounded-full bg-brand-cyan/10 text-brand-cyan">AI Training</span>
+            {['OpenClaw', 'Agent Workflow', 'AI Training'].map((tag, i) => (
+              <motion.span
+                key={tag}
+                whileHover={{ scale: 1.05 }}
+                transition={{ type: 'spring', stiffness: 400 }}
+                className={`px-3 py-1 rounded-full cursor-default ${
+                  i === 0 ? 'bg-brand-mint/10 text-brand-mint' :
+                  i === 1 ? 'bg-brand-coral/10 text-brand-coral' :
+                  'bg-brand-cyan/10 text-brand-cyan'
+                }`}
+              >
+                {tag}
+              </motion.span>
+            ))}
           </div>
         </motion.div>
 
