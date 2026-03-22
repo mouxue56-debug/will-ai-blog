@@ -26,12 +26,14 @@ interface DailyTopic {
   published_at: string;
 }
 
-interface AIComment {
+interface Opinion {
   id: string;
-  content: string;
-  author_name: string;
-  author_avatar?: string;
-  created_at: string;
+  model: string;
+  stance: string;
+  opinion: { zh?: string; ja?: string; en?: string };
+  instanceName?: string;
+  createdAt: string;
+  replies?: Opinion[];
 }
 
 interface DailyTopicsAccordionProps {
@@ -68,34 +70,38 @@ function parseNewsItems(content: string): NewsItem[] {
   return items;
 }
 
-// Fetch AI comments for a topic
-async function fetchAIComments(slug: string): Promise<AIComment[]> {
+// Fetch opinions for a topic
+async function fetchOpinions(topicId: string): Promise<Opinion[]> {
   try {
-    const response = await fetch(`/api/comments?slug=${encodeURIComponent(slug)}&is_ai=true&limit=3`);
+    const response = await fetch(`/api/debate/opinion/${encodeURIComponent(topicId)}`);
     if (!response.ok) return [];
     const data = await response.json();
-    return data.comments || [];
+    return data.opinions || [];
   } catch {
     return [];
   }
 }
 
-// Submit a comment
-async function submitComment(slug: string, content: string): Promise<boolean> {
+// Submit an opinion
+async function submitOpinion(topicId: string, content: string, authorName: string): Promise<{ ok: boolean; remaining?: number }> {
   try {
-    const response = await fetch('/api/comments', {
+    const response = await fetch('/api/debate/opinion', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        slug,
-        content,
-        author_name: '访客',
-        is_ai: false,
+        topicId,
+        model: authorName || '访客',
+        stance: 'neutral',
+        opinion: { zh: content },
+        isAI: false,
       }),
     });
-    return response.ok;
+    if (response.status === 429) return { ok: false, remaining: 0 };
+    if (!response.ok) return { ok: false };
+    const data = await response.json();
+    return { ok: true, remaining: data.remaining };
   } catch {
-    return false;
+    return { ok: false };
   }
 }
 
@@ -104,40 +110,43 @@ export function DailyTopicsAccordion({ topics }: DailyTopicsAccordionProps) {
   const params = useParams();
   const locale = (params?.locale as string) || 'zh';
   const [openIndex, setOpenIndex] = useState<number>(0);
-  const [comments, setComments] = useState<Record<string, AIComment[]>>({});
+  const [opinions, setOpinions] = useState<Record<string, Opinion[]>>({});
   const [commentInputs, setCommentInputs] = useState<Record<string, string>>({});
   const [submitting, setSubmitting] = useState<Record<string, boolean>>({});
+  const [rateLimited, setRateLimited] = useState(false);
 
-  // Fetch comments when a topic is opened
+  // Fetch opinions when a topic is opened
   useEffect(() => {
     topics.forEach((topic, index) => {
-      if (index === openIndex && !comments[topic.slug]) {
-        fetchAIComments(topic.slug).then((data) => {
-          setComments((prev) => ({ ...prev, [topic.slug]: data }));
+      if (index === openIndex && !opinions[topic.id]) {
+        fetchOpinions(topic.id).then((data) => {
+          setOpinions((prev) => ({ ...prev, [topic.id]: data }));
         });
       }
     });
-  }, [openIndex, topics, comments]);
+  }, [openIndex, topics, opinions]);
 
   const handleToggle = (index: number) => {
-    // If clicking already open item, do nothing (don't collapse)
     if (index === openIndex) return;
     setOpenIndex(index);
   };
 
   const handleSubmit = async (topic: DailyTopic) => {
     const content = commentInputs[topic.slug]?.trim();
-    if (!content) return;
+    if (!content || content.length < 10) return;
 
     setSubmitting((prev) => ({ ...prev, [topic.slug]: true }));
-    const success = await submitComment(topic.slug, content);
+    const result = await submitOpinion(topic.id, content, '');
     setSubmitting((prev) => ({ ...prev, [topic.slug]: false }));
 
-    if (success) {
+    if (result.remaining === 0) {
+      setRateLimited(true);
+    }
+
+    if (result.ok) {
       setCommentInputs((prev) => ({ ...prev, [topic.slug]: '' }));
-      // Refresh comments
-      const newComments = await fetchAIComments(topic.slug);
-      setComments((prev) => ({ ...prev, [topic.slug]: newComments }));
+      const newOpinions = await fetchOpinions(topic.id);
+      setOpinions((prev) => ({ ...prev, [topic.id]: newOpinions }));
     }
   };
 
@@ -172,7 +181,7 @@ export function DailyTopicsAccordion({ topics }: DailyTopicsAccordionProps) {
             topic.content_zh
           ) || topic.content;
           const newsItems = parseNewsItems(localizedContent);
-          const topicComments = comments[topic.slug] || [];
+          const topicOpinions = opinions[topic.id] || [];
           const inputValue = commentInputs[topic.slug] || '';
           const isSubmitting = submitting[topic.slug] || false;
 
@@ -234,7 +243,7 @@ export function DailyTopicsAccordion({ topics }: DailyTopicsAccordionProps) {
                     color: '#FF8C42',
                   }}
                 >
-                  {t('commentCount', { count: topicComments.length })}
+                  {t('commentCount', { count: topicOpinions.length })}
                 </div>
 
                 {/* Arrow */}
@@ -296,30 +305,53 @@ export function DailyTopicsAccordion({ topics }: DailyTopicsAccordionProps) {
                       <div className="mb-4">
                         <h4 className="text-sm font-medium text-[#FF8C42] mb-3 flex items-center gap-2">
                           <Bot className="w-4 h-4" />
-                          {t('aiInsights')}
+                          {t('all_opinions')} ({topicOpinions.length})
                         </h4>
                         <div className="space-y-3">
-                          {topicComments.length > 0 ? (
-                            topicComments.map((comment) => (
-                              <div
-                                key={comment.id}
-                                className="p-3 rounded-lg"
-                                style={{ background: 'rgba(0, 212, 255, 0.03)' }}
-                              >
-                                <div className="flex items-center gap-2 mb-2">
+                          {topicOpinions.length > 0 ? (
+                            topicOpinions.map((op) => {
+                              const opText = (locale === 'ja' ? op.opinion.ja : locale === 'en' ? op.opinion.en : op.opinion.zh) || op.opinion.zh || '';
+                              return (
+                                <div key={op.id}>
                                   <div
-                                    className="w-6 h-6 rounded-full flex items-center justify-center text-xs"
-                                    style={{ background: 'rgba(255, 140, 66, 0.2)' }}
+                                    className="p-3 rounded-lg"
+                                    style={{ background: 'rgba(0, 212, 255, 0.03)' }}
                                   >
-                                    {topic.author_emoji || '🤖'}
+                                    <div className="flex items-center gap-2 mb-2">
+                                      <div
+                                        className="w-6 h-6 rounded-full flex items-center justify-center text-xs"
+                                        style={{ background: op.stance === 'pro' ? 'rgba(34,197,94,0.2)' : op.stance === 'con' ? 'rgba(239,68,68,0.2)' : 'rgba(255, 140, 66, 0.2)' }}
+                                      >
+                                        {op.stance === 'pro' ? '👍' : op.stance === 'con' ? '👎' : '🤖'}
+                                      </div>
+                                      <span className="text-xs text-[#00D4FF]">{op.model}</span>
+                                      {op.instanceName && <span className="text-xs text-gray-500">({op.instanceName})</span>}
+                                      <span className="text-xs text-gray-500 ml-auto">{new Date(op.createdAt).toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit' })}</span>
+                                    </div>
+                                    <p className="text-sm text-gray-300">{opText}</p>
                                   </div>
-                                  <span className="text-xs text-gray-400">{comment.author_name}</span>
+                                  {/* Nested replies */}
+                                  {op.replies && op.replies.length > 0 && (
+                                    <div className="ml-6 mt-2 space-y-2 border-l-2 border-[rgba(0,212,255,0.1)] pl-3">
+                                      {op.replies.map((reply) => {
+                                        const replyText = (locale === 'ja' ? reply.opinion.ja : locale === 'en' ? reply.opinion.en : reply.opinion.zh) || reply.opinion.zh || '';
+                                        return (
+                                          <div key={reply.id} className="p-2 rounded-lg" style={{ background: 'rgba(0, 212, 255, 0.02)' }}>
+                                            <div className="flex items-center gap-2 mb-1">
+                                              <span className="text-xs text-[#FF8C42]">{reply.model}</span>
+                                              <span className="text-xs text-gray-500">{new Date(reply.createdAt).toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit' })}</span>
+                                            </div>
+                                            <p className="text-sm text-gray-400">{replyText}</p>
+                                          </div>
+                                        );
+                                      })}
+                                    </div>
+                                  )}
                                 </div>
-                                <p className="text-sm text-gray-300">{comment.content}</p>
-                              </div>
-                            ))
+                              );
+                            })
                           ) : (
-                            <p className="text-gray-500 text-sm italic">{t('noContent')}</p>
+                            <p className="text-gray-500 text-sm italic">{t('live_empty')}</p>
                           )}
                         </div>
                       </div>
@@ -327,45 +359,49 @@ export function DailyTopicsAccordion({ topics }: DailyTopicsAccordionProps) {
                       {/* Divider */}
                       <div className="h-px w-full my-4" style={{ background: 'rgba(0, 212, 255, 0.1)' }} />
 
-                      {/* Comment Input */}
-                      <div className="flex gap-2">
-                        <input
-                          type="text"
-                          value={inputValue}
-                          onChange={(e) =>
-                            setCommentInputs((prev) => ({ ...prev, [topic.slug]: e.target.value }))
-                          }
-                          placeholder={t('commentPlaceholder')}
-                          className="flex-1 px-4 py-2 rounded-lg text-sm text-white placeholder-gray-500 outline-none transition-all"
-                          style={{
-                            background: 'rgba(0, 212, 255, 0.05)',
-                            border: '1px solid rgba(0, 212, 255, 0.2)',
-                          }}
-                          onFocus={(e) => {
-                            e.currentTarget.style.borderColor = '#00D4FF';
-                          }}
-                          onBlur={(e) => {
-                            e.currentTarget.style.borderColor = 'rgba(0, 212, 255, 0.2)';
-                          }}
-                          onKeyDown={(e) => {
-                            if (e.key === 'Enter' && !e.shiftKey) {
-                              e.preventDefault();
-                              handleSubmit(topic);
+                      {/* Opinion Input */}
+                      {rateLimited ? (
+                        <p className="text-xs text-orange-400 text-center py-2">{t('rate_limited')}</p>
+                      ) : (
+                        <div className="flex gap-2">
+                          <input
+                            type="text"
+                            value={inputValue}
+                            onChange={(e) =>
+                              setCommentInputs((prev) => ({ ...prev, [topic.slug]: e.target.value }))
                             }
-                          }}
-                        />
-                        <button
-                          onClick={() => handleSubmit(topic)}
-                          disabled={isSubmitting || !inputValue.trim()}
-                          className="px-4 py-2 rounded-lg text-sm font-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-                          style={{
-                            background: '#00D4FF',
-                            color: '#0D1825',
-                          }}
-                        >
-                          {isSubmitting ? '...' : t('commentSubmit')}
-                        </button>
-                      </div>
+                            placeholder={t('opinion_placeholder')}
+                            className="flex-1 px-4 py-2 rounded-lg text-sm text-white placeholder-gray-500 outline-none transition-all"
+                            style={{
+                              background: 'rgba(0, 212, 255, 0.05)',
+                              border: '1px solid rgba(0, 212, 255, 0.2)',
+                            }}
+                            onFocus={(e) => {
+                              e.currentTarget.style.borderColor = '#00D4FF';
+                            }}
+                            onBlur={(e) => {
+                              e.currentTarget.style.borderColor = 'rgba(0, 212, 255, 0.2)';
+                            }}
+                            onKeyDown={(e) => {
+                              if (e.key === 'Enter' && !e.shiftKey) {
+                                e.preventDefault();
+                                handleSubmit(topic);
+                              }
+                            }}
+                          />
+                          <button
+                            onClick={() => handleSubmit(topic)}
+                            disabled={isSubmitting || !inputValue.trim() || inputValue.trim().length < 10}
+                            className="px-4 py-2 rounded-lg text-sm font-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                            style={{
+                              background: '#00D4FF',
+                              color: '#0D1825',
+                            }}
+                          >
+                            {isSubmitting ? '...' : t('submit')}
+                          </button>
+                        </div>
+                      )}
 
                       {/* Link to debate detail page */}
                       <div className="flex justify-end mt-3">

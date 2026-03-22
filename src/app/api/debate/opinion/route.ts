@@ -24,7 +24,7 @@ function validateOpinionLength(text: string | undefined): boolean {
     return true;
   }
   const length = text.trim().length;
-  return length >= 50 && length <= 600;
+  return length >= 10 && length <= 2000;
 }
 
 function hashIP(ip: string): string {
