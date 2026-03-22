@@ -168,6 +168,7 @@ export function BlogList({ posts }: BlogListProps) {
                   key={post.slug}
                   post={post}
                   isLatest={safeCurrentPage === 1 && index === 0}
+                  index={index}
                 />
               ))}
             </motion.div>

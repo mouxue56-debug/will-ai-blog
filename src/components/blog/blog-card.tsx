@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { motion, type Variants } from 'motion/react';
+import { motion } from 'motion/react';
 import { useLocale, useTranslations } from 'next-intl';
 import { Clock, Calendar } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -49,27 +49,10 @@ const BORDER_BEAM_COLORS: Record<BlogCategory, { from: string; to: string }> = {
 interface BlogCardProps {
   post: BlogPost;
   isLatest?: boolean;
+  index?: number;
 }
 
-// 单个卡片的入场动画变体
-const cardVariants: Variants = {
-  hidden: { 
-    opacity: 0, 
-    y: 30,
-    scale: 0.95,
-  },
-  visible: { 
-    opacity: 1, 
-    y: 0,
-    scale: 1,
-    transition: {
-      duration: 0.5,
-      ease: 'easeOut',
-    },
-  },
-};
-
-export function BlogCard({ post, isLatest = false }: BlogCardProps) {
+export function BlogCard({ post, isLatest = false, index = 0 }: BlogCardProps) {
   const locale = useLocale();
   const t = useTranslations('blog');
   const [isHovered, setIsHovered] = useState(false);
@@ -80,7 +63,10 @@ export function BlogCard({ post, isLatest = false }: BlogCardProps) {
 
   return (
     <motion.div
-      variants={cardVariants}
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: index * 0.07, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+      whileHover={{ y: -4 }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
@@ -108,11 +94,13 @@ export function BlogCard({ post, isLatest = false }: BlogCardProps) {
             )}
 
             {/* Cover Image Placeholder with hover scale animation */}
-            <div
+            <motion.div
               className={cn(
                 'relative flex h-40 items-center justify-center bg-gradient-to-br overflow-hidden',
                 COVER_GRADIENTS[post.category]
               )}
+              whileHover={{ scale: 1.04 }}
+              transition={{ duration: 0.3 }}
             >
               <motion.span 
                 className="text-5xl opacity-60"
@@ -138,7 +126,7 @@ export function BlogCard({ post, isLatest = false }: BlogCardProps) {
                 }}
                 transition={{ duration: 0.6, ease: 'easeInOut' }}
               />
-            </div>
+            </motion.div>
 
             {/* Content */}
             <div className="flex flex-1 flex-col gap-3 p-4">
