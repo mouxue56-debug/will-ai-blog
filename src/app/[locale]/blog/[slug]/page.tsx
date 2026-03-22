@@ -46,8 +46,7 @@ function extractHeadings(content: string) {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale, slug } = await params;
-  const decodedSlug = decodeURIComponent(slug);
-  const post = getPostBySlug(decodedSlug);
+  const post = getPostBySlug(slug);
 
   if (!post) {
     return { title: 'Not Found' };
@@ -95,12 +94,11 @@ export default async function BlogPostPage({ params }: Props) {
   const { locale, slug } = await params;
   setRequestLocale(locale);
 
-  // Decode URL-encoded slug (handles Chinese characters in URL)
-  const decodedSlug = decodeURIComponent(slug);
-  const post = getPostBySlug(decodedSlug);
+  // slug should already be decoded by Next.js routing
+  const post = getPostBySlug(slug);
   if (!post) notFound();
 
-  const { prev, next } = getAdjacentPosts(decodedSlug);
+  const { prev, next } = getAdjacentPosts(slug);
   const comments = getSampleComments();
   const headings = extractHeadings(post.content);
   const lang = (locale === 'zh' || locale === 'ja' || locale === 'en') ? locale : 'zh';
