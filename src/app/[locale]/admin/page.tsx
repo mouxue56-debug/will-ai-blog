@@ -5,9 +5,10 @@ import { useSession } from 'next-auth/react';
 import { signIn } from 'next-auth/react';
 import {
   FileText, MessageSquare, Inbox, Plus, Check, X, Trash2, Edit3, Send,
-  Bot, User, Filter, RefreshCw, Eye
+  Bot, User, Filter, RefreshCw, Eye, ShieldCheck
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { CommentManager } from '@/components/admin/CommentManager';
 
 /* ─── Types ─── */
 interface PostItem {
@@ -585,7 +586,7 @@ function DraftsQueueTab({}) {
 }
 
 /* ═══════════════════════ Main Admin Page ═══════════════════════ */
-type TabType = 'posts' | 'comments' | 'drafts';
+type TabType = 'posts' | 'comments' | 'drafts' | 'all-comments';
 
 export default function AdminPage() {
   const { data: session, status } = useSession();
@@ -626,10 +627,11 @@ export default function AdminPage() {
       </div>
 
       {/* Tabs */}
-      <div className="mb-6 flex items-center gap-1 glass-card p-1 w-fit">
+      <div className="mb-6 flex items-center gap-1 glass-card p-1 w-fit flex-wrap">
         <TabButton active={activeTab === 'posts'} onClick={() => setActiveTab('posts')} icon={FileText} label="Posts" />
         <TabButton active={activeTab === 'comments'} onClick={() => setActiveTab('comments')} icon={MessageSquare} label="Comments" />
         <TabButton active={activeTab === 'drafts'} onClick={() => setActiveTab('drafts')} icon={Inbox} label="Draft Queue" />
+        <TabButton active={activeTab === 'all-comments'} onClick={() => setActiveTab('all-comments')} icon={ShieldCheck} label="全量评论" />
       </div>
 
       {/* Tab Content */}
@@ -637,6 +639,7 @@ export default function AdminPage() {
         {activeTab === 'posts' && <PostsTab  />}
         {activeTab === 'comments' && <CommentsTab  />}
         {activeTab === 'drafts' && <DraftsQueueTab  />}
+        {activeTab === 'all-comments' && <CommentManager />}
       </div>
     </div>
   );
