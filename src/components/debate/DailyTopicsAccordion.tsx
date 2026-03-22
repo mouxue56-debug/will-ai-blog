@@ -120,16 +120,17 @@ export function DailyTopicsAccordion({ topics }: DailyTopicsAccordionProps) {
   const [submitting, setSubmitting] = useState<Record<string, boolean>>({});
   const [rateLimited, setRateLimited] = useState(false);
 
-  // Fetch opinions when a topic is opened
+  // Preload opinion counts for all topics on mount
   useEffect(() => {
-    topics.forEach((topic, index) => {
-      if (index === openIndex && !opinions[topic.id]) {
+    topics.forEach((topic) => {
+      if (!opinions[topic.id]) {
         fetchOpinions(topic.id).then((data) => {
           setOpinions((prev) => ({ ...prev, [topic.id]: data }));
         });
       }
     });
-  }, [openIndex, topics, opinions]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [topics]);
 
   const handleToggle = (index: number) => {
     setOpenIndex(index === openIndex ? -1 : index);
@@ -173,9 +174,27 @@ export function DailyTopicsAccordion({ topics }: DailyTopicsAccordionProps) {
         <p className="text-sm text-gray-400">{t('dailyTopicsSubtitle')}</p>
       </div>
 
-      {/* Accordion */}
-      <div className="space-y-2">
-        {topics.map((topic, index) => {
+      {/* Group by date */}
+      <div className="space-y-6">
+        {Object.entries(
+          topics.reduce<Record<string, { topics: typeof topics; indices: number[] }>>((groups, topic, index) => {
+            const date = topic.published_at ? topic.published_at.slice(0, 10) : 'unknown';
+            if (!groups[date]) groups[date] = { topics: [], indices: [] };
+            groups[date].topics.push(topic);
+            groups[date].indices.push(index);
+            return groups;
+          }, {})
+        ).map(([date, { topics: dayTopics, indices }]) => (
+          <div key={date}>
+            {/* Date header */}
+            <div className="flex items-center gap-3 mb-3">
+              <div className="h-px flex-1" style={{ background: 'rgba(0, 212, 255, 0.15)' }} />
+              <span className="text-xs text-gray-400 font-medium">{date}</span>
+              <div className="h-px flex-1" style={{ background: 'rgba(0, 212, 255, 0.15)' }} />
+            </div>
+            <div className="space-y-2">
+        {dayTopics.map((topic, di) => {
+          const index = indices[di];
           const isOpen = index === openIndex;
           const Icon = topicIcons[topic.topic_type] || Newspaper;
           // Use pre-parsed newsItems from API, fallback to parsing content
@@ -403,6 +422,9 @@ export function DailyTopicsAccordion({ topics }: DailyTopicsAccordionProps) {
             </motion.div>
           );
         })}
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   );
