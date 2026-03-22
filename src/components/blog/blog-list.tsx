@@ -157,11 +157,11 @@ export function BlogList({ posts }: BlogListProps) {
           <>
             {/* Blog cards grid with stagger animation */}
             <motion.div
+              key={safeCurrentPage}
               className="grid grid-cols-1 gap-6 md:grid-cols-2"
               variants={containerVariants}
               initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, margin: '-50px' }}
+              animate="visible"
             >
               {paginatedPosts.map((post, index) => (
                 <BlogCard
