@@ -108,7 +108,7 @@ function YearCard({
   const t = useTranslations('timeline');
   const prefersReducedMotion = useReducedMotion();
   const ref = useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref, { once: true, margin: '-60px' });
+  const isInView = useInView(ref, { once: true, margin: '0px 0px -100px 0px' });
 
   const gradientIdx = Math.min(index, yearGradients.length - 1);
   const gradient = yearGradients[gradientIdx];
@@ -121,7 +121,7 @@ function YearCard({
     ? { initial: { opacity: 0 }, animate: { opacity: 1 } }
     : {
         initial: { opacity: 0, y: 50, scale: 0.96 },
-        animate: isInView ? { opacity: 1, y: 0, scale: 1 } : {},
+        animate: { opacity: isInView ? 1 : 0, y: isInView ? 0 : 50, scale: isInView ? 1 : 0.96 },
       };
 
   return (
