@@ -143,7 +143,7 @@ function MetricsGrid({ metrics, locale }: { metrics: CaseStudy['metrics']; local
           className="glass-card p-4 text-center space-y-1"
         >
           <div className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-brand-cyan to-brand-mint bg-clip-text text-transparent">
-            {prefersReducedMotion ? m.value : <CountUpValue value={m.value} inView={true} />}
+            {m.value}
           </div>
           <div className="text-xs sm:text-sm text-muted-foreground">
             {m.label[locale]}
