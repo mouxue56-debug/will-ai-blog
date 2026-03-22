@@ -115,7 +115,7 @@ export function getAllPosts(): BlogPost[] {
         if (typeof t === 'string') return { zh: t, ja: t, en: t };
         return t;
       })(),
-      category: (['ai','tech','life','cats','business'].includes(data.category as string)
+      category: (['ai','tech','life','cats','business','learning'].includes(data.category as string)
         ? (data.category as BlogCategory)
         : 'ai'),
       contentSource: getContentSource(date),

@@ -1,4 +1,4 @@
-export type BlogCategory = 'ai' | 'tech' | 'life' | 'cats' | 'business';
+export type BlogCategory = 'ai' | 'tech' | 'life' | 'cats' | 'business' | 'learning';
 export type BlogContentSource = 'original' | 'ai-organized';
 
 export interface BlogPost {
@@ -33,6 +33,7 @@ export const CATEGORY_COLORS: Record<BlogCategory, string> = {
   life: 'brand-coral',
   cats: 'brand-mango',
   business: 'brand-taro',
+  learning: 'brand-cyan',
 };
 
 export const CATEGORY_KEYS: Record<BlogCategory, string> = {
@@ -41,9 +42,10 @@ export const CATEGORY_KEYS: Record<BlogCategory, string> = {
   life: 'category_life',
   cats: 'category_cats',
   business: 'category_business',
+  learning: 'category_learning',
 };
 
-export const ALL_CATEGORIES: BlogCategory[] = ['ai', 'tech', 'life', 'cats', 'business'];
+export const ALL_CATEGORIES: BlogCategory[] = ['ai', 'tech', 'life', 'cats', 'business', 'learning'];
 
 export function getSampleComments(): Comment[] {
   return [

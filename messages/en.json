@@ -17,7 +17,8 @@
     "cattery": "Cattery",
     "debate": "AI Perspectives",
     "forum": "AI Digest",
-    "digest": "AI Digest"
+    "digest": "AI Digest",
+    "learning": "AI Learning"
   },
   "home": {
     "hero_title": "AI × Cattery × Osaka Life",
@@ -159,6 +160,7 @@
     "category_life": "Daily Life",
     "category_cats": "Cats",
     "category_business": "Business",
+    "category_learning": "AI Learning",
     "min_read": "min read",
     "table_of_contents": "Table of Contents",
     "prev_post": "Previous",
@@ -522,5 +524,13 @@
     "subtitle": "Will's daily AI viewpoint",
     "willComment": "Will Comment",
     "empty": "No entries yet"
+  },
+  "learning": {
+    "page_title": "AI Learning",
+    "page_desc": "Will's AI Learning Notes — Tool practices, deep dives, and honest failures",
+    "title": "Will's AI Learning Notes",
+    "subtitle": "Real practices, explorations, and honest failures — not a tutorial",
+    "no_posts": "Learning notes coming soon",
+    "min_read": "min read"
   }
 }

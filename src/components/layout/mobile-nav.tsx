@@ -14,6 +14,7 @@ import {
   X,
   LogIn,
   Swords,
+  GraduationCap,
 } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
 import { useSession, signOut } from 'next-auth/react';
@@ -27,6 +28,7 @@ const mainTabs = [
 
 const moreTabs = [
   { key: 'cases', href: '/cases', icon: Briefcase },
+  { key: 'learning', href: '/learning', icon: GraduationCap },
   { key: 'about', href: '/about', icon: User },
 ] as const;
 

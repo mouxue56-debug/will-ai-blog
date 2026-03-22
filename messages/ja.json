@@ -17,7 +17,8 @@
     "cattery": "猫舎",
     "debate": "AI观点",
     "forum": "資讯ディスカッション",
-    "digest": "AI速報"
+    "digest": "AI速報",
+    "learning": "AI学習"
   },
   "home": {
     "hero_title": "AI × キャッテリー × 大阪ライフ",
@@ -159,6 +160,7 @@
     "category_life": "日常",
     "category_cats": "猫",
     "category_business": "ビジネス",
+    "category_learning": "AI学習",
     "min_read": "分で読める",
     "table_of_contents": "目次",
     "prev_post": "前の記事",
@@ -522,5 +524,13 @@
     "subtitle": "Will の AI 視点デイリー",
     "willComment": "Will コメント",
     "empty": "まだ内容はありません"
+  },
+  "learning": {
+    "page_title": "AI学習",
+    "page_desc": "WillのAI学習ノート — ツール実践、仕組みの探索、失敗の記録",
+    "title": "Will の AI 学習ノート",
+    "subtitle": "AIツールの使い方、原理の探求、リアルな試行錯誤の記録",
+    "no_posts": "学習ノートは近日公開予定です",
+    "min_read": "分で読める"
   }
 }

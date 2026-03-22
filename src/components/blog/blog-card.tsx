@@ -16,6 +16,7 @@ const CATEGORY_TAG_COLORS: Record<BlogCategory, string> = {
   life: 'bg-brand-coral/15 text-brand-coral shadow-[0_0_8px_rgba(251,191,36,0.15)]',
   cats: 'bg-brand-mango/15 text-brand-mango shadow-[0_0_8px_rgba(252,211,77,0.15)]',
   business: 'bg-brand-taro/15 text-brand-taro shadow-[0_0_8px_rgba(192,132,252,0.15)]',
+  learning: 'bg-brand-cyan/15 text-brand-cyan shadow-[0_0_8px_rgba(0,212,255,0.15)]',
 };
 
 const COVER_GRADIENTS: Record<BlogCategory, string> = {
@@ -24,6 +25,7 @@ const COVER_GRADIENTS: Record<BlogCategory, string> = {
   life: 'from-brand-coral/20 to-brand-coral/5',
   cats: 'from-brand-mango/20 to-brand-mango/5',
   business: 'from-brand-taro/20 to-brand-taro/5',
+  learning: 'from-brand-cyan/20 to-brand-cyan/5',
 };
 
 const COVER_ICONS: Record<BlogCategory, string> = {
@@ -32,6 +34,7 @@ const COVER_ICONS: Record<BlogCategory, string> = {
   life: '🌸',
   cats: '🐱',
   business: '💼',
+  learning: '📚',
 };
 
 const BORDER_BEAM_COLORS: Record<BlogCategory, { from: string; to: string }> = {
@@ -40,6 +43,7 @@ const BORDER_BEAM_COLORS: Record<BlogCategory, { from: string; to: string }> = {
   life: { from: '#fbbf24', to: '#f87171' },
   cats: { from: '#fcd34d', to: '#fbbf24' },
   business: { from: '#c084fc', to: '#a855f7' },
+  learning: { from: '#00d4ff', to: '#5ef0c8' },
 };
 
 interface BlogCardProps {

@@ -20,6 +20,7 @@ const CATEGORY_TAG_COLORS: Record<BlogCategory, string> = {
   life: 'bg-brand-coral/15 text-brand-coral',
   cats: 'bg-brand-mango/15 text-brand-mango',
   business: 'bg-brand-taro/15 text-brand-taro',
+  learning: 'bg-brand-cyan/15 text-brand-cyan',
 };
 
 const CONTENT_SOURCE_BADGE = {

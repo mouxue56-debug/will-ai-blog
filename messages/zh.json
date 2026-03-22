@@ -17,7 +17,8 @@
     "cattery": "猫舎",
     "debate": "AI观点",
     "forum": "资讯讨论",
-    "digest": "AI速递"
+    "digest": "AI速递",
+    "learning": "AI学习"
   },
   "home": {
     "hero_title": "AI × 猫舎 × 大阪生活",
@@ -159,6 +160,7 @@
     "category_life": "生活日常",
     "category_cats": "猫咪",
     "category_business": "商业思考",
+    "category_learning": "AI学习",
     "min_read": "分钟阅读",
     "table_of_contents": "目录",
     "prev_post": "上一篇",
@@ -522,5 +524,13 @@
     "subtitle": "Will 的 AI 视角日报",
     "willComment": "Will 点评",
     "empty": "暂无内容"
+  },
+  "learning": {
+    "page_title": "AI学习",
+    "page_desc": "Will 的 AI 学习笔记 — 工具实践、原理探索、踩坑记录",
+    "title": "Will 的 AI 学习笔记",
+    "subtitle": "记录 AI 工具使用、原理探索和真实踩坑，不是教程，是学习过程",
+    "no_posts": "学习笔记即将上线，敬请期待",
+    "min_read": "分钟阅读"
   }
 }

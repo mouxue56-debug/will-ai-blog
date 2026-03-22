@@ -11,6 +11,7 @@ const CATEGORY_BG: Record<BlogCategory, string> = {
   life: 'bg-brand-coral/20 text-brand-coral hover:bg-brand-coral/30 border-brand-coral/30',
   cats: 'bg-brand-mango/20 text-brand-mango hover:bg-brand-mango/30 border-brand-mango/30',
   business: 'bg-brand-taro/20 text-brand-taro hover:bg-brand-taro/30 border-brand-taro/30',
+  learning: 'bg-brand-cyan/20 text-brand-cyan hover:bg-brand-cyan/30 border-brand-cyan/30',
 };
 
 const CATEGORY_ACTIVE: Record<BlogCategory, string> = {
@@ -19,6 +20,7 @@ const CATEGORY_ACTIVE: Record<BlogCategory, string> = {
   life: 'bg-brand-coral text-white border-brand-coral',
   cats: 'bg-brand-mango text-white border-brand-mango',
   business: 'bg-brand-taro text-white border-brand-taro',
+  learning: 'bg-brand-cyan text-white border-brand-cyan',
 };
 
 interface CategoryFilterProps {
