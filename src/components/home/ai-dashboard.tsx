@@ -1,8 +1,7 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
-import { motion, useInView } from 'motion/react';
-import { useRef } from 'react';
+import { motion } from 'motion/react';
 import { AnimatedBeam } from '@/components/ui/aceternity';
 
 interface AIInstance {
@@ -60,16 +59,15 @@ function StatusDot({ status, color }: { status: 'online' | 'idle'; color: string
 
 export function AIDashboard() {
   const t = useTranslations('home');
-  const sectionRef = useRef(null);
-  const isInView = useInView(sectionRef, { once: true, margin: '-100px' });
 
   return (
-    <section ref={sectionRef} className="py-16 sm:py-20">
+    <section className="py-16 sm:py-20">
       <div className="mx-auto max-w-5xl px-4 sm:px-6">
         <motion.h2
           className="text-2xl sm:text-3xl font-bold mb-8"
           initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.1 }}
           transition={{ duration: 0.5 }}
         >
           {t('ai_dashboard_title')}
@@ -78,7 +76,8 @@ export function AIDashboard() {
         <motion.div
           className="relative glass-card p-6 overflow-hidden"
           initial={{ opacity: 0, y: 30 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.1 }}
           transition={{ delay: 0.2, duration: 0.6, ease: 'easeOut' }}
         >
           <div className="absolute inset-0 pointer-events-none opacity-30 dark:opacity-20 overflow-hidden">
@@ -122,7 +121,8 @@ export function AIDashboard() {
                 key={inst.key}
                 className="flex flex-col items-center gap-3 rounded-lg bg-white/5 dark:bg-white/[0.03] p-4 border border-white/[0.06] backdrop-blur-sm"
                 initial={{ opacity: 0, scale: 0.9 }}
-                animate={isInView ? { opacity: 1, scale: 1 } : {}}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true, amount: 0.1 }}
                 transition={{ delay: 0.3 + i * 0.1, duration: 0.5, ease: 'easeOut' }}
               >
                 <StatusDot status={inst.status} color={inst.dotColor} />

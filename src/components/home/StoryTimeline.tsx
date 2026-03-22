@@ -1,7 +1,7 @@
 'use client';
 
 import { useRef } from 'react';
-import { motion, useInView, useScroll, useTransform } from 'motion/react';
+import { motion, useScroll, useTransform } from 'motion/react';
 import { Cat, Bot, Users, Newspaper, Zap } from 'lucide-react';
 import { LampEffect } from '@/components/ui/aceternity';
 import { useTranslations } from 'next-intl';
@@ -22,19 +22,15 @@ function StoryNodeCard({
   node: StoryNode;
   index: number;
 }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref, { once: true, margin: '-80px' });
   const isLeft = index % 2 === 0;
 
   return (
-    <div
-      ref={ref}
-      className="relative flex w-full md:items-center"
-    >
+    <div className="relative flex w-full md:items-center">
       {/* Card */}
       <motion.div
         initial={{ opacity: 0, y: 40, x: isLeft ? -30 : 30 }}
-        animate={isInView ? { opacity: 1, y: 0, x: 0 } : {}}
+        whileInView={{ opacity: 1, y: 0, x: 0 }}
+        viewport={{ once: true, amount: 0.1 }}
         transition={{ duration: 0.6, delay: 0.1, ease: 'easeOut' }}
         className={`
           w-full
@@ -69,7 +65,8 @@ function StoryNodeCard({
       {/* Center dot */}
       <motion.div
         initial={{ scale: 0 }}
-        animate={isInView ? { scale: 1 } : {}}
+        whileInView={{ scale: 1 }}
+        viewport={{ once: true, amount: 0.1 }}
         transition={{ duration: 0.4, delay: 0.2, type: 'spring', stiffness: 300 }}
         className={`
           absolute
@@ -96,8 +93,6 @@ function StoryNodeCard({
 export function StoryTimeline() {
   const t = useTranslations('home');
   const containerRef = useRef<HTMLDivElement>(null);
-  const sectionRef = useRef<HTMLDivElement>(null);
-  const isInView = useInView(sectionRef, { once: true, margin: '-100px' });
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -117,13 +112,14 @@ export function StoryTimeline() {
   ];
 
   return (
-    <section ref={sectionRef} className="py-16 sm:py-24">
+    <section className="py-16 sm:py-24">
       <div className="mx-auto max-w-5xl px-4 sm:px-6">
         {/* Section title with Lamp */}
         <LampEffect color="green" className="min-h-[160px] mb-4">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.1 }}
             transition={{ duration: 0.5 }}
             className="text-center"
           >

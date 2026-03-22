@@ -1,8 +1,7 @@
 'use client';
 
-import { useRef } from 'react';
 import { useTranslations } from 'next-intl';
-import { motion, useInView } from 'motion/react';
+import { motion } from 'motion/react';
 import { Link } from '@/i18n/navigation';
 import { Play, Camera, Music } from 'lucide-react';
 import { LampEffect } from '@/components/ui/aceternity';
@@ -39,17 +38,16 @@ const snsCards = [
 
 export function MyWorld() {
   const t = useTranslations('home');
-  const sectionRef = useRef(null);
-  const isInView = useInView(sectionRef, { once: true, margin: '-100px' });
 
   return (
-    <section ref={sectionRef} className="py-16 sm:py-20">
+    <section className="py-16 sm:py-20">
       <div className="mx-auto max-w-5xl px-4 sm:px-6">
         <LampEffect color="purple" className="min-h-[140px] -mb-4">
           <motion.h2
             className="text-2xl sm:text-3xl font-bold"
             initial={{ opacity: 0, y: 20 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.1 }}
             transition={{ duration: 0.5 }}
           >
             🌍 {t('my_world_title')}
@@ -59,7 +57,8 @@ export function MyWorld() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <motion.div
             initial={{ opacity: 0, x: -20 }}
-            animate={isInView ? { opacity: 1, x: 0 } : {}}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, amount: 0.1 }}
             transition={{ delay: 0.1, duration: 0.5 }}
             className="grid grid-cols-3 gap-3"
           >
@@ -87,7 +86,8 @@ export function MyWorld() {
 
           <motion.div
             initial={{ opacity: 0, x: 20 }}
-            animate={isInView ? { opacity: 1, x: 0 } : {}}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, amount: 0.1 }}
             transition={{ delay: 0.2, duration: 0.5 }}
             className="flex flex-col gap-3 justify-center"
           >
