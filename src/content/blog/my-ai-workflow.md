@@ -4,7 +4,7 @@ title:
   zh: 用4个AI助手管理日常工作
   ja: 4つのAIアシスタントで日常業務を管理する
   en: Managing Daily Work with 4 AI Assistants
-category: ai
+category: "ai"
 date: "2026-03-18"
 author: Will
 readingTime: 8

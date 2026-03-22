@@ -5,7 +5,7 @@ title:
   zh: OpenClaw多实例架构踩坑记录
   ja: OpenClaw マルチインスタンス構成の落とし穴
   en: Lessons Learned from OpenClaw Multi-Instance Setup
-category: tech
+category: "tech"
 date: "2026-03-10"
 author: Will
 readingTime: 7

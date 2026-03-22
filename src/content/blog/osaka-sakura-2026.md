@@ -4,7 +4,7 @@ title:
   zh: 大阪の桜今年は少し遅め
   ja: 大阪城公園の桜はもうすぐ
   en: Cherry Blossoms at Osaka Castle Park Are Almost Here
-category: life
+category: "life"
 date: "2026-03-12"
 author: Will
 readingTime: 3

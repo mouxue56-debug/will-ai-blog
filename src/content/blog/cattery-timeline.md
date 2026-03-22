@@ -4,7 +4,7 @@ title:
   ja: "サイベリアン｜福楽キャッテリー 猫タイムライン"
   en: "サイベリアン｜Fuluck Cattery Timeline"
 date: "2026-03-21"
-category: cattery
+category: "cats"
 tags: ["cattery", "timeline", "サイベリアン"]
 excerpt:
   zh: "福楽キャッテリー的成长记录——从2022年注册开业到全国第一名的发展历程。"

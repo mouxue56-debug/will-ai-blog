@@ -5,7 +5,7 @@ title:
   ja: "AI動画批量生成の実践：OpenCloud + NotebookLMで9カ国のプロモ影片を自動化"
   en: "Batch AI Video Generation: OpenCloud + NotebookLM for Automated Multilingual Promos"
 date: "2026-03-17"
-category: AI
+category: "ai"
 tags: ["OpenCloud", "AI自动化", "视频生成", "NotebookLM"]
 excerpt:
   zh: "用OpenCloud结合NotebookLM，实现医院宣传视频批量生成。AI随机生成多个版本，中日英各三个，从中挑选最优再细化，全程基本不需要人工干预。"

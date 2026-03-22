@@ -4,7 +4,7 @@ title:
   zh: 春天的サイベリアン换毛季护理指南
   ja: 春のサイベリアン換毛期ケアガイド
   en: Spring Shedding Season Care Guide for Siberian Cats
-category: cats
+category: "cats"
 date: "2026-03-15"
 author: Will
 readingTime: 6

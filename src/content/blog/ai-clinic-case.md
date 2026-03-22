@@ -4,7 +4,7 @@ title:
   zh: 为大阪诊所搭建多语言 AI 咨询系统
   ja: 大阪クリニックに多言語AI相談システムを構築した話
   en: Building a Multilingual AI Consultation System for an Osaka Clinic
-category: business
+category: "business"
 date: "2026-03-08"
 author: Will
 readingTime: 9
