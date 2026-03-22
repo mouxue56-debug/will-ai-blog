@@ -1,5 +1,5 @@
 import { debates } from '@/data/debates';
-import { getRedis } from '@/lib/redis';
+import { supabaseAdmin } from '@/lib/supabase';
 
 export type DebateLocale = 'zh' | 'ja' | 'en';
 export type DebateSession = 'morning' | 'evening';
@@ -25,14 +25,20 @@ export interface DebateOpinionRecord {
     ja?: string;
     en?: string;
   };
+  isAI?: boolean;
+  replyTo?: string;
+  ipHash?: string;
+  instanceName?: string;
   submittedBy?: string;
   createdAt: string;
 }
 
-const TOPIC_PREFIX = 'debate:topic:';
-const TOPIC_INDEX_KEY = 'debate:topics:list';
-const OPINION_PREFIX = 'debate:opinion:';
-const OPINION_LIST_PREFIX = 'debate:opinions:';
+/** Max submissions per IP per day */
+const DAILY_IP_LIMIT = 5;
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Date helpers
+// ─────────────────────────────────────────────────────────────────────────────
 
 export function getTodayInTokyo(): string {
   return new Intl.DateTimeFormat('en-CA', {
@@ -47,65 +53,9 @@ export function buildTopicId(date: string, session: DebateSession, index = 1): s
   return index <= 1 ? `${date}-${session}` : `${date}-${session}-${index}`;
 }
 
-function topicKey(topicId: string): string {
-  return `${TOPIC_PREFIX}${topicId}`;
-}
-
-function opinionKey(topicId: string, opinionId: string): string {
-  return `${OPINION_PREFIX}${topicId}:${opinionId}`;
-}
-
-function opinionListKey(topicId: string): string {
-  return `${OPINION_LIST_PREFIX}${topicId}`;
-}
-
-function parseTopicHash(data: Record<string, string> | null): DebateTopic | null {
-  if (!data?.id || !data.date || !data.session || !data.title || !data.newsSource) {
-    return null;
-  }
-
-  try {
-    return {
-      id: data.id,
-      date: data.date,
-      session: data.session as DebateSession,
-      title: JSON.parse(data.title) as DebateTopic['title'],
-      newsSource: data.newsSource,
-      tags: data.tags ? (JSON.parse(data.tags) as string[]) : [],
-      createdAt: data.createdAt,
-    };
-  } catch {
-    return null;
-  }
-}
-
-function parseOpinionHash(data: Record<string, string> | null): DebateOpinionRecord | null {
-  if (!data?.id || !data.topicId || !data.model || !data.stance || !data.opinion || !data.createdAt) {
-    return null;
-  }
-
-  try {
-    return {
-      id: data.id,
-      topicId: data.topicId,
-      model: data.model,
-      stance: data.stance as DebateStance,
-      opinion: JSON.parse(data.opinion) as DebateOpinionRecord['opinion'],
-      submittedBy: data.submittedBy || undefined,
-      createdAt: data.createdAt,
-    };
-  } catch {
-    return null;
-  }
-}
-
-function compareTopics(a: DebateTopic, b: DebateTopic): number {
-  if (a.session !== b.session) {
-    return a.session === 'morning' ? -1 : 1;
-  }
-
-  return (a.createdAt ?? '').localeCompare(b.createdAt ?? '') || a.id.localeCompare(b.id);
-}
+// ─────────────────────────────────────────────────────────────────────────────
+// Static (hardcoded) debate helpers — kept for fallback / legacy frontend
+// ─────────────────────────────────────────────────────────────────────────────
 
 export function getStaticDebateTopic(topicId: string): DebateTopic | null {
   const debate = debates.find((item) => buildTopicId(item.date, item.session) === topicId);
@@ -137,58 +87,80 @@ export function getStaticTopicsForDate(date: string): DebateTopic[] {
     }));
 }
 
-async function listStoredTopicsForDate(date: string): Promise<DebateTopic[]> {
-  const client = getRedis();
-  if (!client) {
-    return [];
-  }
+// ─────────────────────────────────────────────────────────────────────────────
+// Supabase: topic helpers
+// ─────────────────────────────────────────────────────────────────────────────
 
-  try {
-    const topicIds = ((await client.zrange(TOPIC_INDEX_KEY, 0, -1)) as string[])
-      .filter((topicId) => topicId.startsWith(`${date}-`));
-
-    if (!topicIds.length) {
-      return [];
-    }
-
-    const records = await Promise.all(
-      topicIds.map((topicId) => client.hgetall(topicKey(topicId)) as Promise<Record<string, string> | null>),
-    );
-
-    return records
-      .map((record) => parseTopicHash(record))
-      .filter((topic): topic is DebateTopic => Boolean(topic))
-      .sort(compareTopics);
-  } catch {
-    return [];
-  }
+function rowToTopic(row: Record<string, unknown>): DebateTopic {
+  return {
+    id: row.id as string,
+    date: row.date as string,
+    session: row.session as DebateSession,
+    title: {
+      zh: row.title_zh as string,
+      ja: (row.title_ja as string) ?? '',
+      en: (row.title_en as string) ?? '',
+    },
+    newsSource: (row.news_source as string) ?? '',
+    tags: (row.tags as string[]) ?? [],
+    createdAt: row.created_at as string,
+  };
 }
 
 export async function getDebateTopic(topicId: string): Promise<DebateTopic | null> {
-  const client = getRedis();
-  if (!client) {
-    return getStaticDebateTopic(topicId);
-  }
-
   try {
-    const data = (await client.hgetall(topicKey(topicId))) as Record<string, string> | null;
-    return parseTopicHash(data) ?? getStaticDebateTopic(topicId);
+    // First try to find the topic in Supabase by matching date+session pattern
+    const staticTopic = getStaticDebateTopic(topicId);
+    
+    // Try Supabase — topics stored with date+session columns
+    // Parse topicId like "2026-03-20-morning" or legacy "ai-job-2026-03-20-am"
+    const { data, error } = await supabaseAdmin
+      .from('debate_topics')
+      .select('*')
+      .eq('id', topicId)
+      .maybeSingle();
+
+    if (error || !data) {
+      return staticTopic;
+    }
+
+    return rowToTopic(data as Record<string, unknown>);
   } catch {
     return getStaticDebateTopic(topicId);
   }
 }
 
+async function listStoredTopicsForDate(date: string): Promise<DebateTopic[]> {
+  try {
+    const { data, error } = await supabaseAdmin
+      .from('debate_topics')
+      .select('*')
+      .eq('date', date)
+      .order('created_at', { ascending: true });
+
+    if (error || !data) {
+      return [];
+    }
+
+    return (data as Record<string, unknown>[]).map(rowToTopic);
+  } catch {
+    return [];
+  }
+}
+
+function compareTopics(a: DebateTopic, b: DebateTopic): number {
+  if (a.session !== b.session) {
+    return a.session === 'morning' ? -1 : 1;
+  }
+  return (a.createdAt ?? '').localeCompare(b.createdAt ?? '') || a.id.localeCompare(b.id);
+}
+
 export async function listDebateTopicsForDate(date: string): Promise<DebateTopic[]> {
-  const client = getRedis();
   const fallbackTopics = getStaticTopicsForDate(date);
 
-  if (!client) {
-    return fallbackTopics;
-  }
-
   try {
-    const merged = new Map<string, DebateTopic>();
     const storedTopics = await listStoredTopicsForDate(date);
+    const merged = new Map<string, DebateTopic>();
 
     fallbackTopics.forEach((topic) => merged.set(topic.id, topic));
     storedTopics.forEach((topic) => merged.set(topic.id, topic));
@@ -204,34 +176,28 @@ export async function getTodayDebateTopics(): Promise<DebateTopic[]> {
 }
 
 export async function saveDebateTopic(topic: DebateTopic): Promise<boolean> {
-  const client = getRedis();
-  if (!client) {
-    return false;
-  }
-
   try {
-    await client.hset(topicKey(topic.id), {
+    const { error } = await supabaseAdmin.from('debate_topics').upsert({
       id: topic.id,
       date: topic.date,
       session: topic.session,
-      title: JSON.stringify(topic.title),
-      newsSource: topic.newsSource,
-      tags: JSON.stringify(topic.tags),
-      createdAt: topic.createdAt ?? new Date().toISOString(),
+      title_zh: topic.title.zh,
+      title_ja: topic.title.ja ?? null,
+      title_en: topic.title.en ?? null,
+      news_source: topic.newsSource,
+      tags: topic.tags,
+      created_at: topic.createdAt ?? new Date().toISOString(),
     });
 
-    await client.zadd(TOPIC_INDEX_KEY, {
-      score: Date.now(),
-      member: topic.id,
-    });
-
-    return true;
+    return !error;
   } catch {
     return false;
   }
 }
 
-export async function createDebateTopic(input: Omit<DebateTopic, 'id' | 'createdAt'>): Promise<DebateTopic | null> {
+export async function createDebateTopic(
+  input: Omit<DebateTopic, 'id' | 'createdAt'>,
+): Promise<DebateTopic | null> {
   const dateTopics = await listDebateTopicsForDate(input.date);
   const nextIndex = dateTopics.filter((topic) => topic.session === input.session).length + 1;
   const topic: DebateTopic = {
@@ -244,83 +210,139 @@ export async function createDebateTopic(input: Omit<DebateTopic, 'id' | 'created
   return saved ? topic : null;
 }
 
+// ─────────────────────────────────────────────────────────────────────────────
+// Supabase: opinion helpers
+// ─────────────────────────────────────────────────────────────────────────────
+
+function rowToOpinion(row: Record<string, unknown>): DebateOpinionRecord {
+  return {
+    id: row.id as string,
+    topicId: row.topic_id as string,
+    model: row.model as string,
+    stance: row.stance as DebateStance,
+    opinion: {
+      zh: row.opinion_zh as string,
+      ja: row.opinion_ja as string | undefined,
+      en: row.opinion_en as string | undefined,
+    },
+    isAI: row.is_ai as boolean,
+    replyTo: row.reply_to as string | undefined,
+    ipHash: row.ip_hash as string | undefined,
+    instanceName: row.instance_name as string | undefined,
+    createdAt: row.created_at as string,
+  };
+}
+
 export async function saveDebateOpinion(opinion: DebateOpinionRecord): Promise<boolean> {
-  const client = getRedis();
-  if (!client) {
-    return false;
-  }
-
-  const key = opinionKey(opinion.topicId, opinion.id);
-
   try {
-    await client.hset(key, {
+    const { error } = await supabaseAdmin.from('debate_opinions').insert({
       id: opinion.id,
-      topicId: opinion.topicId,
+      topic_id: opinion.topicId,
       model: opinion.model,
       stance: opinion.stance,
-      opinion: JSON.stringify(opinion.opinion),
-      submittedBy: opinion.submittedBy ?? '',
-      createdAt: opinion.createdAt,
+      opinion_zh: opinion.opinion.zh,
+      opinion_ja: opinion.opinion.ja ?? null,
+      opinion_en: opinion.opinion.en ?? null,
+      is_ai: opinion.isAI ?? true,
+      reply_to: opinion.replyTo ?? null,
+      ip_hash: opinion.ipHash ?? null,
+      instance_name: opinion.instanceName ?? null,
+      created_at: opinion.createdAt,
     });
 
-    await client.lpush(opinionListKey(opinion.topicId), key);
-    return true;
+    return !error;
   } catch {
     return false;
   }
 }
 
 export async function listDebateOpinions(topicId: string): Promise<DebateOpinionRecord[]> {
-  const client = getRedis();
-  if (!client) {
-    return [];
-  }
-
   try {
-    const keys = (await client.lrange(opinionListKey(topicId), 0, 99)) as string[];
-    if (!keys.length) {
+    const { data, error } = await supabaseAdmin
+      .from('debate_opinions')
+      .select('*')
+      .eq('topic_id', topicId)
+      .order('created_at', { ascending: true });
+
+    if (error || !data) {
       return [];
     }
 
-    const records = await Promise.all(
-      keys.map((key) => client.hgetall(key) as Promise<Record<string, string> | null>),
-    );
-
-    return records
-      .map((record) => parseOpinionHash(record))
-      .filter((record): record is DebateOpinionRecord => Boolean(record));
+    return (data as Record<string, unknown>[]).map(rowToOpinion);
   } catch {
     return [];
   }
 }
 
-export async function incrementOpinionRateLimit(apiKey: string): Promise<number | null> {
-  const client = getRedis();
-  if (!client) {
-    return null;
-  }
-
-  const hourBucket = new Intl.DateTimeFormat('en-CA', {
-    timeZone: 'Asia/Tokyo',
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-    hour: '2-digit',
-    hourCycle: 'h23',
-  })
-    .format(new Date())
-    .replace(/[^\d]/g, '');
-
-  const key = `debate:ratelimit:${apiKey}:${hourBucket}`;
-
+export async function getOpinionReplies(opinionId: string): Promise<DebateOpinionRecord[]> {
   try {
-    const count = await client.incr(key);
-    if (count === 1) {
-      await client.expire(key, 3600);
+    const { data, error } = await supabaseAdmin
+      .from('debate_opinions')
+      .select('*')
+      .eq('reply_to', opinionId)
+      .order('created_at', { ascending: true });
+
+    if (error || !data) {
+      return [];
     }
 
-    return count;
+    return (data as Record<string, unknown>[]).map(rowToOpinion);
   } catch {
-    return null;
+    return [];
   }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// IP Rate limiting — Supabase debate_rate_limits table
+// ─────────────────────────────────────────────────────────────────────────────
+
+export async function checkAndIncrementRateLimit(
+  ipHash: string,
+): Promise<{ allowed: boolean; remaining: number }> {
+  const date = getTodayInTokyo();
+
+  try {
+    // Try to insert first; if row exists, update count
+    const { data: existingRow } = await supabaseAdmin
+      .from('debate_rate_limits')
+      .select('count')
+      .eq('ip_hash', ipHash)
+      .eq('date', date)
+      .maybeSingle();
+
+    const currentCount = (existingRow?.count as number) ?? 0;
+
+    if (currentCount >= DAILY_IP_LIMIT) {
+      return { allowed: false, remaining: 0 };
+    }
+
+    // Upsert: insert or increment
+    const { error } = await supabaseAdmin.from('debate_rate_limits').upsert(
+      {
+        ip_hash: ipHash,
+        date,
+        count: currentCount + 1,
+      },
+      { onConflict: 'ip_hash,date' },
+    );
+
+    if (error) {
+      // On upsert error, allow but warn (fail open to avoid blocking legit users)
+      return { allowed: true, remaining: DAILY_IP_LIMIT - 1 };
+    }
+
+    return {
+      allowed: true,
+      remaining: DAILY_IP_LIMIT - (currentCount + 1),
+    };
+  } catch {
+    // Fail open
+    return { allowed: true, remaining: DAILY_IP_LIMIT - 1 };
+  }
+}
+
+/** @deprecated Use checkAndIncrementRateLimit with IP hash instead */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export async function incrementOpinionRateLimit(_apiKey: string): Promise<number | null> {
+  return null;
 }
