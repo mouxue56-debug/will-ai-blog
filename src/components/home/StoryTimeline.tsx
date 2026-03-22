@@ -28,10 +28,9 @@ function StoryNodeCard({
     <div className="relative flex w-full md:items-center">
       {/* Card */}
       <motion.div
-        initial={{ opacity: 0, y: 40, x: isLeft ? -30 : 30 }}
-        whileInView={{ opacity: 1, y: 0, x: 0 }}
-        viewport={{ once: true, amount: 0.1 }}
-        transition={{ duration: 0.6, delay: 0.1, ease: 'easeOut' }}
+        initial={{ opacity: 0, x: -20 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.6, delay: index * 0.1, ease: 'easeOut' }}
         className={`
           w-full
           md:w-[calc(50%-2.5rem)]
@@ -65,9 +64,9 @@ function StoryNodeCard({
       {/* Center dot */}
       <motion.div
         initial={{ scale: 0 }}
-        whileInView={{ scale: 1 }}
-        viewport={{ once: true, amount: 0.1 }}
-        transition={{ duration: 0.4, delay: 0.2, type: 'spring', stiffness: 300 }}
+        animate={{ scale: 1 }}
+        whileHover={{ scale: 1.2 }}
+        transition={{ duration: 0.4, delay: index * 0.1 + 0.05, type: 'spring', stiffness: 300 }}
         className={`
           absolute
           left-0 md:left-1/2 md:-translate-x-1/2
@@ -112,14 +111,18 @@ export function StoryTimeline() {
   ];
 
   return (
-    <section className="py-16 sm:py-24">
+    <motion.section
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.6 }}
+      className="py-16 sm:py-24"
+    >
       <div className="mx-auto max-w-5xl px-4 sm:px-6">
         {/* Section title with Lamp */}
         <LampEffect color="green" className="min-h-[160px] mb-4">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.1 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
             className="text-center"
           >
@@ -156,6 +159,6 @@ export function StoryTimeline() {
           <div className="absolute left-[15px] md:left-1/2 md:-translate-x-1/2 bottom-0 w-3 h-3 rounded-full bg-brand-mint shadow-[0_0_8px_rgba(94,234,212,0.5)]" />
         </div>
       </div>
-    </section>
+    </motion.section>
   );
 }
