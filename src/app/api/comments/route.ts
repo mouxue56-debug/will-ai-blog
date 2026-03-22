@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { authenticate } from '@/lib/auth';
 import { auth } from '@/lib/auth-config';
 import { getRedis } from '@/lib/redis';
+import { filterContent } from '@/lib/rate-limit';
 
 interface StoredComment {
   id: string;
@@ -202,6 +203,12 @@ export async function POST(request: NextRequest) {
         { error: 'postSlug and content are required' },
         { status: 400 }
       );
+    }
+
+    // 内容过滤（敏感词 + 长度 + 重复检测）
+    const filter = filterContent(content);
+    if (!filter.ok) {
+      return NextResponse.json({ error: filter.reason }, { status: 400 });
     }
 
     let commentAuthor = author;
