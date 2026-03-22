@@ -173,7 +173,7 @@ export function DailyTopicsAccordion({ topics }: DailyTopicsAccordionProps) {
       </div>
 
       {/* Accordion */}
-      <div className="space-y-3">
+      <div className="space-y-2">
         {topics.map((topic, index) => {
           const isOpen = index === openIndex;
           const Icon = topicIcons[topic.topic_type] || Newspaper;
@@ -210,63 +210,44 @@ export function DailyTopicsAccordion({ topics }: DailyTopicsAccordionProps) {
                 border: '1px solid rgba(0, 212, 255, 0.15)',
               }}
             >
-              {/* Header */}
+              {/* Card header - always visible */}
               <button
                 onClick={() => handleToggle(index)}
-                className="w-full px-5 py-4 flex items-center justify-between gap-4 hover:bg-white/5 transition-colors"
+                className="w-full px-4 py-3 hover:bg-white/5 transition-colors text-left"
               >
-                <div className="flex items-center gap-3 flex-1 min-w-0">
+                {/* Top row: icon + category + date + comment count + arrow */}
+                <div className="flex items-center gap-2 mb-2">
+                  <Icon className="w-4 h-4 text-[#00D4FF] flex-shrink-0" />
+                  <span className="text-xs font-medium text-[#00D4FF]">
+                    {getTopicDisplayName(topic.topic_type, t)}
+                  </span>
+                  <span className="text-xs text-gray-500">
+                    {topic.published_at ? topic.published_at.slice(0, 10) : ''}
+                  </span>
                   <div
-                    className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0"
-                    style={{ background: 'rgba(0, 212, 255, 0.1)' }}
+                    className="px-2 py-0.5 rounded-full text-xs ml-auto flex-shrink-0"
+                    style={{ background: 'rgba(255, 140, 66, 0.15)', color: '#FF8C42' }}
                   >
-                    <Icon className="w-5 h-5 text-[#00D4FF]" />
+                    {t('commentCount', { count: topicOpinions.length })}
                   </div>
-                  <div className="text-left flex-1 min-w-0">
-                    <h3 className="font-medium text-white truncate text-sm">
-                      {displayTitle}
-                    </h3>
-                    <p className="text-xs text-gray-400">
-                      {getTopicDisplayName(topic.topic_type, t)} · {topic.published_at ? topic.published_at.slice(0, 10) : ''}
-                    </p>
-                  </div>
+                  <motion.span
+                    animate={{ rotate: isOpen ? 180 : 0 }}
+                    transition={{ duration: 0.25 }}
+                    className="flex-shrink-0"
+                  >
+                    <ChevronDown className="w-4 h-4 text-gray-400" />
+                  </motion.span>
                 </div>
-
-                {/* AI Avatars */}
-                <div className="hidden sm:flex items-center -space-x-2 mr-2">
-                  {[1, 2, 3].map((i) => (
-                    <div
-                      key={i}
-                      className="w-7 h-7 rounded-full flex items-center justify-center text-xs border-2"
-                      style={{
-                        background: '#0D1825',
-                        borderColor: 'rgba(0, 212, 255, 0.3)',
-                      }}
-                    >
-                      {topic.author_emoji || '🤖'}
+                
+                {/* News headlines preview - always visible */}
+                <div className="space-y-1">
+                  {newsItems.slice(0, 5).map((item, i) => (
+                    <div key={i} className="flex items-start gap-1.5">
+                      <span className="text-[#00D4FF] text-xs mt-0.5 flex-shrink-0">•</span>
+                      <span className="text-xs text-gray-300 line-clamp-1">{getLocalizedTitle(item)}</span>
                     </div>
                   ))}
                 </div>
-
-                {/* Comment count badge */}
-                <div
-                  className="px-2.5 py-1 rounded-full text-xs flex-shrink-0"
-                  style={{
-                    background: 'rgba(255, 140, 66, 0.15)',
-                    color: '#FF8C42',
-                  }}
-                >
-                  {t('commentCount', { count: topicOpinions.length })}
-                </div>
-
-                {/* Arrow */}
-                <motion.span
-                  animate={{ rotate: isOpen ? 180 : 0 }}
-                  transition={{ duration: 0.25 }}
-                  className="flex-shrink-0"
-                >
-                  <ChevronDown className="w-5 h-5 text-gray-400" />
-                </motion.span>
               </button>
 
               {/* Content */}
@@ -279,40 +260,28 @@ export function DailyTopicsAccordion({ topics }: DailyTopicsAccordionProps) {
                     transition={{ duration: 0.25 }}
                     className="overflow-hidden"
                   >
-                    <div className="px-5 pb-5 pt-2">
-                      {/* News Items */}
-                      <div className="space-y-2 mb-4">
-                        <p className="text-xs text-gray-400">
-                          {t('news_intro')}
-                        </p>
-                        {newsItems.length > 0 ? (
-                          newsItems.map((item, i) => (
-                            <div key={i} className="flex items-start gap-2">
-                              <span className="text-[#00D4FF] mt-1">•</span>
-                              <div className="flex-1 min-w-0">
-                                <span className="text-gray-200 text-sm">{getLocalizedTitle(item)}</span>
-                                <a
-                                  href={item.url}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  className="ml-2 text-xs px-2 py-0.5 rounded-full inline-block hover:opacity-80 transition-opacity"
-                                  style={{
-                                    background: 'rgba(0, 212, 255, 0.1)',
-                                    color: '#00D4FF',
-                                  }}
-                                >
-                                  {item.source}
-                                </a>
-                              </div>
-                            </div>
-                          ))
-                        ) : (
-                          <p className="text-gray-500 text-sm">{t('noContent')}</p>
-                        )}
+                    <div className="px-4 pb-4 pt-1">
+                      {/* News links with sources */}
+                      <div className="space-y-1.5 mb-3">
+                        {newsItems.map((item, i) => (
+                          <div key={i} className="flex items-center gap-2">
+                            <a
+                              href={item.url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-xs text-gray-400 hover:text-[#00D4FF] transition-colors truncate"
+                            >
+                              {getLocalizedTitle(item)}
+                            </a>
+                            <span className="text-xs px-1.5 py-0.5 rounded-full flex-shrink-0" style={{ background: 'rgba(0, 212, 255, 0.08)', color: 'rgba(0, 212, 255, 0.6)' }}>
+                              {item.source}
+                            </span>
+                          </div>
+                        ))}
                       </div>
 
                       {/* Divider */}
-                      <div className="h-px w-full my-4" style={{ background: 'rgba(0, 212, 255, 0.1)' }} />
+                      <div className="h-px w-full my-3" style={{ background: 'rgba(0, 212, 255, 0.1)' }} />
 
                       {/* AI Comments */}
                       <div className="mb-4">
