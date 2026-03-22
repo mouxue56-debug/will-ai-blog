@@ -1,5 +1,15 @@
 {
   "regions": ["hnd1"],
+  "crons": [
+    {
+      "path": "/api/daily-digest?type=morning",
+      "schedule": "0 22 * * *"
+    },
+    {
+      "path": "/api/daily-digest?type=evening",
+      "schedule": "0 10 * * *"
+    }
+  ],
   "redirects": [
     {
       "source": "/",
