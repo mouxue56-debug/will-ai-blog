@@ -1,8 +1,7 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
-import { motion, useInView } from 'motion/react';
-import { useRef } from 'react';
+import { motion } from 'motion/react';
 import { YouTubeEmbed } from './YouTubeEmbed';
 import { InstagramGrid } from './InstagramGrid';
 import { TikTokGrid } from './TikTokGrid';
@@ -13,8 +12,6 @@ const sampleVideoIds = ['dQw4w9WgXcQ', 'jNQXAC9IVRw', 'kJQP7kiw5Fk'];
 
 function YouTubeSection() {
   const t = useTranslations('social');
-  const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: '-80px' });
 
   const videos = [
     { key: 'kittens', date: '2026-03-18', views: '2.3K', gradient: 'from-red-500 via-red-400 to-orange-400', emoji: '🐱', videoId: sampleVideoIds[0] },
@@ -24,9 +21,9 @@ function YouTubeSection() {
 
   return (
     <motion.section
-      ref={ref}
       initial={{ opacity: 0, y: 30 }}
-      animate={inView ? { opacity: 1, y: 0 } : {}}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.1 }}
       transition={{ duration: 0.5 }}
       className="glass-card p-6 sm:p-8"
     >
@@ -46,7 +43,8 @@ function YouTubeSection() {
       {/* Featured video embed */}
       <motion.div
         initial={{ opacity: 0, scale: 0.97 }}
-        animate={inView ? { opacity: 1, scale: 1 } : {}}
+        whileInView={{ opacity: 1, scale: 1 }}
+        viewport={{ once: true, amount: 0.1 }}
         transition={{ delay: 0.2, duration: 0.4 }}
         className="mb-5"
       >
@@ -59,7 +57,8 @@ function YouTubeSection() {
           <motion.div
             key={i}
             initial={{ opacity: 0, y: 20 }}
-            animate={inView ? { opacity: 1, y: 0 } : {}}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.1 }}
             transition={{ delay: 0.3 + i * 0.1, duration: 0.4 }}
             className="rounded-lg overflow-hidden bg-white/5 dark:bg-white/[0.03] border border-white/[0.06] backdrop-blur-sm"
           >
@@ -110,14 +109,12 @@ function YouTubeSection() {
 
 function InstagramSection() {
   const t = useTranslations('social');
-  const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: '-80px' });
 
   return (
     <motion.section
-      ref={ref}
       initial={{ opacity: 0, y: 30 }}
-      animate={inView ? { opacity: 1, y: 0 } : {}}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.1 }}
       transition={{ duration: 0.5, delay: 0.1 }}
       className="glass-card p-6 sm:p-8"
     >
@@ -152,14 +149,12 @@ function InstagramSection() {
 
 function TikTokSection() {
   const t = useTranslations('social');
-  const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: '-80px' });
 
   return (
     <motion.section
-      ref={ref}
       initial={{ opacity: 0, y: 30 }}
-      animate={inView ? { opacity: 1, y: 0 } : {}}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.1 }}
       transition={{ duration: 0.5, delay: 0.2 }}
       className="glass-card p-6 sm:p-8"
     >

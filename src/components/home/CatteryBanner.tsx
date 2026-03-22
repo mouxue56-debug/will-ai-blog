@@ -1,19 +1,16 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
-import { motion, useInView } from 'motion/react';
-import { useRef } from 'react';
+import { motion } from 'motion/react';
 
 export function CatteryBanner() {
   const t = useTranslations('home');
-  const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: '-80px' });
 
   return (
     <motion.section
-      ref={ref}
       initial={{ opacity: 0, y: 30 }}
-      animate={inView ? { opacity: 1, y: 0 } : {}}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.1 }}
       transition={{ duration: 0.6 }}
       className="mx-auto max-w-5xl px-4 sm:px-6 py-8"
     >
@@ -25,7 +22,8 @@ export function CatteryBanner() {
         <div className="relative z-10 max-w-xl">
           <motion.h3
             initial={{ opacity: 0, x: -20 }}
-            animate={inView ? { opacity: 1, x: 0 } : {}}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, amount: 0.1 }}
             transition={{ delay: 0.2, duration: 0.5 }}
             className="text-xl sm:text-2xl font-bold"
           >
@@ -34,7 +32,8 @@ export function CatteryBanner() {
 
           <motion.p
             initial={{ opacity: 0, x: -20 }}
-            animate={inView ? { opacity: 1, x: 0 } : {}}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, amount: 0.1 }}
             transition={{ delay: 0.3, duration: 0.5 }}
             className="mt-2 text-sm sm:text-base text-muted-foreground leading-relaxed"
           >
@@ -43,7 +42,8 @@ export function CatteryBanner() {
 
           <motion.div
             initial={{ opacity: 0, y: 10 }}
-            animate={inView ? { opacity: 1, y: 0 } : {}}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.1 }}
             transition={{ delay: 0.4, duration: 0.4 }}
             className="mt-5 flex flex-wrap gap-3"
           >

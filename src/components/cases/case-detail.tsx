@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence, useInView, useReducedMotion } from 'motion/react';
+import { useState, useEffect } from 'react';
+import { motion, AnimatePresence, useReducedMotion } from 'motion/react';
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 import type { CaseStudy } from '@/data/cases';
@@ -123,48 +123,27 @@ function ExpandableSection({
 }
 
 function MetricsGrid({ metrics, locale }: { metrics: CaseStudy['metrics']; locale: Locale }) {
-  const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: '-50px' });
   const prefersReducedMotion = useReducedMotion();
-
-  if (prefersReducedMotion) {
-    return (
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-12">
-        {metrics.map((m, i) => (
-          <div
-            key={i}
-            className="glass-card p-4 text-center space-y-1"
-          >
-            <div className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-brand-cyan to-brand-mint bg-clip-text text-transparent">
-              {m.value}
-            </div>
-            <div className="text-xs sm:text-sm text-muted-foreground">
-              {m.label[locale]}
-            </div>
-          </div>
-        ))}
-      </div>
-    );
-  }
 
   return (
     <motion.div
-      ref={ref}
       initial={{ opacity: 0, y: 16 }}
-      animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.4, delay: 0.15, ease: [0.25, 0.1, 0.25, 1] }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.2 }}
+      transition={{ duration: 0.4, delay: 0.1, ease: [0.25, 0.1, 0.25, 1] }}
       className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-12"
     >
       {metrics.map((m, i) => (
         <motion.div
           key={i}
           initial={{ opacity: 0, scale: 0.9 }}
-          animate={inView ? { opacity: 1, scale: 1 } : {}}
-          transition={{ duration: 0.4, delay: 0.2 + i * 0.08, ease: [0.25, 0.1, 0.25, 1] }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true, amount: 0.2 }}
+          transition={{ duration: 0.4, delay: 0.15 + i * 0.08, ease: [0.25, 0.1, 0.25, 1] }}
           className="glass-card p-4 text-center space-y-1"
         >
           <div className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-brand-cyan to-brand-mint bg-clip-text text-transparent">
-            <CountUpValue value={m.value} inView={inView} />
+            {prefersReducedMotion ? m.value : <CountUpValue value={m.value} inView={true} />}
           </div>
           <div className="text-xs sm:text-sm text-muted-foreground">
             {m.label[locale]}

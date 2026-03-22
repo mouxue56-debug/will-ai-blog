@@ -1,8 +1,7 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
-import { motion, useInView } from 'motion/react';
-import { useRef } from 'react';
+import { motion } from 'motion/react';
 
 const mockPosts = [
   { key: 'cats', gradient: 'from-purple-300 via-pink-200 to-rose-300', emoji: '🐱' },
@@ -15,16 +14,15 @@ const mockPosts = [
 
 export function InstagramGrid() {
   const t = useTranslations('social');
-  const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: '-60px' });
 
   return (
-    <div ref={ref} className="grid grid-cols-3 gap-2 sm:gap-3">
+    <div className="grid grid-cols-3 gap-2 sm:gap-3">
       {mockPosts.map((post, i) => (
         <motion.div
           key={post.key}
           initial={{ opacity: 0, scale: 0.9 }}
-          animate={inView ? { opacity: 1, scale: 1 } : {}}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true, amount: 0.1 }}
           transition={{ delay: 0.15 + i * 0.06, duration: 0.35 }}
           className={`aspect-square rounded-lg bg-gradient-to-br ${post.gradient} flex flex-col items-center justify-center gap-1 cursor-pointer hover:scale-105 transition-transform duration-200 relative overflow-hidden group`}
         >

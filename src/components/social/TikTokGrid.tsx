@@ -1,8 +1,7 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
-import { motion, useInView } from 'motion/react';
-import { useRef } from 'react';
+import { motion } from 'motion/react';
 
 const mockVideos = [
   { key: 'morning', gradient: 'from-gray-800 via-gray-700 to-gray-900', emoji: '🐱', likes: '5.2K', views: '28K' },
@@ -12,8 +11,6 @@ const mockVideos = [
 
 export function TikTokGrid() {
   const t = useTranslations('social');
-  const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: '-60px' });
 
   return (
     <div className="grid grid-cols-3 gap-3">
@@ -21,7 +18,8 @@ export function TikTokGrid() {
         <motion.div
           key={v.key}
           initial={{ opacity: 0, y: 20 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.1 }}
           transition={{ delay: 0.2 + i * 0.1, duration: 0.4 }}
           className="rounded-xl overflow-hidden border border-border/20 cursor-pointer group"
         >
