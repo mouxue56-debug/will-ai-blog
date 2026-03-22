@@ -7,6 +7,7 @@ import { StoryTimeline } from '@/components/home/StoryTimeline';
 import { LatestUpdates } from '@/components/home/LatestUpdates';
 import { MyWorld } from '@/components/home/MyWorld';
 import { AIDashboard } from '@/components/home/ai-dashboard';
+import { AboutWill } from '@/components/home/AboutWill';
 
 const OG_LOCALE_MAP: Record<string, string> = {
   zh: 'zh_CN',
@@ -81,6 +82,8 @@ export default async function HomePage({
           <div className="mx-auto max-w-5xl">
           <HeroSection />
         </div>
+
+        <AboutWill />
 
         <ScrollReveal direction="fadeUp">
           <StoryTimeline />

@@ -185,6 +185,12 @@ export function BlogCard({ post, isLatest = false }: BlogCardProps) {
                   })}
                 </time>
                 <span className="ml-auto text-muted-foreground/60">by {post.author}</span>
+                {/* 历史归档标签：文章日期早于博客正式启动日 */}
+                {post.date < '2026-03-22' && (
+                  <span className="ml-1 inline-flex items-center rounded-full bg-amber-500/10 border border-amber-500/20 px-2 py-0.5 text-[10px] font-medium text-amber-500">
+                    AI整理
+                  </span>
+                )}
               </div>
             </div>
           </article>

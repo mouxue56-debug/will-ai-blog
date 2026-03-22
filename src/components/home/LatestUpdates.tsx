@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useRef } from 'react';
-import { motion, useInView, AnimatePresence } from 'motion/react';
+import { useState } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
 import { LampEffect } from '@/components/ui/aceternity';
 import { FeedSection } from './feed-section';
 import { NewsSection } from './news-section';
@@ -12,11 +12,9 @@ type Tab = 'blog' | 'news';
 export function LatestUpdates() {
   const t = useTranslations('home');
   const [activeTab, setActiveTab] = useState<Tab>('blog');
-  const sectionRef = useRef(null);
-  const isInView = useInView(sectionRef, { once: true, margin: '-100px' });
 
   return (
-    <section ref={sectionRef} className="py-16 sm:py-20">
+    <section className="py-16 sm:py-20">
       <div className="mx-auto max-w-5xl px-4 sm:px-6">
         {/* Lamp decoration */}
         <LampEffect color="cyan" className="min-h-[140px] -mb-8">
@@ -26,7 +24,8 @@ export function LatestUpdates() {
         {/* Section header with tabs */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-100px' }}
           transition={{ duration: 0.5 }}
           className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8"
         >
