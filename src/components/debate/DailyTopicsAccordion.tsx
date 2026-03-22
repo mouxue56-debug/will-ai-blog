@@ -40,11 +40,11 @@ const topicIcons = {
   github: Bot,
 };
 
-const topicTypeMap = {
-  ai: 'topicAI',
-  economy: 'topicEconomy',
-  github: 'topicGithub',
-} as const;
+const topicDisplayName: Record<string, string> = {
+  ai: '📡 AI 动态',
+  economy: '💹 经济脉搏',
+  github: '🔥 GitHub 热点',
+};
 
 // Parse markdown content to extract news items
 function parseNewsItems(content: string): NewsItem[] {
@@ -186,8 +186,12 @@ export function DailyTopicsAccordion({ topics, locale }: DailyTopicsAccordionPro
                     <Icon className="w-5 h-5 text-[#00D4FF]" />
                   </div>
                   <div className="text-left flex-1 min-w-0">
-                    <h3 className="font-medium text-white truncate">{topic.title}</h3>
-                    <p className="text-xs text-gray-400">{t(topicTypeMap[topic.topic_type])}</p>
+                    <h3 className="font-medium text-white truncate">
+                      {topicDisplayName[topic.topic_type] || topic.title}
+                    </h3>
+                    <p className="text-xs text-gray-400">
+                      {topic.published_at ? topic.published_at.slice(0, 10) : ''} · 晚报
+                    </p>
                   </div>
                 </div>
 
