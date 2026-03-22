@@ -1,8 +1,9 @@
 'use client';
 
-import { useMemo, useState, useEffect } from 'react';
+import { useMemo, useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { useTranslations } from 'next-intl';
+import { useInView } from 'motion/react';
+import { useTranslations, useLocale } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 import { timelineEvents, type TimelineEvent } from '@/lib/timeline-data';
 import { useReducedMotion } from 'framer-motion';
@@ -10,25 +11,31 @@ import { useReducedMotion } from 'framer-motion';
 type TimelineCategory = TimelineEvent['category'];
 type CategoryFilter = 'all' | TimelineCategory;
 
-const categoryConfig: Record<TimelineCategory, { color: string; icon: string }> = {
-  cattery: { color: '#f59e0b', icon: '🐾' },
-  tech: { color: '#22d3ee', icon: '🔧' },
-  ai: { color: '#8b5cf6', icon: '🤖' },
-  life: { color: '#fb7185', icon: '🌸' },
+const categoryConfig: Record<TimelineCategory, { color: string; glow: string; icon: string }> = {
+  cattery: { color: '#f59e0b', glow: 'rgba(245,158,11,0.35)', icon: '🐾' },
+  tech:    { color: '#22d3ee', glow: 'rgba(34,211,238,0.35)',  icon: '🔧' },
+  ai:      { color: '#c084fc', glow: 'rgba(192,132,246,0.35)', icon: '🤖' },
+  life:    { color: '#fb7185', glow: 'rgba(251,113,133,0.35)', icon: '🌸' },
 };
 
-function getKeywords(entries: TimelineEvent[], max = 3): string[] {
-  const tagCounts: Record<string, number> = {};
-  entries.forEach((entry) => {
-    entry.tags?.forEach((tag) => {
-      tagCounts[tag] = (tagCounts[tag] || 0) + 1;
-    });
-  });
-  return Object.entries(tagCounts)
-    .sort((a, b) => b[1] - a[1])
-    .slice(0, max)
-    .map(([tag]) => tag);
-}
+// Gradient palette per year index (mint → cyan → purple → coral)
+const yearGradients = [
+  'linear-gradient(135deg, #5eead4, #22d3ee)',
+  'linear-gradient(135deg, #22d3ee, #818cf8)',
+  'linear-gradient(135deg, #818cf8, #c084fc)',
+  'linear-gradient(135deg, #c084fc, #fb7185)',
+  'linear-gradient(135deg, #fb7185, #f59e0b)',
+];
+
+const yearGlowColors = [
+  'rgba(94,234,212,0.25)',
+  'rgba(34,211,238,0.25)',
+  'rgba(129,140,248,0.25)',
+  'rgba(192,132,246,0.25)',
+  'rgba(251,113,133,0.25)',
+];
+
+/* ── Filter Bar ─────────────────────────────────────── */
 
 function FilterBar({
   value,
@@ -53,22 +60,26 @@ function FilterBar({
         {categories.map(({ key, label }) => {
           const isActive = value === key;
           const color = key === 'all' ? undefined : categoryConfig[key].color;
-
           return (
             <button
               key={key}
               type="button"
               onClick={() => onChange(key)}
               className={[
-                'px-3 py-1 rounded-full text-xs font-medium transition-all duration-200 border cursor-pointer',
+                'px-3 py-1.5 rounded-full text-xs font-medium transition-all duration-200 border cursor-pointer',
                 isActive
                   ? 'text-white shadow-sm'
                   : 'border-border text-muted-foreground hover:text-foreground hover:border-foreground/30',
               ].join(' ')}
-              style={isActive ? {
-                backgroundColor: color || 'var(--color-foreground)',
-                borderColor: color || 'var(--color-foreground)',
-              } : undefined}
+              style={
+                isActive
+                  ? {
+                      backgroundColor: color || 'var(--color-foreground)',
+                      borderColor: color || 'var(--color-foreground)',
+                      boxShadow: color ? `0 0 12px ${color}40` : undefined,
+                    }
+                  : undefined
+              }
             >
               {key !== 'all' && <span className="mr-1">{categoryConfig[key].icon}</span>}
               {label}
@@ -80,155 +91,221 @@ function FilterBar({
   );
 }
 
-// Animated timeline node component
-function TimelineNode({ 
-  year, 
-  entries, 
+/* ── Single Year Card ──────────────────────────────── */
+
+function YearCard({
+  year,
+  entries,
   index,
   totalYears,
-  isFiltered 
-}: { 
-  year: string; 
-  entries: TimelineEvent[]; 
+}: {
+  year: string;
+  entries: TimelineEvent[];
   index: number;
   totalYears: number;
-  isFiltered: boolean;
 }) {
+  const locale = useLocale() as 'zh' | 'ja' | 'en';
+  const t = useTranslations('timeline');
   const prefersReducedMotion = useReducedMotion();
-  const monthCount = new Set(entries.map((entry) => entry.date.slice(5, 7))).size;
-  const keywords = getKeywords(entries);
-  const eventCount = entries.length;
-  
-  // Calculate line gradient based on position
-  const progress = totalYears > 1 ? index / (totalYears - 1) : 0.5;
-  const gradientColors = [
-    { r: 94, g: 234, b: 212 }, // mint
-    { r: 34, g: 211, b: 238 }, // cyan
-    { r: 192, g: 132, b: 246 }, // purple
-    { r: 251, g: 146, b: 60 }, // orange
-  ];
-  const idx = Math.floor(progress * (gradientColors.length - 1));
-  const color = gradientColors[idx];
-  const lineColor = `rgb(${color.r}, ${color.g}, ${color.b})`;
+  const ref = useRef<HTMLDivElement>(null);
+  const isInView = useInView(ref, { once: true, margin: '-60px' });
+
+  const gradientIdx = Math.min(index, yearGradients.length - 1);
+  const gradient = yearGradients[gradientIdx];
+  const glow = yearGlowColors[gradientIdx];
+
+  const topEvents = entries.slice(0, 3);
+  const uniqueCategories = [...new Set(entries.map((e) => e.category))];
+
+  const anim = prefersReducedMotion
+    ? { initial: { opacity: 0 }, animate: { opacity: 1 } }
+    : {
+        initial: { opacity: 0, y: 50, scale: 0.96 },
+        animate: isInView ? { opacity: 1, y: 0, scale: 1 } : {},
+      };
 
   return (
     <motion.div
-      initial={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, x: -50 }}
-      animate={{ opacity: 1, x: 0 }}
-      transition={{ 
-        duration: 0.5, 
-        delay: index * 0.15,
-        ease: [0.22, 1, 0.36, 1]
-      }}
-      className="relative"
+      ref={ref}
+      {...anim}
+      transition={{ duration: 0.55, delay: index * 0.12, ease: [0.22, 1, 0.36, 1] }}
+      className="relative group"
     >
-      {/* Timeline line */}
-      <div className="absolute left-6 top-0 bottom-0 w-px" style={{
-        background: `linear-gradient(to bottom, ${lineColor}, ${lineColor}40)`,
-      }} />
-      
-      {/* Timeline node */}
-      <div className="relative flex items-start gap-4 sm:gap-6">
-        {/* Animated node */}
-        <motion.div 
-          className="relative z-10 flex-shrink-0 w-12 h-12 rounded-full border-4 flex items-center justify-center"
-          style={{ 
-            borderColor: lineColor,
-            backgroundColor: 'var(--background)',
-            boxShadow: `0 0 20px ${lineColor}40`
-          }}
-          whileHover={prefersReducedMotion ? {} : { scale: 1.15 }}
-          transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+      <Link href={`/timeline/${year}` as `/${string}`} className="block">
+        <motion.div
+          className="glass-card relative overflow-hidden p-6 sm:p-8 cursor-pointer transition-colors duration-300"
+          whileHover={
+            prefersReducedMotion
+              ? {}
+              : {
+                  y: -4,
+                  transition: { duration: 0.25, ease: 'easeOut' },
+                }
+          }
         >
-          <span className="text-xl">{entries[0]?.category ? categoryConfig[entries[0].category]?.icon : '📅'}</span>
-        </motion.div>
-        
-        {/* Content card */}
-        <Link href={`/timeline/${year}` as `/${string}`} className="flex-1 group">
-          <motion.div 
-            className="glass-card p-5 sm:p-6 cursor-pointer"
-            whileHover={prefersReducedMotion ? {} : { 
-              x: 8,
-              boxShadow: `0 0 30px ${lineColor}30`
+          {/* Background glow on hover */}
+          <div
+            className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none rounded-2xl"
+            style={{
+              background: `radial-gradient(ellipse at 30% 20%, ${glow}, transparent 70%)`,
             }}
-            transition={{ duration: 0.2 }}
-          >
-            <div className="flex items-start justify-between gap-4">
-              <div className="flex-1">
-                {/* Year with animated gradient */}
-                <motion.h2 
-                  className="text-3xl sm:text-4xl font-bold tracking-tight mb-3"
+          />
+
+          {/* Top border accent line */}
+          <div
+            className="absolute top-0 left-0 right-0 h-px opacity-60"
+            style={{ background: gradient }}
+          />
+
+          <div className="relative z-10">
+            {/* Year + stats row */}
+            <div className="flex items-start justify-between gap-4 mb-5">
+              {/* BIG YEAR NUMBER */}
+              <div className="relative">
+                <h2
+                  className="text-6xl sm:text-7xl lg:text-8xl font-black tracking-tighter leading-none select-none"
                   style={{
-                    background: `linear-gradient(135deg, ${lineColor}, ${lineColor}cc)`,
+                    background: gradient,
                     WebkitBackgroundClip: 'text',
                     WebkitTextFillColor: 'transparent',
                     backgroundClip: 'text',
+                    filter: 'drop-shadow(0 0 20px rgba(94,234,212,0.15))',
                   }}
                 >
                   {year}
-                </motion.h2>
-
-                <div className="flex flex-wrap items-center gap-3 mb-3 text-sm text-muted-foreground">
-                  <motion.span 
-                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-muted/50"
-                    whileHover={prefersReducedMotion ? {} : { scale: 1.05 }}
-                  >
-                    <span className="w-2 h-2 rounded-full" style={{ backgroundColor: lineColor }} />
-                    📋 {eventCount} {isFiltered ? 'events' : 'events'}
-                  </motion.span>
-                  <motion.span 
-                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-muted/50"
-                    whileHover={prefersReducedMotion ? {} : { scale: 1.05 }}
-                  >
-                    🗓 {monthCount} {isFiltered ? 'months' : 'months'}
-                  </motion.span>
-                  
-                  {/* Category badges */}
-                  {[...new Set(entries.map(e => e.category))].slice(0, 3).map(cat => (
-                    <motion.span 
-                      key={cat}
-                      className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs"
-                      style={{ 
-                        backgroundColor: `${categoryConfig[cat].color}20`,
-                        color: categoryConfig[cat].color
-                      }}
-                      whileHover={prefersReducedMotion ? {} : { scale: 1.1 }}
-                    >
-                      {categoryConfig[cat].icon} {cat}
-                    </motion.span>
-                  ))}
-                </div>
-
-                {keywords.length > 0 && (
-                  <div className="flex flex-wrap gap-2">
-                    {keywords.map((keyword) => (
-                      <span
-                        key={keyword}
-                        className="text-xs px-2.5 py-1 rounded-full bg-muted/60 text-muted-foreground"
-                      >
-                        #{keyword}
-                      </span>
-                    ))}
-                  </div>
-                )}
+                </h2>
+                {/* Glow behind year text */}
+                <div
+                  className="absolute -inset-2 -z-10 blur-2xl opacity-30 group-hover:opacity-50 transition-opacity duration-500"
+                  style={{ background: gradient }}
+                />
               </div>
 
-              {/* Animated arrow */}
-              <motion.div
-                className="flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center"
-                style={{ backgroundColor: `${lineColor}20` }}
-                whileHover={prefersReducedMotion ? {} : { x: 4 }}
-                transition={{ duration: 0.2 }}
-              >
-                <span className="text-xl" style={{ color: lineColor }}>→</span>
-              </motion.div>
+              {/* Stats pills */}
+              <div className="flex flex-col items-end gap-2 mt-2">
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-muted/50 text-muted-foreground">
+                  📋 {entries.length} {t('events_count')}
+                </span>
+                <div className="flex gap-1.5">
+                  {uniqueCategories.slice(0, 3).map((cat) => (
+                    <span
+                      key={cat}
+                      className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium"
+                      style={{
+                        backgroundColor: `${categoryConfig[cat].color}18`,
+                        color: categoryConfig[cat].color,
+                      }}
+                    >
+                      {categoryConfig[cat].icon}
+                    </span>
+                  ))}
+                </div>
+              </div>
             </div>
-          </motion.div>
-        </Link>
-      </div>
+
+            {/* Event previews */}
+            <div className="space-y-3">
+              {topEvents.map((event, i) => (
+                <motion.div
+                  key={event.date}
+                  className="flex items-start gap-3 p-3 rounded-xl bg-muted/30 border border-border/40 group-hover:border-border/60 transition-colors duration-300"
+                  whileHover={
+                    prefersReducedMotion
+                      ? {}
+                      : { x: 4, transition: { duration: 0.2 } }
+                  }
+                >
+                  {/* Month badge */}
+                  <span
+                    className="flex-shrink-0 inline-flex items-center justify-center w-10 h-10 rounded-lg text-xs font-bold text-white/90"
+                    style={{
+                      background: `${categoryConfig[event.category].color}30`,
+                      color: categoryConfig[event.category].color,
+                      border: `1px solid ${categoryConfig[event.category].color}40`,
+                    }}
+                  >
+                    {t(`monthNames.${event.date.slice(5, 7)}`)}
+                  </span>
+
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-semibold truncate leading-snug">
+                      {event.title[locale]}
+                    </p>
+                    <p className="text-xs text-muted-foreground mt-0.5 line-clamp-1">
+                      {event.description[locale]}
+                    </p>
+                  </div>
+
+                  {/* Category dot */}
+                  <div
+                    className="flex-shrink-0 w-2 h-2 rounded-full mt-1.5"
+                    style={{
+                      backgroundColor: categoryConfig[event.category].color,
+                      boxShadow: `0 0 6px ${categoryConfig[event.category].glow}`,
+                    }}
+                  />
+                </motion.div>
+              ))}
+            </div>
+
+            {/* Bottom: "View all" hint */}
+            {entries.length > 3 && (
+              <div className="mt-4 flex items-center gap-1.5 text-xs text-muted-foreground group-hover:text-foreground/70 transition-colors duration-300">
+                <span>+{entries.length - 3} more</span>
+                <motion.span
+                  className="inline-block"
+                  whileHover={prefersReducedMotion ? {} : { x: 2 }}
+                >
+                  →
+                </motion.span>
+              </div>
+            )}
+          </div>
+        </motion.div>
+      </Link>
     </motion.div>
   );
 }
+
+/* ── Connecting line between cards ─────────────────── */
+
+function Connector({ index }: { index: number }) {
+  const gradientIdx = Math.min(index, yearGradients.length - 1);
+  const nextIdx = Math.min(index + 1, yearGradients.length - 1);
+  const from = yearGlowColors[gradientIdx];
+  const to = yearGlowColors[nextIdx];
+
+  return (
+    <div className="flex justify-center py-1">
+      <div className="flex flex-col items-center gap-0.5">
+        {/* Vertical line */}
+        <div
+          className="w-px h-8 sm:h-12"
+          style={{
+            background: `linear-gradient(to bottom, ${from}, ${to})`,
+          }}
+        />
+        {/* Diamond node */}
+        <div
+          className="w-2.5 h-2.5 rotate-45 rounded-sm"
+          style={{
+            background: `linear-gradient(135deg, ${from}, ${to})`,
+            boxShadow: `0 0 8px ${from}`,
+          }}
+        />
+        {/* Vertical line */}
+        <div
+          className="w-px h-8 sm:h-12"
+          style={{
+            background: `linear-gradient(to bottom, ${to}, ${from})`,
+          }}
+        />
+      </div>
+    </div>
+  );
+}
+
+/* ── Main Component ────────────────────────────────── */
 
 export function TimelineYearIndexClient() {
   const t = useTranslations('timeline');
@@ -257,45 +334,63 @@ export function TimelineYearIndexClient() {
       <FilterBar value={categoryFilter} onChange={setCategoryFilter} />
 
       {/* Stats bar */}
-      <motion.div 
-        className="flex items-center justify-center gap-6 mb-8 text-sm text-muted-foreground"
-        initial={{ opacity: 0, y: -10 }}
+      <motion.div
+        className="flex items-center justify-center gap-4 sm:gap-6 mb-10 text-sm text-muted-foreground"
+        initial={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.2 }}
+        transition={{ delay: 0.15 }}
       >
-        <span>📊 {filteredEntries.length} events</span>
+        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-muted/40">
+          📊 {filteredEntries.length} {t('events_count')}
+        </span>
         <span className="w-px h-4 bg-border" />
-        <span>📅 {yearGroups.length} years</span>
+        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-muted/40">
+          📅 {yearGroups.length} years
+        </span>
         <span className="w-px h-4 bg-border" />
-        <span>🏷 {[...new Set(filteredEntries.map(e => e.category))].length} categories</span>
+        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-muted/40">
+          🏷 {[...new Set(filteredEntries.map((e) => e.category))].length} categories
+        </span>
       </motion.div>
 
-      {/* Timeline */}
-      <div className="relative pl-6 sm:pl-12">
-        <AnimatePresence mode="popLayout">
-          {yearGroups.length > 0 ? (
-            yearGroups.map(([year, entries], index) => (
-              <TimelineNode 
-                key={year} 
-                year={year} 
-                entries={entries} 
-                index={index}
-                totalYears={yearGroups.length}
-                isFiltered={categoryFilter !== 'all'}
-              />
-            ))
-          ) : (
-            <motion.div 
-              initial={{ opacity: 0 }} 
-              animate={{ opacity: 1 }}
-              className="text-center py-20"
-            >
-              <p className="text-4xl mb-4">🔍</p>
-              <p className="text-muted-foreground">{t('noEvents')}</p>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
+      {/* Year cards with connectors */}
+      <AnimatePresence mode="popLayout">
+        {yearGroups.length > 0 ? (
+          <div className="max-w-3xl mx-auto space-y-0">
+            {yearGroups.map(([year, entries], index) => (
+              <motion.div
+                key={year}
+                layout
+                initial={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, scale: 0.95 }}
+                transition={{
+                  duration: 0.4,
+                  delay: index * 0.08,
+                  ease: [0.22, 1, 0.36, 1],
+                }}
+              >
+                <YearCard
+                  year={year}
+                  entries={entries}
+                  index={index}
+                  totalYears={yearGroups.length}
+                />
+                {index < yearGroups.length - 1 && <Connector index={index} />}
+              </motion.div>
+            ))}
+          </div>
+        ) : (
+          <motion.div
+            initial={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="text-center py-20"
+          >
+            <p className="text-4xl mb-4">🔍</p>
+            <p className="text-muted-foreground">{t('noEvents')}</p>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </>
   );
 }
