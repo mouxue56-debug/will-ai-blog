@@ -11,7 +11,7 @@ import { PageTransition } from '@/components/shared/PageTransition';
 import { MarkdownRenderer } from './markdown-renderer';
 import { TableOfContents, type TocHeading } from './table-of-contents';
 import { MobileTableOfContents } from './mobile-table-of-contents';
-import { CommentSection } from './comment-section';
+import { CommentSection } from './CommentSection';
 
 const CATEGORY_TAG_COLORS: Record<BlogCategory, string> = {
   ai: 'bg-brand-cyan/15 text-brand-cyan',
@@ -176,7 +176,7 @@ export function BlogDetail({ post, prevPost, nextPost, comments, postSlug, headi
             </nav>
 
             <div className="mt-12">
-              <CommentSection comments={comments} postSlug={postSlug} />
+              <CommentSection postSlug={postSlug ?? post.slug} />
             </div>
           </article>
 
