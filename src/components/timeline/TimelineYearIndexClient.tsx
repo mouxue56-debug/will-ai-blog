@@ -163,12 +163,9 @@ function YearCard({
               {/* BIG YEAR NUMBER */}
               <div className="relative">
                 <h2
-                  className="text-6xl sm:text-7xl lg:text-8xl font-black tracking-tighter leading-none select-none"
+                  className="text-6xl sm:text-7xl lg:text-8xl font-black tracking-tighter leading-none select-none bg-clip-text text-transparent"
                   style={{
-                    background: gradient,
-                    WebkitBackgroundClip: 'text',
-                    WebkitTextFillColor: 'transparent',
-                    backgroundClip: 'text',
+                    backgroundImage: gradient,
                     filter: 'drop-shadow(0 0 20px rgba(94,234,212,0.15))',
                   }}
                 >
