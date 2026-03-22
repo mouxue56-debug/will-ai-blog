@@ -211,7 +211,7 @@ function YearCard({
                       border: `1px solid ${categoryConfig[event.category].color}40`,
                     }}
                   >
-                    {t(`monthNames.${event.date.slice(5, 7)}`)}
+                    {t(`monthNames.${parseInt(event.date.slice(5, 7))}`)}
                   </span>
 
                   <div className="flex-1 min-w-0">

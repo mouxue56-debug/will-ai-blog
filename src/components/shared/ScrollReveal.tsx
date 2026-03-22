@@ -88,8 +88,7 @@ export function ScrollReveal({
       <Tag
         className={className}
         initial="hidden"
-        whileInView="visible"
-        viewport={{ once, margin, amount: 0.1 }}
+        animate="visible"
         variants={{
           hidden: {},
           visible: {
@@ -111,8 +110,7 @@ export function ScrollReveal({
     <Tag
       className={className}
       initial="hidden"
-      whileInView="visible"
-      viewport={{ once, margin, amount: 0.1 }}
+      animate="visible"
       variants={variants}
       transition={{ duration, delay, ease: [0.25, 0.1, 0.25, 1] }}
       style={{ willChange: 'transform, opacity' }}
