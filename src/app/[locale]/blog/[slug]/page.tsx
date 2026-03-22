@@ -9,7 +9,13 @@ const SITE_URL = 'https://aiblog.fuluckai.com';
 export function generateStaticParams() {
   const posts = getAllPosts();
   const locales = ['zh', 'ja', 'en'];
-  return locales.flatMap((locale) => posts.map((post) => ({ locale, slug: post.slug })));
+  return locales.flatMap((locale) => 
+    posts.map((post) => ({ 
+      locale, 
+      // Use encodeURIComponent to handle Chinese slugs in static generation
+      slug: encodeURIComponent(post.slug) 
+    }))
+  );
 }
 
 type Props = {
@@ -46,7 +52,8 @@ function extractHeadings(content: string) {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale, slug } = await params;
-  const post = getPostBySlug(slug);
+  const decodedSlug = decodeURIComponent(slug);
+  const post = getPostBySlug(decodedSlug);
 
   if (!post) {
     return { title: 'Not Found' };
@@ -94,11 +101,12 @@ export default async function BlogPostPage({ params }: Props) {
   const { locale, slug } = await params;
   setRequestLocale(locale);
 
-  // slug should already be decoded by Next.js routing
-  const post = getPostBySlug(slug);
+  // Decode URL-encoded slug to match against stored slugs
+  const decodedSlug = decodeURIComponent(slug);
+  const post = getPostBySlug(decodedSlug);
   if (!post) notFound();
 
-  const { prev, next } = getAdjacentPosts(slug);
+  const { prev, next } = getAdjacentPosts(decodedSlug);
   const comments = getSampleComments();
   const headings = extractHeadings(post.content);
   const lang = (locale === 'zh' || locale === 'ja' || locale === 'en') ? locale : 'zh';
