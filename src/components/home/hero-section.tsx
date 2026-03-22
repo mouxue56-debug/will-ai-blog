@@ -350,12 +350,11 @@ function AINetwork() {
               <motion.circle
                 cx={pos.x}
                 cy={pos.y}
-                r={isHovered ? 32 : 24}
+                r={isHovered ? 36 : 28}
                 fill={`${node.color}08`}
                 stroke={`${node.color}20`}
                 strokeWidth="1"
                 animate={{
-                  r: isHovered ? [32, 36, 32] : [24, 28, 24],
                   opacity: isHovered ? [0.3, 0.5, 0.3] : [0.2, 0.3, 0.2],
                 }}
                 transition={{
@@ -452,12 +451,11 @@ function AINetwork() {
         <motion.circle
           cx="150"
           cy="130"
-          r="6"
+          r={8}
           fill="rgba(94,234,212,0.3)"
           stroke="#5eead4"
           strokeWidth="1"
           animate={{
-            r: [6, 8, 6],
             opacity: [0.5, 1, 0.5],
           }}
           transition={{
