@@ -1,8 +1,7 @@
 'use client';
 
-import { useMemo, useState, useRef } from 'react';
+import { useMemo, useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { useInView } from 'motion/react';
 import { useTranslations, useLocale } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 import { timelineEvents, type TimelineEvent } from '@/lib/timeline-data';
@@ -107,8 +106,6 @@ function YearCard({
   const locale = useLocale() as 'zh' | 'ja' | 'en';
   const t = useTranslations('timeline');
   const prefersReducedMotion = useReducedMotion();
-  const ref = useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref, { once: true, margin: '0px 0px -100px 0px' });
 
   const gradientIdx = Math.min(index, yearGradients.length - 1);
   const gradient = yearGradients[gradientIdx];
@@ -117,18 +114,11 @@ function YearCard({
   const topEvents = entries.slice(0, 3);
   const uniqueCategories = [...new Set(entries.map((e) => e.category))];
 
-  const anim = prefersReducedMotion
-    ? { initial: { opacity: 0 }, animate: { opacity: 1 } }
-    : {
-        initial: { opacity: 0, y: 50, scale: 0.96 },
-        animate: { opacity: isInView ? 1 : 0, y: isInView ? 0 : 50, scale: isInView ? 1 : 0.96 },
-      };
-
   return (
     <motion.div
-      ref={ref}
-      {...anim}
-      transition={{ duration: 0.55, delay: index * 0.12, ease: [0.22, 1, 0.36, 1] }}
+      initial={{ opacity: 0, y: prefersReducedMotion ? 0 : 40 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, delay: index * 0.12, ease: [0.22, 1, 0.36, 1] }}
       className="relative group"
     >
       <Link href={`/timeline/${year}` as `/${string}`} className="block">
