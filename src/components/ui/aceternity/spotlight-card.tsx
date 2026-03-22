@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, useCallback, useEffect, type ElementType, type ReactNode } from "react";
+import { useRef, useCallback, useEffect, type ElementType, type ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
 interface SpotlightCardProps {
@@ -15,35 +15,53 @@ export function SpotlightCard({
   as: Component = "div",
 }: SpotlightCardProps & Record<string, unknown>) {
   const divRef = useRef<HTMLDivElement>(null);
-  const positionRef = useRef({ x: 0, y: 0 });
-  const [position, setPosition] = useState({ x: 0, y: 0 });
-  const [opacity, setOpacity] = useState(0);
+  const spotlightRef = useRef<HTMLDivElement>(null);
+  const borderRef = useRef<HTMLDivElement>(null);
   const rafRef = useRef<number | null>(null);
+  const isActiveRef = useRef(false);
 
-  const updatePosition = useCallback(() => {
-    setPosition({ ...positionRef.current });
-    rafRef.current = null;
+  const updateSpotlight = useCallback((x: number, y: number) => {
+    if (spotlightRef.current) {
+      spotlightRef.current.style.background = `radial-gradient(600px circle at ${x}px ${y}px, rgba(255,255,255,0.06), transparent 40%)`;
+    }
+    if (borderRef.current) {
+      borderRef.current.style.background = `radial-gradient(400px circle at ${x}px ${y}px, rgba(255,255,255,0.1), transparent 40%)`;
+    }
   }, []);
 
   const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
-    if (!divRef.current) return;
+    if (!divRef.current || !isActiveRef.current) return;
     const rect = divRef.current.getBoundingClientRect();
-    positionRef.current = {
-      x: e.clientX - rect.left,
-      y: e.clientY - rect.top,
-    };
-    // Use requestAnimationFrame to throttle state updates
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    // Use requestAnimationFrame to throttle DOM updates
     if (!rafRef.current) {
-      rafRef.current = requestAnimationFrame(updatePosition);
+      rafRef.current = requestAnimationFrame(() => {
+        updateSpotlight(x, y);
+        rafRef.current = null;
+      });
     }
-  }, [updatePosition]);
+  }, [updateSpotlight]);
 
   const handleMouseEnter = useCallback(() => {
-    setOpacity(1);
+    isActiveRef.current = true;
+    if (spotlightRef.current) {
+      spotlightRef.current.style.opacity = "1";
+    }
+    if (borderRef.current) {
+      borderRef.current.style.opacity = "1";
+    }
   }, []);
 
   const handleMouseLeave = useCallback(() => {
-    setOpacity(0);
+    isActiveRef.current = false;
+    if (spotlightRef.current) {
+      spotlightRef.current.style.opacity = "0";
+    }
+    if (borderRef.current) {
+      borderRef.current.style.opacity = "0";
+    }
   }, []);
 
   useEffect(() => {
@@ -67,20 +85,16 @@ export function SpotlightCard({
         className
       )}
     >
-      {/* Spotlight gradient */}
+      {/* Spotlight gradient - using direct DOM manipulation to avoid React re-renders */}
       <div
-        className="pointer-events-none absolute -inset-px rounded-xl transition-opacity duration-300 will-change-[opacity]"
-        style={{
-          opacity,
-          background: `radial-gradient(600px circle at ${position.x}px ${position.y}px, rgba(255,255,255,0.06), transparent 40%)`,
-        }}
+        ref={spotlightRef}
+        className="pointer-events-none absolute -inset-px rounded-xl opacity-0 transition-opacity duration-300 will-change-[opacity]"
       />
       {/* Border glow */}
       <div
-        className="pointer-events-none absolute -inset-px rounded-xl transition-opacity duration-300 will-change-[opacity]"
+        ref={borderRef}
+        className="pointer-events-none absolute -inset-px rounded-xl opacity-0 transition-opacity duration-300 will-change-[opacity]"
         style={{
-          opacity,
-          background: `radial-gradient(400px circle at ${position.x}px ${position.y}px, rgba(255,255,255,0.1), transparent 40%)`,
           mask: "linear-gradient(black, black) content-box, linear-gradient(black, black)",
           maskComposite: "exclude",
           WebkitMaskComposite: "xor",

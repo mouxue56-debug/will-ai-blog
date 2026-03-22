@@ -105,11 +105,10 @@ function ExpandableSection({
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ 
-              duration: prefersReducedMotion ? 0 : 0.3, 
+              duration: prefersReducedMotion ? 0 : 0.25, 
               ease: [0.25, 0.1, 0.25, 1] 
             }}
             className="overflow-hidden"
-            style={{ willChange: 'height, opacity' }}
           >
             <div className="pt-2 pb-1">
               <p className="text-muted-foreground leading-relaxed whitespace-pre-line">
@@ -155,16 +154,14 @@ function MetricsGrid({ metrics, locale }: { metrics: CaseStudy['metrics']; local
       animate={inView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.4, delay: 0.15, ease: [0.25, 0.1, 0.25, 1] }}
       className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-12"
-      style={{ willChange: 'transform, opacity' }}
     >
       {metrics.map((m, i) => (
         <motion.div
           key={i}
           initial={{ opacity: 0, scale: 0.9 }}
           animate={inView ? { opacity: 1, scale: 1 } : {}}
-          transition={{ duration: 0.4, delay: 0.2 + i * 0.1, ease: [0.25, 0.1, 0.25, 1] }}
+          transition={{ duration: 0.4, delay: 0.2 + i * 0.08, ease: [0.25, 0.1, 0.25, 1] }}
           className="glass-card p-4 text-center space-y-1"
-          style={{ willChange: 'transform, opacity' }}
         >
           <div className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-brand-cyan to-brand-mint bg-clip-text text-transparent">
             <CountUpValue value={m.value} inView={inView} />
@@ -204,7 +201,6 @@ export function CaseDetail({
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: prefersReducedMotion ? 0 : 0.5, ease: [0.25, 0.1, 0.25, 1] }}
             className="space-y-4"
-            style={{ willChange: 'transform, opacity' }}
           >
             <span className="text-6xl sm:text-7xl">{caseStudy.icon}</span>
             <h1 className="text-3xl sm:text-4xl font-bold tracking-tight">
@@ -238,7 +234,6 @@ export function CaseDetail({
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: prefersReducedMotion ? 0 : 0.4, delay: 0.25, ease: [0.25, 0.1, 0.25, 1] }}
         className="space-y-8"
-        style={{ willChange: 'transform, opacity' }}
       >
         {/* Story layer - always open */}
         <div className="glass-card p-6 sm:p-8 space-y-6">

@@ -83,7 +83,7 @@ export async function generateMetadata({
     },
     other: {
       'geo.region': 'JP-27',
-      'geo.placename': 'Osaka',
+      'geo.placename': '大阪',
       'geo.position': '34.6937;135.5023',
       'ICBM': '34.6937, 135.5023',
     },

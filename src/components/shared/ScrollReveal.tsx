@@ -1,7 +1,7 @@
 'use client';
 
 import { motion, type Variants, useReducedMotion } from 'motion/react';
-import { Children, type ReactNode, memo } from 'react';
+import { Children, type ReactNode, memo, useMemo } from 'react';
 
 type RevealDirection = 'fadeUp' | 'fadeIn' | 'fadeLeft' | 'fadeRight' | 'scaleIn';
 
@@ -72,7 +72,7 @@ export function ScrollReveal({
   margin = '-80px',
   as = 'div',
 }: ScrollRevealProps) {
-  const variants = directionVariants[direction];
+  const variants = useMemo(() => directionVariants[direction], [direction]);
   const Tag = motion[as] as typeof motion.div;
   const prefersReducedMotion = useReducedMotion();
 
@@ -87,10 +87,9 @@ export function ScrollReveal({
     return (
       <Tag
         className={className}
-        style={{ willChange: 'transform, opacity' }}
         initial="hidden"
         whileInView="visible"
-        viewport={{ once, margin }}
+        viewport={{ once, margin, amount: 0.1 }}
         variants={{
           hidden: {},
           visible: {
@@ -111,12 +110,12 @@ export function ScrollReveal({
   return (
     <Tag
       className={className}
-      style={{ willChange: 'transform, opacity' }}
       initial="hidden"
       whileInView="visible"
-      viewport={{ once, margin }}
+      viewport={{ once, margin, amount: 0.1 }}
       variants={variants}
       transition={{ duration, delay, ease: [0.25, 0.1, 0.25, 1] }}
+      style={{ willChange: 'transform, opacity' }}
     >
       {children}
     </Tag>

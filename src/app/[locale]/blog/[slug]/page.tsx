@@ -46,7 +46,8 @@ function extractHeadings(content: string) {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale, slug } = await params;
-  const post = getPostBySlug(slug);
+  const decodedSlug = decodeURIComponent(slug);
+  const post = getPostBySlug(decodedSlug);
 
   if (!post) {
     return { title: 'Not Found' };
@@ -94,10 +95,12 @@ export default async function BlogPostPage({ params }: Props) {
   const { locale, slug } = await params;
   setRequestLocale(locale);
 
-  const post = getPostBySlug(slug);
+  // Decode URL-encoded slug (handles Chinese characters in URL)
+  const decodedSlug = decodeURIComponent(slug);
+  const post = getPostBySlug(decodedSlug);
   if (!post) notFound();
 
-  const { prev, next } = getAdjacentPosts(slug);
+  const { prev, next } = getAdjacentPosts(decodedSlug);
   const comments = getSampleComments();
   const headings = extractHeadings(post.content);
   const lang = (locale === 'zh' || locale === 'ja' || locale === 'en') ? locale : 'zh';
@@ -124,6 +127,12 @@ export default async function BlogPostPage({ params }: Props) {
       '@type': 'Person',
       name: post.author || 'Will',
       url: `${SITE_URL}/about`,
+      image: {
+        '@type': 'ImageObject',
+        url: `${SITE_URL}/og-image.png`,
+        width: 1200,
+        height: 630,
+      },
       jobTitle: 'AI Researcher & Developer',
       sameAs: [
         'https://github.com/willfuluck',
@@ -136,13 +145,13 @@ export default async function BlogPostPage({ params }: Props) {
       url: SITE_URL,
       logo: {
         '@type': 'ImageObject',
-        url: `${SITE_URL}/logo.png`,
-        width: 512,
-        height: 512,
+        url: `${SITE_URL}/og-image.png`,
+        width: 1200,
+        height: 630,
       },
     },
     description,
-    inLanguage: ['zh', 'ja', 'en'],
+    inLanguage: lang,
     url: `${SITE_URL}/${lang}/blog/${slug}`,
     keywords: post.tags?.length ? post.tags.join(', ') : undefined,
     image: {
