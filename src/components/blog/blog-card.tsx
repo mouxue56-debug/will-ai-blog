@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { useLocale, useTranslations } from 'next-intl';
 import { Clock, Calendar } from 'lucide-react';
@@ -56,8 +56,14 @@ export function BlogCard({ post, isLatest = false, index = 0 }: BlogCardProps) {
   const locale = useLocale();
   const t = useTranslations('blog');
   const [isHovered, setIsHovered] = useState(false);
+  const [imageError, setImageError] = useState(false);
   const title = post.title[locale] || post.title.zh || post.title.en || '';
   const excerpt = post.excerpt[locale] || post.excerpt.zh || post.excerpt.en || '';
+
+  // Reset image error state when coverImage changes
+  useEffect(() => {
+    setImageError(false);
+  }, [post.coverImage]);
   
   const beamColors = BORDER_BEAM_COLORS[post.category];
 
@@ -93,40 +99,65 @@ export function BlogCard({ post, isLatest = false, index = 0 }: BlogCardProps) {
               />
             )}
 
-            {/* Cover Image Placeholder with hover scale animation */}
-            <motion.div
-              className={cn(
-                'relative flex h-40 items-center justify-center bg-gradient-to-br overflow-hidden',
-                COVER_GRADIENTS[post.category]
-              )}
-              whileHover={{ scale: 1.04 }}
-              transition={{ duration: 0.3 }}
-            >
-              <motion.span 
-                className="text-5xl opacity-60"
-                animate={{ 
-                  scale: isHovered ? 1.15 : 1,
-                  rotate: isHovered ? 5 : 0,
-                }}
-                transition={{ 
-                  duration: 0.4, 
-                  ease: 'easeOut',
-                }}
-              >
-                {COVER_ICONS[post.category]}
-              </motion.span>
-              
-              {/* 悬停时的微光效果 */}
+            {/* Cover Image - 如果有封面图且未出错则显示封面图，否则显示占位图 */}
+            {(post.coverImage && !imageError) ? (
               <motion.div
-                className="absolute inset-0 bg-gradient-to-tr from-white/0 via-white/10 to-white/0"
-                initial={{ x: '-100%', opacity: 0 }}
-                animate={{ 
-                  x: isHovered ? '100%' : '-100%',
-                  opacity: isHovered ? 1 : 0,
-                }}
-                transition={{ duration: 0.6, ease: 'easeInOut' }}
-              />
-            </motion.div>
+                className="relative w-full aspect-video overflow-hidden"
+                whileHover={{ scale: 1.04 }}
+                transition={{ duration: 0.3 }}
+              >
+                <img
+                  src={post.coverImage}
+                  alt={title}
+                  className="w-full h-full object-cover"
+                  onError={() => setImageError(true)}
+                />
+                {/* 悬停时的微光效果 */}
+                <motion.div
+                  className="absolute inset-0 bg-gradient-to-tr from-white/0 via-white/10 to-white/0"
+                  initial={{ x: '-100%', opacity: 0 }}
+                  animate={{ 
+                    x: isHovered ? '100%' : '-100%',
+                    opacity: isHovered ? 1 : 0,
+                  }}
+                  transition={{ duration: 0.6, ease: 'easeInOut' }}
+                />
+              </motion.div>
+            ) : (
+              <motion.div
+                className={cn(
+                  'relative flex h-40 items-center justify-center bg-gradient-to-br overflow-hidden',
+                  COVER_GRADIENTS[post.category]
+                )}
+                whileHover={{ scale: 1.04 }}
+                transition={{ duration: 0.3 }}
+              >
+                <motion.span 
+                  className="text-5xl opacity-60"
+                  animate={{ 
+                    scale: isHovered ? 1.15 : 1,
+                    rotate: isHovered ? 5 : 0,
+                  }}
+                  transition={{ 
+                    duration: 0.4, 
+                    ease: 'easeOut',
+                  }}
+                >
+                  {COVER_ICONS[post.category]}
+                </motion.span>
+                
+                {/* 悬停时的微光效果 */}
+                <motion.div
+                  className="absolute inset-0 bg-gradient-to-tr from-white/0 via-white/10 to-white/0"
+                  initial={{ x: '-100%', opacity: 0 }}
+                  animate={{ 
+                    x: isHovered ? '100%' : '-100%',
+                    opacity: isHovered ? 1 : 0,
+                  }}
+                  transition={{ duration: 0.6, ease: 'easeInOut' }}
+                />
+              </motion.div>
+            )}
 
             {/* Content */}
             <div className="flex flex-1 flex-col gap-3 p-4">

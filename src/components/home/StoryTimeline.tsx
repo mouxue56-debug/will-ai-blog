@@ -38,7 +38,7 @@ function StoryNodeCard({
           pl-12 md:pl-0
         `}
       >
-        <div className="glass-card p-5 sm:p-6 hover:shadow-lg hover:shadow-brand-cyan/10 transition-shadow duration-300">
+        <div className="glass-card p-5 sm:p-6 hover:shadow-lg hover:shadow-brand-cyan/10 hover:border-cyan-500/30 transition-all duration-300">
           {/* Year tag */}
           <span
             className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold mb-3 bg-clip-text text-transparent bg-gradient-to-r from-brand-cyan to-brand-mint"
@@ -118,6 +118,7 @@ export function StoryTimeline() {
       className="py-16 sm:py-24"
     >
       <div className="mx-auto max-w-5xl px-4 sm:px-6">
+        <div className="w-16 h-0.5 bg-gradient-to-r from-[#00D4FF] to-transparent mb-6 mx-auto" />
         {/* Section title with Lamp */}
         <LampEffect color="green" className="min-h-[160px] mb-4">
           <motion.div

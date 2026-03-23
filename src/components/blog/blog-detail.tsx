@@ -81,6 +81,15 @@ export function BlogDetail({ post, prevPost, nextPost, comments, postSlug, headi
 
         <div className="xl:grid xl:grid-cols-[minmax(0,1fr)_280px] xl:items-start xl:gap-12">
           <article className="min-w-0 max-w-4xl">
+            {post.coverImage && (
+              <div className="relative w-full aspect-video overflow-hidden rounded-xl mb-8 max-w-3xl mx-auto">
+                <img
+                  src={post.coverImage}
+                  alt={post.title[locale] || post.title.zh}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            )}
             <motion.header
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}

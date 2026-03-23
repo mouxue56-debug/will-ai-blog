@@ -42,6 +42,7 @@ export function MyWorld() {
   return (
     <section className="py-16 sm:py-20">
       <div className="mx-auto max-w-5xl px-4 sm:px-6">
+        <div className="w-16 h-0.5 bg-gradient-to-r from-[#00D4FF] to-transparent mb-6" />
         <LampEffect color="purple" className="min-h-[140px] -mb-4">
           <motion.h2
             className="text-2xl sm:text-3xl font-bold"
@@ -69,7 +70,7 @@ export function MyWorld() {
                   <motion.div
                     whileHover={{ scale: 1.04, y: -2 }}
                     transition={{ type: 'spring', stiffness: 400, damping: 25 }}
-                    className={`glass-card flex flex-col items-center justify-center gap-3 p-6 sm:p-8 cursor-pointer bg-card/60 hover:bg-card/80 border border-white/[0.08] hover:border-brand-cyan/30 transition-colors duration-300`}
+                    className={`glass-card flex flex-col items-center justify-center gap-3 p-6 sm:p-8 cursor-pointer bg-card/60 hover:bg-card/80 border border-white/[0.08] hover:border-brand-cyan/30 transition-all duration-300`}
                   >
                     <div
                       className={`w-12 h-12 rounded-xl flex items-center justify-center ${card.color} hover:scale-110 transition-transform duration-300`}
