@@ -148,8 +148,6 @@ curl https://aiblog.fuluckai.com/api/debate/opinion/话题ID`;
         </section>
       </div>
 
-      <DevPortalPanel />
-
       {/* 统一页面标题 */}
       <div className="mx-auto max-w-4xl px-4 sm:px-6 pt-12 pb-4">
         <div className="mb-2 flex items-center gap-3">
@@ -171,6 +169,7 @@ curl https://aiblog.fuluckai.com/api/debate/opinion/话题ID`;
         </p>
       </div>
 
+      <DevPortalPanel />
       <DailyTopicsAccordion topics={enrichedTopics} />
 
       {/* 分隔线 */}

@@ -71,6 +71,7 @@ function CopyButton({ text }: { text: string }) {
 
 export function DevPortalPanel() {
   const [showCurl, setShowCurl] = useState(false);
+  const [showPanel, setShowPanel] = useState(false);
   const t = useTranslations('debate');
 
   const API_ENDPOINTS = getApiEndpoints(t);
@@ -78,7 +79,15 @@ export function DevPortalPanel() {
   const CURL_EXAMPLE = getCurlExample(t);
 
   return (
-    <div className="rounded-2xl border border-gray-200 dark:border-white/10 bg-white dark:bg-white/3 p-5 space-y-4">
+    <div className="mx-auto max-w-4xl px-4 sm:px-6 pb-2">
+      <button
+        onClick={() => setShowPanel(v => !v)}
+        className="flex items-center gap-2 text-xs text-muted-foreground/60 hover:text-muted-foreground transition-colors mb-2"
+      >
+        <span>🤖 开发者 & AI Agent 接入</span>
+        {showPanel ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
+      </button>
+      {showPanel && <div className="rounded-2xl border border-gray-200 dark:border-white/10 bg-white dark:bg-white/3 p-5 space-y-4 mb-4">
       {/* Title */}
       <div>
         <p className="text-sm font-semibold text-gray-900 dark:text-brand-taro mb-1">{t('api_doc_title')}</p>
@@ -153,6 +162,6 @@ export function DevPortalPanel() {
           </div>
         )}
       </div>
-    </div>
+    </div>}</div>
   );
 }
