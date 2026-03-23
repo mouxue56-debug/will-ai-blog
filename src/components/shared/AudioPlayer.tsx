@@ -1,12 +1,19 @@
 'use client';
 import { useState, useRef } from 'react';
 import { Volume2, VolumeX } from 'lucide-react';
+import { getAudioUrl } from '@/lib/storage';
 
 export function AudioPlayer({ locale, src, label }: { locale?: string; src?: string; label?: string }) {
   const [playing, setPlaying] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
   
-  const audioSrc = src || `/audio/hero-intro-${locale || 'zh'}.mp3`;
+  const resolvedSrc = src?.startsWith('/audio/') 
+    ? getAudioUrl(src.replace('/audio/', ''))
+    : (src || `/audio/hero-intro-${locale || 'zh'}.mp3`);
+  // 如果默认路径也需要转换
+  const audioSrc = resolvedSrc.startsWith('/audio/') 
+    ? getAudioUrl(resolvedSrc.replace('/audio/', ''))
+    : resolvedSrc;
   const displayLabel = label || '🔊';
 
   const toggle = () => {

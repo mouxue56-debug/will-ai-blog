@@ -9,6 +9,7 @@ import type { BlogPost, BlogCategory } from '@/lib/blog-types';
 import { CATEGORY_KEYS } from '@/lib/blog-types';
 import { Link } from '@/i18n/navigation';
 import { SpotlightCard, BorderBeam } from '@/components/ui/aceternity';
+import { getCoverUrl } from '@/lib/storage';
 
 const CATEGORY_TAG_COLORS: Record<BlogCategory, string> = {
   ai: 'bg-brand-cyan/15 text-brand-cyan shadow-[0_0_8px_rgba(56,189,248,0.15)]',
@@ -107,7 +108,7 @@ export function BlogCard({ post, isLatest = false, index = 0 }: BlogCardProps) {
                 transition={{ duration: 0.3 }}
               >
                 <img
-                  src={post.coverImage}
+                  src={post.coverImage?.startsWith('/covers/') ? getCoverUrl(post.slug) : post.coverImage}
                   alt={title}
                   className="w-full h-full object-cover"
                   onError={() => setImageError(true)}

@@ -262,7 +262,7 @@ export function DebatePageClient({
   debates: DebatePost[];
   locale: Locale;
 }) {
-  const [showAiGuide, setShowAiGuide] = useState(true);
+  const [showAiGuide, setShowAiGuide] = useState(false);
   const t = useTranslations('debate');
   const humanSteps = (t.raw('human_steps') as string[]);
 
@@ -287,17 +287,29 @@ export function DebatePageClient({
   return (
     <PageTransition>
       <div className="mx-auto max-w-4xl px-4 sm:px-6 py-12 sm:py-16">
-        {/* Header */}
+        {/* 参与指南（默认折叠） */}
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="mb-10">
-          <div className="mb-3 flex flex-wrap items-center gap-3">
-            <h1 className="text-3xl font-bold sm:text-4xl">{t('title')}</h1>
-            <span className="inline-flex items-center rounded-full border border-brand-mint/30 bg-brand-mint/10 px-3 py-1 text-xs font-medium text-brand-mint">
-              {t('badge')}
+          {/* 折叠按钮 */}
+          <div className="flex items-center justify-between mb-4 cursor-pointer" onClick={() => setShowAiGuide((v) => !v)}>
+            <span className="text-sm font-semibold text-gray-900 dark:text-foreground">
+              {locale === 'zh' ? '📘 如何参与' : locale === 'ja' ? '📘 参加方法' : '📘 How to Participate'}
             </span>
+            {showAiGuide ? (
+              <ChevronUp className="w-4 h-4 text-muted-foreground" />
+            ) : (
+              <ChevronDown className="w-4 h-4 text-muted-foreground" />
+            )}
           </div>
-          <p className="text-lg text-muted-foreground mb-5">{t('subtitle')}</p>
 
-          {/* Participation guide */}
+          <AnimatePresence>
+            {showAiGuide && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                exit={{ opacity: 0, height: 0 }}
+                className="overflow-hidden"
+              >
+                {/* Participation guide */}
           <div className="rounded-2xl border border-gray-200 dark:border-white/10 bg-white dark:bg-white/3 p-5 space-y-4">
             <p className="text-sm font-semibold text-gray-900 dark:text-foreground">{t('what_title')}</p>
             <p className="text-sm text-gray-600 dark:text-muted-foreground leading-relaxed">{t('what_desc')}</p>
@@ -312,78 +324,57 @@ export function DebatePageClient({
               </ol>
             </div>
 
-            {/* AI (collapsible) */}
+            {/* AI */}
             <div className="border-t border-gray-200 dark:border-white/8 pt-4">
-              <button
-                onClick={() => setShowAiGuide((v) => !v)}
-                className="w-full flex items-center justify-between text-xs font-semibold text-violet-600 dark:text-brand-taro hover:opacity-80 transition-opacity cursor-pointer"
-              >
-                <span>{t('ai_title')}</span>
-                {showAiGuide ? (
-                  <ChevronUp className="w-4 h-4" />
-                ) : (
-                  <ChevronDown className="w-4 h-4" />
-                )}
-              </button>
+              <p className="text-xs font-semibold text-violet-600 dark:text-brand-taro mb-2">{t('ai_title')}</p>
+              <p className="text-sm text-gray-600 dark:text-muted-foreground mb-3">{t('ai_desc')}</p>
 
-              <AnimatePresence>
-                {showAiGuide && (
-                  <motion.div
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: 'auto' }}
-                    exit={{ opacity: 0, height: 0 }}
-                    className="overflow-hidden"
-                  >
-                    <div className="mt-3 space-y-3">
-                      <p className="text-sm text-gray-600 dark:text-muted-foreground">{t('ai_desc')}</p>
+              {/* API endpoints */}
+              <div className="rounded-xl bg-gray-100 dark:bg-black/50 border border-gray-200 dark:border-white/10 p-4 space-y-1.5 text-xs font-mono">
+                {apiEndpoints.map((ep) => (
+                  <div key={ep.path} className="flex gap-3 items-baseline flex-wrap">
+                    <span
+                      className={
+                        ep.method === 'POST'
+                          ? 'text-amber-600 dark:text-amber-400 shrink-0'
+                          : 'text-emerald-600 dark:text-emerald-400 shrink-0'
+                      }
+                    >
+                      {ep.method}
+                    </span>
+                    <span className="text-gray-700 dark:text-slate-300 break-all">{ep.path}</span>
+                    <span className="text-gray-500 dark:text-slate-500 shrink-0 ml-auto">{ep.desc}</span>
+                  </div>
+                ))}
+              </div>
 
-                      {/* API endpoints */}
-                      <div className="rounded-xl bg-gray-100 dark:bg-black/50 border border-gray-200 dark:border-white/10 p-4 space-y-1.5 text-xs font-mono">
-                        {apiEndpoints.map((ep) => (
-                          <div key={ep.path} className="flex gap-3 items-baseline flex-wrap">
-                            <span
-                              className={
-                                ep.method === 'POST'
-                                  ? 'text-amber-600 dark:text-amber-400 shrink-0'
-                                  : 'text-emerald-600 dark:text-emerald-400 shrink-0'
-                              }
-                            >
-                              {ep.method}
-                            </span>
-                            <span className="text-gray-700 dark:text-slate-300 break-all">{ep.path}</span>
-                            <span className="text-gray-500 dark:text-slate-500 shrink-0 ml-auto">{ep.desc}</span>
-                          </div>
-                        ))}
-                      </div>
+              {/* curl example */}
+              <div className="rounded-xl bg-gray-100 dark:bg-black/50 border border-gray-200 dark:border-white/10 p-4 mt-3">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-xs text-gray-500 dark:text-slate-400 font-mono">curl example</span>
+                  <CopyButton
+                    text={CURL_EXAMPLE}
+                    labels={{ copy: t('copy'), copied: t('copied') }}
+                  />
+                </div>
+                <pre className="text-xs font-mono text-sky-700 dark:text-sky-200 leading-6 overflow-x-auto whitespace-pre-wrap">
+                  {CURL_EXAMPLE}
+                </pre>
+              </div>
 
-                      {/* curl example */}
-                      <div className="rounded-xl bg-gray-100 dark:bg-black/50 border border-gray-200 dark:border-white/10 p-4">
-                        <div className="flex items-center justify-between mb-2">
-                          <span className="text-xs text-gray-500 dark:text-slate-400 font-mono">curl example</span>
-                          <CopyButton
-                            text={CURL_EXAMPLE}
-                            labels={{ copy: t('copy'), copied: t('copied') }}
-                          />
-                        </div>
-                        <pre className="text-xs font-mono text-sky-700 dark:text-sky-200 leading-6 overflow-x-auto whitespace-pre-wrap">
-                          {CURL_EXAMPLE}
-                        </pre>
-                      </div>
-
-                      <div className="flex flex-wrap gap-2 text-xs text-gray-500 dark:text-muted-foreground">
-                        {t('no_key').split(' · ').map((tag, i) => (
-                          <span key={i} className="bg-gray-100 dark:bg-white/5 rounded-full px-3 py-1">
-                            {tag}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
+              <div className="flex flex-wrap gap-2 text-xs text-gray-500 dark:text-muted-foreground mt-3">
+                {t('no_key').split(' · ').map((tag, i) => (
+                  <span key={i} className="bg-gray-100 dark:bg-white/5 rounded-full px-3 py-1">
+                    {tag}
+                  </span>
+                ))}
+              </div>
             </div>
           </div>
         </motion.div>
+      )}
+    </AnimatePresence>
+  </motion.div>
 
         {/* Topic list */}
         {debates.length > 0 && (

@@ -181,10 +181,19 @@ export function DailyTopicsAccordion({ topics }: DailyTopicsAccordionProps) {
 
   return (
     <div className="w-full max-w-4xl mx-auto px-4 py-8">
-      {/* Header */}
-      <div className="text-center mb-8">
-        <h2 className="text-2xl font-bold text-cyan-600 dark:text-[#00D4FF] mb-2">{t('dailyTopics')}</h2>
-        <p className="text-sm text-gray-500 dark:text-gray-400">{t('dailyTopicsSubtitle')}</p>
+      {/* 今日资讯来源小标题 */}
+      <div className="mb-6">
+        <div className="flex items-center gap-2 mb-3">
+          <span className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+            {locale === 'zh' ? '📰 今日资讯来源' : locale === 'ja' ? '📰 今日のニュース' : '📰 Today\'s News'}
+          </span>
+          <div className="h-px flex-1 bg-border/40" />
+        </div>
+        <p className="text-sm text-muted-foreground">
+          {locale === 'zh' ? 'ナツ 每天整理的 AI、GitHub、经济动态，点击展开可查看详情并参与讨论。' : 
+           locale === 'ja' ? 'ナツが毎日収集するAI・GitHub・経済ニュース。クリックで詳細を表示、議論に参加できます。' :
+           'Daily AI, GitHub, economy news curated by ナツ. Click to expand, view details, and join discussion.'}
+        </p>
       </div>
 
       {/* Group by date */}

@@ -13,6 +13,7 @@ import { TableOfContents, type TocHeading } from './table-of-contents';
 import { MobileTableOfContents } from './mobile-table-of-contents';
 import { CommentSection } from './CommentSection';
 import { AudioPlayer } from '@/components/shared/AudioPlayer';
+import { getCoverUrl, getAudioUrl } from '@/lib/storage';
 
 const CATEGORY_TAG_COLORS: Record<BlogCategory, string> = {
   ai: 'bg-brand-cyan/15 text-brand-cyan',
@@ -85,7 +86,7 @@ export function BlogDetail({ post, prevPost, nextPost, comments, postSlug, headi
             {post.coverImage && (
               <div className="relative w-full aspect-video overflow-hidden rounded-xl mb-8 max-w-3xl mx-auto">
                 <img
-                  src={post.coverImage}
+                  src={post.coverImage?.startsWith('/covers/') ? getCoverUrl(post.slug) : post.coverImage}
                   alt={post.title[locale] || post.title.zh}
                   className="w-full h-full object-cover"
                 />
@@ -159,7 +160,7 @@ export function BlogDetail({ post, prevPost, nextPost, comments, postSlug, headi
               >
                 <div className="flex items-center justify-between mb-3">
                   <span className="text-xs font-semibold uppercase tracking-widest text-cyan-400">Will&apos;s Take</span>
-                  <AudioPlayer src={`/audio/${post.slug}-will-comment.mp3`} label={locale === 'ja' ? 'Willの声で聴く' : locale === 'en' ? 'Listen to Will' : '听 Will 说'} />
+                  <AudioPlayer src={getAudioUrl(`${post.slug}-will-comment.mp3`)} label={locale === 'ja' ? 'Willの声で聴く' : locale === 'en' ? 'Listen to Will' : '听 Will 说'} />
                 </div>
                 <p className="text-sm leading-relaxed text-muted-foreground">{post.willComment[locale]}</p>
               </motion.div>

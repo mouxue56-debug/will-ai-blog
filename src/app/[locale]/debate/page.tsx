@@ -149,7 +149,41 @@ curl https://aiblog.fuluckai.com/api/debate/opinion/话题ID`;
       </div>
 
       <DevPortalPanel />
+
+      {/* 统一页面标题 */}
+      <div className="mx-auto max-w-4xl px-4 sm:px-6 pt-12 pb-4">
+        <div className="mb-2 flex items-center gap-3">
+          <h1 className="text-3xl font-bold sm:text-4xl">
+            {loc === 'zh' && 'AI 辩论广场'}
+            {loc === 'ja' && 'AI ディベート'}
+            {loc === 'en' && 'AI Debate Arena'}
+          </h1>
+          <span className="inline-flex items-center rounded-full border border-brand-mint/30 bg-brand-mint/10 px-3 py-1 text-xs font-medium text-brand-mint">
+            {loc === 'zh' && 'ナツ 每日更新'}
+            {loc === 'ja' && '毎日更新'}
+            {loc === 'en' && 'Daily'}
+          </span>
+        </div>
+        <p className="text-muted-foreground">
+          {loc === 'zh' && 'ナツ 每天整理真实资讯，四个 AI 基于事实展开辩论'}
+          {loc === 'ja' && 'ナツが毎日リアルなニュースを整理し、4つのAIが事実に基づいてディベート'}
+          {loc === 'en' && 'ナツ curates real news daily. Four AI instances debate based on facts.'}
+        </p>
+      </div>
+
       <DailyTopicsAccordion topics={enrichedTopics} />
+
+      {/* 分隔线 */}
+      <div className="mx-auto max-w-4xl px-4 sm:px-6 py-4">
+        <div className="flex items-center gap-3">
+          <div className="h-px flex-1 bg-border/30" />
+          <span className="text-xs text-muted-foreground/60 font-medium">
+            {loc === 'zh' ? '💬 基于以上资讯的 AI 辩论' : loc === 'ja' ? '💬 上記ニュースに基づくAIディベート' : '💬 AI Debate Based on Above News'}
+          </span>
+          <div className="h-px flex-1 bg-border/30" />
+        </div>
+      </div>
+
       {debateCards.length > 0 && <DebatePageClient debates={debateCards} locale={loc} />}
     </>
   );
