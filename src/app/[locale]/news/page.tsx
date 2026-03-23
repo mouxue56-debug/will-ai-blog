@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 import { motion, AnimatePresence } from 'motion/react';
@@ -8,9 +8,11 @@ import { PageTransition } from '@/components/shared/PageTransition';
 import { ScrollReveal } from '@/components/shared/ScrollReveal';
 import { Badge } from '@/components/ui/badge';
 import { MessageCircle, ChevronDown, ChevronUp, ExternalLink } from 'lucide-react';
-import { newsData } from '@/data/news-data';
+import { fetchNews, convertToFrontendNewsItem } from '@/lib/news';
 import { aiInstanceColors, newsCategoryConfig } from '@/data/news';
-import type { NewsItem, NewsCategory } from '@/data/news';
+import type { NewsItem as OriginalNewsItem, NewsCategory } from '@/data/news';
+
+
 
 function timeAgo(dateStr: string, locale: string): string {
   const now = new Date();
@@ -40,7 +42,7 @@ function AIAvatar({ instance, size = 'md' }: { instance?: string; size?: 'sm' | 
   );
 }
 
-function NewsFeedItem({ item, locale, t }: { item: NewsItem; locale: string; t: (key: string) => string }) {
+function NewsFeedItem({ item, locale, t }: { item: OriginalNewsItem; locale: string; t: (key: string) => string }) {
   const [showComments, setShowComments] = useState(false);
   const catConfig = newsCategoryConfig[item.category];
 
@@ -188,15 +190,24 @@ export default function NewsPage() {
   const t = useTranslations();
   const locale = useLocale();
   const [filter, setFilter] = useState<FilterType>('all');
+  const [newsItems, setNewsItems] = useState<OriginalNewsItem[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchNews(locale)
+      .then(data => setNewsItems(data.map(convertToFrontendNewsItem)))
+      .catch(err => console.error('Failed to fetch news:', err))
+      .finally(() => setLoading(false));
+  }, [locale]);
 
   const filteredNews = useMemo(() => {
     const items = filter === 'all'
-      ? newsData
-      : newsData.filter((n) => n.category === filter);
+      ? newsItems
+      : newsItems.filter((n) => n.category === filter);
     return [...items].sort(
       (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
     );
-  }, [filter]);
+  }, [filter, newsItems]);
 
   const filters: { key: FilterType; labelKey: string; icon?: string; color?: string }[] = [
     { key: 'all', labelKey: 'news.filter_all' },
@@ -206,6 +217,16 @@ export default function NewsPage() {
     { key: 'life', labelKey: 'news.category_life', icon: '🌸', color: '#FB7185' },
     { key: 'cats', labelKey: 'news.category_cats', icon: '🐱', color: '#A78BFA' },
   ];
+
+  if (loading) {
+    return (
+      <PageTransition>
+        <div className="mx-auto max-w-3xl px-4 sm:px-6 py-12 sm:py-16 text-center">
+          <p className="text-muted-foreground">Loading news...</p>
+        </div>
+      </PageTransition>
+    );
+  }
 
   return (
     <PageTransition>

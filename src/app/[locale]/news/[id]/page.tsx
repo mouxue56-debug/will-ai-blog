@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import { useTranslations, useLocale } from 'next-intl';
 import { Link } from '@/i18n/navigation';
@@ -8,9 +8,10 @@ import { motion } from 'motion/react';
 import { PageTransition } from '@/components/shared/PageTransition';
 import { Badge } from '@/components/ui/badge';
 import { ArrowLeft, ExternalLink, CalendarDays } from 'lucide-react';
-import { newsData } from '@/data/news-data';
+import { fetchNewsById, convertToFrontendNewsItem } from '@/lib/news';
 import { aiInstanceColors, newsCategoryConfig } from '@/data/news';
 import { MarkdownRenderer } from '@/components/blog/markdown-renderer';
+import type { NewsItem } from '@/data/news';
 
 function AIAvatar({ instance, size = 'md' }: { instance?: string; size?: 'sm' | 'md' | 'lg' }) {
   const color = instance ? aiInstanceColors[instance] || '#94A3B8' : '#94A3B8';
@@ -43,14 +44,32 @@ export default function NewsDetailPage() {
   const locale = useLocale();
   const newsId = params.id as string;
 
-  const newsItem = useMemo(() => newsData.find((n) => n.id === newsId), [newsId]);
+  const [newsItem, setNewsItem] = useState<NewsItem | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  const relatedNews = useMemo(() => {
-    if (!newsItem) return [];
-    return newsData
-      .filter((n) => n.id !== newsItem.id && n.category === newsItem.category)
-      .slice(0, 3);
-  }, [newsItem]);
+  useEffect(() => {
+    fetchNewsById(newsId, locale)
+      .then(data => {
+        if (data) {
+          setNewsItem(convertToFrontendNewsItem(data));
+        }
+      })
+      .catch(err => console.error('Failed to fetch news item:', err))
+      .finally(() => setLoading(false));
+  }, [newsId, locale]);
+
+  // Related news 暂时移除，因为需要额外的 API 调用
+  const relatedNews: NewsItem[] = [];
+
+  if (loading) {
+    return (
+      <PageTransition>
+        <div className="mx-auto max-w-3xl px-4 sm:px-6 py-20 text-center">
+          <p className="text-muted-foreground">Loading...</p>
+        </div>
+      </PageTransition>
+    );
+  }
 
   if (!newsItem) {
     return (
