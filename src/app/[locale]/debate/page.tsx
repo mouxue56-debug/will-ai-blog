@@ -17,7 +17,7 @@ export default async function DebatePage({ params }: { params: Promise<{ locale:
   // Fetch daily reports from Supabase (3 days, filtered by topic_type)
   const { data: todayTopics } = await supabaseAdmin
     .from('daily_reports')
-    .select('id, title, content, topic_type, slug, author_emoji, published_at')
+    .select('id, title, content, topic_type, slug, author_emoji, published_at, title_zh, title_ja, title_en, content_zh, content_ja, content_en')
     .in('topic_type', ['ai', 'economy', 'github'])
     .order('published_at', { ascending: false })
     .limit(9);
@@ -28,7 +28,13 @@ export default async function DebatePage({ params }: { params: Promise<{ locale:
   const enrichedTopics = (todayTopics || []).map((topic) => {
     const newsItems = translationsMap[topic.id];
     if (newsItems) {
-      return { ...topic, newsItems };
+      return { 
+        ...topic, 
+        newsItems,
+        display_title_zh: topic.title_zh || topic.title,
+        display_title_ja: topic.title_ja || topic.title,
+        display_title_en: topic.title_en || topic.title,
+      };
     }
     // Fallback: parse from content
     const content = topic.content || '';
@@ -38,7 +44,13 @@ export default async function DebatePage({ params }: { params: Promise<{ locale:
     while ((match = regex.exec(content)) !== null) {
       parsed.push({ title_en: match[1], title_zh: match[1], title_ja: match[1], url: match[2], source: (match[3]||'').trim().replace(/\*$/,'').trim() });
     }
-    return { ...topic, newsItems: parsed };
+    return { 
+      ...topic, 
+      newsItems: parsed,
+      display_title_zh: topic.title_zh || topic.title,
+      display_title_ja: topic.title_ja || topic.title,
+      display_title_en: topic.title_en || topic.title,
+    };
   });
 
   const topics = await getTodayDebateTopics();

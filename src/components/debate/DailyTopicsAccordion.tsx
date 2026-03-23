@@ -19,6 +19,9 @@ interface NewsItem {
 interface DailyTopic {
   id: string;
   title: string;
+  title_zh?: string;
+  title_ja?: string;
+  title_en?: string;
   content: string;
   content_zh?: string;
   content_ja?: string;
@@ -28,6 +31,9 @@ interface DailyTopic {
   author_emoji: string;
   published_at: string;
   newsItems?: NewsItem[];
+  display_title_zh?: string;
+  display_title_ja?: string;
+  display_title_en?: string;
 }
 
 interface Opinion {
@@ -131,6 +137,13 @@ export function DailyTopicsAccordion({ topics }: DailyTopicsAccordionProps) {
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [topics]);
+
+  // 获取当前 locale 对应的标题
+  const getTopicTitle = (topic: DailyTopic) => {
+    if (locale === 'ja') return topic.display_title_ja || topic.title_ja || topic.title;
+    if (locale === 'en') return topic.display_title_en || topic.title_en || topic.title;
+    return topic.display_title_zh || topic.title_zh || topic.title;
+  };
 
   const handleToggle = (index: number) => {
     setOpenIndex(index === openIndex ? -1 : index);
