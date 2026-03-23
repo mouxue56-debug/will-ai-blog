@@ -15,6 +15,7 @@ export interface BlogPost {
   tags?: string[];
   readingTime: number;
   content: string;
+  willComment?: Record<string, string>;
 }
 
 export interface Comment {

@@ -138,6 +138,7 @@ export function getAllPosts(): BlogPost[] {
           : [],
       readingTime: calculateReadingTime(content),
       content,
+      willComment: (data.willComment as Record<string, string>) || undefined,
     } as BlogPost;
   });
 

@@ -12,6 +12,7 @@ import { MarkdownRenderer } from './markdown-renderer';
 import { TableOfContents, type TocHeading } from './table-of-contents';
 import { MobileTableOfContents } from './mobile-table-of-contents';
 import { CommentSection } from './CommentSection';
+import { AudioPlayer } from '@/components/shared/AudioPlayer';
 
 const CATEGORY_TAG_COLORS: Record<BlogCategory, string> = {
   ai: 'bg-brand-cyan/15 text-brand-cyan',
@@ -148,6 +149,21 @@ export function BlogDetail({ post, prevPost, nextPost, comments, postSlug, headi
             >
               <MarkdownRenderer content={post.content} />
             </motion.div>
+
+            {post.willComment && post.willComment[locale] && (
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4, duration: 0.5 }}
+                className="mt-8 rounded-xl border border-cyan-500/20 bg-cyan-500/5 p-6"
+              >
+                <div className="flex items-center justify-between mb-3">
+                  <span className="text-xs font-semibold uppercase tracking-widest text-cyan-400">Will&apos;s Take</span>
+                  <AudioPlayer src={`/audio/${post.slug}-will-comment.mp3`} label={locale === 'ja' ? 'Willの声で聴く' : locale === 'en' ? 'Listen to Will' : '听 Will 说'} />
+                </div>
+                <p className="text-sm leading-relaxed text-muted-foreground">{post.willComment[locale]}</p>
+              </motion.div>
+            )}
 
             <hr className="my-10 border-border" />
 

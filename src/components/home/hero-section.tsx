@@ -1,9 +1,10 @@
 'use client';
 
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { motion, useScroll, useTransform } from 'motion/react';
 import { useState, useCallback, useEffect, useRef } from 'react';
 import { Link } from '@/i18n/navigation';
+import { AudioPlayer } from '@/components/shared/AudioPlayer';
 
 const nodes = [
   { id: 'yuki', color: '#38bdf8', x: 50, y: 20 },
@@ -523,6 +524,7 @@ function AnimatedTitle({ text }: { text: string }) {
 export function HeroSection() {
   const t = useTranslations('home');
   const navT = useTranslations('nav');
+  const locale = useLocale();
   const sectionRef = useRef<HTMLElement>(null);
   
   const { scrollYProgress } = useScroll({
@@ -623,6 +625,7 @@ export function HeroSection() {
                   </span>
                 </Link>
               </motion.div>
+              <AudioPlayer locale={locale} />
             </motion.div>
 
             <motion.div
