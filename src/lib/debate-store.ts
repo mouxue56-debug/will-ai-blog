@@ -195,8 +195,11 @@ export async function getTodayDebateTopics(): Promise<DebateTopic[]> {
 
 export async function saveDebateTopic(topic: DebateTopic): Promise<boolean> {
   try {
+    // debate_topics.id is UUID type; use randomUUID and store slug separately
+    const uuid = crypto.randomUUID();
     const { error } = await supabaseAdmin.from('debate_topics').upsert({
-      id: topic.id,
+      id: uuid,
+      slug: topic.id,          // store the human-readable id (e.g. "2026-03-23-morning") as slug
       date: topic.date,
       session: topic.session,
       title_zh: topic.title.zh,
@@ -207,7 +210,23 @@ export async function saveDebateTopic(topic: DebateTopic): Promise<boolean> {
       created_at: topic.createdAt ?? new Date().toISOString(),
     });
 
-    return !error;
+    if (error) {
+      // Fallback: try without slug column in case it doesn't exist yet
+      const { error: error2 } = await supabaseAdmin.from('debate_topics').upsert({
+        id: uuid,
+        date: topic.date,
+        session: topic.session,
+        title_zh: topic.title.zh,
+        title_ja: topic.title.ja ?? null,
+        title_en: topic.title.en ?? null,
+        news_source: topic.newsSource,
+        tags: topic.tags,
+        created_at: topic.createdAt ?? new Date().toISOString(),
+      });
+      return !error2;
+    }
+
+    return true;
   } catch {
     return false;
   }
