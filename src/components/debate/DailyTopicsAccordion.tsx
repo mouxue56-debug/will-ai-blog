@@ -224,9 +224,9 @@ export function DailyTopicsAccordion({ topics }: DailyTopicsAccordionProps) {
             return item.title_zh || item.title_en || item.title || '';
           };
           
-          // Use first news headline as the display title
-          const displayTitle = newsItems.length > 0 
-            ? getLocalizedTitle(newsItems[0])
+          // Use trilingual topic title (from daily_reports.title_zh/ja/en) or category name
+          const displayTitle = getTopicTitle(topic) !== topic.title
+            ? getTopicTitle(topic)
             : getTopicDisplayName(topic.topic_type, t);
           const inputValue = commentInputs[topic.slug] || '';
           const isSubmitting = submitting[topic.slug] || false;
