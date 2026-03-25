@@ -92,6 +92,31 @@ export function BlogDetail({ post, prevPost, nextPost, comments, postSlug, headi
                 />
               </div>
             )}
+
+            {post.audioUrl && (
+              <motion.div
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.05, duration: 0.4 }}
+                className="mb-6 rounded-xl border border-cyan-500/30 bg-gradient-to-r from-cyan-500/10 to-cyan-500/5 p-4 flex items-center gap-4"
+              >
+                <div className="flex-shrink-0">
+                  <div className="w-9 h-9 rounded-full bg-cyan-500/20 flex items-center justify-center text-sm">🎙</div>
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="text-xs font-semibold uppercase tracking-widest text-cyan-400 mb-0.5">播客导读</div>
+                  <p className="text-xs text-muted-foreground leading-snug line-clamp-1">
+                    {locale === 'zh' ? '点击播放本文语音版' : locale === 'ja' ? 'この記事の音声版を聴く' : 'Listen to this article'}
+                  </p>
+                </div>
+                <div className="flex-shrink-0">
+                  <AudioPlayer
+                    src={post.audioUrl?.replace(/^\/audio\//, '')}
+                    label={locale === 'ja' ? '▶ 再生' : locale === 'en' ? '▶ Play' : '▶ 播放'}
+                  />
+                </div>
+              </motion.div>
+            )}
             <motion.header
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}

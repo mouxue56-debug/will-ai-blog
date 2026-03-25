@@ -12,6 +12,8 @@ excerpt:
   zh: 三月换毛季，猫毛飞满屋。福楽キャッテリー的实战护理流程，加上 AI 自动提醒系统的搭法。
   ja: 3月の換毛期、猫毛が舞う季節。福楽キャッテリーの実践ケアと、AIリマインダーシステムの作り方。
   en: Shedding season in March at Fukuraku Cattery — practical care routines plus how we automated reminders with AI.
+coverImage: "/covers/siberian-spring-care.jpg"
+audioUrl: "/audio/siberian-spring-care.mp3"
 ---
 
 ## 换毛季来了！

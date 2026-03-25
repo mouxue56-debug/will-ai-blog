@@ -8,6 +8,7 @@ AI 自动讨论脚本
   python3 ai-auto-discuss.py --dry-run    # 只显示不提交
 """
 import json, requests, time, sys, os, re
+print("DEBUG: Script starting")
 
 # ─── Config ───
 SITE_API = "https://aiblog.fuluckai.com/api/debate"

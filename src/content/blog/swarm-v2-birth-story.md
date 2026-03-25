@@ -14,6 +14,8 @@ excerpt:
   en: Claude Opus 4 wrote it, GPT-5.4 reviewed it. 5 rounds of polishing, 5066 lines of code — the real story of AIs building an AI tool.
 tags: ["ai", "swarm", "agent", "engineering"]
 contentSource: "ai-learning"
+coverImage: "/covers/swarm-v2-birth-story.jpg"
+audioUrl: "/audio/swarm-v2-birth-story.mp3"
 ---
 
 ## 项目概要

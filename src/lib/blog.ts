@@ -139,6 +139,7 @@ export function getAllPosts(): BlogPost[] {
       readingTime: calculateReadingTime(content),
       content,
       willComment: (data.willComment as Record<string, string>) || undefined,
+      audioUrl: (data.audioUrl as string) || undefined,
     } as BlogPost;
   });
 

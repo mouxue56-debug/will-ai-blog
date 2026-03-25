@@ -4,8 +4,10 @@ import { DebatePageClient } from '@/components/debate/DebatePageClient';
 import { getTodayDebateTopics } from '@/lib/debate-store';
 import { supabaseAdmin } from '@/lib/supabase';
 import { DailyTopicsAccordion } from '@/components/debate/DailyTopicsAccordion';
-import { DevPortalPanel } from '@/components/debate/DevPortalPanel';
+import { ParticipationGuide } from '@/components/debate/ParticipationGuide';
 import newsTranslations from '@/data/news-translations.json';
+import Image from 'next/image';
+import { getIllustrationUrl } from '@/lib/storage';
 
 type Locale = 'zh' | 'ja' | 'en';
 
@@ -14,13 +16,14 @@ export default async function DebatePage({ params }: { params: Promise<{ locale:
   setRequestLocale(locale);
   const loc = (locale as Locale) || 'zh';
 
-  // Fetch daily reports from Supabase (3 days, filtered by topic_type)
+  // Fetch daily reports from Supabase (7 days, filtered by topic_type)
   const { data: todayTopics } = await supabaseAdmin
     .from('daily_reports')
     .select('id, title, content, topic_type, slug, author_emoji, published_at, title_zh, title_ja, title_en, content_zh, content_ja, content_en')
-    .in('topic_type', ['ai', 'economy', 'github'])
+    .in('topic_type', ['ai', 'economy', 'github', 'general'])
+    .gte('published_at', new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString())
     .order('published_at', { ascending: false })
-    .limit(9);
+    .limit(30);
 
   // Inject translated newsItems into topics from SSR
   type TranslatedItem = {title_en: string; title_zh: string; title_ja: string; url: string; source: string};
@@ -36,13 +39,36 @@ export default async function DebatePage({ params }: { params: Promise<{ locale:
         display_title_en: topic.title_en || topic.title,
       };
     }
-    // Fallback: parse from content
+    // Fallback: parse from content (en) + content_zh + content_ja
     const content = topic.content || '';
+    const content_zh = (topic as Record<string, unknown>).content_zh as string || '';
+    const content_ja = (topic as Record<string, unknown>).content_ja as string || '';
+
+    // Helper: extract [title](url) pairs from a markdown string
+    const extractTitles = (src: string): string[] => {
+      const r = /- \[([^\]]+)\]\([^)]+\)/g;
+      const out: string[] = [];
+      let m;
+      while ((m = r.exec(src)) !== null) out.push(m[1]);
+      return out;
+    };
+
+    const zhTitles = extractTitles(content_zh);
+    const jaTitles = extractTitles(content_ja);
+
     const regex = /- \[([^\]]+)\]\(([^)]+)\)\s*\*?—?\s*([^*\n]*)\*?/g;
     const parsed: TranslatedItem[] = [];
     let match;
+    let idx = 0;
     while ((match = regex.exec(content)) !== null) {
-      parsed.push({ title_en: match[1], title_zh: match[1], title_ja: match[1], url: match[2], source: (match[3]||'').trim().replace(/\*$/,'').trim() });
+      parsed.push({
+        title_en: match[1],
+        title_zh: zhTitles[idx] || match[1],
+        title_ja: jaTitles[idx] || match[1],
+        url: match[2],
+        source: (match[3]||'').trim().replace(/\*$/,'').trim(),
+      });
+      idx++;
     }
     return { 
       ...topic, 
@@ -55,7 +81,9 @@ export default async function DebatePage({ params }: { params: Promise<{ locale:
 
   const topics = await getTodayDebateTopics();
   const topicMap = new Map(debates.map((debate) => [debate.id, debate]));
-  const debateCards = topics.map((topic) => {
+  const debateCards = topics
+    .filter((t) => t.newsSource && t.newsSource.trim() !== '')
+    .map((topic) => {
     const staticDebate = topicMap.get(topic.id);
     return {
       id: topic.id,
@@ -150,12 +178,33 @@ curl https://aiblog.fuluckai.com/api/debate/opinion/话题ID`;
 
       {/* 统一页面标题 */}
       <div className="mx-auto max-w-4xl px-4 sm:px-6 pt-12 pb-4">
-        <h1 className="text-3xl font-bold sm:text-4xl">
-          {loc === 'zh' && 'AI 辩论广场'}
-          {loc === 'ja' && 'AI ディベート'}
-          {loc === 'en' && 'AI Debate Arena'}
-        </h1>
+        <div className="relative mb-6 overflow-hidden rounded-2xl border border-white/8">
+          <div className="relative h-40 w-full sm:h-48">
+            <Image
+              src={getIllustrationUrl('debate-banner')}
+              alt="AI Debate"
+              fill
+              className="object-cover object-center opacity-75"
+            />
+            <div className="absolute inset-0 bg-gradient-to-r from-background/90 via-background/50 to-transparent" />
+            <div className="absolute inset-0 flex flex-col justify-center px-6 sm:px-8">
+              <h1 className="text-3xl font-bold sm:text-4xl">
+                {loc === 'zh' && 'AI 辩论广场'}
+                {loc === 'ja' && 'AI ディベート'}
+                {loc === 'en' && 'AI Debate Arena'}
+              </h1>
+              <p className="mt-2 text-sm text-muted-foreground max-w-md">
+                {loc === 'zh' && '每日资讯 · AI多角度讨论 · 发表你的观点'}
+                {loc === 'ja' && '毎日のニュース · AI多角度ディスカッション · あなたの意見を'}
+                {loc === 'en' && 'Daily news · Multi-perspective AI discussion · Share your view'}
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
+
+      {/* 参与指南 — 始终可见 */}
+      <ParticipationGuide locale={loc} />
 
       {/* 今日资讯来源 */}
       <div className="mx-auto max-w-4xl px-4 sm:px-6 pb-3">
@@ -169,18 +218,7 @@ curl https://aiblog.fuluckai.com/api/debate/opinion/话题ID`;
       <DailyTopicsAccordion topics={enrichedTopics} />
 
       {/* 分隔线 */}
-      <div className="mx-auto max-w-4xl px-4 sm:px-6 py-4">
-        <div className="flex items-center gap-3">
-          <div className="h-px flex-1 bg-border/30" />
-          <span className="text-xs text-muted-foreground/60 font-medium">
-            {loc === 'zh' ? '💬 基于以上资讯的 AI 辩论' : loc === 'ja' ? '💬 上記ニュースに基づくAIディベート' : '💬 AI Debate Based on Above News'}
-          </span>
-          <div className="h-px flex-1 bg-border/30" />
-        </div>
-      </div>
-
-      {debateCards.length > 0 && <DebatePageClient debates={debateCards} locale={loc} />}
-      <DevPortalPanel />
+      {/* debate_topics（凭空生成话题）已停用 — 只保留 daily_reports 真实资讯讨论 */}
     </>
   );
 }

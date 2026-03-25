@@ -4,6 +4,8 @@ import { getTranslations } from 'next-intl/server';
 import { Link } from '@/i18n/navigation';
 import { setRequestLocale } from 'next-intl/server';
 import { BookOpen, Clock, Calendar } from 'lucide-react';
+import Image from 'next/image';
+import { getIllustrationUrl } from '@/lib/storage';
 
 export async function generateMetadata({
   params,
@@ -71,43 +73,38 @@ export default async function LearningPage({
         }
       `}</style>
       {/* Hero Section */}
-      <section className="relative overflow-hidden pt-20 pb-16 px-4">
+      <section className="relative overflow-hidden pt-8 pb-16 px-4">
+        {/* Banner 插画 */}
+        <div className="mx-auto max-w-4xl mb-8">
+          <div className="relative h-44 sm:h-52 w-full overflow-hidden rounded-2xl border border-white/8">
+            <Image
+              src={getIllustrationUrl('learning-banner')}
+              alt=""
+              fill
+              className="object-cover object-center opacity-70"
+            />
+            <div className="absolute inset-0 bg-gradient-to-r from-[#080F18]/90 via-[#080F18]/50 to-transparent" />
+            <div className="absolute inset-0 flex flex-col justify-center px-6 sm:px-10">
+              <span className="mb-2 inline-flex w-fit items-center gap-2 rounded-full border border-cyan-500/30 bg-cyan-500/10 px-4 py-1.5 text-xs font-medium text-cyan-400 tracking-wide uppercase">
+                <BookOpen className="h-3.5 w-3.5" />
+                Learning Notes
+              </span>
+              <h1 className="text-2xl sm:text-3xl font-bold"
+                style={{background:'linear-gradient(135deg,#00D4FF 0%,#5EF0C8 50%,#00A8E8 100%)',WebkitBackgroundClip:'text',WebkitTextFillColor:'transparent',backgroundClip:'text'}}>
+                {t('title')}
+              </h1>
+              <p className="mt-1 max-w-lg text-sm text-slate-400">{t('subtitle')}</p>
+            </div>
+          </div>
+        </div>
+
         {/* Background glow */}
         <div
           className="pointer-events-none absolute inset-0"
-          style={{
-            background:
-              'radial-gradient(ellipse 80% 40% at 50% 0%, rgba(0,212,255,0.08) 0%, transparent 70%)',
-          }}
+          style={{background:'radial-gradient(ellipse 80% 40% at 50% 0%, rgba(0,212,255,0.06) 0%, transparent 70%)'}}
         />
 
         <div className="relative mx-auto max-w-4xl text-center">
-          {/* Badge */}
-          <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-cyan-500/30 bg-cyan-500/10 px-4 py-1.5 animate-fade-in-up">
-            <BookOpen className="h-3.5 w-3.5 text-cyan-400" />
-            <span className="text-xs font-medium text-cyan-400 tracking-wide uppercase">
-              Learning Notes
-            </span>
-          </div>
-
-          {/* Title */}
-          <h1
-            className="mb-4 text-4xl font-bold sm:text-5xl animate-fade-in-up-delay-1"
-            style={{
-              background: 'linear-gradient(135deg, #00D4FF 0%, #5EF0C8 50%, #00A8E8 100%)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              backgroundClip: 'text',
-            }}
-          >
-            {t('title')}
-          </h1>
-
-          {/* Subtitle */}
-          <p className="mx-auto max-w-2xl text-base text-slate-400 leading-relaxed animate-fade-in-up-delay-2">
-            {t('subtitle')}
-          </p>
-
           {/* Stats bar */}
           {learningPosts.length > 0 && (
             <div className="mt-8 flex items-center justify-center gap-6">

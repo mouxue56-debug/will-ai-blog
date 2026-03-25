@@ -19,14 +19,14 @@ export async function GET(request: NextRequest) {
     const days = parseInt(request.nextUrl.searchParams.get('days') || '3', 10);
     const limit = Math.min(days * 3, 30); // max 30 topics
     
-    const topics = await getTodayDebateTopics();
-    if (topics.length === 0) {
+    // 始终从 daily_reports 读取真实资讯作为讨论话题，不使用凭空生成的 debate_topics
+    if (true) {
       const today = getTodayInTokyo();
       // Select base fields; translation fields may not exist yet
       const { data: reports, error } = await supabaseAdmin
         .from('daily_reports')
-        .select('id,title,content,topic_type,slug,published_at')
-        .in('topic_type', ['ai', 'economy', 'github'])
+        .select('id,title,title_zh,title_ja,title_en,content,content_zh,content_ja,content_en,topic_type,slug,published_at')
+        .in('topic_type', ['ai', 'economy', 'github', 'general'])
         .order('published_at', { ascending: false })
         .limit(limit);
 
@@ -34,14 +34,21 @@ export async function GET(request: NextRequest) {
         throw error;
       }
 
-      // Extract news items from markdown content
-      function extractNewsItems(content: string): Array<{title: string; url: string; source: string}> {
+      // Extract title from a specific URL within markdown content
+      function extractTitleFromContent(content: string, url: string): string {
+        const escaped = url.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        const regex = new RegExp(`- \\[([^\\]]+)\\]\\(${escaped}\\)\\s*\\*?—?\\s*([^\\n]*)\\*?`);
+        const match = content.match(regex);
+        return match ? match[1].trim() : '';
+      }
+
+      // Extract news items from markdown content (returns items with url + source, no title yet)
+      function extractNewsItemsRaw(content: string): Array<{url: string; source: string}> {
         const regex = /- \[([^\]]+)\]\(([^)]+)\)\s*\*?—?\s*([^*\n]*)\*?/g;
-        const items: Array<{title: string; url: string; source: string}> = [];
+        const items: Array<{url: string; source: string}> = [];
         let match;
         while ((match = regex.exec(content)) !== null) {
           items.push({
-            title: match[1].trim(),
             url: match[2].trim(),
             source: (match[3] || '').trim().replace(/\*$/, '').trim(),
           });
@@ -49,40 +56,30 @@ export async function GET(request: NextRequest) {
         return items;
       }
 
-      // Load pre-translated news items
-      let translationsMap: Record<string, Array<{title_en: string; title_zh: string; title_ja: string; url: string; source: string}>> = {};
-      try {
-        translationsMap = (await import('@/data/news-translations.json')).default;
-      } catch { /* no translations file */ }
-
       const mappedTopics = (reports ?? []).map((r) => {
-        const rawItems = extractNewsItems(r.content || '');
-        // Use translations if available, otherwise use raw items
-        const translated = translationsMap[r.id];
-        const newsItems = translated
-          ? translated.map((t) => ({
-              title_en: t.title_en,
-              title_zh: t.title_zh,
-              title_ja: t.title_ja,
-              url: t.url,
-              source: t.source,
-            }))
-          : rawItems.map((item) => ({
-              title_en: item.title,
-              title_zh: item.title,
-              title_ja: item.title,
-              url: item.url,
-              source: item.source,
-            }));
+        // Extract from all three content versions
+        const rawEn = extractNewsItemsRaw(r.content || '');
+        const rawZh = extractNewsItemsRaw(r.content_zh || r.content || '');
+        const rawJa = extractNewsItemsRaw(r.content_ja || r.content || '');
+
+        // Build translated title arrays by matching URL index
+        const maxLen = Math.max(rawEn.length, rawZh.length, rawJa.length);
+        const newsItems = Array.from({ length: maxLen }, (_, i) => ({
+          title_en: rawEn[i] ? extractTitleFromContent(r.content || '', rawEn[i].url) : '',
+          title_zh: rawZh[i] ? extractTitleFromContent(r.content_zh || r.content || '', rawZh[i].url) : (rawEn[i] ? extractTitleFromContent(r.content || '', rawEn[i].url) : ''),
+          title_ja: rawJa[i] ? extractTitleFromContent(r.content_ja || r.content || '', rawJa[i].url) : (rawEn[i] ? extractTitleFromContent(r.content || '', rawEn[i].url) : ''),
+          url: rawEn[i]?.url || rawZh[i]?.url || '',
+          source: rawEn[i]?.source || '',
+        }));
 
         return {
           id: r.id,
           date: r.published_at?.slice(0, 10) || today,
           session: 'evening' as const,
           title: {
-            zh: r.title,
-            ja: r.title,
-            en: r.title,
+            zh: r.title_zh || r.title,
+            ja: r.title_ja || r.title,
+            en: r.title_en || r.title,
           },
           content: r.content,
           newsItems, // Pre-parsed + translated news items
@@ -94,8 +91,6 @@ export async function GET(request: NextRequest) {
 
       return NextResponse.json({ topics: mappedTopics });
     }
-
-    return NextResponse.json({ topics });
   } catch (error) {
     return NextResponse.json(
       { error: 'Failed to fetch debate topics', detail: String(error) },

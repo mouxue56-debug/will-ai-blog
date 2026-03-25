@@ -16,6 +16,8 @@ import {
 import type { LucideIcon } from 'lucide-react';
 import { BorderBeam } from '@/components/ui/aceternity';
 import { PublicCalendar } from '@/components/shared/PublicCalendar';
+import Image from 'next/image';
+import { getIllustrationUrl } from '@/lib/storage';
 
 /* ── Hero / Profile ──────────────────────────────────── */
 
@@ -29,8 +31,14 @@ function ProfileHero() {
       transition={{ duration: 0.5 }}
       className="flex flex-col sm:flex-row items-center sm:items-start gap-6 sm:gap-8"
     >
-      <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-full bg-gradient-to-br from-brand-mint via-brand-cyan to-brand-taro flex items-center justify-center text-4xl sm:text-5xl shadow-lg flex-shrink-0">
-        🧑‍💻
+      <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-full overflow-hidden ring-2 ring-brand-cyan/30 shadow-lg flex-shrink-0">
+        <Image
+          src={getIllustrationUrl('about-portrait')}
+          alt="Will"
+          width={128}
+          height={128}
+          className="w-full h-full object-cover object-top"
+        />
       </div>
 
       <div className="text-center sm:text-left">

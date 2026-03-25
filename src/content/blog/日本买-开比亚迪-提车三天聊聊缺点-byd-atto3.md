@@ -15,6 +15,8 @@ source: "bilibili"
 bvid: BV1Hs4y1C7Q2
 
 
+coverImage: "/covers/日本买-开比亚迪-提车三天聊聊缺点-byd-atto3.jpg"
+audioUrl: "/audio/日本买-开比亚迪-提车三天聊聊缺点-byd-atto3.mp3"
 ---
 
 在日本买了比亚迪 Atto 3，提车三天了，来聊聊实际使用中发现的一些优缺点。作为在日本首批体验这款中国电动车的用户之一，我的感受可能对那些正在观望的朋友有参考价值。

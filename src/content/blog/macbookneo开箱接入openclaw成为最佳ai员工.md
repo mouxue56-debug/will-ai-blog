@@ -1,5 +1,7 @@
 ---
-
+slug: macbook-neo-openclaw
+coverImage: "/covers/macbook-neo-openclaw.jpg"
+audioUrl: "/audio/macbook-neo-openclaw.mp3"
 title:
   zh: "MacBook Neo开箱：接入OpenClaw成为最佳AI工作站"
   ja: "MacBook Neo開封＆OpenClaw導入で最強のAI相棒が完成"
@@ -12,10 +14,8 @@ excerpt:
   ja: "一切都很好，就是触控板我的天阉割的太离谱了。"
   en: "一切都很好，就是触控板我的天阉割的太离谱了。"
 source: "xiaohongshu-大阪沉迷Ai的落雪"
-
 url: https://www.xiaohongshu.com/explore/69b2add2000000000600baf4?xsec_token=AB_oil-he6oWZMRWn4VxbyE_ugKjEfsOh9woNAnI2X8TE=&xsec_source=pc_search
----------
-
+---
 
 收到 MacBook Neo 的那一刻，我就知道这台机器注定要和 OpenClaw 绑在一起。作为一台为 AI 工作流而生的设备，它的性能释放、续航表现和系统生态，都完美契合了我对"AI 员工"的想象。
 
@@ -24,6 +24,10 @@ url: https://www.xiaohongshu.com/explore/69b2add2000000000600baf4?xsec_token=AB_
 MacBook Neo 延续了苹果一贯的工业设计语言，但细节上有不少惊喜。机身比我想象中更轻薄，单手开合毫无压力。屏幕素质一如既往地优秀，色彩还原精准，对于需要处理图片和视频的内容创作来说非常重要。
 
 性能方面，我选的配置是 16GB 内存 + 512GB 存储。对于运行 OpenClaw 这样的本地 AI 助手平台来说，这个配置绰绰有余。实际使用中，同时开启多个浏览器标签页、运行代码编辑器、再加上 OpenClaw 的后台进程，系统依然流畅自如。
+
+## OpenClaw 接入：从开箱到上线只需 30 分钟
+
+很多人以为在 Mac 上部署 OpenClaw 很复杂，其实恰恰相反。得益于 macOS 的 Unix 底层和 Homebrew 生态，整个安装过程非常顺滑。
 
 ## OpenClaw 接入：从开箱到上线只需 30 分钟
 

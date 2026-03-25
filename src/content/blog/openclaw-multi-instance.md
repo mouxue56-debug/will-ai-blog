@@ -13,6 +13,8 @@ excerpt:
   zh: 端口冲突、日志混淆、共享缓存污染——三个月踩的坑全在这里，附解决方案。
   ja: ポート競合、ログ混在、共有キャッシュ汚染——3ヶ月で踏んだ地雷と解決策。
   en: Port conflicts, mixed logs, shared cache pollution — every mistake from 3 months of multi-instance setup.
+coverImage: "/covers/openclaw-multi-instance.jpg"
+audioUrl: "/audio/openclaw-multi-instance.mp3"
 ---
 
 ## 为什么要多实例？

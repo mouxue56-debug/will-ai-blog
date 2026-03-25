@@ -12,6 +12,8 @@ excerpt:
   zh: 一台 Mac Mini M4 跑4个 AI 实例，分别负责代码、内容、客户沟通和医疗咨询。不是炫技，是真的需要。
   ja: Mac Mini M4 1台で4つのAIインスタンスを稼働。コード、コンテンツ、顧客対応、医療相談をそれぞれ担当。
   en: One Mac Mini M4 running 4 AI instances for code, content, customer service, and medical consulting.
+coverImage: "/covers/my-ai-workflow.jpg"
+audioUrl: "/audio/my-ai-workflow.mp3"
 ---
 
 ## 从一个 Bot 到四个 AI 助手

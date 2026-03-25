@@ -10,6 +10,10 @@ excerpt:
   zh: "福楽キャッテリー的成长记录——从2022年注册开业到全国第一名的发展历程。"
   ja: "福楽キャッテリーの成長記録——2022年の登録開業から全国第1位までの足跡。"
   en: "Fuluck Cattery growth timeline — from 2022 registration to national #1 ranking."
+coverImage: "/covers/cattery-timeline.jpg"
+
+audioUrl: "/audio/cattery-timeline.mp3"
+
 ---
 
 # サイベリアン｜福楽キャッテリー 成长时间线

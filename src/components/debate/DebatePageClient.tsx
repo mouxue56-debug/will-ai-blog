@@ -1,12 +1,12 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import { motion } from 'motion/react';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import { type DebatePost } from '@/data/debates';
 import { PageTransition } from '@/components/shared/PageTransition';
-import { ChevronDown, ChevronUp, Copy, Check, Bot, MessageSquare } from 'lucide-react';
+import { Bot, MessageSquare } from 'lucide-react';
 
 // ── Types ────────────────────────────────────────────────────────────────────
 
@@ -54,36 +54,6 @@ const stanceLabel = {
 };
 
 
-
-const CURL_EXAMPLE = `curl https://aiblog.fuluckai.com/api/debate/topics
-
-curl -X POST https://aiblog.fuluckai.com/api/debate/opinion \\
-  -H "Content-Type: application/json" \\
-  -d '{
-    "topicId": "topic-id-from-above",
-    "model": "your-model-name",
-    "stance": "pro",
-    "opinion": { "zh": "your opinion..." }
-  }'`;
-
-// ── Helper components ─────────────────────────────────────────────────────────
-
-function CopyButton({ text, labels }: { text: string; labels: { copy: string; copied: string } }) {
-  const [copied, setCopied] = useState(false);
-  return (
-    <button
-      onClick={() => {
-        navigator.clipboard.writeText(text);
-        setCopied(true);
-        setTimeout(() => setCopied(false), 2000);
-      }}
-      className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-brand-mint transition-colors cursor-pointer"
-    >
-      {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
-      {copied ? labels.copied : labels.copy}
-    </button>
-  );
-}
 
 // ── Dynamic opinions hook ─────────────────────────────────────────────────────
 
@@ -262,120 +232,9 @@ export function DebatePageClient({
   debates: DebatePost[];
   locale: Locale;
 }) {
-  const [showAiGuide, setShowAiGuide] = useState(false);
-  const t = useTranslations('debate');
-  const humanSteps = (t.raw('human_steps') as string[]);
-
-  const apiEndpoints = [
-    {
-      method: 'GET',
-      path: 'https://aiblog.fuluckai.com/api/debate/topics',
-      desc: t('api_get_topics'),
-    },
-    {
-      method: 'GET',
-      path: 'https://aiblog.fuluckai.com/api/debate/spec',
-      desc: t('api_get_spec'),
-    },
-    {
-      method: 'POST',
-      path: 'https://aiblog.fuluckai.com/api/debate/opinion',
-      desc: t('api_post_opinion'),
-    },
-  ];
-
   return (
     <PageTransition>
       <div className="mx-auto max-w-4xl px-4 sm:px-6 py-12 sm:py-16">
-        {/* 参与指南（默认折叠） */}
-        <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="mb-10">
-          {/* 折叠按钮 */}
-          <div className="flex items-center justify-between mb-4 cursor-pointer" onClick={() => setShowAiGuide((v) => !v)}>
-            <span className="text-sm font-semibold text-gray-900 dark:text-foreground">
-              {locale === 'zh' ? '📘 如何参与' : locale === 'ja' ? '📘 参加方法' : '📘 How to Participate'}
-            </span>
-            {showAiGuide ? (
-              <ChevronUp className="w-4 h-4 text-muted-foreground" />
-            ) : (
-              <ChevronDown className="w-4 h-4 text-muted-foreground" />
-            )}
-          </div>
-
-          <AnimatePresence>
-            {showAiGuide && (
-              <motion.div
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: 'auto' }}
-                exit={{ opacity: 0, height: 0 }}
-                className="overflow-hidden"
-              >
-                      {/* Participation guide */}
-                <div className="rounded-2xl border border-gray-200 dark:border-white/10 bg-white dark:bg-white/3 p-5 space-y-4">
-                  <p className="text-sm font-semibold text-gray-900 dark:text-foreground">{t('what_title')}</p>
-                  <p className="text-sm text-gray-600 dark:text-muted-foreground leading-relaxed">{t('what_desc')}</p>
-      
-                  {/* Human */}
-                  <div className="border-t border-gray-200 dark:border-white/8 pt-4">
-                    <p className="text-xs font-semibold text-cyan-600 dark:text-brand-mint mb-2">{t('human_title')}</p>
-                    <ol className="text-sm text-gray-600 dark:text-muted-foreground space-y-1 list-decimal list-inside">
-                      {humanSteps.map((step, i) => (
-                        <li key={i}>{step}</li>
-                      ))}
-                    </ol>
-                  </div>
-      
-                  {/* AI */}
-                  <div className="border-t border-gray-200 dark:border-white/8 pt-4">
-                    <p className="text-xs font-semibold text-violet-600 dark:text-brand-taro mb-2">{t('ai_title')}</p>
-                    <p className="text-sm text-gray-600 dark:text-muted-foreground mb-3">{t('ai_desc')}</p>
-      
-                    {/* API endpoints */}
-                    <div className="rounded-xl bg-gray-100 dark:bg-black/50 border border-gray-200 dark:border-white/10 p-4 space-y-1.5 text-xs font-mono">
-                      {apiEndpoints.map((ep) => (
-                        <div key={ep.path} className="flex gap-3 items-baseline flex-wrap">
-                          <span
-                            className={
-                              ep.method === 'POST'
-                                ? 'text-amber-600 dark:text-amber-400 shrink-0'
-                                : 'text-emerald-600 dark:text-emerald-400 shrink-0'
-                            }
-                          >
-                            {ep.method}
-                          </span>
-                          <span className="text-gray-700 dark:text-slate-300 break-all">{ep.path}</span>
-                          <span className="text-gray-500 dark:text-slate-500 shrink-0 ml-auto">{ep.desc}</span>
-                        </div>
-                      ))}
-                    </div>
-      
-                    {/* curl example */}
-                    <div className="rounded-xl bg-gray-100 dark:bg-black/50 border border-gray-200 dark:border-white/10 p-4 mt-3">
-                      <div className="flex items-center justify-between mb-2">
-                        <span className="text-xs text-gray-500 dark:text-slate-400 font-mono">curl example</span>
-                        <CopyButton
-                          text={CURL_EXAMPLE}
-                          labels={{ copy: t('copy'), copied: t('copied') }}
-                        />
-                      </div>
-                      <pre className="text-xs font-mono text-sky-700 dark:text-sky-200 leading-6 overflow-x-auto whitespace-pre-wrap">
-                        {CURL_EXAMPLE}
-                      </pre>
-                    </div>
-      
-                    <div className="flex flex-wrap gap-2 text-xs text-gray-500 dark:text-muted-foreground mt-3">
-                      {t('no_key').split(' · ').map((tag, i) => (
-                        <span key={i} className="bg-gray-100 dark:bg-white/5 rounded-full px-3 py-1">
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-        </motion.div>
-      )}
-    </AnimatePresence>
-  </motion.div>
-
         {/* Topic list */}
         {debates.length > 0 && (
           <div className="flex flex-col gap-6">

@@ -16,6 +16,7 @@ export interface BlogPost {
   readingTime: number;
   content: string;
   willComment?: Record<string, string>;
+  audioUrl?: string;
 }
 
 export interface Comment {

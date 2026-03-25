@@ -5,6 +5,8 @@ import { motion, useScroll, useTransform } from 'motion/react';
 import { useState, useCallback, useEffect, useRef } from 'react';
 import { Link } from '@/i18n/navigation';
 import { AudioPlayer } from '@/components/shared/AudioPlayer';
+import { getIllustrationUrl } from '@/lib/storage';
+import Image from 'next/image';
 
 const nodes = [
   { id: 'yuki', color: '#38bdf8', x: 50, y: 20 },
@@ -689,16 +691,20 @@ export function HeroSection() {
             transition={{ delay: 0.5, duration: 0.6, ease: 'easeOut' }}
           >
             <motion.div
-              animate={{
-                y: [0, -10, 0],
-              }}
-              transition={{
-                duration: 4,
-                repeat: Infinity,
-                ease: 'easeInOut',
-              }}
+              animate={{ y: [0, -10, 0] }}
+              transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
+              className="relative"
             >
-              <AINetwork />
+              <Image
+                src={getIllustrationUrl('hero-main')}
+                alt="Will's AI Lab illustration"
+                width={720}
+                height={405}
+                className="w-full rounded-2xl object-cover shadow-2xl shadow-brand-cyan/10"
+                priority
+              />
+              {/* 边缘发光装饰 */}
+              <div className="pointer-events-none absolute inset-0 rounded-2xl ring-1 ring-brand-cyan/20" />
             </motion.div>
           </motion.div>
         </div>

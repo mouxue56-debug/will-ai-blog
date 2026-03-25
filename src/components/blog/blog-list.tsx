@@ -8,6 +8,8 @@ import { ScrollReveal } from '@/components/shared/ScrollReveal';
 import { CategoryFilter } from './category-filter';
 import { BlogCard } from './blog-card';
 import { ChevronLeft, ChevronRight, Search, X } from 'lucide-react';
+import Image from 'next/image';
+import { getIllustrationUrl } from '@/lib/storage';
 import { cn } from '@/lib/utils';
 import type { BlogPost, BlogCategory } from '@/lib/blog-types';
 
@@ -109,12 +111,23 @@ export function BlogList({ posts }: BlogListProps) {
     <PageTransition>
       <div className="mx-auto max-w-5xl px-4 py-12 sm:px-6">
         <ScrollReveal direction="fadeIn">
-          <div className="mb-8">
-            <h1 className="text-3xl font-bold">{t('title')}</h1>
-            <p className="mt-2 text-muted-foreground">{t('subtitle')}</p>
-            <p className="mt-3 max-w-2xl text-sm leading-7 text-muted-foreground/85 sm:text-base">
-              {t('page_intro')}
-            </p>
+          <div className="mb-8 overflow-hidden rounded-2xl border border-white/8 bg-card/30">
+            <div className="relative h-48 w-full sm:h-56">
+              <Image
+                src={getIllustrationUrl('blog-banner')}
+                alt="Blog banner"
+                fill
+                className="object-cover object-center opacity-80"
+              />
+              <div className="absolute inset-0 bg-gradient-to-r from-background/90 via-background/60 to-transparent" />
+              <div className="absolute inset-0 flex flex-col justify-center px-6 sm:px-8">
+                <h1 className="text-3xl font-bold">{t('title')}</h1>
+                <p className="mt-2 text-muted-foreground">{t('subtitle')}</p>
+                <p className="mt-2 max-w-lg text-sm leading-6 text-muted-foreground/80">
+                  {t('page_intro')}
+                </p>
+              </div>
+            </div>
           </div>
         </ScrollReveal>
 

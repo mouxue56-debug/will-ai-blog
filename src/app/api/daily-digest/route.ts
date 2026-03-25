@@ -8,6 +8,8 @@ interface NewsItem {
   title: string;
   url: string;
   source: string;
+  title_zh?: string;
+  title_ja?: string;
 }
 
 interface NewsPayload {
@@ -24,42 +26,112 @@ interface AIAgent {
   id?: string;
 }
 
-async function translateTitles(items: NewsItem[]): Promise<NewsItem[]> {
-  if (!process.env.GLM_API_KEY || items.length === 0) return items;
-  try {
-    const titles = items.map((i) => i.title).join('\n');
-    const resp = await fetch('https://open.bigmodel.cn/api/paas/v4/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${process.env.GLM_API_KEY}`,
-      },
-      body: JSON.stringify({
-        model: 'glm-4-flash',
-        messages: [
-          {
-            role: 'user',
-            content: `将以下英文新闻标题翻译成简洁的中文（一行一个，保持顺序，不要加编号，不要解释）：\n\n${titles}`,
-          },
-        ],
-        temperature: 0.3,
-        max_tokens: 500,
-      }),
-    });
-    if (!resp.ok) return items;
-    const data = await resp.json();
-    const translated =
-      data.choices?.[0]?.message?.content
-        ?.trim()
-        .split('\n')
-        .filter((l: string) => l.trim()) || [];
-    return items.map((item, i) => ({
-      ...item,
-      title: translated[i]?.trim() || item.title,
-    }));
-  } catch {
-    return items;
+// Translate to both Chinese and Japanese (used for title_zh/title_ja)
+async function translateTitles(
+  items: NewsItem[]
+): Promise<{ zh: NewsItem[]; ja: NewsItem[] }> {
+  if (items.length === 0) return { zh: items, ja: items };
+
+  const titles = items.map((i) => i.title).join('\n');
+  const kimiKey = process.env.KIMI_API_KEY;
+
+  if (kimiKey) {
+    try {
+      // Use Kimi for both ZH and JA translation
+      const resp = await fetch('https://api.kimi.com/coding/v1/messages', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': kimiKey,
+          'anthropic-version': '2023-06-01',
+        },
+        body: JSON.stringify({
+          model: 'kimi-for-coding',
+          max_tokens: 1000,
+          messages: [
+            {
+              role: 'user',
+              content: `Translate these English news titles into both Chinese AND Japanese. Output format:\n\n[ZH] Chinese translation\n[JA] Japanese translation\n---\n${titles}\n---\nRules:\n- One [ZH] and one [JA] line per title\n- Keep titles concise (under 40 characters)\n- Do NOT add numbers or explanations\n- Use proper Chinese/Japanese punctuation`,
+            },
+          ],
+        }),
+      });
+      if (resp.ok) {
+        const data = await resp.json();
+        // Kimi uses Anthropic format: data.content[0].text
+        const text = data.content?.[0]?.text || data.choices?.[0]?.message?.content || '';
+        const zhTitles: string[] = [];
+        const jaTitles: string[] = [];
+        let currentLang: 'zh' | 'ja' | null = null;
+        for (const line of text.split('\n')) {
+          const trimmed = line.trim();
+          if (trimmed === '---') continue;
+          if (trimmed.startsWith('[ZH]')) {
+            currentLang = 'zh';
+            zhTitles.push(trimmed.slice(4).trim());
+          } else if (trimmed.startsWith('[JA]')) {
+            currentLang = 'ja';
+            jaTitles.push(trimmed.slice(4).trim());
+          } else if (currentLang === 'zh' && trimmed) {
+            zhTitles.push(trimmed);
+          } else if (currentLang === 'ja' && trimmed) {
+            jaTitles.push(trimmed);
+          }
+        }
+        return {
+          zh: items.map((item, i) => ({
+            ...item,
+            title_zh: zhTitles[i]?.trim() || item.title,
+          })),
+          ja: items.map((item, i) => ({
+            ...item,
+            title_ja: jaTitles[i]?.trim() || item.title,
+          })),
+        };
+      }
+    } catch { /* fall through to GLM */ }
   }
+
+  // Fallback: GLM Chinese only (only runs if kimiKey was falsy or Kimi call failed)
+  if (process.env.GLM_API_KEY) {
+    try {
+      const resp = await fetch('https://open.bigmodel.cn/api/paas/v4/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${process.env.GLM_API_KEY}`,
+        },
+        body: JSON.stringify({
+          model: 'glm-4-flash',
+          messages: [
+            {
+              role: 'user',
+              content: `将以下英文新闻标题翻译成简洁的中文（一行一个，保持顺序，不要加编号，不要解释）：\n\n${titles}`,
+            },
+          ],
+          temperature: 0.3,
+          max_tokens: 500,
+        }),
+      });
+      if (resp.ok) {
+        const data = await resp.json();
+        const translated =
+          data.choices?.[0]?.message?.content
+            ?.trim()
+            .split('\n')
+            .filter((l: string) => l.trim()) || [];
+        return {
+          zh: items.map((item, i) => ({
+            ...item,
+            title_zh: translated[i]?.trim() || item.title,
+          })),
+          ja: items,
+        };
+      }
+    } catch { return { zh: items, ja: items }; }
+  }
+
+  return { zh: items, ja: items };
 }
 
 // AI 记者配置
@@ -81,62 +153,78 @@ const AGENTS: Record<string, AIAgent> = {
   },
 };
 
-function formatNewsSection(items: NewsItem[], emptyMsg: string): string {
+// Format news section with optional translated titles
+function formatNewsSection(
+  items: NewsItem[],
+  emptyMsg: string,
+  getTitle: (item: NewsItem) => string
+): string {
   if (items.length === 0) return emptyMsg;
-  return items.map((n) => `- [${n.title}](${n.url}) *— ${n.source}*`).join('\n');
+  return items.map((n) => `- [${getTitle(n)}](${n.url}) *— ${n.source}*`).join('\n');
+}
+
+interface TranslatedNewsItem extends NewsItem {
+  title_zh?: string;
+  title_ja?: string;
 }
 
 function generateTopicContent(
-  news: NewsPayload,
+  news: { hnAI: TranslatedNewsItem[]; github: TranslatedNewsItem[]; economy: TranslatedNewsItem[] },
   topicType: string,
   date: Date,
   reportType: string
-): { title: string; content: string } {
+): { title: string; title_zh: string; title_ja: string; title_en: string; content: string; content_zh: string; content_ja: string; content_en: string } {
   const dateStr = date.toISOString().split('T')[0];
+  const jstTime = date.toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Tokyo' });
   const timeLabel = reportType === 'morning' ? '早报' : '晚报';
 
-  let title: string;
+  let title_zh: string;
+  let title_ja: string;
+  let title_en: string;
   let content: string;
+  let content_zh: string;
+  let content_ja: string;
+  let content_en: string;
 
   switch (topicType) {
     case 'ai':
-      title = `${dateStr} 📡 AI动态 ${timeLabel}`;
-      content = `## 📡 今日 AI 动态
-
-${formatNewsSection(news.hnAI, '暂无 AI 重大新闻')}
-
----
-*由 🐾ユキ 整理发布 · JST ${date.toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Tokyo' })}*`;
+      title_zh = `${dateStr} 📡 AI动态 ${timeLabel}`;
+      title_ja = `${dateStr} 📡 AI動態 ${timeLabel}`;
+      title_en = `${dateStr} 📡 AI News ${timeLabel.replace('早报', 'Morning').replace('晚报', 'Evening')}`;
+      content = `## 📡 今日 AI 动态\n\n${formatNewsSection(news.hnAI, '暂无 AI 重大新闻', (n) => n.title)}\n\n---\n*由 🐾ユキ 整理发布 · JST ${jstTime}*`;
+      content_zh = `## 📡 今日 AI 动态\n\n${formatNewsSection(news.hnAI, '暂无 AI 重大新闻', (n) => n.title_zh || n.title)}\n\n---\n*由 🐾ユキ 整理发布 · JST ${jstTime}*`;
+      content_ja = `## 📡 今日のAI動態\n\n${formatNewsSection(news.hnAI, 'AIの重大なニュースなし', (n) => n.title_ja || n.title)}\n\n---\n*🐾ユキが整理 · JST ${jstTime}*`;
+      content_en = `## 📡 Today's AI News\n\n${formatNewsSection(news.hnAI, 'No significant AI news', (n) => n.title)}\n\n---\n*Curated by 🐾ユキ · JST ${jstTime}*`;
       break;
     case 'economy':
-      title = `${dateStr} 💹 经济动态 ${timeLabel}`;
-      content = `## 💹 经济动态
-
-${formatNewsSection(news.economy, '暂无经济重大新闻')}
-
----
-*由 🐾ユキ 整理发布 · JST ${date.toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Tokyo' })}*`;
+      title_zh = `${dateStr} 💹 经济动态 ${timeLabel}`;
+      title_ja = `${dateStr} 💹 経済動態 ${timeLabel}`;
+      title_en = `${dateStr} 💹 Economy & Business ${timeLabel.replace('早报', 'Morning').replace('晚报', 'Evening')}`;
+      content = `## 💹 经济动态\n\n${formatNewsSection(news.economy, '暂无经济重大新闻', (n) => n.title)}\n\n---\n*由 🐾ユキ 整理发布 · JST ${jstTime}*`;
+      content_zh = `## 💹 经济动态\n\n${formatNewsSection(news.economy, '暂无经济重大新闻', (n) => n.title_zh || n.title)}\n\n---\n*由 🐾ユキ 整理发布 · JST ${jstTime}*`;
+      content_ja = `## 💹 経済動態\n\n${formatNewsSection(news.economy, '経済的重大ニュースなし', (n) => n.title_ja || n.title)}\n\n---\n*🐾ユキが整理 · JST ${jstTime}*`;
+      content_en = `## 💹 Economy & Business\n\n${formatNewsSection(news.economy, 'No significant economy news', (n) => n.title)}\n\n---\n*Curated by 🐾ユキ · JST ${jstTime}*`;
       break;
     case 'github':
-      title = `${dateStr} 🔥 GitHub热点 ${timeLabel}`;
-      content = `## 🔥 GitHub 热点
-
-${formatNewsSection(news.github, '暂无 GitHub 热点')}
-
----
-*由 🐾ユキ 整理发布 · JST ${date.toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Tokyo' })}*`;
+      title_zh = `${dateStr} 🔥 GitHub热点 ${timeLabel}`;
+      title_ja = `${dateStr} 🔥 GitHub人気 ${timeLabel}`;
+      title_en = `${dateStr} 🔥 GitHub Trending ${timeLabel.replace('早报', 'Morning').replace('晚报', 'Evening')}`;
+      content = `## 🔥 GitHub 热点\n\n${formatNewsSection(news.github, '暂无 GitHub 热点', (n) => n.title)}\n\n---\n*由 🐾ユキ 整理发布 · JST ${jstTime}*`;
+      content_zh = `## 🔥 GitHub 热点\n\n${formatNewsSection(news.github, '暂无 GitHub 热点', (n) => n.title_zh || n.title)}\n\n---\n*由 🐾ユキ 整理发布 · JST ${jstTime}*`;
+      content_ja = `## 🔥 GitHub 人気\n\n${formatNewsSection(news.github, 'GitHubのトレンドなし', (n) => n.title_ja || n.title)}\n\n---\n*🐾ユキが整理 · JST ${jstTime}*`;
+      content_en = `## 🔥 GitHub Trending\n\n${formatNewsSection(news.github, 'No trending repos', (n) => n.title)}\n\n---\n*Curated by 🐾ユキ · JST ${jstTime}*`;
       break;
     default:
-      title = `${dateStr} 📰 综合 ${timeLabel}`;
-      content = `## 综合资讯
-
-暂无内容
-
----
-*由 🐾ユキ 整理发布*`;
+      title_zh = `${dateStr} 📰 综合 ${timeLabel}`;
+      title_ja = `${dateStr} 📰 综合 ${timeLabel}`;
+      title_en = `${dateStr} 📰 General ${timeLabel}`;
+      content = `## 综合资讯\n\n暂无内容\n\n---\n*由 🐾ユキ 整理发布*`;
+      content_zh = content;
+      content_ja = content;
+      content_en = content;
   }
 
-  return { title, content };
+  return { title: title_zh, title_zh, title_ja, title_en, content, content_zh, content_ja, content_en };
 }
 
 // 获取 AI Agent 的 ID
@@ -173,9 +261,31 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: 'News fetch error', detail: String(e) }, { status: 500 });
   }
 
-  news.hnAI = await translateTitles(news.hnAI);
-  news.economy = await translateTitles(news.economy);
-  news.github = await translateTitles(news.github);
+  // Translate to ZH and JA — one call per category
+  const [hnAI_trans, economy_trans, github_trans] = await Promise.all([
+    translateTitles(news.hnAI),
+    translateTitles(news.economy),
+    translateTitles(news.github),
+  ]);
+
+  // Merge translated titles into items
+  const mergedHnAI: TranslatedNewsItem[] = news.hnAI.map((item, i) => ({
+    ...item,
+    title_zh: hnAI_trans.zh[i]?.title_zh || item.title,
+    title_ja: hnAI_trans.ja[i]?.title_ja || item.title,
+  }));
+  const mergedEconomy: TranslatedNewsItem[] = news.economy.map((item, i) => ({
+    ...item,
+    title_zh: economy_trans.zh[i]?.title_zh || item.title,
+    title_ja: economy_trans.ja[i]?.title_ja || item.title,
+  }));
+  const mergedGithub: TranslatedNewsItem[] = news.github.map((item, i) => ({
+    ...item,
+    title_zh: github_trans.zh[i]?.title_zh || item.title,
+    title_ja: github_trans.ja[i]?.title_ja || item.title,
+  }));
+
+  const newsForContent = { hnAI: mergedHnAI, economy: mergedEconomy, github: mergedGithub };
 
   const now = new Date();
   const dateStr = now.toISOString().split('T')[0];
@@ -192,7 +302,8 @@ export async function POST(req: Request) {
   const topicTypes = ['ai', 'economy', 'github'] as const;
   
   for (const topicType of topicTypes) {
-    const { title, content } = generateTopicContent(news, topicType, now, report_type);
+    const { title, title_zh, title_ja, title_en, content, content_zh, content_ja, content_en } =
+      generateTopicContent(newsForContent, topicType, now, report_type);
     const slug = `${dateStr}-${report_type}-${topicType}`;
 
     const { data, error } = await supabaseAdmin
@@ -202,7 +313,13 @@ export async function POST(req: Request) {
         author_name: AGENTS.yuki.name,
         author_emoji: AGENTS.yuki.emoji,
         title,
+        title_zh,
+        title_ja,
+        title_en,
         content,
+        content_zh,
+        content_ja,
+        content_en,
         report_type,
         slug,
         topic_type: topicType,

@@ -12,6 +12,10 @@ excerpt:
   zh: 日本再生医疗クリニック，外国患者占30%，前台接中文电话接到崩溃。LINE Bot + AI，三个月把多语言咨询响应时间从24小时压到5分钟。
   ja: 外国人患者が30%を占める再生医療クリニック。LINE Bot + AIで多言語対応時間を24時間から5分に短縮。
   en: A Japanese regenerative medicine clinic with 30% foreign patients. LINE Bot + AI cut multilingual response time from 24h to 5 minutes.
+coverImage: "/covers/ai-clinic-case.jpg"
+
+audioUrl: "/audio/ai-clinic-case.mp3"
+
 ---
 
 ## 诊所前台快撑不住了
