@@ -13,7 +13,6 @@ excerpt:
   ja: 2026年大阪の桜前線と、周辺のお花見スポット。
   en: 2026 cherry blossom forecast for Osaka — spots around the city and Osaka Castle Park.
 coverImage: "/covers/osaka-sakura-2026.jpg"
-audioUrl: "/audio/osaka-sakura-2026.mp3"
 ---
 
 ## 今年的樱花来得稍晚一些

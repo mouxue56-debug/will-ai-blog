@@ -16,14 +16,12 @@ export default async function DebatePage({ params }: { params: Promise<{ locale:
   setRequestLocale(locale);
   const loc = (locale as Locale) || 'zh';
 
-  // Fetch daily reports from Supabase (7 days, filtered by topic_type)
+  // Fetch ALL daily reports from Supabase — no date filter, no limit cap
   const { data: todayTopics } = await supabaseAdmin
     .from('daily_reports')
     .select('id, title, content, topic_type, slug, author_emoji, published_at, title_zh, title_ja, title_en, content_zh, content_ja, content_en')
     .in('topic_type', ['ai', 'economy', 'github', 'general'])
-    .gte('published_at', new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString())
-    .order('published_at', { ascending: false })
-    .limit(30);
+    .order('published_at', { ascending: false });
 
   // Inject translated newsItems into topics from SSR
   type TranslatedItem = {title_en: string; title_zh: string; title_ja: string; url: string; source: string};

@@ -16,19 +16,17 @@ function isDebateSession(value: string): value is DebateSession {
 
 export async function GET(request: NextRequest) {
   try {
-    const days = parseInt(request.nextUrl.searchParams.get('days') || '3', 10);
-    const limit = Math.min(days * 3, 30); // max 30 topics
+    // days param kept for backward compat but no longer enforces a cutoff
     
     // 始终从 daily_reports 读取真实资讯作为讨论话题，不使用凭空生成的 debate_topics
     if (true) {
       const today = getTodayInTokyo();
-      // Select base fields; translation fields may not exist yet
+      // Select base fields; translation fields may not exist yet — no limit, full history
       const { data: reports, error } = await supabaseAdmin
         .from('daily_reports')
         .select('id,title,title_zh,title_ja,title_en,content,content_zh,content_ja,content_en,topic_type,slug,published_at')
         .in('topic_type', ['ai', 'economy', 'github', 'general'])
-        .order('published_at', { ascending: false })
-        .limit(limit);
+        .order('published_at', { ascending: false });
 
       if (error) {
         throw error;

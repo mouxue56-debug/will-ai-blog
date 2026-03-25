@@ -12,7 +12,6 @@ excerpt:
   en: "Fuluck Cattery growth timeline — from 2022 registration to national #1 ranking."
 coverImage: "/covers/cattery-timeline.jpg"
 
-audioUrl: "/audio/cattery-timeline.mp3"
 
 ---
 

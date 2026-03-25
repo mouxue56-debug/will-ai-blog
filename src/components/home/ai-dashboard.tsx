@@ -2,7 +2,7 @@
 
 import { useTranslations } from 'next-intl';
 import { motion } from 'motion/react';
-import { AnimatedBeam } from '@/components/ui/aceternity';
+
 
 interface AIInstance {
   key: string;
@@ -81,40 +81,6 @@ export function AIDashboard() {
           viewport={{ once: true, amount: 0.1 }}
           transition={{ delay: 0.2, duration: 0.6, ease: 'easeOut' }}
         >
-          <div className="absolute inset-0 pointer-events-none opacity-30 dark:opacity-20 overflow-hidden">
-            <AnimatedBeam
-              pathD="M 40 60 Q 200 40 360 60"
-              duration={4}
-              color="#5eead4"
-              width={400}
-              height={200}
-              className="absolute inset-0 w-full h-full"
-            />
-            <AnimatedBeam
-              pathD="M 60 140 Q 200 160 340 140"
-              duration={5}
-              color="#38bdf8"
-              width={400}
-              height={200}
-              className="absolute inset-0 w-full h-full"
-            />
-            <AnimatedBeam
-              pathD="M 80 40 Q 200 100 320 160"
-              duration={6}
-              color="#c084fc"
-              width={400}
-              height={200}
-              className="absolute inset-0 w-full h-full"
-            />
-            <AnimatedBeam
-              pathD="M 320 40 Q 200 100 80 160"
-              duration={5.5}
-              color="#fbbf24"
-              width={400}
-              height={200}
-              className="absolute inset-0 w-full h-full"
-            />
-          </div>
 
           <div className="relative z-10 grid grid-cols-2 sm:grid-cols-4 gap-4">
             {instances.map((inst, i) => (

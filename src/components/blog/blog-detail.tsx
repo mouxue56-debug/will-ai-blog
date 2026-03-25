@@ -111,7 +111,7 @@ export function BlogDetail({ post, prevPost, nextPost, comments, postSlug, headi
                 </div>
                 <div className="flex-shrink-0">
                   <AudioPlayer
-                    src={post.audioUrl?.replace(/^\/audio\//, '')}
+                    src={`https://aiblog.fuluckai.com${post.audioUrl?.startsWith('/') ? '' : '/'}${post.audioUrl}`}
                     label={locale === 'ja' ? '▶ 再生' : locale === 'en' ? '▶ Play' : '▶ 播放'}
                   />
                 </div>

@@ -550,8 +550,7 @@ export function HeroSection() {
       <motion.div style={{ y: backgroundY }} className="absolute inset-0">
         <AnimatedGradientBackground />
       </motion.div>
-      <FloatingParticles />
-      <LightBeams />
+
       <MouseFollowerOrb />
 
       <motion.div style={{ opacity }} className="relative z-10 mx-auto max-w-5xl">
@@ -684,29 +683,7 @@ export function HeroSection() {
             </motion.div>
           </div>
 
-          <motion.div
-            className="w-full flex-shrink-0 lg:w-[40%]"
-            initial={{ opacity: 0, scale: 0.9, rotateY: -10 }}
-            animate={{ opacity: 1, scale: 1, rotateY: 0 }}
-            transition={{ delay: 0.5, duration: 0.6, ease: 'easeOut' }}
-          >
-            <motion.div
-              animate={{ y: [0, -10, 0] }}
-              transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-              className="relative"
-            >
-              <Image
-                src={getIllustrationUrl('hero-main')}
-                alt="Will's AI Lab illustration"
-                width={720}
-                height={405}
-                className="w-full rounded-2xl object-cover shadow-2xl shadow-brand-cyan/10"
-                priority
-              />
-              {/* 边缘发光装饰 */}
-              <div className="pointer-events-none absolute inset-0 rounded-2xl ring-1 ring-brand-cyan/20" />
-            </motion.div>
-          </motion.div>
+
         </div>
       </motion.div>
     </section>

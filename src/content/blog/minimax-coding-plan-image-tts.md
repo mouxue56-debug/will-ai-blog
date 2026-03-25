@@ -17,9 +17,8 @@ willComment:
   zh: MiniMax Coding Plan 里藏着图片和语音——我测了一整天，踩了几个坑，整理成这篇学习笔记。
   ja: MiniMax Coding Planに画像・音声生成が隠れていた話。丸一日テストして分かったことをまとめました。
   en: MiniMax Coding Plan Has Image & TTS Built In — My Full Test
-audioUrl: minimax-coding-plan-image-tts.mp3
+
 coverImage: "/covers/minimax-coding-plan-image-tts.jpg"
-audioUrl: "/audio/minimax-coding-plan-image-tts.mp3"
 ---
 
 # MiniMax Coding Plan 里藏着图片和语音——我测了一整天
