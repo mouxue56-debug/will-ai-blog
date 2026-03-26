@@ -8,13 +8,13 @@ import {
   Home,
   BookOpen,
   Clock,
-  MoreHorizontal,
-  Briefcase,
   User,
   X,
   LogIn,
-  Swords,
+  Briefcase,
   GraduationCap,
+  Swords,
+  Cat,
 } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
 import { useSession, signOut } from 'next-auth/react';
@@ -22,14 +22,15 @@ import { useSession, signOut } from 'next-auth/react';
 const mainTabs = [
   { key: 'home', href: '/', icon: Home },
   { key: 'blog', href: '/blog', icon: BookOpen },
-  { key: 'debate', href: '/debate', icon: Swords },
   { key: 'timeline', href: '/timeline', icon: Clock },
+  { key: 'cats', href: '/blog?category=cats', icon: Cat },
+  { key: 'about', href: '/about', icon: User },
 ] as const;
 
 const moreTabs = [
   { key: 'cases', href: '/cases', icon: Briefcase },
   { key: 'learning', href: '/learning', icon: GraduationCap },
-  { key: 'about', href: '/about', icon: User },
+  { key: 'debate', href: '/debate', icon: Swords },
 ] as const;
 
 export function MobileNav() {
@@ -41,6 +42,10 @@ export function MobileNav() {
 
   function isActive(href: string) {
     if (href === '/') return pathname === '/';
+    if (href.includes('?')) {
+      const [path, query] = href.split('?');
+      return pathname.startsWith(path) && (typeof window !== 'undefined' ? window.location.search.includes(query) : false);
+    }
     return pathname.startsWith(href);
   }
 
@@ -59,7 +64,7 @@ export function MobileNav() {
               onClick={() => setMoreOpen(false)}
             />
             <motion.div
-              className="fixed bottom-16 right-2 left-2 z-50 glass-card p-2 md:hidden"
+              className="fixed bottom-20 right-2 left-2 z-50 glass-card p-2 md:hidden"
               initial={{ opacity: 0, y: 20, scale: 0.95 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 20, scale: 0.95 }}
@@ -77,7 +82,7 @@ export function MobileNav() {
                   <X className="h-4 w-4" />
                 </button>
               </div>
-              <div className="grid grid-cols-2 gap-1">
+              <div className="grid grid-cols-3 gap-1">
                 {moreTabs.map((tab) => {
                   const Icon = tab.icon;
                   const active = isActive(tab.href);
@@ -137,10 +142,17 @@ export function MobileNav() {
       <nav className="fixed bottom-0 left-0 right-0 z-40 border-t border-white/[0.06] dark:border-white/[0.06] border-gray-200/60 bg-white/80 dark:bg-[rgba(10,10,15,0.8)] backdrop-blur-xl md:hidden safe-area-bottom">
         <div className="relative flex items-center justify-around h-16 px-1">
           {(() => {
-            const activeIndex = mainTabs.findIndex((tab) => isActive(tab.href));
+            const activeIndex = mainTabs.findIndex((tab) => {
+              if (tab.href === '/') return pathname === '/';
+              if (tab.href.includes('?')) {
+                const [path] = tab.href.split('?');
+                return pathname.startsWith(path);
+              }
+              return pathname.startsWith(tab.href);
+            });
             const idx = activeIndex >= 0 ? activeIndex : (moreIsActive ? mainTabs.length : -1);
             if (idx < 0) return null;
-            const totalTabs = mainTabs.length + 1;
+            const totalTabs = mainTabs.length;
             return (
               <motion.div
                 className="absolute top-1 h-[3px] rounded-full bg-brand-mint"
@@ -168,23 +180,16 @@ export function MobileNav() {
                     : 'text-muted-foreground hover:text-foreground'
                 }`}
               >
-                <Icon className={`h-5 w-5 transition-all duration-300 ${active ? 'drop-shadow-[0_0_8px_rgba(94,234,212,0.6)]' : ''}`} />
+                <motion.div
+                  whileTap={{ scale: 0.9 }}
+                  transition={{ type: 'spring', stiffness: 400, damping: 17 }}
+                >
+                  <Icon className={`h-5 w-5 transition-all duration-300 ${active ? 'drop-shadow-[0_0_8px_rgba(94,234,212,0.6)]' : ''}`} />
+                </motion.div>
                 <span className="text-[10px] leading-tight">{t(tab.key)}</span>
               </Link>
             );
           })}
-
-          <button
-            onClick={() => setMoreOpen((prev) => !prev)}
-            className={`flex flex-1 flex-col items-center gap-0.5 py-1.5 min-h-[44px] justify-center transition-colors ${
-              moreIsActive || moreOpen
-                ? 'text-brand-mint'
-                : 'text-muted-foreground hover:text-foreground'
-            }`}
-          >
-            <MoreHorizontal className={`h-5 w-5 transition-all duration-300 ${moreIsActive || moreOpen ? 'drop-shadow-[0_0_8px_rgba(94,234,212,0.6)]' : ''}`} />
-            <span className="text-[10px] leading-tight">{t('more')}</span>
-          </button>
         </div>
       </nav>
     </>

@@ -73,12 +73,16 @@ export function BlogCard({ post, isLatest = false, index = 0 }: BlogCardProps) {
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.07, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-      whileHover={{ y: -4 }}
+      whileHover={{ 
+        y: -8, 
+        transition: { duration: 0.3, ease: 'easeOut' }
+      }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
+      className="group/card"
     >
       <Link href={`/blog/${post.slug}`}>
-        <SpotlightCard className="p-0 glass-card border-white/[0.06] bg-card/80 dark:bg-white/[0.03] transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-foreground/5">
+        <SpotlightCard className="p-0 glass-card border-white/[0.06] bg-card/80 dark:bg-white/[0.03] transition-all duration-300 hover:shadow-xl hover:shadow-brand-mint/10 hover:border-brand-mint/20">
           <article className="group relative flex flex-col overflow-hidden">
             {/* BorderBeam for latest post - 始终显示 */}
             {isLatest && (
@@ -178,7 +182,7 @@ export function BlogCard({ post, isLatest = false, index = 0 }: BlogCardProps) {
                 </motion.span>
                 <span className="flex items-center gap-1 text-xs text-muted-foreground">
                   <Clock className="h-3 w-3" />
-                  {post.readingTime} {t('min_read')}
+                  {locale === 'ja' ? `${post.readingTime}分で読める` : `${post.readingTime} ${t('min_read')}`}
                 </span>
               </div>
 

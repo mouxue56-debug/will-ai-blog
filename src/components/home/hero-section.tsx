@@ -5,8 +5,6 @@ import { motion, useScroll, useTransform } from 'motion/react';
 import { useState, useCallback, useEffect, useRef } from 'react';
 import { Link } from '@/i18n/navigation';
 import { AudioPlayer } from '@/components/shared/AudioPlayer';
-import { getIllustrationUrl } from '@/lib/storage';
-import Image from 'next/image';
 
 const nodes = [
   { id: 'yuki', color: '#38bdf8', x: 50, y: 20 },
@@ -579,6 +577,32 @@ export function HeroSection() {
 
             <AnimatedTitle text="Will's AI Lab" />
 
+            {/* 价值主张文案 */}
+            <motion.div
+              className="mt-4 inline-flex items-center gap-2 rounded-full border border-brand-coral/20 bg-gradient-to-r from-brand-coral/10 via-brand-mint/10 to-brand-cyan/10 px-4 py-1.5"
+              initial={{ opacity: 0, y: 10, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              transition={{ delay: 0.12, duration: 0.5, ease: 'easeOut' }}
+            >
+              <motion.span
+                className="text-lg"
+                animate={{ rotate: [0, 10, -10, 0] }}
+                transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
+              >
+                🏠
+              </motion.span>
+              <span className="text-sm font-medium bg-gradient-to-r from-brand-coral via-brand-mint to-brand-cyan bg-clip-text text-transparent">
+                大阪 × AI × 猫舎 真实生活博客
+              </span>
+              <motion.span
+                className="text-lg"
+                animate={{ rotate: [0, -10, 10, 0] }}
+                transition={{ duration: 2, repeat: Infinity, repeatDelay: 3, delay: 0.5 }}
+              >
+                🤖
+              </motion.span>
+            </motion.div>
+
             <motion.p
               className="mt-4 text-sm font-medium uppercase tracking-[0.2em] text-muted-foreground/80 sm:text-base"
               initial={{ opacity: 0, x: -20 }}
@@ -612,16 +636,36 @@ export function HeroSection() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3, duration: 0.45, ease: 'easeOut' }}
             >
-              <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }} transition={{ delay: 0.3 }}>
+              <motion.div 
+                whileHover={{ scale: 1.03, y: -2 }} 
+                whileTap={{ scale: 0.97 }} 
+                transition={{ type: 'spring', stiffness: 400, damping: 17 }}
+                className="relative"
+              >
+                <motion.div
+                  className="absolute inset-0 rounded-full bg-brand-mint/20 blur-md"
+                  animate={{ scale: [1, 1.1, 1], opacity: [0.5, 0.8, 0.5] }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                />
                 <Link href="/blog">
-                  <span className="inline-flex items-center rounded-full border border-brand-mint/25 bg-brand-mint/[0.08] px-4 py-2 text-sm font-medium text-brand-mint transition-colors hover:bg-brand-mint/[0.14]">
+                  <span className="relative inline-flex items-center rounded-full border border-brand-mint/25 bg-brand-mint/[0.08] px-4 py-2 text-sm font-medium text-brand-mint transition-colors hover:bg-brand-mint/[0.14]">
                     {t('hero_cta_blog')}
                   </span>
                 </Link>
               </motion.div>
-              <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }} transition={{ delay: 0.3 }}>
+              <motion.div 
+                whileHover={{ scale: 1.03, y: -2 }} 
+                whileTap={{ scale: 0.97 }} 
+                transition={{ type: 'spring', stiffness: 400, damping: 17 }}
+                className="relative"
+              >
+                <motion.div
+                  className="absolute inset-0 rounded-full bg-brand-taro/20 blur-md"
+                  animate={{ scale: [1, 1.1, 1], opacity: [0.5, 0.8, 0.5] }}
+                  transition={{ duration: 2, repeat: Infinity, delay: 0.5 }}
+                />
                 <Link href="/cases">
-                  <span className="inline-flex items-center rounded-full border border-brand-taro/25 bg-brand-taro/[0.08] px-4 py-2 text-sm font-medium text-brand-taro transition-colors hover:bg-brand-taro/[0.14]">
+                  <span className="relative inline-flex items-center rounded-full border border-brand-taro/25 bg-brand-taro/[0.08] px-4 py-2 text-sm font-medium text-brand-taro transition-colors hover:bg-brand-taro/[0.14]">
                     {t('hero_cta_cases')}
                   </span>
                 </Link>

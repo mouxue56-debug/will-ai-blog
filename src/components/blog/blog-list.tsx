@@ -117,7 +117,9 @@ export function BlogList({ posts }: BlogListProps) {
                 src={getIllustrationUrl('blog-banner')}
                 alt="Blog banner"
                 fill
+                sizes="(max-width: 768px) 100vw, 1024px"
                 className="object-cover object-center opacity-80"
+                priority
               />
               <div className="absolute inset-0 bg-gradient-to-r from-background/90 via-background/60 to-transparent" />
               <div className="absolute inset-0 flex flex-col justify-center px-6 sm:px-8">
