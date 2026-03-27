@@ -13,7 +13,7 @@ excerpt:
   ja: AppleのMLXフレームワークでローカル音声AIを実行。5倍高速で完全無料。声のクローン、VoiceDesign、MLX Whisper認識を一気に解説。
   en: Run voice AI locally with Apple's MLX framework—5x faster and completely free. Voice cloning, VoiceDesign, and MLX Whisper recognition covered in one guide.
 coverImage: ""
-audioUrl: "mlx-voice-study-zh.mp3"
+audioUrl: "/audio/mlx-voice-study-zh.mp3"
 willComment:
   zh: "用苹果自己的MLX框架跑语音AI，速度快5倍还完全免费，这才是Apple Silicon应有的玩法。"
   ja: "Apple SiliconでMLXを使った音声AIを実行すると、速度が5倍速くなり完全無料。これがApple Siliconの本来の使い方です。"
