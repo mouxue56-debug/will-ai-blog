@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>蜂群引擎 v6.1 升级全记录</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #0A1420;
+            --bg-content: #0D1825;
+            --text-primary: #E8F4F8;
+            --color-primary: #00D4FF;
+            --color-accent: #FF8C42;
+            --color-ref: rgba(232, 244, 248, 0.3);
+            --glass-bg: rgba(0, 212, 255, 0.05);
+            --glass-border: rgba(0, 212, 255, 0.1);
+        }
+
+        body {
+            font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.8;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* 标题区 */
+        .hero {
+            text-align: center;
+            padding: 60px 20px 40px;
+            background: linear-gradient(180deg, rgba(0, 212, 255, 0.08) 0%, transparent 100%);
+            border-radius: 16px;
+            margin-bottom: 40px;
+        }
+
+        .hero h1 {
+            font-size: clamp(1.8rem, 5vw, 2.5rem);
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--text-primary) 0%, var(--color-primary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 16px;
+        }
+
+        .hero .subtitle {
+            font-size: 1.1rem;
+            color: var(--color-ref);
+            margin-bottom: 20px;
+        }
+
+        .hero .meta {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            font-size: 0.9rem;
+            color: var(--color-primary);
+        }
+
+        /* 毛玻璃卡片 */
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 24px;
+            transition: all 0.3s ease;
+        }
+
+        .glass-card:hover {
+            border-color: rgba(0, 212, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        /* 概要数据卡片网格 */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            text-align: center;
+        }
+
+        .stat-card .icon {
+            font-size: 2rem;
+            margin-bottom: 12px;
+        }
+
+        .stat-card .value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--color-primary);
+            margin-bottom: 8px;
+        }
+
+        .stat-card .label {
+            font-size: 0.9rem;
+            color: var(--color-ref);
+        }
+
+        /* 正文区 */
+        .content-section {
+            background: var(--bg-content);
+            border-radius: 16px;
+            padding: 32px;
+            margin-bottom: 32px;
+        }
+
+        .content-section h2 {
+            font-size: 1.4rem;
+            color: var(--color-primary);
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .content-section h3 {
+            font-size: 1.15rem;
+            color: var(--text-primary);
+            margin: 24px 0 12px;
+        }
+
+        .content-section p {
+            margin-bottom: 16px;
+            color: var(--text-primary);
+            opacity: 0.9;
+        }
+
+        /* 问题→解决方案区 */
+        .problem-solution {
+            display: grid;
+            gap: 20px;
+        }
+
+        .problem-box, .solution-box {
+            padding: 20px;
+            border-radius: 12px;
+            position: relative;
+        }
+
+        .problem-box {
+            background: rgba(255, 140, 66, 0.08);
+            border-left: 4px solid var(--color-accent);
+        }
+
+        .solution-box {
+            background: rgba(0, 212, 255, 0.08);
+            border-left: 4px solid var(--color-primary);
+        }
+
+        .problem-box::before {
+            content: "⚠️ 问题";
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--color-accent);
+            margin-bottom: 8px;
+        }
+
+        .solution-box::before {
+            content: "✅ 解决方案";
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--color-primary);
+            margin-bottom: 8px;
+        }
+
+        /* 对比表格 */
+        .compare-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 0.95rem;
+        }
+
+        .compare-table th,
+        .compare-table td {
+            padding: 14px 16px;
+            text-align: left;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .compare-table th {
+            background: var(--glass-bg);
+            color: var(--color-primary);
+            font-weight: 600;
+        }
+
+        .compare-table tr:hover td {
+            background: rgba(0, 212, 255, 0.03);
+        }
+
+        .compare-table td:first-child {
+            font-weight: 500;
+            color: var(--color-primary);
+        }
+
+        /* Cycle引擎流程图 */
+        .cycle-flow {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 12px;
+            margin: 24px 0;
+            padding: 24px;
+            background: var(--glass-bg);
+            border-radius: 12px;
+        }
+
+        .flow-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .flow-box {
+            padding: 12px 20px;
+            background: var(--bg-content);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            text-align: center;
+            min-width: 100px;
+        }
+
+        .flow-box.primary {
+            border-color: var(--color-primary);
+            color: var(--color-primary);
+        }
+
+        .flow-box.accent {
+            border-color: var(--color-accent);
+            color: var(--color-accent);
+        }
+
+        .flow-arrow {
+            color: var(--color-ref);
+            font-size: 1.2rem;
+        }
+
+        .flow-branch {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .flow-parallel {
+            display: flex;
+            gap: 12px;
+        }
+
+        /* 时间轴 */
+        .timeline {
+            position: relative;
+            padding-left: 30px;
+        }
+
+        .timeline::before {
+            content: "";
+            position: absolute;
+            left: 8px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(180deg, var(--color-primary) 0%, var(--color-accent) 100%);
+        }
+
+        .timeline-item {
+            position: relative;
+            padding: 16px 0;
+        }
+
+        .timeline-item::before {
+            content: "";
+            position: absolute;
+            left: -26px;
+            top: 20px;
+            width: 12px;
+            height: 12px;
+            background: var(--bg-primary);
+            border: 2px solid var(--color-primary);
+            border-radius: 50%;
+        }
+
+        .timeline-item.highlight::before {
+            background: var(--color-primary);
+            box-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+        }
+
+        .timeline-time {
+            font-size: 0.85rem;
+            color: var(--color-primary);
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .timeline-content {
+            font-size: 0.95rem;
+            color: var(--text-primary);
+        }
+
+        /* 数据卡片 */
+        .data-card {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 16px;
+            margin: 20px 0;
+        }
+
+        .data-item {
+            text-align: center;
+            padding: 20px;
+            background: var(--glass-bg);
+            border-radius: 12px;
+        }
+
+        .data-item .number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--color-accent);
+        }
+
+        .data-item .unit {
+            font-size: 0.9rem;
+            color: var(--color-ref);
+        }
+
+        /* 关键学习卡片 */
+        .learnings-grid {
+            display: grid;
+            gap: 16px;
+        }
+
+        .learning-card {
+            display: flex;
+            gap: 16px;
+            padding: 20px;
+            background: var(--glass-bg);
+            border-radius: 12px;
+            border-left: 3px solid var(--color-primary);
+        }
+
+        .learning-number {
+            flex-shrink: 0;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--color-primary);
+            color: var(--bg-primary);
+            font-weight: 700;
+            font-size: 1.1rem;
+            border-radius: 8px;
+        }
+
+        .learning-content {
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+
+        /* 折叠详情 */
+        details {
+            background: var(--glass-bg);
+            border-radius: 12px;
+            margin: 12px 0;
+            overflow: hidden;
+        }
+
+        summary {
+            padding: 16px 20px;
+            cursor: pointer;
+            font-weight: 500;
+            color: var(--color-primary);
+            list-style: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        summary::before {
+            content: "▶";
+            font-size: 0.8rem;
+            transition: transform 0.2s;
+        }
+
+        details[open] summary::before {
+            transform: rotate(90deg);
+        }
+
+        details .detail-content {
+            padding: 0 20px 20px;
+            font-size: 0.9rem;
+            color: var(--text-primary);
+            opacity: 0.85;
+        }
+
+        /* 标签 */
+        .tag {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            margin-right: 6px;
+        }
+
+        .tag-critical {
+            background: rgba(255, 140, 66, 0.15);
+            color: var(--color-accent);
+        }
+
+        .tag-important {
+            background: rgba(0, 212, 255, 0.15);
+            color: var(--color-primary);
+        }
+
+        .tag-ref {
+            background: var(--color-ref);
+            color: var(--text-primary);
+        }
+
+        /* 代码块 */
+        code {
+            font-family: "SF Mono", Monaco, monospace;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            color: var(--color-primary);
+        }
+
+        pre {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 16px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 12px 0;
+        }
+
+        pre code {
+            background: none;
+            padding: 0;
+        }
+
+        /* 列表 */
+        ul, ol {
+            margin: 12px 0 12px 20px;
+        }
+
+        li {
+            margin: 8px 0;
+        }
+
+        /* 响应式 */
+        @media (max-width: 640px) {
+            .container {
+                padding: 12px;
+            }
+
+            .hero {
+                padding: 40px 16px 32px;
+            }
+
+            .content-section {
+                padding: 20px;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .compare-table {
+                font-size: 0.85rem;
+            }
+
+            .compare-table th,
+            .compare-table td {
+                padding: 10px 12px;
+            }
+
+            .cycle-flow {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .flow-arrow {
+                transform: rotate(90deg);
+            }
+
+            .flow-parallel {
+                flex-direction: column;
+                width: 100%;
+            }
+        }
+
+        /* 页脚 */
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--color-ref);
+            font-size: 0.9rem;
+        }
+
+        footer a {
+            color: var(--color-primary);
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 标题区 -->
+        <header class="hero">
+            <h1>蜂群引擎 v6.1 升级全记录</h1>
+            <p class="subtitle">从单体巨兽到场景化编排</p>
+            <div class="meta">
+                <span>📖</span>
+                <span>阅读时间约 8 分钟</span>
+            </div>
+        </header>
+
+        <!-- 概要数据卡片 -->
+        <div class="stats-grid">
+            <div class="glass-card stat-card">
+                <div class="icon">🎯</div>
+                <div class="value">3种</div>
+                <div class="label">场景 Profile</div>
+            </div>
+            <div class="glass-card stat-card">
+                <div class="icon">⚙️</div>
+                <div class="value">Cycle</div>
+                <div class="label">串联/并联/循环</div>
+            </div>
+            <div class="glass-card stat-card">
+                <div class="icon">📢</div>
+                <div class="value">铁律</div>
+                <div class="label">主动告知</div>
+            </div>
+            <div class="glass-card stat-card">
+                <div class="icon">⭐</div>
+                <div class="value">7.5分</div>
+                <div class="label">ナツ测试评分</div>
+            </div>
+        </div>
+
+        <!-- 问题→解决方案区 -->
+        <section class="content-section">
+            <h2>核心挑战与解决方案</h2>
+            <div class="problem-solution">
+                <div class="problem-box">
+                    <p>蜂群引擎 v6.0 的 <code>SKILL.md</code> 已经 <strong>420 行</strong>，orchestrator-prompt-template <strong>1800 行</strong>，references 引用 <strong>26 个文件</strong>。它是一个单体巨兽——调研、开发、内容、审查所有场景的逻辑混在一起。每次改动都像给巨人缝补丁。</p>
+                    <p style="margin-top: 12px;">而且 OpenClaw 的 skill 触发靠 description 关键词匹配，模型弱的时候（如 Kimi K2.5 做日常对话）扫 25+ 个 skill 的 description 就已经很吃力，再增加 skill 数量只会让路由更不准。</p>
+                </div>
+                <div class="solution-box">
+                    <p><strong>v6.1 核心理念：一个入口 + 内部分流</strong></p>
+                    <p style="margin-top: 12px;">不增加 skill 数量。对外只有一个触发入口（swarm-dev-engine），Commander 内部根据任务类型自动加载不同的 profile 配置。调研、开发、内容三种场景各自有独立的配置，但对外是统一的。</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 三种 Profile 对比表格 -->
+        <section class="content-section">
+            <h2>三种场景 Profile 对比</h2>
+            <table class="compare-table">
+                <thead>
+                    <tr>
+                        <th>Profile</th>
+                        <th>调研蜂群</th>
+                        <th>代码开发蜂群</th>
+                        <th>内容生产蜂群</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>量级</td>
+                        <td><span class="tag tag-ref">轻量</span></td>
+                        <td><span class="tag tag-critical">重量</span></td>
+                        <td><span class="tag tag-important">中等</span></td>
+                    </tr>
+                    <tr>
+                        <td>Git Worktree</td>
+                        <td>不需要</td>
+                        <td><span class="tag tag-critical">必须</span></td>
+                        <td>可选</td>
+                    </tr>
+                    <tr>
+                        <td>团队规模</td>
+                        <td>3人小队</td>
+                        <td>5人标准编制</td>
+                        <td>4人</td>
+                    </tr>
+                    <tr>
+                        <td>核心能力</td>
+                        <td>多源交叉验证</td>
+                        <td>TDD + Review</td>
+                        <td>品牌验证 + 去AI味</td>
+                    </tr>
+                    <tr>
+                        <td>Superpowers</td>
+                        <td>基础注入</td>
+                        <td><span class="tag tag-critical">全量注入</span></td>
+                        <td>内容增强</td>
+                    </tr>
+                    <tr>
+                        <td>典型触发词</td>
+                        <td>"帮我调研"、"可行性分析"</td>
+                        <td>"帮我实现"、"重构一下"</td>
+                        <td>"写文案"、"SNS内容"</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Cycle 引擎流程图 -->
+        <section class="content-section">
+            <h2>Cycle 引擎：三种编排模式</h2>
+            
+            <h3>串联模式</h3>
+            <div class="cycle-flow">
+                <div class="flow-item">
+                    <div class="flow-box primary">Phase A<br><small>调研</small></div>
+                    <span class="flow-arrow">→</span>
+                </div>
+                <div class="flow-item">
+                    <div class="flow-box accent">Gate</div>
+                    <span class="flow-arrow">→</span>
+                </div>
+                <div class="flow-item">
+                    <div class="flow-box primary">Phase B<br><small>开发</small></div>
+                    <span class="flow-arrow">→</span>
+                </div>
+                <div class="flow-item">
+                    <div class="flow-box accent">Gate</div>
+                    <span class="flow-arrow">→</span>
+                </div>
+                <div class="flow-item">
+                    <div class="flow-box primary">Phase C<br><small>审查</small></div>
+                </div>
+            </div>
+            <p><span class="tag tag-ref">说明</span> 每个阶段完成后才启动下一个，阶段间产出自动传递。适合"先调研再开发"这类多阶段任务。</p>
+
+            <h3>并联模式</h3>
+            <div class="cycle-flow">
+                <div class="flow-branch">
+                    <div class="flow-parallel">
+                        <div class="flow-box primary">Phase A<br><small>前端调研</small></div>
+                        <div class="flow-box primary">Phase B<br><small>后端调研</small></div>
+                    </div>
+                    <span class="flow-arrow" style="transform: rotate(90deg); margin: 8px 0;">→</span>
+                    <div class="flow-box accent">Gate</div>
+                    <span class="flow-arrow" style="transform: rotate(90deg); margin: 8px 0;">→</span>
+                    <div class="flow-box primary">Phase C<br><small>开发</small></div>
+                </div>
+            </div>
+            <p><span class="tag tag-ref">说明</span> 独立任务同时进行，全部完成后才进入下一阶段。适合多路并行的调研任务。</p>
+
+            <h3>循环模式</h3>
+            <div class="cycle-flow">
+                <div class="flow-item">
+                    <div class="flow-box primary">开发</div>
+                    <span class="flow-arrow">→</span>
+                </div>
+                <div class="flow-item">
+                    <div class="flow-box primary">审查</div>
+                    <span class="flow-arrow">→</span>
+                </div>
+                <div class="flow-item">
+                    <div class="flow-box accent">条件检查</div>
+                    <span class="flow-arrow">→</span>
+                </div>
+                <div class="flow-branch">
+                    <div style="font-size: 0.85rem; color: var(--color-ref); margin-bottom: 8px;">不满足条件</div>
+                    <span class="flow-arrow" style="transform: rotate(-90deg);">→</span>
+                    <div style="font-size: 0.85rem; color: var(--color-primary); margin-top: 8px;">返回开发</div>
+                </div>
+            </div>
+            <p><span class="tag tag-ref">说明</span> 开发→审查→条件检查→不满足则回退。适合迭代开发，设置 <code>max_iterations</code> 防止无限循环。</p>
+
+            <h3>Gate 类型</h3>
+            <ul>
+                <li><span class="tag tag-important">auto</span> — 上一阶段完成且无 BLOCKER 自动继续</li>
+                <li><span class="tag tag-critical">manual</span> — 发 Telegram 等 Will 确认</li>
+                <li><span class="tag tag-ref">loop_check</span> — 检查条件决定是否回退</li>
+                <li><span class="tag tag-important">quality_gate</span> — 检查产出质量指标</li>
+            </ul>
+        </section>
+
+        <!-- 时间轴 -->
+        <section class="content-section">
+            <h2>演进时间轴：v5 → v6.0 → v6.1</h2>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-time">00:55</div>
+                    <div class="timeline-content">v5.0-P2 整夜改造完成（Opus设计 + GPT-5.4验证）</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-time">01:30</div>
+                    <div class="timeline-content">A/B测试 4场景×2版本，v5 平均快 38% 省 33% token</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-time">09:25</div>
+                    <div class="timeline-content">v6.0 三源融合调研（DeerFlow + ClawTeam + Superpowers）</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-time">09:46</div>
+                    <div class="timeline-content">GPT-5.4 审查 6.8/10，"该拆两期做"</div>
+                </div>
+                <div class="timeline-item highlight">
+                    <div class="timeline-time">10:00</div>
+                    <div class="timeline-content">v6.0 落地（四状态 + TDD + Preflight + no-placeholder + HITL）</div>
+                </div>
+                <div class="timeline-item highlight">
+                    <div class="timeline-time">10:45</div>
+                    <div class="timeline-content">ナツ v6.0 第二轮测试（Live2D MVP）</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-time">11:08</div>
+                    <div class="timeline-content">ナツ产出 Opus 审核通过（3717行代码，合格）</div>
+                </div>
+                <div class="timeline-item highlight">
+                    <div class="timeline-time">11:15 - 11:20</div>
+                    <div class="timeline-content">v6.1 设计 → 实装完成（场景Profile分流 + Cycle引擎 + 主动告知铁律）</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ナツ测试结果 -->
+        <section class="content-section">
+            <h2>ナツ测试评价：v6.0 第二轮（Live2D MVP）</h2>
+            <div class="data-card">
+                <div class="data-item">
+                    <div class="number">7.5</div>
+                    <div class="unit">/ 10 分</div>
+                </div>
+                <div class="data-item">
+                    <div class="number">5/5</div>
+                    <div class="unit">任务完成</div>
+                </div>
+                <div class="data-item">
+                    <div class="number">22</div>
+                    <div class="unit">分钟</div>
+                </div>
+                <div class="data-item">
+                    <div class="number">3717</div>
+                    <div class="unit">行代码</div>
+                </div>
+            </div>
+            
+            <div class="glass-card" style="margin-top: 20px;">
+                <h3 style="margin-top: 0;">发现的问题</h3>
+                <ul>
+                    <li><span class="tag tag-critical">2个 TODO 残留</span> — <code>no-placeholder</code> 铁律未生效</li>
+                    <li><span class="tag tag-critical">Discovery 机制</span> — 完全没用起来</li>
+                </ul>
+                <p style="margin-top: 16px;"><strong>根本原因：</strong>Orchestrator 没正确注入 v6.0 新铁律给 Worker。产出量和结构上去了，但新能力的注入管道需要加强。</p>
+            </div>
+        </section>
+
+        <!-- 关键学习 -->
+        <section class="content-section">
+            <h2>5 条关键学习</h2>
+            <div class="learnings-grid">
+                <div class="learning-card">
+                    <div class="learning-number">1</div>
+                    <div class="learning-content"><strong>不要把一个 skill 做得无限大</strong> — 分场景 profile 比分 skill 更轻量，维护成本更低。</div>
+                </div>
+                <div class="learning-card">
+                    <div class="learning-number">2</div>
+                    <div class="learning-content"><strong>路由问题靠 description 改进</strong> — 不需要新的路由系统，优化现有 description 的清晰度即可。</div>
+                </div>
+                <div class="learning-card">
+                    <div class="learning-number">3</div>
+                    <div class="learning-content"><strong>弱模型也要能用</strong> — 一个入口自动分流比让模型选 skill 更可靠，降低对模型能力的依赖。</div>
+                </div>
+                <div class="learning-card">
+                    <div class="learning-number">4</div>
+                    <div class="learning-content"><strong>主动告知比等用户问更有价值</strong> — Claude Code 的 Plan Mode 思路，AI 应该主动说明自己能做什么。</div>
+                </div>
+                <div class="learning-card">
+                    <div class="learning-number">5</div>
+                    <div class="learning-content"><strong>验证要看到新能力是否真正生效</strong> — ナツ测试暴露了注入管道的问题，测试不能只看产出量。</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 主动告知铁律 -->
+        <section class="content-section">
+            <h2>主动告知铁律</h2>
+            <p>写入 <code>AGENTS.md</code> 的新规则：<strong>所有模型（包括 Kimi 默认模型）必须主动告诉用户有什么 skill 可用、建议怎么做。</strong></p>
+            
+            <div class="glass-card" style="margin: 20px 0; border-color: var(--color-accent);">
+                <p style="margin: 0; font-family: monospace; font-size: 1.1rem;">💡 我有 [skill名]，可以 [做什么]。要用吗？</p>
+            </div>
+            
+            <p>不主动告知 = 浪费用户时间去猜 AI 有什么能力。</p>
+
+            <h3>Skill 路由决策树</h3>
+            <ol>
+                <li><span class="tag tag-critical">蜂群</span> → 多步骤并行任务</li>
+                <li><span class="tag tag-important">coding-agent</span> → 单文件/单功能代码修改</li>
+                <li><span class="tag tag-important">auto-pipeline</span> → 非代码批量任务</li>
+                <li><span class="tag tag-ref">ds-advisor</span> → 深度讨论（需用户明确触发）</li>
+                <li><span class="tag tag-ref">research</span> → 联网调研验证</li>
+                <li><span class="tag tag-ref">sns-copywriter</span> → 品牌文案</li>
+                <li>其他专项 skill → 按 description 匹配</li>
+            </ol>
+        </section>
+
+        <!-- 折叠详情：技术细节 -->
+        <section class="content-section">
+            <h2>技术细节</h2>
+            
+            <details>
+                <summary>Profile 配置文件结构</summary>
+                <div class="detail-content">
+                    <p>每个 profile 是一个独立的 markdown 文件，位于 <code>references/</code> 目录：</p>
+                    <ul>
+                        <li><code>profile-research.md</code> (1.2KB) — 调研场景配置</li>
+                        <li><code>profile-dev.md</code> (1.6KB) — 开发场景配置</li>
+                        <li><code>profile-content.md</code> (1.5KB) — 内容场景配置</li>
+                    </ul>
+                    <p>Commander 根据任务类型动态加载对应 profile，注入到 Worker 的 system prompt 中。</p>
+                </div>
+            </details>
+
+            <details>
+                <summary>Cycle 引擎实现</summary>
+                <div class="detail-content">
+                    <p>Cycle 引擎通过 <code>cycle-plan.json</code> 定义任务流程：</p>
+                    <pre><code>{
+  "mode": "serial" | "parallel" | "loop",
+  "phases": [...],
+  "gates": [...],
+  "max_iterations": 3
+}</code></pre>
+                    <p>Gate 支持四种类型：auto、manual、loop_check、quality_gate。阶段间产出通过上下文传递。</p>
+                </div>
+            </details>
+
+            <details>
+                <summary>产出清单</summary>
+                <div class="detail-content">
+                    <table class="compare-table" style="margin: 0;">
+                        <thead>
+                            <tr>
+                                <th>文件</th>
+                                <th>大小</th>
+                                <th>用途</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>references/profile-research.md</code></td>
+                                <td>1.2KB</td>
+                                <td>调研场景配置</td>
+                            </tr>
+                            <tr>
+                                <td><code>references/profile-dev.md</code></td>
+                                <td>1.6KB</td>
+                                <td>开发场景配置</td>
+                            </tr>
+                            <tr>
+                                <td><code>references/profile-content.md</code></td>
+                                <td>1.5KB</td>
+                                <td>内容场景配置</td>
+                            </tr>
+                            <tr>
+                                <td><code>references/cycle-engine.md</code></td>
+                                <td>4.4KB</td>
+                                <td>串联/并联编排引擎</td>
+                            </tr>
+                            <tr>
+                                <td><code>SKILL.md</code> 更新</td>
+                                <td>~450行</td>
+                                <td>分流 + cycle + 新changelog</td>
+                            </tr>
+                            <tr>
+                                <td><code>AGENTS.md</code> 更新</td>
+                                <td>+40行</td>
+                                <td>主动告知铁律 + 路由决策树</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </details>
+
+            <details>
+                <summary>v6.0 vs v6.1 架构对比</summary>
+                <div class="detail-content">
+                    <p><strong>v6.0（单体架构）：</strong></p>
+                    <ul>
+                        <li>一个巨大的 orchestrator prompt（1800行）</li>
+                        <li>所有场景逻辑混在一起</li>
+                        <li>修改一处可能影响其他场景</li>
+                    </ul>
+                    <p><strong>v6.1（场景化架构）：</strong></p>
+                    <ul>
+                        <li>Commander 轻量核心 + 可插拔 Profile</li>
+                        <li>调研/开发/内容各自独立配置</li>
+                        <li>修改一个 profile 不影响其他场景</li>
+                    </ul>
+                </div>
+            </details>
+        </section>
+
+        <footer>
+            <p>蜂群引擎 v6.1 | 从单体巨兽到场景化编排</p>
+            <p style="margin-top: 8px; font-size: 0.85rem;">生成于 2026-03-27 | ユキ</p>
+        </footer>
+    </div>
+</body>
+</html>
