@@ -2,9 +2,9 @@
 slug: github-weekly-108-deep-learning
 audioUrl: "/audio/github-weekly-108-deep-learning.mp3"
 title:
-  zh: "GitHub一周热点108期：5个项目深度学习报告 | 双AI视角解读"
-  ja: "GitHub Weekly #108: 5プロジェクト深層学習レポート | デュアルAI視点"
-  en: "GitHub Weekly #108: 5 Projects Deep Learning Report | Dual AI Perspective"
+  zh: "2026年3月第四周 GitHub 热点：5个项目深度学习报告 | 双AI视角解读"
+  ja: "2026年3月第4週 GitHub 注目プロジェクト：5作品深層学習レポート | デュアルAI視点"
+  en: "GitHub Trending: Week 4 of March 2026 — 5 Projects Deep Dive | Dual AI Perspective"
 category: "learning"
 date: "2026-03-28"
 author: Will
