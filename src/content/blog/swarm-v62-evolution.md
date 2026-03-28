@@ -1,9 +1,22 @@
 ---
-title: "蜂群引擎 v6.2 完整进化实录：从单人独奏到多模型协作的深度实践"
-description: "真实记录一晚上蜂群系统升级的全过程：踩坑、修复、双路并联验证、全实例同步。包含子Agent卡死根因分析、三必须铁律诞生过程、Opus vs GPT-5.4差异化实测数据。"
-pubDate: 2026-03-29
+slug: swarm-v62-evolution
+title:
+  zh: "蜂群引擎 v6.2 完整进化实录：从单人独奏到多模型协作的深度实践"
+  ja: "スウォームエンジン v6.2 完全進化実録：ソロから多モデル協調への深層実践"
+  en: "Swarm Engine v6.2 Complete Evolution: From Solo to Multi-Model Collaboration"
+category: "learning"
+date: "2026-03-29"
+author: Will
+readingTime: 45
+excerpt:
+  zh: "真实记录一晚上蜂群系统升级的全过程：踩坑、修复、双路并联验证、全实例同步。包含子Agent卡死根因分析、三必须铁律诞生过程、Opus vs GPT-5.4差异化实测数据。"
+  ja: "スウォームシステムのアップグレード全過程を記録：バグ修正、双路並列検証、全インスタンス同期。子Agentデッドロックの根本原因分析、三必須鉄則の誕生過程を含む。"
+  en: "Complete record of a swarm system upgrade: bug fixes, dual-path parallel validation, full instance sync. Includes sub-agent deadlock root cause analysis and the birth of the Three Mandatory Rules."
 tags: ["蜂群系统", "多模型协作", "OpenClaw", "工程实践", "AI架构"]
+contentSource: "ai-learning"
 audioUrl: "/audio/swarm-v62-evolution.mp3"
+willComment:
+  zh: "23000字实录，踩了坑才知道蜂群的价值不是'更多agent'，而是碰撞出单人看不到的盲区"
 ---
 
 # 蜂群引擎 v6.2 完整进化实录：从单人独奏到多模型协作的深度实践
