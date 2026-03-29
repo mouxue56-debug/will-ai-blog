@@ -16,11 +16,12 @@ export default async function DebatePage({ params }: { params: Promise<{ locale:
   setRequestLocale(locale);
   const loc = (locale as Locale) || 'zh';
 
-  // Fetch ALL daily reports from Supabase — no date filter, no limit cap
+  // Fetch ALL daily reports from Supabase — exclude 'general' type to avoid duplicates
+  // (general type is legacy, now we have separate ai/economy/github types)
   const { data: todayTopics } = await supabaseAdmin
     .from('daily_reports')
     .select('id, title, content, topic_type, slug, author_emoji, published_at, title_zh, title_ja, title_en, content_zh, content_ja, content_en')
-    .in('topic_type', ['ai', 'economy', 'github', 'general'])
+    .in('topic_type', ['ai', 'economy', 'github'])
     .order('published_at', { ascending: false });
 
   // Inject translated newsItems into topics from SSR
