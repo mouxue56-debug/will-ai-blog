@@ -25,7 +25,7 @@ export async function GET(request: NextRequest) {
       const { data: reports, error } = await supabaseAdmin
         .from('daily_reports')
         .select('id,title,title_zh,title_ja,title_en,content,content_zh,content_ja,content_en,topic_type,slug,published_at')
-        .in('topic_type', ['ai', 'economy', 'github', 'general'])
+        .in('topic_type', ['ai', 'economy', 'github'])
         .order('published_at', { ascending: false });
 
       if (error) {

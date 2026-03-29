@@ -137,7 +137,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: 'Invalid or unapproved API key' }, { status: 401 });
   }
 
-  const { title, content, report_type, title_zh, title_ja, title_en, content_zh, content_ja, content_en } = await req.json();
+  const { title, content, report_type, topic_type, title_zh, title_ja, title_en, content_zh, content_ja, content_en } = await req.json();
 
   if (!title || !content) {
     return NextResponse.json({ error: 'title and content required' }, { status: 400 });
@@ -145,6 +145,9 @@ export async function POST(req: Request) {
 
   const validTypes = ['morning', 'evening'];
   const type = validTypes.includes(report_type) ? report_type : 'evening';
+
+  const validTopicTypes = ['ai', 'economy', 'github'];
+  const topicType = validTopicTypes.includes(topic_type) ? topic_type : null;
 
   // 如果没有传三语字段，且有内容，则自动生成三语
   let tri_title_zh = title_zh || null;
@@ -179,6 +182,7 @@ export async function POST(req: Request) {
       title,
       content,
       report_type: type,
+      topic_type: topicType,
       title_zh: tri_title_zh,
       title_ja: tri_title_ja,
       title_en: tri_title_en,
