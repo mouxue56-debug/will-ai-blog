@@ -13,7 +13,7 @@ excerpt:
   ja: Anthropic連続リーク、Apple MLXの強襲、Agentic Workflowパラダイム革命、hermes-agent自己進化の探求——2026年春、AIはツールからエージェントへ、クラウドからローカル自律へ進化している。
   en: Anthropic leaks, Apple MLX surge, Agentic Workflow revolution, hermes-agent self-evolution—Spring 2026, AI is evolving from tools to agents, from cloud to local autonomy.
 coverImage: ""
-audioUrl: "/audio/ai-trends-april-2026-zh.mp3"
+audioUrl: "/audio/ai-trends-april-2026-v2-zh.mp3"
 willComment:
   zh: "2026年4月的AI社区充满变数：Anthropic的危机、Apple的野心、Agentic范式的成熟、自进化AI的崛起。这些趋势将重塑整个行业格局。"
   ja: "2026年4月のAIコミュニティは変化に満ちている：Anthropicの危機、Appleの野望、Agenticパラダイムの成熟、自己進化AIの台頭。これらのトレンドが業界全体を再構築する。"
