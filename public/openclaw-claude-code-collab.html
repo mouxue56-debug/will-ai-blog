@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpenClaw + Claude Code + Telegram 三方协作架构方案</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --bg: #0A1420; --bg2: #0D1825; --text: #E8F4F8;
+            --cyan: #00D4FF; --orange: #FF8C42;
+            --card: rgba(0,212,255,0.05); --border: rgba(0,212,255,0.15);
+        }
+        body { font-family: -apple-system,"PingFang SC","Microsoft YaHei",sans-serif; background: var(--bg); color: var(--text); line-height: 1.8; }
+        .tooltip { position: relative; border-bottom: 1px dotted var(--cyan); cursor: help; color: var(--cyan); }
+        .tooltip:hover::after { content: attr(data-tip); position: absolute; bottom: 130%; left: 50%; transform: translateX(-50%); background: var(--bg2); border: 1px solid var(--border); padding: 10px 14px; border-radius: 8px; font-size: 13px; color: var(--text); z-index: 1000; box-shadow: 0 4px 20px rgba(0,0,0,0.5); min-width: 200px; max-width: 380px; white-space: normal; opacity: 1; }
+
+        /* Header */
+        .header { padding: 80px 20px 60px; text-align: center; background: linear-gradient(180deg, rgba(0,212,255,0.08) 0%, transparent 100%); border-bottom: 1px solid var(--border); }
+        .header h1 { font-size: clamp(26px,5vw,46px); font-weight: 700; margin-bottom: 16px; background: linear-gradient(135deg, var(--text) 0%, var(--cyan) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .header .sub { font-size: 17px; color: rgba(232,244,248,0.7); margin-bottom: 24px; max-width: 700px; margin-left: auto; margin-right: auto; }
+        .badge { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; color: var(--orange); background: rgba(255,140,66,0.1); padding: 8px 16px; border-radius: 20px; }
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
+
+        /* Stats */
+        .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px,1fr)); gap: 20px; padding: 40px 0; }
+        .stat { background: var(--card); backdrop-filter: blur(20px); border: 1px solid var(--border); border-radius: 16px; padding: 28px 20px; text-align: center; transition: all .3s; }
+        .stat:hover { transform: translateY(-4px); border-color: var(--cyan); box-shadow: 0 8px 32px rgba(0,212,255,0.15); }
+        .stat-num { font-size: 44px; font-weight: 700; color: var(--cyan); text-shadow: 0 0 30px rgba(0,212,255,0.3); }
+        .stat-label { font-size: 14px; color: rgba(232,244,248,0.7); margin-top: 4px; }
+
+        /* Section */
+        .section { padding: 50px 0; }
+        .section-title { font-size: 26px; font-weight: 600; margin-bottom: 32px; text-align: center; position: relative; padding-bottom: 14px; }
+        .section-title::after { content: ''; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 60px; height: 3px; background: linear-gradient(90deg, var(--cyan), var(--orange)); border-radius: 2px; }
+
+        /* Arch diagram */
+        .arch { background: var(--bg2); border-radius: 16px; padding: 40px; border: 1px solid var(--border); display: flex; flex-direction: column; gap: 24px; align-items: center; }
+        .arch-row { display: flex; justify-content: center; gap: 24px; flex-wrap: wrap; width: 100%; }
+        .arch-node { background: var(--card); backdrop-filter: blur(20px); border: 2px solid var(--border); border-radius: 16px; padding: 20px 28px; min-width: 200px; text-align: center; transition: all .3s; }
+        .arch-node.n1 { border-color: var(--cyan); box-shadow: 0 0 20px rgba(0,212,255,0.2); }
+        .arch-node.n2 { border-color: var(--orange); box-shadow: 0 0 20px rgba(255,140,66,0.15); }
+        .arch-node.n3 { border-color: rgba(232,244,248,0.3); }
+        .arch-node h3 { font-size: 17px; margin-bottom: 6px; }
+        .arch-node p { font-size: 13px; color: rgba(232,244,248,0.6); }
+        .arch-arrow { color: var(--cyan); font-size: 28px; }
+        .arch-bridge { background: var(--bg2); padding: 6px 16px; border-radius: 12px; font-size: 13px; color: var(--cyan); border: 1px solid var(--border); }
+
+        /* Highlight boxes */
+        .hbox { background: var(--card); backdrop-filter: blur(20px); border-radius: 16px; padding: 24px; margin-bottom: 20px; border-left: 4px solid; }
+        .hbox.crit { border-left-color: var(--orange); background: rgba(255,140,66,0.05); }
+        .hbox.imp { border-left-color: var(--cyan); background: rgba(0,212,255,0.05); }
+        .hbox.ref { border-left-color: rgba(232,244,248,0.3); }
+        .hbox h4 { font-size: 17px; margin-bottom: 12px; }
+        .hbox.crit h4 { color: var(--orange); }
+        .hbox.imp h4 { color: var(--cyan); }
+        .hbox p, .hbox li { color: rgba(232,244,248,0.85); font-size: 15px; line-height: 1.9; }
+        .hbox ul { margin-left: 20px; margin-top: 8px; }
+        .hbox li { margin-bottom: 6px; }
+
+        /* Layer */
+        .layer { margin-bottom: 36px; }
+        .layer-hd { display: flex; align-items: center; gap: 14px; margin-bottom: 16px; }
+        .layer-badge { background: var(--cyan); color: var(--bg); font-size: 13px; font-weight: 600; padding: 5px 14px; border-radius: 20px; }
+        .layer-badge.orange { background: var(--orange); }
+        .layer-badge.gray { background: rgba(232,244,248,0.3); color: var(--bg); }
+        .layer-title { font-size: 20px; font-weight: 600; }
+
+        /* Timeline */
+        .tl { position: relative; padding-left: 36px; }
+        .tl::before { content: ''; position: absolute; left: 10px; top: 0; bottom: 0; width: 2px; background: linear-gradient(180deg, var(--cyan), var(--orange)); }
+        .tl-item { position: relative; margin-bottom: 32px; padding: 20px; background: var(--card); backdrop-filter: blur(20px); border-radius: 16px; border: 1px solid var(--border); }
+        .tl-item::before { content: ''; position: absolute; left: -32px; top: 24px; width: 14px; height: 14px; background: var(--cyan); border-radius: 50%; border: 3px solid var(--bg); box-shadow: 0 0 0 2px var(--cyan); }
+        .tl-item.o::before { background: var(--orange); box-shadow: 0 0 0 2px var(--orange); }
+        .tl-item h4 { font-size: 17px; color: var(--cyan); margin-bottom: 8px; }
+        .tl-item.o h4 { color: var(--orange); }
+        .tl-item p { font-size: 14px; color: rgba(232,244,248,0.8); }
+
+        /* Table */
+        .tbl { width: 100%; border-collapse: collapse; background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+        .tbl th { background: rgba(0,212,255,0.12); color: var(--cyan); padding: 14px 16px; text-align: left; font-weight: 600; border-bottom: 1px solid rgba(0,212,255,0.25); }
+        .tbl td { padding: 12px 16px; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 14px; }
+        .tbl tr:last-child td { border-bottom: none; }
+        .tbl tr:hover { background: rgba(0,212,255,0.04); }
+        .tbl .executor { color: var(--cyan); font-weight: 500; }
+
+        /* Details */
+        details { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; margin-bottom: 16px; overflow: hidden; }
+        summary { padding: 16px 20px; cursor: pointer; font-weight: 600; color: var(--cyan); font-size: 15px; }
+        summary:hover { background: rgba(0,212,255,0.05); }
+        details > div { padding: 0 20px 20px; font-size: 14px; color: rgba(232,244,248,0.8); line-height: 1.9; }
+        details code { background: rgba(0,212,255,0.1); padding: 2px 6px; border-radius: 4px; font-size: 13px; color: var(--cyan); }
+
+        /* Footer */
+        .footer { text-align: center; padding: 40px 20px; border-top: 1px solid var(--border); margin-top: 40px; color: rgba(232,244,248,0.4); font-size: 13px; }
+
+        @media (max-width: 600px) {
+            .arch-row { flex-direction: column; align-items: center; }
+            .arch-node { min-width: 80%; }
+            .stats { grid-template-columns: repeat(2, 1fr); }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Header -->
+<div class="header">
+    <h1>OpenClaw + Claude Code + Telegram<br>三方协作架构方案</h1>
+    <p class="sub">让免费模型处理日常，让 Opus 专注代码，让用户随时接管 —— 一个 AI 多智能体协作的实战方案</p>
+    <span class="badge">⏱ 阅读时间约 8 分钟</span>
+</div>
+
+<!-- Stats -->
+<div class="container">
+    <div class="stats">
+        <div class="stat">
+            <div class="stat-num">4</div>
+            <div class="stat-label">AI 实例协同运行</div>
+        </div>
+        <div class="stat">
+            <div class="stat-num">146</div>
+            <div class="stat-label">clawmem 知识文档</div>
+        </div>
+        <div class="stat">
+            <div class="stat-num">3</div>
+            <div class="stat-label">协作层级</div>
+        </div>
+        <div class="stat">
+            <div class="stat-num">5</div>
+            <div class="stat-label">自动化 Hooks</div>
+        </div>
+    </div>
+</div>
+
+<!-- 1. 背景与问题 -->
+<div class="container">
+    <div class="section">
+        <h2 class="section-title">背景与问题</h2>
+        
+        <div class="hbox crit">
+            <h4>🔥 核心矛盾</h4>
+            <p><span class="tooltip" data-tip="开源 AI Agent 框架，可连接多个 LLM 并通过 Telegram/Discord 等渠道交互">OpenClaw</span> 是一个开源 AI Agent 框架，我们用它运行了四个 AI 实例：ユキ（技术顾问）、ナツ（SNS运营）、ハル（生活助理）、アキ（随身助手）。默认使用 <span class="tooltip" data-tip="月之暗面的编码模型，月额制免费使用">Kimi K2.5</span> 作为主力模型，月额制免费，性价比极高。</p>
+            <p style="margin-top:12px;">但 Kimi 在复杂代码任务上能力有限。而 <span class="tooltip" data-tip="Anthropic 官方的 CLI 编程助手，支持 Opus/Sonnet 模型">Claude Code</span> CLI 拥有 Opus/Sonnet 的强大代码能力，却没有 OpenClaw 的多渠道调度和蜂群编排能力。</p>
+        </div>
+        
+        <div class="hbox imp">
+            <h4>💡 核心问题</h4>
+            <ul>
+                <li>如何让 OpenClaw（免费 Kimi）和 Claude Code（付费 Opus）<strong>无缝协同</strong>？</li>
+                <li>如何让用户（Will）在 Telegram 上<strong>随时人工接管</strong> Claude Code 的执行？</li>
+                <li>如何让两个系统的<strong>知识和记忆自动同步</strong>？</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- 2. 架构总览 -->
+<div class="container">
+    <div class="section">
+        <h2 class="section-title">架构总览</h2>
+        
+        <div class="arch">
+            <!-- User layer -->
+            <div class="arch-row">
+                <div class="arch-node n3" style="min-width:300px;">
+                    <h3>👤 Will（用户）</h3>
+                    <p>通过 Telegram 同时连接两个 Bot</p>
+                </div>
+            </div>
+            
+            <div class="arch-arrow">↙ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ↘</div>
+            
+            <!-- Bot layer -->
+            <div class="arch-row">
+                <div class="arch-node n1">
+                    <h3>🐾 OpenClaw Bot</h3>
+                    <p>@luoxueclaw_bot</p>
+                    <p>Kimi K2.5 · 日常对话 · 蜂群调度</p>
+                </div>
+                <div class="arch-node n2">
+                    <h3>🤖 Claude Code Bot</h3>
+                    <p>Telegram Channel Plugin</p>
+                    <p>Opus/Sonnet · 代码执行 · 人工接管</p>
+                </div>
+            </div>
+            
+            <div class="arch-arrow">↘ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ↙</div>
+            
+            <!-- Bridge -->
+            <div class="arch-row">
+                <div class="arch-node n1" style="min-width:350px; border-color: linear-gradient(var(--cyan), var(--orange));">
+                    <h3>🔗 共享桥梁</h3>
+                    <p>文件系统（同一台 Mac Mini）</p>
+                    <p>clawmem 知识库（146 文档 · 向量+关键词混合检索）</p>
+                    <p>CLAUDE.md（workspace 上下文自动注入）</p>
+                </div>
+            </div>
+            
+            <div style="font-size:13px; color: rgba(232,244,248,0.5); margin-top:8px;">
+                两个系统不直接通信，通过文件系统和 clawmem 实现知识共享
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 3. 三层协作机制 -->
+<div class="container">
+    <div class="section">
+        <h2 class="section-title">三层协作机制</h2>
+        
+        <!-- Layer 1 -->
+        <div class="layer">
+            <div class="layer-hd">
+                <span class="layer-badge">第一层</span>
+                <span class="layer-title">OpenClaw 自动派任务</span>
+            </div>
+            <div class="hbox imp">
+                <h4>⚡ 自动执行模式</h4>
+                <p>OpenClaw 检测到代码任务时，通过 <code style="background:rgba(0,212,255,0.1);padding:2px 6px;border-radius:4px;color:var(--cyan);">exec</code> 工具启动 Claude Code CLI：</p>
+                <p style="margin-top:8px;font-family:monospace;font-size:13px;color:var(--cyan);background:var(--bg2);padding:12px;border-radius:8px;margin-top:12px;">
+                    cd /path/to/project && claude --permission-mode bypassPermissions --print "实现XXX功能"
+                </p>
+                <ul>
+                    <li><strong>--print 模式</strong>：非交互式，自动执行完返回结果</li>
+                    <li><strong>--permission-mode bypassPermissions</strong>：允许文件读写和命令执行</li>
+                    <li>适合：明确的、不需要人工干预的代码任务</li>
+                    <li>OpenClaw 自动收结果 → 验证 → 通知用户</li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- Layer 2 -->
+        <div class="layer">
+            <div class="layer-hd">
+                <span class="layer-badge orange">第二层</span>
+                <span class="layer-title">文件系统 + clawmem 共享</span>
+            </div>
+            <div class="hbox crit">
+                <h4>🧠 记忆桥梁</h4>
+                <p><span class="tooltip" data-tip="混合检索记忆系统，结合向量搜索和关键词搜索，让 AI 能跨 session 记住重要信息">clawmem</span> 是连接两个系统的核心桥梁。它索引了三类知识：</p>
+                <ul>
+                    <li><strong>topics（27 文档）</strong>：技术环境、模型策略、业务分析等主题知识</li>
+                    <li><strong>procedures（80 文档）</strong>：操作手册、SOP、踩坑记录</li>
+                    <li><strong>shared-knowledge（30 文档）</strong>：跨实例共享的经验教训</li>
+                </ul>
+                <p style="margin-top:12px;">OpenClaw 派出的 Claude Code 和 Telegram bot 上的 Claude Code 虽然是不同 session，但共享同一个文件系统和 clawmem 数据库。改了一个文件，另一边立即可见。</p>
+            </div>
+            <div class="hbox ref">
+                <h4>📋 CLAUDE.md 自动注入</h4>
+                <p>Claude Code 进入 <code style="background:rgba(0,212,255,0.1);padding:2px 6px;border-radius:4px;color:var(--cyan);">~/.openclaw/workspace/</code> 时会自动读取 CLAUDE.md，获得：</p>
+                <ul>
+                    <li>四实例架构信息（ユキ/ナツ/ハル/アキ的端口和角色）</li>
+                    <li>Provider 配置规范（Kimi 用 Anthropic 格式、MiniMax 双 i 域名等）</li>
+                    <li>升级 SOP 和安全红线</li>
+                    <li>clawmem 搜索指南</li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- Layer 3 -->
+        <div class="layer">
+            <div class="layer-hd">
+                <span class="layer-badge gray">第三层</span>
+                <span class="layer-title">用户通过 Telegram 人工接管</span>
+            </div>
+            <div class="hbox crit">
+                <h4>🎮 随时接管</h4>
+                <p>Claude Code Telegram bot 作为持久进程运行（<code style="background:rgba(0,212,255,0.1);padding:2px 6px;border-radius:4px;color:var(--cyan);">--channels plugin:telegram</code>），用户可以随时：</p>
+                <ul>
+                    <li><strong>查看改动</strong>：OpenClaw 派 Claude Code 改了代码 → 你在 bot 里问"看看刚才改了什么"</li>
+                    <li><strong>修正方向</strong>：觉得方向不对 → 直接在 bot 里说"回滚，改用另一种方案"</li>
+                    <li><strong>深度对话</strong>：需要 Opus 级别的复杂推理 → 直接跟 Claude Code bot 聊</li>
+                    <li><strong>自动记录</strong>：clawmem hooks 自动提取你在 bot 里做的决策，下次 OpenClaw 能搜到</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 4. 四个工作流场景 -->
+<div class="container">
+    <div class="section">
+        <h2 class="section-title">四个典型工作流场景</h2>
+        
+        <div class="tl">
+            <div class="tl-item">
+                <h4>场景 1：全自动模式</h4>
+                <p><strong>用户</strong>："帮 fuluckpet-website 加个新页面"</p>
+                <p>→ <span style="color:var(--cyan);">ユキ</span> 分析需求，拆任务</p>
+                <p>→ <span style="color:var(--cyan);">ユキ</span> exec 调用 <code style="background:rgba(0,212,255,0.1);padding:2px 6px;border-radius:4px;color:var(--cyan);">claude --print</code></p>
+                <p>→ Claude Code 执行，产出代码</p>
+                <p>→ <span style="color:var(--cyan);">ユキ</span> 验证结果，通知用户 ✅</p>
+                <p style="margin-top:8px;font-size:13px;color:rgba(232,244,248,0.5);">用户全程只需给一句需求</p>
+            </div>
+            
+            <div class="tl-item o">
+                <h4>场景 2：半自动 + 人工接管</h4>
+                <p><strong>用户</strong>："重构 will-video-maker 的 TTS 模块"</p>
+                <p>→ <span style="color:var(--cyan);">ユキ</span> 启动 Claude Code 后台执行</p>
+                <p>→ 用户看了中间产出，觉得方向不对</p>
+                <p>→ 用户切到 <span style="color:var(--orange);">Claude Code Telegram bot</span></p>
+                <p>→ "看看 tts_gen.py 的改动，我要改用 CosyVoice API"</p>
+                <p>→ Claude Code bot 直接在同一份代码上修改 ✅</p>
+                <p style="margin-top:8px;font-size:13px;color:rgba(232,244,248,0.5);">从自动到手动的无缝切换</p>
+            </div>
+            
+            <div class="tl-item">
+                <h4>场景 3：用户直接使用 Claude Code</h4>
+                <p><strong>用户</strong> 直接在 Claude Code bot 里发消息</p>
+                <p>→ "cd ~/projects/xxx && 实现用户登录功能"</p>
+                <p>→ Claude Code 执行，clawmem 自动保存 handoff 和决策</p>
+                <p>→ 下次 <span style="color:var(--cyan);">ユキ</span> session 时能搜到这些信息</p>
+                <p style="margin-top:8px;font-size:13px;color:rgba(232,244,248,0.5);">跳过 OpenClaw，但知识仍自动同步</p>
+            </div>
+            
+            <div class="tl-item o">
+                <h4>场景 4：配置管理与升级</h4>
+                <p><strong>用户</strong>："升级 OpenClaw 到最新版"</p>
+                <p>→ <span style="color:var(--cyan);">ユキ</span> 检查版本差异，确认升级范围</p>
+                <p>→ 简单操作：ユキ 自己 exec 执行 npm install</p>
+                <p>→ 复杂操作：调用 Claude Code 处理 config 迁移、四实例同步</p>
+                <p>→ 验证四实例健康状态 ✅</p>
+                <p style="margin-top:8px;font-size:13px;color:rgba(232,244,248,0.5);">按复杂度自动选择执行方式</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 5. clawmem 记忆桥梁 -->
+<div class="container">
+    <div class="section">
+        <h2 class="section-title">clawmem 记忆桥梁</h2>
+        
+        <div class="hbox imp">
+            <h4>🔌 五个自动化 Hooks</h4>
+            <p>Claude Code 的 hooks 机制让知识同步完全自动化：</p>
+        </div>
+        
+        <details>
+            <summary>context-surfacing — 上下文自动注入</summary>
+            <div>
+                <p>每次 Claude Code 开始新对话时，自动从 <span class="tooltip" data-tip="混合检索记忆系统，结合向量搜索和关键词搜索">clawmem</span> 搜索相关知识并注入上下文。这意味着 Claude Code 天生就"记得"之前做过的事。</p>
+            </div>
+        </details>
+        
+        <details>
+            <summary>postcompact-inject — 压缩后记忆保留</summary>
+            <div>
+                <p>当 Claude Code 的对话被压缩（context window 满了）时，自动将关键信息注入压缩后的上下文，确保不丢失重要记忆。</p>
+            </div>
+        </details>
+        
+        <details>
+            <summary>curator-nudge — 记忆整理提醒</summary>
+            <div>
+                <p>定期提醒 Claude Code 整理和归档过时的记忆，保持知识库的新鲜度和准确性。</p>
+            </div>
+        </details>
+        
+        <details>
+            <summary>decision-extractor — 决策自动提取</summary>
+            <div>
+                <p>自动识别对话中的关键决策（如"选择方案A""弃用XXX"），提取并保存到 clawmem。OpenClaw 下次搜索时就能发现这些决策。</p>
+            </div>
+        </details>
+        
+        <details>
+            <summary>handoff-generator — 交接文档生成</summary>
+            <div>
+                <p>Claude Code session 结束时自动生成交接文档（handoff），包含：做了什么、改了哪些文件、未完成的任务、注意事项。OpenClaw 或下一个 Claude Code session 可以无缝接续。</p>
+            </div>
+        </details>
+    </div>
+</div>
+
+<!-- 6. 分工矩阵 -->
+<div class="container">
+    <div class="section">
+        <h2 class="section-title">分工矩阵</h2>
+        
+        <table class="tbl">
+            <thead>
+                <tr>
+                    <th>任务类型</th>
+                    <th>执行者</th>
+                    <th>原因</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>日常对话 · 调度</td>
+                    <td class="executor">OpenClaw（Kimi）</td>
+                    <td>免费模型，响应快，够用</td>
+                </tr>
+                <tr>
+                    <td>调研 · 蜂群编排</td>
+                    <td class="executor">OpenClaw</td>
+                    <td>Skills + web_search + 多 Agent 并行</td>
+                </tr>
+                <tr>
+                    <td>简单代码（≤3 文件）</td>
+                    <td class="executor">OpenClaw</td>
+                    <td>Edit 工具够用，不需要启动 Claude Code</td>
+                </tr>
+                <tr>
+                    <td>新功能开发</td>
+                    <td style="color:var(--orange);font-weight:500;">Claude Code CLI</td>
+                    <td>Opus 代码能力，全项目理解</td>
+                </tr>
+                <tr>
+                    <td>大规模重构</td>
+                    <td style="color:var(--orange);font-weight:500;">Claude Code CLI</td>
+                    <td>跨文件依赖分析，安全重构</td>
+                </tr>
+                <tr>
+                    <td>Config · 升级</td>
+                    <td style="color:var(--orange);font-weight:500;">Claude Code CLI</td>
+                    <td>Shell 权限 + 多步骤验证</td>
+                </tr>
+                <tr>
+                    <td>人工接管 · 审查</td>
+                    <td style="color:var(--orange);font-weight:500;">Claude Code Telegram</td>
+                    <td>用户随时可用，直接介入</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- 7. 信息同步 -->
+<div class="container">
+    <div class="section">
+        <h2 class="section-title">信息同步机制</h2>
+        
+        <div class="hbox imp">
+            <h4>➡️ OpenClaw → Claude Code（自动）</h4>
+            <ul>
+                <li><strong>CLAUDE.md</strong>：进入 workspace 自动读取，提供四实例架构和全部 SOP</li>
+                <li><strong>clawmem collections</strong>：topics/procedures/shared-knowledge 已索引，<span class="tooltip" data-tip="模型上下文协议，AI 连接外部工具的标准接口">MCP</span> Server 暴露搜索能力</li>
+                <li><strong>文件系统</strong>：同一台机器，改了就能看到</li>
+            </ul>
+        </div>
+        
+        <div class="hbox crit">
+            <h4>⬅️ Claude Code → OpenClaw（半自动）</h4>
+            <ul>
+                <li><strong>clawmem handoff</strong>：session 结束自动生成交接文档</li>
+                <li><strong>decision 自动提取</strong>：关键决策自动保存到 clawmem</li>
+                <li><strong>文件变更</strong>：OpenClaw 读文件即可发现改动</li>
+            </ul>
+        </div>
+        
+        <div class="hbox ref">
+            <h4>🔄 手动同步（偶尔）</h4>
+            <p>如果在 Claude Code bot 里做了重要但 hooks 没捕到的决策，告诉 ユキ 一声就行。ユキ 可以通过 <code style="background:rgba(0,212,255,0.1);padding:2px 6px;border-radius:4px;color:var(--cyan);">clawmem_search</code> 搜到 Claude Code 的 handoff 记录。</p>
+        </div>
+    </div>
+</div>
+
+<!-- 8. 未来扩展 -->
+<div class="container">
+    <div class="section">
+        <h2 class="section-title">未来扩展</h2>
+        
+        <div class="stats" style="padding:0;">
+            <div class="stat" style="text-align:left;padding:24px;">
+                <div style="font-size:24px;margin-bottom:8px;">🏗️</div>
+                <div style="font-size:16px;font-weight:600;margin-bottom:8px;">launchd 常驻</div>
+                <div style="font-size:14px;color:rgba(232,244,248,0.6);">将 Claude Code Telegram bot 做成 macOS launchd 常驻服务，崩溃自动重启</div>
+            </div>
+            <div class="stat" style="text-align:left;padding:24px;">
+                <div style="font-size:24px;margin-bottom:8px;">👁️</div>
+                <div style="font-size:16px;font-weight:600;margin-bottom:8px;">clawmem watch</div>
+                <div style="font-size:14px;color:rgba(232,244,248,0.6);">文件变更实时索引，不需要手动 <code style="background:rgba(0,212,255,0.1);padding:2px 6px;border-radius:4px;color:var(--cyan);font-size:12px;">clawmem update</code></div>
+            </div>
+            <div class="stat" style="text-align:left;padding:24px;">
+                <div style="font-size:24px;margin-bottom:8px;">🔗</div>
+                <div style="font-size:16px;font-weight:600;margin-bottom:8px;"><span class="tooltip" data-tip="Agent Communication Protocol，Agent 间通信协议">ACP</span> 深度集成</div>
+                <div style="font-size:14px;color:rgba(232,244,248,0.6);">通过 ACP 协议实现 OpenClaw 和 Claude Code 的进程级通信</div>
+            </div>
+            <div class="stat" style="text-align:left;padding:24px;">
+                <div style="font-size:24px;margin-bottom:8px;">🌐</div>
+                <div style="font-size:16px;font-weight:600;margin-bottom:8px;">多实例推广</div>
+                <div style="font-size:14px;color:rgba(232,244,248,0.6);">将协作方案推广到全部四实例（ユキ/ナツ/ハル/アキ），统一标准</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Footer -->
+<div class="footer">
+    <p>OpenClaw + Claude Code + Telegram 三方协作架构 · 2026-04-05</p>
+    <p style="margin-top:8px;">Will's AI Lab · aiblog.fuluckai.com</p>
+</div>
+
+</body>
+</html>

@@ -149,6 +149,46 @@ export async function POST(req: Request) {
   const validTopicTypes = ['ai', 'economy', 'github'];
   const topicType = validTopicTypes.includes(topic_type) ? topic_type : null;
 
+  // ── Dedup: check if same date + topic_type + report_type already exists ──
+  if (topicType) {
+    // Extract date from title ("2026-04-04 ...") or use today
+    const dateMatch = title.match(/(\d{4}-\d{2}-\d{2})/);
+    const reportDate = dateMatch ? dateMatch[1] : new Intl.DateTimeFormat('en-CA', {
+      timeZone: 'Asia/Tokyo', year: 'numeric', month: '2-digit', day: '2-digit'
+    }).format(new Date());
+
+    const { data: existing } = await supabaseAdmin
+      .from('daily_reports')
+      .select('id')
+      .eq('topic_type', topicType)
+      .eq('report_type', type)
+      .gte('published_at', `${reportDate}T00:00:00`)
+      .lt('published_at', `${reportDate}T23:59:59`)
+      .limit(1);
+
+    if (existing && existing.length > 0) {
+      // Update existing instead of creating duplicate
+      const { data: updated, error: updateError } = await supabaseAdmin
+        .from('daily_reports')
+        .update({
+          title,
+          content,
+          title_zh: title_zh || null,
+          title_ja: title_ja || null,
+          title_en: title_en || null,
+          content_zh: content_zh || null,
+          content_ja: content_ja || null,
+          content_en: content_en || null,
+        })
+        .eq('id', existing[0].id)
+        .select()
+        .single();
+
+      if (updateError) return NextResponse.json({ error: updateError.message }, { status: 500 });
+      return NextResponse.json({ report: updated, deduplicated: true }, { status: 200 });
+    }
+  }
+
   // 如果没有传三语字段，且有内容，则自动生成三语
   let tri_title_zh = title_zh || null;
   let tri_title_ja = title_ja || null; 

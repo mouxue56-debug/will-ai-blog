@@ -1,0 +1,1774 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OpenClaw + Claude Code + Telegram — 三方协作架构技术方案</title>
+<style>
+  /* ===== Reset & Base ===== */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0A1420;
+    --bg-card: #0F1D2E;
+    --bg-card-hover: #132638;
+    --border: #1A3048;
+    --primary: #00D4FF;
+    --primary-dim: #007A99;
+    --accent: #FF8C42;
+    --accent-dim: #CC6F35;
+    --text: #E0EAF0;
+    --text-dim: #7A9AB5;
+    --text-muted: #4A6A80;
+    --success: #00FF88;
+    --warning: #FFD93D;
+    --danger: #FF4D6A;
+    --purple: #A78BFA;
+    --glow-primary: 0 0 20px rgba(0,212,255,0.15);
+    --glow-accent: 0 0 20px rgba(255,140,66,0.15);
+  }
+
+  html { scroll-behavior: smooth; font-size: 16px; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans SC', 'PingFang SC', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* ===== Animated Background ===== */
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background:
+      radial-gradient(ellipse 800px 600px at 20% 20%, rgba(0,212,255,0.04) 0%, transparent 70%),
+      radial-gradient(ellipse 600px 800px at 80% 80%, rgba(255,140,66,0.03) 0%, transparent 70%),
+      radial-gradient(ellipse 400px 400px at 50% 50%, rgba(167,139,250,0.02) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+    animation: bgPulse 12s ease-in-out infinite alternate;
+  }
+
+  @keyframes bgPulse {
+    0% { opacity: 0.6; }
+    100% { opacity: 1; }
+  }
+
+  /* ===== Grid Lines Background ===== */
+  .grid-bg {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-image:
+      linear-gradient(rgba(0,212,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,212,255,0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ===== Scrollbar ===== */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--primary-dim); border-radius: 3px; }
+
+  /* ===== Layout ===== */
+  .container {
+    position: relative;
+    z-index: 1;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+  }
+
+  /* ===== Hero Section ===== */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    position: relative;
+    padding: 4rem 2rem;
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.4rem 1.2rem;
+    border: 1px solid var(--primary-dim);
+    border-radius: 999px;
+    font-size: 0.8rem;
+    color: var(--primary);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 2rem;
+    background: rgba(0,212,255,0.05);
+    animation: fadeInDown 0.8s ease-out;
+  }
+
+  .hero-badge .dot {
+    width: 6px; height: 6px;
+    background: var(--success);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(0,255,136,0.4); }
+    50% { opacity: 0.8; box-shadow: 0 0 0 6px rgba(0,255,136,0); }
+  }
+
+  .hero h1 {
+    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    font-weight: 800;
+    line-height: 1.15;
+    margin-bottom: 1.5rem;
+    animation: fadeInUp 0.8s ease-out 0.2s both;
+  }
+
+  .hero h1 .gradient-text {
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero-subtitle {
+    font-size: 1.2rem;
+    color: var(--text-dim);
+    max-width: 700px;
+    margin-bottom: 3rem;
+    animation: fadeInUp 0.8s ease-out 0.4s both;
+  }
+
+  .hero-stats {
+    display: flex;
+    gap: 3rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    animation: fadeInUp 0.8s ease-out 0.6s both;
+  }
+
+  .hero-stat {
+    text-align: center;
+  }
+
+  .hero-stat .num {
+    display: block;
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--primary);
+  }
+
+  .hero-stat .label {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    letter-spacing: 0.1em;
+  }
+
+  .scroll-indicator {
+    position: absolute;
+    bottom: 2rem;
+    animation: bounce 2s infinite;
+  }
+
+  .scroll-indicator svg {
+    width: 24px; height: 24px;
+    stroke: var(--text-muted);
+    stroke-width: 2;
+    fill: none;
+  }
+
+  @keyframes bounce {
+    0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+    40% { transform: translateY(-8px); }
+    60% { transform: translateY(-4px); }
+  }
+
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeInDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ===== Section ===== */
+  section {
+    padding: 5rem 0;
+    position: relative;
+  }
+
+  .section-header {
+    margin-bottom: 3rem;
+  }
+
+  .section-num {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+  }
+
+  .section-title {
+    font-size: 2.2rem;
+    font-weight: 700;
+    margin-bottom: 0.8rem;
+  }
+
+  .section-title .hl {
+    color: var(--primary);
+  }
+
+  .section-desc {
+    color: var(--text-dim);
+    font-size: 1.05rem;
+    max-width: 700px;
+  }
+
+  /* ===== Cards ===== */
+  .card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 2rem;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--primary), transparent);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .card:hover {
+    background: var(--bg-card-hover);
+    border-color: var(--primary-dim);
+    box-shadow: var(--glow-primary);
+    transform: translateY(-2px);
+  }
+
+  .card:hover::before { opacity: 1; }
+
+  .card-accent::before {
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  }
+
+  .card-accent:hover {
+    border-color: var(--accent-dim);
+    box-shadow: var(--glow-accent);
+  }
+
+  /* ===== Problem Cards Grid ===== */
+  .problems-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .problem-card .icon {
+    width: 48px; height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    margin-bottom: 1.2rem;
+  }
+
+  .problem-card .icon.red { background: rgba(255,77,106,0.1); color: var(--danger); }
+  .problem-card .icon.yellow { background: rgba(255,217,61,0.1); color: var(--warning); }
+  .problem-card .icon.blue { background: rgba(0,212,255,0.1); color: var(--primary); }
+  .problem-card .icon.purple { background: rgba(167,139,250,0.1); color: var(--purple); }
+
+  .problem-card h3 {
+    font-size: 1.1rem;
+    margin-bottom: 0.6rem;
+  }
+
+  .problem-card p {
+    color: var(--text-dim);
+    font-size: 0.95rem;
+  }
+
+  /* ===== Architecture Diagram ===== */
+  .arch-diagram {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 3rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .arch-diagram::after {
+    content: '';
+    position: absolute;
+    top: -50%; left: -50%;
+    width: 200%; height: 200%;
+    background: radial-gradient(circle at center, rgba(0,212,255,0.02) 0%, transparent 50%);
+    pointer-events: none;
+  }
+
+  .arch-layers {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  .arch-layer {
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    position: relative;
+  }
+
+  .arch-layer.user-layer {
+    border-color: var(--accent-dim);
+    background: rgba(255,140,66,0.03);
+  }
+
+  .arch-layer.orchestration-layer {
+    border-color: var(--primary-dim);
+    background: rgba(0,212,255,0.03);
+  }
+
+  .arch-layer.execution-layer {
+    border-color: var(--purple);
+    background: rgba(167,139,250,0.03);
+  }
+
+  .arch-layer.memory-layer {
+    border-color: var(--success);
+    background: rgba(0,255,136,0.03);
+  }
+
+  .layer-label {
+    position: absolute;
+    top: -0.6rem;
+    left: 1.5rem;
+    background: var(--bg-card);
+    padding: 0 0.8rem;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+
+  .user-layer .layer-label { color: var(--accent); }
+  .orchestration-layer .layer-label { color: var(--primary); }
+  .execution-layer .layer-label { color: var(--purple); }
+  .memory-layer .layer-label { color: var(--success); }
+
+  .layer-content {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .arch-node {
+    padding: 0.8rem 1.5rem;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-align: center;
+    min-width: 140px;
+    position: relative;
+  }
+
+  .node-will { background: rgba(255,140,66,0.15); color: var(--accent); border: 1px solid rgba(255,140,66,0.3); }
+  .node-telegram { background: rgba(0,212,255,0.1); color: #29B6F6; border: 1px solid rgba(41,182,246,0.3); }
+  .node-openclaw { background: rgba(0,212,255,0.15); color: var(--primary); border: 1px solid rgba(0,212,255,0.3); }
+  .node-claude { background: rgba(167,139,250,0.15); color: var(--purple); border: 1px solid rgba(167,139,250,0.3); }
+  .node-clawmem { background: rgba(0,255,136,0.1); color: var(--success); border: 1px solid rgba(0,255,136,0.3); }
+  .node-instance { background: rgba(0,212,255,0.08); color: var(--text-dim); border: 1px solid rgba(0,212,255,0.15); font-size: 0.82rem; }
+
+  .arch-node small {
+    display: block;
+    font-weight: 400;
+    font-size: 0.75rem;
+    opacity: 0.7;
+    margin-top: 0.2rem;
+  }
+
+  .arch-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.3rem 0;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    gap: 0.5rem;
+  }
+
+  .arch-arrow svg {
+    width: 20px; height: 20px;
+    stroke: var(--text-muted);
+    stroke-width: 2;
+    fill: none;
+  }
+
+  /* ===== Three Layer Mechanism ===== */
+  .three-layers {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+  }
+
+  @media (max-width: 900px) {
+    .three-layers { grid-template-columns: 1fr; }
+  }
+
+  .layer-card {
+    text-align: center;
+    padding: 2.5rem 2rem;
+  }
+
+  .layer-card .layer-icon {
+    width: 72px; height: 72px;
+    border-radius: 50%;
+    margin: 0 auto 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    position: relative;
+  }
+
+  .layer-card .layer-icon::after {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    border-radius: 50%;
+    border: 2px dashed;
+    opacity: 0.3;
+    animation: spin 20s linear infinite;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .layer-icon.orange { background: rgba(255,140,66,0.12); }
+  .layer-icon.orange::after { border-color: var(--accent); }
+  .layer-icon.cyan { background: rgba(0,212,255,0.12); }
+  .layer-icon.cyan::after { border-color: var(--primary); }
+  .layer-icon.violet { background: rgba(167,139,250,0.12); }
+  .layer-icon.violet::after { border-color: var(--purple); }
+
+  .layer-card h3 {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .layer-card .layer-tag {
+    display: inline-block;
+    font-size: 0.7rem;
+    padding: 0.2rem 0.7rem;
+    border-radius: 999px;
+    margin-bottom: 1rem;
+    letter-spacing: 0.08em;
+  }
+
+  .layer-tag.orange { background: rgba(255,140,66,0.12); color: var(--accent); }
+  .layer-tag.cyan { background: rgba(0,212,255,0.12); color: var(--primary); }
+  .layer-tag.violet { background: rgba(167,139,250,0.12); color: var(--purple); }
+
+  .layer-card p {
+    color: var(--text-dim);
+    font-size: 0.92rem;
+    margin-bottom: 1.2rem;
+  }
+
+  .layer-features {
+    list-style: none;
+    text-align: left;
+  }
+
+  .layer-features li {
+    padding: 0.4rem 0;
+    font-size: 0.88rem;
+    color: var(--text-dim);
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .layer-features li::before {
+    content: '>';
+    color: var(--primary);
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  /* ===== Workflow Scenarios ===== */
+  .workflows-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+
+  @media (max-width: 800px) {
+    .workflows-grid { grid-template-columns: 1fr; }
+  }
+
+  .workflow-card {
+    padding: 2rem;
+  }
+
+  .workflow-card .wf-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .wf-num {
+    width: 40px; height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+  }
+
+  .wf-num.c1 { background: rgba(0,212,255,0.12); color: var(--primary); }
+  .wf-num.c2 { background: rgba(255,140,66,0.12); color: var(--accent); }
+  .wf-num.c3 { background: rgba(167,139,250,0.12); color: var(--purple); }
+  .wf-num.c4 { background: rgba(0,255,136,0.12); color: var(--success); }
+
+  .wf-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+  }
+
+  .wf-subtitle {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+  }
+
+  .wf-steps {
+    list-style: none;
+    position: relative;
+    padding-left: 1.5rem;
+  }
+
+  .wf-steps::before {
+    content: '';
+    position: absolute;
+    left: 5px;
+    top: 8px;
+    bottom: 8px;
+    width: 1px;
+    background: linear-gradient(to bottom, var(--primary-dim), transparent);
+  }
+
+  .wf-steps li {
+    position: relative;
+    padding: 0.5rem 0 0.5rem 1rem;
+    font-size: 0.9rem;
+    color: var(--text-dim);
+  }
+
+  .wf-steps li::before {
+    content: '';
+    position: absolute;
+    left: -1.5rem;
+    top: 0.95rem;
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    border: 2px solid var(--primary-dim);
+    background: var(--bg-card);
+  }
+
+  .wf-steps li:first-child::before { border-color: var(--primary); background: rgba(0,212,255,0.2); }
+  .wf-steps li:last-child::before { border-color: var(--success); background: rgba(0,255,136,0.2); }
+
+  .wf-steps .actor {
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  /* ===== clawmem Section ===== */
+  .clawmem-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+  }
+
+  @media (max-width: 800px) {
+    .clawmem-grid { grid-template-columns: 1fr; }
+  }
+
+  .clawmem-full {
+    grid-column: 1 / -1;
+  }
+
+  .hook-list {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 0.8rem;
+  }
+
+  .hook-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.8rem;
+    padding: 1rem;
+    background: rgba(0,212,255,0.03);
+    border-radius: 8px;
+    border: 1px solid rgba(0,212,255,0.08);
+  }
+
+  .hook-item .hook-name {
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: var(--primary);
+    white-space: nowrap;
+  }
+
+  .hook-item .hook-desc {
+    font-size: 0.82rem;
+    color: var(--text-dim);
+  }
+
+  /* ===== Pipeline Diagram ===== */
+  .pipeline {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: 1.5rem 0;
+  }
+
+  .pipeline-node {
+    padding: 0.6rem 1.2rem;
+    border-radius: 8px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    text-align: center;
+    border: 1px solid;
+  }
+
+  .pipeline-arrow {
+    color: var(--text-muted);
+    font-size: 1.2rem;
+    padding: 0 0.3rem;
+  }
+
+  /* ===== Matrix Table ===== */
+  .matrix-table-wrap {
+    overflow-x: auto;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+  }
+
+  thead {
+    background: rgba(0,212,255,0.06);
+  }
+
+  th {
+    padding: 1rem 1.2rem;
+    text-align: left;
+    font-weight: 700;
+    font-size: 0.8rem;
+    letter-spacing: 0.08em;
+    color: var(--primary);
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+  }
+
+  td {
+    padding: 0.8rem 1.2rem;
+    border-bottom: 1px solid rgba(26,48,72,0.5);
+    color: var(--text-dim);
+  }
+
+  tr:hover td {
+    background: rgba(0,212,255,0.02);
+  }
+
+  .tag {
+    display: inline-block;
+    padding: 0.15rem 0.6rem;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+
+  .tag-oc { background: rgba(0,212,255,0.12); color: var(--primary); }
+  .tag-cc { background: rgba(167,139,250,0.12); color: var(--purple); }
+  .tag-tg { background: rgba(41,182,246,0.12); color: #29B6F6; }
+  .tag-both { background: rgba(255,140,66,0.12); color: var(--accent); }
+
+  /* ===== Sync Section ===== */
+  .sync-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .sync-card h3 {
+    font-size: 1rem;
+    margin-bottom: 0.8rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .sync-card h3 .sync-icon {
+    width: 28px; height: 28px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+  }
+
+  .sync-icon.green { background: rgba(0,255,136,0.1); }
+  .sync-icon.blue { background: rgba(0,212,255,0.1); }
+  .sync-icon.orange { background: rgba(255,140,66,0.1); }
+
+  .sync-detail {
+    list-style: none;
+  }
+
+  .sync-detail li {
+    padding: 0.35rem 0;
+    font-size: 0.88rem;
+    color: var(--text-dim);
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .sync-detail li::before {
+    content: '\2022';
+    color: var(--primary-dim);
+    flex-shrink: 0;
+  }
+
+  /* ===== Instance Map ===== */
+  .instance-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    margin: 2rem 0;
+  }
+
+  @media (max-width: 900px) {
+    .instance-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  .instance-card {
+    text-align: center;
+    padding: 1.5rem 1rem;
+  }
+
+  .instance-card .inst-name {
+    font-size: 1.8rem;
+    font-weight: 800;
+    margin-bottom: 0.2rem;
+  }
+
+  .instance-card .inst-role {
+    font-size: 0.8rem;
+    color: var(--text-dim);
+    margin-bottom: 0.8rem;
+  }
+
+  .inst-meta {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+  }
+
+  .inst-meta span { display: block; padding: 0.15rem 0; }
+
+  /* ===== Future Section ===== */
+  .future-timeline {
+    position: relative;
+    padding-left: 3rem;
+  }
+
+  .future-timeline::before {
+    content: '';
+    position: absolute;
+    left: 12px;
+    top: 0; bottom: 0;
+    width: 2px;
+    background: linear-gradient(to bottom, var(--primary), var(--accent), var(--purple), var(--success));
+    border-radius: 1px;
+  }
+
+  .future-item {
+    position: relative;
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    transition: all 0.3s;
+  }
+
+  .future-item:hover {
+    border-color: var(--primary-dim);
+    box-shadow: var(--glow-primary);
+  }
+
+  .future-item::before {
+    content: '';
+    position: absolute;
+    left: -2.45rem;
+    top: 1.8rem;
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    border: 3px solid var(--primary);
+    background: var(--bg);
+  }
+
+  .future-item:nth-child(2)::before { border-color: var(--accent); }
+  .future-item:nth-child(3)::before { border-color: var(--purple); }
+  .future-item:nth-child(4)::before { border-color: var(--success); }
+
+  .future-item .fi-phase {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 0.3rem;
+  }
+
+  .future-item:nth-child(1) .fi-phase { color: var(--primary); }
+  .future-item:nth-child(2) .fi-phase { color: var(--accent); }
+  .future-item:nth-child(3) .fi-phase { color: var(--purple); }
+  .future-item:nth-child(4) .fi-phase { color: var(--success); }
+
+  .future-item h3 {
+    font-size: 1.15rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .future-item p {
+    color: var(--text-dim);
+    font-size: 0.9rem;
+  }
+
+  .future-tags {
+    margin-top: 0.8rem;
+    display: flex;
+    gap: 0.4rem;
+    flex-wrap: wrap;
+  }
+
+  .future-tags span {
+    font-size: 0.7rem;
+    padding: 0.15rem 0.5rem;
+    border-radius: 4px;
+    background: rgba(0,212,255,0.06);
+    color: var(--text-muted);
+    border: 1px solid rgba(0,212,255,0.1);
+  }
+
+  /* ===== Code Block ===== */
+  .code-block {
+    background: #060D14;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.2rem 1.5rem;
+    font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+    font-size: 0.82rem;
+    line-height: 1.6;
+    overflow-x: auto;
+    color: var(--text-dim);
+    margin: 1rem 0;
+  }
+
+  .code-block .cm { color: var(--text-muted); }
+  .code-block .kw { color: var(--primary); }
+  .code-block .fn { color: var(--accent); }
+  .code-block .str { color: var(--success); }
+  .code-block .op { color: var(--text-dim); }
+
+  /* ===== Divider ===== */
+  .divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border), transparent);
+    margin: 1rem 0;
+  }
+
+  /* ===== Footer ===== */
+  .footer {
+    text-align: center;
+    padding: 4rem 2rem;
+    border-top: 1px solid var(--border);
+    color: var(--text-muted);
+    font-size: 0.85rem;
+  }
+
+  .footer .footer-brand {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text-dim);
+    margin-bottom: 0.5rem;
+  }
+
+  .footer .footer-brand .hl { color: var(--primary); }
+
+  /* ===== Callout ===== */
+  .callout {
+    border-left: 3px solid var(--primary);
+    padding: 1rem 1.5rem;
+    background: rgba(0,212,255,0.04);
+    border-radius: 0 8px 8px 0;
+    margin: 1.5rem 0;
+    font-size: 0.92rem;
+    color: var(--text-dim);
+  }
+
+  .callout strong { color: var(--text); }
+
+  .callout.accent {
+    border-left-color: var(--accent);
+    background: rgba(255,140,66,0.04);
+  }
+
+  /* ===== Responsive ===== */
+  @media (max-width: 600px) {
+    .container { padding: 0 1rem; }
+    section { padding: 3rem 0; }
+    .arch-diagram { padding: 1.5rem; }
+    .hero-stats { gap: 1.5rem; }
+    .instance-grid { grid-template-columns: 1fr 1fr; }
+  }
+
+  /* ===== Animated Entrance ===== */
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+</style>
+</head>
+<body>
+
+<div class="grid-bg"></div>
+
+<!-- ==================== HERO ==================== -->
+<header class="hero">
+  <div class="hero-badge"><span class="dot"></span> PRODUCTION ARCHITECTURE v2.0</div>
+  <h1>
+    <span class="gradient-text">OpenClaw + Claude Code</span><br>
+    + Telegram 三方协作架构
+  </h1>
+  <p class="hero-subtitle">
+    从单一 AI 助手到多实例智能协作体系 —— 基于共享记忆的人格化搭档架构，
+    覆盖日常对话、代码开发、SNS运营、客户管理全场景。
+  </p>
+  <div class="hero-stats">
+    <div class="hero-stat"><span class="num">4</span><span class="label">AI 实例</span></div>
+    <div class="hero-stat"><span class="num">3</span><span class="label">协作层级</span></div>
+    <div class="hero-stat"><span class="num">6</span><span class="label">Hooks 钩子</span></div>
+    <div class="hero-stat"><span class="num">24/7</span><span class="label">自动运行</span></div>
+  </div>
+  <div class="scroll-indicator">
+    <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
+  </div>
+</header>
+
+<div class="container">
+
+<!-- ==================== 01 背景与问题 ==================== -->
+<section id="background" class="reveal">
+  <div class="section-header">
+    <div class="section-num">01 / Background</div>
+    <h2 class="section-title">背景与<span class="hl">问题</span></h2>
+    <p class="section-desc">
+      当 AI 助手从单一对话工具演进为多实例协作体系，传统的"一问一答"模式暴露出哪些根本性问题？
+    </p>
+  </div>
+
+  <div class="problems-grid">
+    <div class="card problem-card">
+      <div class="icon red">!</div>
+      <h3>上下文断裂</h3>
+      <p>不同 AI 工具之间无法共享记忆。Claude Code 不知道 OpenClaw 讨论过什么，Telegram 指令的上下文在会话结束后丢失，每次都需要从头说明背景。</p>
+    </div>
+    <div class="card problem-card">
+      <div class="icon yellow">?</div>
+      <h3>职责边界模糊</h3>
+      <p>多实例并存时，缺乏明确的路由表和分工矩阵。「这个任务该交给谁？」成为反复出现的决策负担，导致任务冲突或遗漏。</p>
+    </div>
+    <div class="card problem-card card-accent">
+      <div class="icon blue">&lt;/&gt;</div>
+      <h3>代码能力与日常能力割裂</h3>
+      <p>OpenClaw 擅长日常对话和调度编排，但重度代码开发力不从心；Claude Code 代码能力强，但缺乏业务上下文和调度能力。两者能力互补却难以协作。</p>
+    </div>
+    <div class="card problem-card">
+      <div class="icon purple">#</div>
+      <h3>跨实例状态不可见</h3>
+      <p>四个实例分布在三台机器上，Will 无法一眼看到「现在每个实例在做什么」。任务超时、委派失败、重复劳动频发。</p>
+    </div>
+  </div>
+
+  <div class="callout" style="margin-top:2rem;">
+    <strong>核心洞察：</strong>我们需要的不是"更强的单一 AI"，而是一个 <strong>共享记忆 + 明确分工 + 自动路由</strong> 的多实例协作体系。
+    不是工程流水线，而是人格化搭档团队。
+  </div>
+</section>
+
+<!-- ==================== 02 架构总览 ==================== -->
+<section id="architecture" class="reveal">
+  <div class="section-header">
+    <div class="section-num">02 / Architecture Overview</div>
+    <h2 class="section-title">架构<span class="hl">总览</span></h2>
+    <p class="section-desc">
+      四层架构：用户交互层 → 编排调度层 → 执行引擎层 → 共享记忆层，每层职责清晰，通过定义明确的协议连接。
+    </p>
+  </div>
+
+  <div class="arch-diagram">
+    <div class="arch-layers">
+
+      <!-- User Layer -->
+      <div class="arch-layer user-layer">
+        <div class="layer-label">Layer 1 — 用户交互层</div>
+        <div class="layer-content">
+          <div class="arch-node node-will">
+            Will（用户）
+            <small>语音 / 文字 / 终端</small>
+          </div>
+          <div class="arch-node node-telegram">
+            Telegram Bot
+            <small>主要交互入口</small>
+          </div>
+          <div class="arch-node" style="background:rgba(255,140,66,0.08);color:var(--text-dim);border:1px solid rgba(255,140,66,0.15);font-size:0.82rem;">
+            Terminal CLI
+            <small>直接代码操作</small>
+          </div>
+        </div>
+      </div>
+
+      <!-- Arrow -->
+      <div class="arch-arrow">
+        <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><polyline points="19 12 12 19 5 12"></polyline></svg>
+        双向通信：Telegram 消息 / CLI 指令 / 语音
+      </div>
+
+      <!-- Orchestration Layer -->
+      <div class="arch-layer orchestration-layer">
+        <div class="layer-label">Layer 2 — 编排调度层（OpenClaw 四实例）</div>
+        <div class="layer-content">
+          <div class="arch-node node-openclaw">
+            ユキ
+            <small>M4:18789 技术顾问+架构师</small>
+          </div>
+          <div class="arch-node node-openclaw">
+            ナツ
+            <small>M4:18790 SNS运营+品牌</small>
+          </div>
+          <div class="arch-node node-instance">
+            ハル
+            <small>M2:18789 AI员工模板</small>
+          </div>
+          <div class="arch-node node-instance">
+            アキ
+            <small>MBP:18789 移动执行</small>
+          </div>
+        </div>
+      </div>
+
+      <!-- Arrow -->
+      <div class="arch-arrow">
+        <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><polyline points="19 12 12 19 5 12"></polyline></svg>
+        sessions_spawn / coding-agent Skill / SSH Exec
+      </div>
+
+      <!-- Execution Layer -->
+      <div class="arch-layer execution-layer">
+        <div class="layer-label">Layer 3 — 执行引擎层</div>
+        <div class="layer-content">
+          <div class="arch-node node-claude">
+            Claude Code CLI
+            <small>Opus 4.6 重度代码开发</small>
+          </div>
+          <div class="arch-node" style="background:rgba(0,212,255,0.08);color:var(--text-dim);border:1px solid rgba(0,212,255,0.15);font-size:0.82rem;">
+            蜂群子Agent
+            <small>MiniMax / Infini-AI</small>
+          </div>
+          <div class="arch-node" style="background:rgba(255,217,61,0.08);color:var(--warning);border:1px solid rgba(255,217,61,0.15);font-size:0.82rem;">
+            Cron 定时任务
+            <small>自动化流水线</small>
+          </div>
+        </div>
+      </div>
+
+      <!-- Arrow -->
+      <div class="arch-arrow">
+        <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><polyline points="19 12 12 19 5 12"></polyline></svg>
+        MCP Server / Hooks 自动读写
+      </div>
+
+      <!-- Memory Layer -->
+      <div class="arch-layer memory-layer">
+        <div class="layer-label">Layer 4 — 共享记忆层</div>
+        <div class="layer-content">
+          <div class="arch-node node-clawmem">
+            clawmem
+            <small>向量+BM25 混合检索</small>
+          </div>
+          <div class="arch-node" style="background:rgba(0,255,136,0.08);color:var(--success);border:1px solid rgba(0,255,136,0.15);font-size:0.82rem;">
+            shared-knowledge/
+            <small>路由表 / 任务看板</small>
+          </div>
+          <div class="arch-node" style="background:rgba(0,255,136,0.08);color:var(--success);border:1px solid rgba(0,255,136,0.15);font-size:0.82rem;">
+            Claude Code Memory
+            <small>MEMORY.md + 文件系统</small>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Instance Map -->
+  <h3 style="margin-top:3rem;margin-bottom:0.5rem;font-size:1.1rem;">四实例部署拓扑</h3>
+  <p style="color:var(--text-dim);font-size:0.9rem;margin-bottom:1.5rem;">分布在 3 台 Apple Silicon 设备上，通过 SSH + Tailscale 网络互联</p>
+  <div class="instance-grid">
+    <div class="card instance-card">
+      <div class="inst-name" style="color:var(--primary);">ユキ</div>
+      <div class="inst-role">技术顾问 + 架构师</div>
+      <div class="inst-meta">
+        <span>Mac Mini M4 · Port 18789</span>
+        <span>Kimi K2.5 默认</span>
+        <span>蜂群编排 · 代码调度</span>
+      </div>
+    </div>
+    <div class="card instance-card">
+      <div class="inst-name" style="color:var(--accent);">ナツ</div>
+      <div class="inst-role">SNS运营 + 品牌传播</div>
+      <div class="inst-meta">
+        <span>Mac Mini M4 · Port 18790</span>
+        <span>日语文案 · 客户对话</span>
+        <span>猫舍运营 · 内容创作</span>
+      </div>
+    </div>
+    <div class="card instance-card">
+      <div class="inst-name" style="color:var(--purple);">ハル</div>
+      <div class="inst-role">AI员工模板</div>
+      <div class="inst-meta">
+        <span>Mac Mini M2 · Port 18789</span>
+        <span>SSH: Wills-Mac-mini.local</span>
+        <span>产品化 · 可复制方案</span>
+      </div>
+    </div>
+    <div class="card instance-card">
+      <div class="inst-name" style="color:var(--success);">アキ</div>
+      <div class="inst-role">移动执行</div>
+      <div class="inst-meta">
+        <span>MacBook Pro · Port 18789</span>
+        <span>Tailscale: 100.114.92.3</span>
+        <span>外出时的随身实例</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== 03 三层协作机制 ==================== -->
+<section id="layers" class="reveal">
+  <div class="section-header">
+    <div class="section-num">03 / Collaboration Layers</div>
+    <h2 class="section-title">三层<span class="hl">协作</span>机制</h2>
+    <p class="section-desc">
+      Telegram 负责人机交互，OpenClaw 负责智能编排，Claude Code 负责深度执行 —— 三层各司其职，通过 clawmem 共享上下文。
+    </p>
+  </div>
+
+  <div class="three-layers">
+    <!-- Layer 1: Telegram -->
+    <div class="card layer-card">
+      <div class="layer-icon orange">T</div>
+      <h3>Telegram 交互层</h3>
+      <span class="layer-tag orange">人机界面</span>
+      <p>Will 的主要入口。通过 Telegram Bot 发送自然语言指令，接收任务结果和状态通知。</p>
+      <ul class="layer-features">
+        <li>自然语言指令 → OpenClaw 解析执行</li>
+        <li>图片/文件上传 → 自动识别处理</li>
+        <li>实时状态推送 → 任务进度通知</li>
+        <li>多 Chat 分流 → 不同实例不同频道</li>
+        <li>语音消息 → 转文字后理解执行</li>
+      </ul>
+    </div>
+
+    <!-- Layer 2: OpenClaw -->
+    <div class="card layer-card">
+      <div class="layer-icon cyan">O</div>
+      <h3>OpenClaw 编排层</h3>
+      <span class="layer-tag cyan">智能调度</span>
+      <p>四实例组成的 AI 搭档团队。根据路由表自动分配任务，管理跨实例协作和状态同步。</p>
+      <ul class="layer-features">
+        <li>路由表驱动 → 按业务+能力自动分配</li>
+        <li>蜂群编排 → 子 Agent 并行执行</li>
+        <li>轻量代码修改 → Edit 工具直接改</li>
+        <li>跨实例委派 → 任务看板状态追踪</li>
+        <li>Cron 定时任务 → SNS/监控自动化</li>
+        <li>Skills 体系 → 可复用能力封装</li>
+      </ul>
+    </div>
+
+    <!-- Layer 3: Claude Code -->
+    <div class="card layer-card">
+      <div class="layer-icon violet">C</div>
+      <h3>Claude Code 执行层</h3>
+      <span class="layer-tag violet">深度编码</span>
+      <p>Opus 4.6 驱动的重度代码执行引擎。处理新功能开发、大规模重构、CI/CD 等需要全项目理解的任务。</p>
+      <ul class="layer-features">
+        <li>新功能开发 → Opus 代码能力强</li>
+        <li>大规模重构 → 全项目理解 + 原子提交</li>
+        <li>OpenClaw 配置管理 → JSON 编辑 + 热重载</li>
+        <li>OpenClaw 升级 → npm install + SIGUSR1</li>
+        <li>PR 审查 → 深度代码理解</li>
+        <li>GSD 工作流 → 计划/执行/验证闭环</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="callout accent" style="margin-top:2rem;">
+    <strong>协作核心原则：</strong>不越权 · 不抢功 · 不甩锅 · 要闭环。
+    每个实例都是人格化搭档，不是工程流水线上的工位。按路由表行事，委派必须给足上下文，接收必须回报结果。
+  </div>
+</section>
+
+<!-- ==================== 04 四个典型工作流 ==================== -->
+<section id="workflows" class="reveal">
+  <div class="section-header">
+    <div class="section-num">04 / Workflow Scenarios</div>
+    <h2 class="section-title">四个典型<span class="hl">工作流</span>场景</h2>
+    <p class="section-desc">
+      从需求到交付，不同场景下三方如何无缝协作——覆盖功能开发、系统升级、SNS运营、直接编码四种核心场景。
+    </p>
+  </div>
+
+  <div class="workflows-grid">
+    <!-- WF 1 -->
+    <div class="card workflow-card">
+      <div class="wf-header">
+        <div class="wf-num c1">01</div>
+        <div><div class="wf-title">新功能开发</div><div class="wf-subtitle">Telegram → OpenClaw → Claude Code → 交付</div></div>
+      </div>
+      <ol class="wf-steps">
+        <li><span class="actor">Will</span> 通过 Telegram 告诉 ユキ："猫舍网站加一个预约表单"</li>
+        <li><span class="actor">ユキ</span> 分析需求，拆解为前端+后端+数据库三个子任务</li>
+        <li><span class="actor">ユキ</span> 确认方案后，通过 coding-agent Skill 调度 Claude Code</li>
+        <li><span class="actor">Claude Code</span> 从 clawmem 读取项目上下文，了解现有架构</li>
+        <li><span class="actor">Claude Code</span> 实现功能，原子提交，运行测试</li>
+        <li><span class="actor">ユキ</span> 收到完成通知，验证结果后通过 Telegram 告知 Will</li>
+      </ol>
+    </div>
+
+    <!-- WF 2 -->
+    <div class="card workflow-card card-accent">
+      <div class="wf-header">
+        <div class="wf-num c2">02</div>
+        <div><div class="wf-title">OpenClaw 系统升级</div><div class="wf-subtitle">版本检查 → 四实例滚动升级 → 验证</div></div>
+      </div>
+      <ol class="wf-steps">
+        <li><span class="actor">Will</span> 说："升级一下 OpenClaw"</li>
+        <li><span class="actor">ユキ</span> 检查 npm registry 版本差异，评估升级风险</li>
+        <li><span class="actor">ユキ</span> 确认后调度 Claude Code 执行升级脚本</li>
+        <li><span class="actor">Claude Code</span> 在本机执行 <code>npm install -g openclaw@latest</code></li>
+        <li><span class="actor">Claude Code</span> 通过 SSH 升级远程实例（ハル@M2, アキ@MBP）</li>
+        <li><span class="actor">Claude Code</span> 发送 SIGUSR1 热重载信号，逐一验证四实例状态</li>
+      </ol>
+    </div>
+
+    <!-- WF 3 -->
+    <div class="card workflow-card">
+      <div class="wf-header">
+        <div class="wf-num c3">03</div>
+        <div><div class="wf-title">SNS 自动运营</div><div class="wf-subtitle">定时触发 → 内容生成 → 自动发布</div></div>
+      </div>
+      <ol class="wf-steps">
+        <li><span class="actor">Cron 定时器</span> 在预设时间触发 ナツ 的 SNS 任务</li>
+        <li><span class="actor">ナツ</span> 从 shared-knowledge 读取 SNS 策略和品牌指南</li>
+        <li><span class="actor">ナツ</span> 编排蜂群子 Agent 并行生成多平台内容</li>
+        <li><span class="actor">蜂群 Agent</span> 生成文案 → ナツ 质量校验（字数/敬语/品牌名）</li>
+        <li><span class="actor">ナツ</span> 通过 API 自动发布到各社交平台</li>
+        <li><span class="actor">ナツ</span> 将发布结果汇报到 Telegram，Will 异步查看</li>
+      </ol>
+    </div>
+
+    <!-- WF 4 -->
+    <div class="card workflow-card card-accent">
+      <div class="wf-header">
+        <div class="wf-num c4">04</div>
+        <div><div class="wf-title">直接终端编码</div><div class="wf-subtitle">CLI → clawmem 自动注入 → 开发 → 记忆沉淀</div></div>
+      </div>
+      <ol class="wf-steps">
+        <li><span class="actor">Will</span> 在终端直接输入 <code>cd ~/projects/xxx && claude</code></li>
+        <li><span class="actor">clawmem</span> SessionStart Hook 自动注入相关项目记忆</li>
+        <li><span class="actor">Claude Code</span> 带着完整上下文开始开发工作</li>
+        <li><span class="actor">Will</span> 与 Claude Code 交互式完成复杂编码任务</li>
+        <li><span class="actor">clawmem</span> Stop Hook 自动提取决策、生成 handoff 文档</li>
+        <li>下次 <span class="actor">OpenClaw</span> 或 Claude Code 会话都能召回本次决策</li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== 05 clawmem 记忆桥梁 ==================== -->
+<section id="clawmem" class="reveal">
+  <div class="section-header">
+    <div class="section-num">05 / Memory Bridge</div>
+    <h2 class="section-title">clawmem <span class="hl">记忆桥梁</span></h2>
+    <p class="section-desc">
+      clawmem 是整个协作体系的"大脑"——它让 OpenClaw 的业务知识和 Claude Code 的开发上下文实现双向流通，消除上下文断裂。
+    </p>
+  </div>
+
+  <div class="clawmem-grid">
+    <!-- Memory Types -->
+    <div class="card">
+      <h3 style="margin-bottom:1rem;font-size:1.05rem;">四种记忆类型</h3>
+      <table>
+        <thead>
+          <tr><th>类型</th><th>用途</th><th>触发时机</th></tr>
+        </thead>
+        <tbody>
+          <tr><td style="color:var(--primary);font-weight:600;">user</td><td>用户偏好、习惯</td><td>偏好信号确认后</td></tr>
+          <tr><td style="color:var(--accent);font-weight:600;">feedback</td><td>纠错、反馈、已验证方法</td><td>用户纠正或确认时</td></tr>
+          <tr><td style="color:var(--purple);font-weight:600;">project</td><td>项目状态、决策、死线</td><td>架构决策 / 里程碑变更</td></tr>
+          <tr><td style="color:var(--success);font-weight:600;">reference</td><td>工具文档、API手册</td><td>首次接触新工具/SDK</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Retrieval Pipeline -->
+    <div class="card">
+      <h3 style="margin-bottom:1rem;font-size:1.05rem;">混合检索管线</h3>
+      <div class="pipeline">
+        <div class="pipeline-node" style="border-color:var(--primary-dim);color:var(--primary);background:rgba(0,212,255,0.06);">Query 输入</div>
+        <div class="pipeline-arrow">&#8594;</div>
+        <div class="pipeline-node" style="border-color:var(--accent-dim);color:var(--accent);background:rgba(255,140,66,0.06);">自动路由</div>
+        <div class="pipeline-arrow">&#8594;</div>
+        <div class="pipeline-node" style="border-color:var(--purple);color:var(--purple);background:rgba(167,139,250,0.06);">BM25 + 向量</div>
+        <div class="pipeline-arrow">&#8594;</div>
+        <div class="pipeline-node" style="border-color:var(--success);color:var(--success);background:rgba(0,255,136,0.06);">Top-K 返回</div>
+      </div>
+      <ul class="layer-features" style="margin-top:1rem;">
+        <li>"为什么我们选了 X" → 因果图遍历</li>
+        <li>"上次会话做了什么" → 会话历史</li>
+        <li>"和 X 相关的还有什么" → 向量近邻</li>
+        <li>复杂多主题查询 → 并行分解</li>
+      </ul>
+    </div>
+
+    <!-- Hooks -->
+    <div class="card clawmem-full">
+      <h3 style="margin-bottom:1.2rem;font-size:1.05rem;">六大生命周期 Hooks —— 全自动记忆读写</h3>
+      <ul class="hook-list">
+        <li class="hook-item">
+          <div>
+            <div class="hook-name">SessionStart</div>
+            <div class="hook-desc">启动时注入上下文 — postcompact-inject + curator-nudge，确保新会话即刻获得相关记忆</div>
+          </div>
+        </li>
+        <li class="hook-item">
+          <div>
+            <div class="hook-name">UserPromptSubmit</div>
+            <div class="hook-desc">用户输入时 — context-surfacing 自动召回相关记忆，为每次回答注入背景知识</div>
+          </div>
+        </li>
+        <li class="hook-item">
+          <div>
+            <div class="hook-name">PreCompact</div>
+            <div class="hook-desc">上下文压缩前 — precompact-extract 提取关键信息，防止长对话中的重要决策丢失</div>
+          </div>
+        </li>
+        <li class="hook-item">
+          <div>
+            <div class="hook-name">Stop (Decision)</div>
+            <div class="hook-desc">会话结束 — decision-extractor 自动保存本次会话中的架构决策和技术选型</div>
+          </div>
+        </li>
+        <li class="hook-item">
+          <div>
+            <div class="hook-name">Stop (Handoff)</div>
+            <div class="hook-desc">会话结束 — handoff-generator 生成交接文档，下次会话可完美续接未完成的工作</div>
+          </div>
+        </li>
+        <li class="hook-item">
+          <div>
+            <div class="hook-name">Stop (Feedback)</div>
+            <div class="hook-desc">会话结束 — feedback-loop 收集纠错信号，持续改进记忆质量和推荐准确度</div>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Data Flow Diagram -->
+  <div class="card" style="margin-top:1.5rem;">
+    <h3 style="margin-bottom:1rem;font-size:1.05rem;">数据流转全景</h3>
+    <div class="code-block">
+<span class="cm">// OpenClaw 积累的知识 → clawmem → Claude Code 自动获得</span>
+
+<span class="kw">Collection</span> <span class="str">"知识主题"</span>    <span class="op">←</span> ~/.openclaw/workspace/memory/topics/
+<span class="kw">Collection</span> <span class="str">"操作手册"</span>    <span class="op">←</span> ~/.openclaw/workspace/memory/procedures/
+<span class="kw">Collection</span> <span class="str">"Skills"</span>      <span class="op">←</span> ~/.openclaw/workspace/skills/
+<span class="kw">Collection</span> <span class="str">"共享知识"</span>    <span class="op">←</span> ~/.openclaw/shared-knowledge/
+
+<span class="cm">// Claude Code 的决策 → clawmem → OpenClaw 下次可召回</span>
+<span class="fn">Stop Hook</span> <span class="op">→</span> decision-extractor <span class="op">→</span> clawmem <span class="op">→</span> <span class="kw">memory_retrieve</span>(<span class="str">"为什么选了方案A"</span>)
+<span class="fn">Stop Hook</span> <span class="op">→</span> handoff-generator  <span class="op">→</span> clawmem <span class="op">→</span> <span class="kw">memory_retrieve</span>(<span class="str">"上次做到哪里了"</span>)
+    </div>
+  </div>
+</section>
+
+<!-- ==================== 06 分工矩阵 ==================== -->
+<section id="matrix" class="reveal">
+  <div class="section-header">
+    <div class="section-num">06 / Division Matrix</div>
+    <h2 class="section-title">分工<span class="hl">矩阵</span></h2>
+    <p class="section-desc">
+      每类任务都有明确的主执行者和原因。路由表驱动，消除决策负担——"这个任务该交给谁"不再是问题。
+    </p>
+  </div>
+
+  <div class="matrix-table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>任务类型</th>
+          <th>执行者</th>
+          <th>原因</th>
+          <th>协作方</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>日常对话 / 闲聊</td>
+          <td><span class="tag tag-oc">OpenClaw</span></td>
+          <td>免费模型（Kimi K2.5），响应快</td>
+          <td><span class="tag tag-tg">Telegram</span></td>
+        </tr>
+        <tr>
+          <td>调研 / 信息收集</td>
+          <td><span class="tag tag-oc">OpenClaw</span></td>
+          <td>web_search + 蜂群并行</td>
+          <td>-</td>
+        </tr>
+        <tr>
+          <td>SNS 文案 / 客服</td>
+          <td><span class="tag tag-oc">ナツ</span></td>
+          <td>Skills 已配好，日语能力强</td>
+          <td><span class="tag tag-tg">Telegram</span></td>
+        </tr>
+        <tr>
+          <td>猫舍 / 医院 / 生活</td>
+          <td><span class="tag tag-oc">OpenClaw</span></td>
+          <td>已有领域知识积累</td>
+          <td>-</td>
+        </tr>
+        <tr>
+          <td>简单代码修改（≤3文件）</td>
+          <td><span class="tag tag-oc">OpenClaw</span></td>
+          <td>Edit 工具足够，省 Opus 额度</td>
+          <td>-</td>
+        </tr>
+        <tr>
+          <td>新功能开发</td>
+          <td><span class="tag tag-cc">Claude Code</span></td>
+          <td>Opus 代码能力强，全项目理解</td>
+          <td><span class="tag tag-oc">ユキ 调度</span></td>
+        </tr>
+        <tr>
+          <td>大规模重构（&gt;5文件）</td>
+          <td><span class="tag tag-cc">Claude Code</span></td>
+          <td>需要全项目理解 + 原子提交</td>
+          <td><span class="tag tag-oc">ユキ 调度</span></td>
+        </tr>
+        <tr>
+          <td>OpenClaw 配置修改</td>
+          <td><span class="tag tag-cc">Claude Code</span></td>
+          <td>直接编辑 JSON + 热重载</td>
+          <td><span class="tag tag-oc">ユキ 验证</span></td>
+        </tr>
+        <tr>
+          <td>OpenClaw 四实例升级</td>
+          <td><span class="tag tag-cc">Claude Code</span></td>
+          <td>npm install + SSH 远程 + SIGUSR1</td>
+          <td><span class="tag tag-oc">ユキ 确认</span></td>
+        </tr>
+        <tr>
+          <td>CI/CD / 部署</td>
+          <td><span class="tag tag-cc">Claude Code</span></td>
+          <td>需要 shell 权限和构建能力</td>
+          <td>-</td>
+        </tr>
+        <tr>
+          <td>PR 审查 / 代码审计</td>
+          <td><span class="tag tag-cc">Claude Code</span></td>
+          <td>深度代码理解 + 安全分析</td>
+          <td>-</td>
+        </tr>
+        <tr>
+          <td>AI 员工模板开发</td>
+          <td><span class="tag tag-both">ハル</span></td>
+          <td>专注可复制、产品化方案</td>
+          <td><span class="tag tag-oc">ユキ 架构</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout" style="margin-top:1.5rem;">
+    <strong>调度三种方式：</strong>
+    (1) <code>sessions_spawn</code> — ACP 协议调度，结果自动回报；
+    (2) <code>coding-agent Skill</code> — 封装好的复杂代码任务；
+    (3) <code>Will 直接 CLI</code> — 终端交互式开发，clawmem 自动注入上下文。
+  </div>
+</section>
+
+<!-- ==================== 07 信息同步 ==================== -->
+<section id="sync" class="reveal">
+  <div class="section-header">
+    <div class="section-num">07 / Information Sync</div>
+    <h2 class="section-title">信息<span class="hl">同步</span>机制</h2>
+    <p class="section-desc">
+      四实例分布在三台机器上，信息同步是协作的命脉。三种同步机制覆盖不同时效需求。
+    </p>
+  </div>
+
+  <div class="sync-cards">
+    <div class="card sync-card">
+      <h3><span class="sync-icon green">R</span> 实时共享</h3>
+      <ul class="sync-detail">
+        <li>task-board.md 任务看板 — 三实例直接读写同一文件（本地文件系统）</li>
+        <li>routing-table.md 路由表 — 职责边界的 Single Source of Truth</li>
+        <li>clawmem MCP Server — Claude Code 每次输入实时检索</li>
+        <li>Telegram 消息 — Will 的指令即时到达目标实例</li>
+      </ul>
+    </div>
+
+    <div class="card sync-card">
+      <h3><span class="sync-icon blue">S</span> 定期同步</h3>
+      <ul class="sync-detail">
+        <li>cross-instance-sync.py — 每日 04:15 自动同步共享知识库</li>
+        <li>Skills 同步 — rsync 从 ユキ → ナツ/ハル/アキ</li>
+        <li>clawmem collection update — 定期重建向量索引</li>
+        <li>Heartbeat 检查 — 各实例周期检查委派任务</li>
+      </ul>
+    </div>
+
+    <div class="card sync-card">
+      <h3><span class="sync-icon orange">E</span> 事件驱动</h3>
+      <ul class="sync-detail">
+        <li>SIGUSR1 热重载 — 配置变更后立即生效，无需重启</li>
+        <li>Stop Hook → handoff — 会话结束时自动生成交接文档</li>
+        <li>委派协议 — 跨实例任务在看板中状态流转</li>
+        <li>错误熔断 — 3次失败自动标记 BLOCKED</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Skills Sync Diagram -->
+  <div class="card" style="margin-top:1.5rem;">
+    <h3 style="margin-bottom:1rem;font-size:1.05rem;">Skills 跨实例同步流程</h3>
+    <div class="code-block">
+<span class="cm"># 源：ユキ（主实例）→ 同步到所有实例</span>
+
+<span class="cm"># ナツ（同机，端口不同）</span>
+<span class="kw">rsync</span> -av ~/.openclaw/workspace/skills/ ~/.openclaw/workspace-natsu/skills/
+<span class="kw">kill</span> -USR1 $(<span class="fn">pgrep</span> -f <span class="str">"openclaw.*18790"</span>)
+
+<span class="cm"># ハル（远程 M2 Mac Mini）</span>
+<span class="kw">rsync</span> -av ~/.openclaw/workspace/skills/ willma@Wills-Mac-mini.local:~/.openclaw/workspace/skills/
+
+<span class="cm"># アキ（远程 MacBook Pro via Tailscale）</span>
+<span class="kw">rsync</span> -av ~/.openclaw/workspace/skills/ willma@100.114.92.3:~/.openclaw/workspace/skills/
+    </div>
+  </div>
+
+  <!-- Sync Matrix Table -->
+  <div class="matrix-table-wrap" style="margin-top:1.5rem;">
+    <table>
+      <thead>
+        <tr>
+          <th>数据类型</th>
+          <th>同步方式</th>
+          <th>频率</th>
+          <th>方向</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>任务看板</td>
+          <td>文件系统直读</td>
+          <td>实时</td>
+          <td>双向</td>
+        </tr>
+        <tr>
+          <td>路由表</td>
+          <td>文件系统直读</td>
+          <td>实时</td>
+          <td>只读</td>
+        </tr>
+        <tr>
+          <td>Skills 技能集</td>
+          <td>rsync + SIGUSR1</td>
+          <td>手动/按需</td>
+          <td>ユキ → 全部</td>
+        </tr>
+        <tr>
+          <td>共享知识库</td>
+          <td>cross-instance-sync.py</td>
+          <td>每日 04:15</td>
+          <td>ユキ → 全部</td>
+        </tr>
+        <tr>
+          <td>clawmem 记忆</td>
+          <td>MCP Server 检索</td>
+          <td>每次查询</td>
+          <td>双向读写</td>
+        </tr>
+        <tr>
+          <td>Claude Code 决策</td>
+          <td>Stop Hook 自动保存</td>
+          <td>会话结束时</td>
+          <td>CC → clawmem</td>
+        </tr>
+        <tr>
+          <td>配置文件</td>
+          <td>SSH + SIGUSR1 热重载</td>
+          <td>事件驱动</td>
+          <td>Claude Code → 实例</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ==================== 08 未来扩展 ==================== -->
+<section id="future" class="reveal">
+  <div class="section-header">
+    <div class="section-num">08 / Future Roadmap</div>
+    <h2 class="section-title">未来<span class="hl">扩展</span></h2>
+    <p class="section-desc">
+      从当前的四实例协作到更智能的自主协作体系——每个阶段都在解决一个具体的协作痛点。
+    </p>
+  </div>
+
+  <div class="future-timeline">
+    <div class="future-item">
+      <div class="fi-phase">Phase 1 — 可视化</div>
+      <h3>监控 Dashboard</h3>
+      <p>
+        在 OpenClaw Web 界面展示四实例实时状态、任务看板全景、资源使用率和错误日志。
+        让 Will 一个页面看到所有实例在做什么，不再需要逐个检查。
+        包含 Heartbeat 心跳监控和任务超时自动告警。
+      </p>
+      <div class="future-tags">
+        <span>Web UI</span><span>实时监控</span><span>告警推送</span><span>状态聚合</span>
+      </div>
+    </div>
+
+    <div class="future-item">
+      <div class="fi-phase">Phase 2 — 智能路由</div>
+      <h3>委派智能路由 + 自动熔断</h3>
+      <p>
+        基于路由表的静态分配升级为动态智能路由。根据实例当前负载、能力匹配度、历史成功率
+        自动推荐最佳委派目标。集成 3 次错误熔断机制，防止任务无限重试浪费资源。
+        任务看板与熔断联动，BLOCKED 状态自动升级通知。
+      </p>
+      <div class="future-tags">
+        <span>动态路由</span><span>负载均衡</span><span>熔断机制</span><span>自愈能力</span>
+      </div>
+    </div>
+
+    <div class="future-item">
+      <div class="fi-phase">Phase 3 — 记忆增强</div>
+      <h3>跨实例语义记忆搜索</h3>
+      <p>
+        将 clawmem 的能力扩展到所有实例。任何实例都能语义检索全局知识图谱，
+        不仅包括 shared-knowledge 的文件，还包括每个实例的对话历史、决策记录和反馈信号。
+        支持因果链追溯："这个设计决策是什么时候、谁、基于什么原因做的？"
+      </p>
+      <div class="future-tags">
+        <span>语义检索</span><span>知识图谱</span><span>因果追溯</span><span>全局记忆</span>
+      </div>
+    </div>
+
+    <div class="future-item">
+      <div class="fi-phase">Phase 4 — 自主协作</div>
+      <h3>产出质量校验 + 自主工作流</h3>
+      <p>
+        引入产出质量校验管线：SNS 文案自动检查字数、品牌名、禁用词；客服回复验证敬语体；
+        技术方案强制包含前提/步骤/风险三章节。校验通过后自动发布，不通过则自动修正重试。
+        最终实现从需求输入到交付的全自主工作流，Will 只需审批关键节点。
+      </p>
+      <div class="future-tags">
+        <span>质量校验</span><span>自动修正</span><span>自主执行</span><span>审批网关</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+</div><!-- .container -->
+
+<!-- ==================== FOOTER ==================== -->
+<footer class="footer">
+  <div class="footer-brand">Open<span class="hl">Claw</span> + Claude Code + Telegram</div>
+  <p>三方协作架构技术方案 v2.0 — 2026.04</p>
+  <p style="margin-top:0.3rem;font-size:0.75rem;color:var(--text-muted);">
+    Built with OpenClaw (Kimi K2.5) + Claude Code (Opus 4.6) + clawmem
+  </p>
+</footer>
+
+<!-- ===== Scroll Reveal Script ===== -->
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.1 });
+  reveals.forEach(el => observer.observe(el));
+});
+</script>
+
+</body>
+</html>

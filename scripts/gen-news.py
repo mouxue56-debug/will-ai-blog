@@ -69,7 +69,7 @@ def search_real_news(query, count=3):
     try:
         r = requests.get(
             SEARXNG_URL,
-            params={"q": query, "format": "json", "engines": "google,bing"},
+            params={"q": query, "format": "json", "engines": "brave,startpage"},
             proxies={"http": None, "https": None},  # 绕过系统代理
             timeout=15
         )
