@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hermes vs OpenClaw 技术对比分析 | 多模型交叉验证报告</title>
+    <title>三强鼎立：Hermes vs Official OpenClaw vs Will's Custom | 技术对比分析报告</title>
     <style>
         :root {
             --bg-primary: #0A1420;
@@ -11,6 +11,7 @@
             --text-primary: #E8F4F8;
             --accent-primary: #00D4FF;
             --accent-action: #FF8C42;
+            --accent-purple: #A78BFA;
             --card-bg: rgba(0, 212, 255, 0.05);
             --border-subtle: rgba(0, 212, 255, 0.15);
             --border-strong: rgba(0, 212, 255, 0.3);
@@ -18,17 +19,13 @@
             --warning: #FBBF24;
             --danger: #F87171;
             --info: #60A5FA;
+            --hermes-color: #FF8C42;
+            --official-color: #00D4FF;
+            --custom-color: #4ADE80;
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        html {
-            scroll-behavior: smooth;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
@@ -38,564 +35,197 @@
             font-size: 15px;
         }
 
-        /* Sticky TOC Sidebar */
+        /* Sticky TOC */
         .toc-sidebar {
-            position: fixed;
-            left: 0;
-            top: 0;
-            width: 260px;
-            height: 100vh;
-            background: var(--bg-content);
-            border-right: 1px solid var(--border-subtle);
-            padding: 24px 16px;
-            overflow-y: auto;
-            z-index: 100;
+            position: fixed; left: 0; top: 0; width: 260px; height: 100vh;
+            background: var(--bg-content); border-right: 1px solid var(--border-subtle);
+            padding: 24px 16px; overflow-y: auto; z-index: 100;
         }
-
         .toc-title {
-            font-size: 14px;
-            font-weight: 700;
-            color: var(--accent-primary);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 20px;
-            padding-bottom: 12px;
+            font-size: 14px; font-weight: 700; color: var(--accent-primary);
+            text-transform: uppercase; letter-spacing: 1px; margin-bottom: 20px; padding-bottom: 12px;
             border-bottom: 1px solid var(--border-subtle);
         }
-
-        .toc-list {
-            list-style: none;
-        }
-
-        .toc-list li {
-            margin-bottom: 6px;
-        }
-
+        .toc-list { list-style: none; }
+        .toc-list li { margin-bottom: 6px; }
         .toc-list a {
-            display: block;
-            padding: 8px 12px;
-            color: var(--text-primary);
-            text-decoration: none;
-            font-size: 13px;
-            border-radius: 8px;
-            transition: all 0.2s;
-            opacity: 0.85;
-            border-left: 2px solid transparent;
+            display: block; padding: 8px 12px; color: var(--text-primary);
+            text-decoration: none; font-size: 13px; border-radius: 8px;
+            transition: all 0.2s; opacity: 0.85; border-left: 2px solid transparent;
         }
+        .toc-list a:hover { background: rgba(0, 212, 255, 0.08); opacity: 1; }
+        .toc-list a.active { background: rgba(0, 212, 255, 0.12); border-left-color: var(--accent-primary); opacity: 1; color: var(--accent-primary); }
+        .toc-list .toc-h3 { padding-left: 24px; font-size: 12px; }
 
-        .toc-list a:hover {
-            background: rgba(0, 212, 255, 0.08);
-            opacity: 1;
+        /* Main */
+        .main-content { margin-left: 260px; min-height: 100vh; }
+        .container { max-width: 960px; margin: 0 auto; padding: 40px 32px; }
+
+        /* Comparison Scope Banner */
+        .scope-banner {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.06) 0%, rgba(74, 222, 128, 0.05) 50%, rgba(255, 140, 66, 0.05) 100%);
+            border: 1px solid var(--border-subtle);
+            border-radius: 16px;
+            padding: 24px 28px;
+            margin-bottom: 32px;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 20px;
         }
-
-        .toc-list a.active {
-            background: rgba(0, 212, 255, 0.12);
-            border-left-color: var(--accent-primary);
-            opacity: 1;
-            color: var(--accent-primary);
+        .scope-item {
+            background: var(--bg-content);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            padding: 16px 18px;
         }
-
-        .toc-list .toc-h2 {
-            font-weight: 600;
+        .scope-item .scope-name {
+            font-size: 14px; font-weight: 800; margin-bottom: 6px;
+            display: flex; align-items: center; gap: 8px;
         }
+        .scope-item .scope-desc { font-size: 12px; opacity: 0.75; margin: 0; line-height: 1.5; }
+        .scope-hermes .scope-name { color: var(--hermes-color); }
+        .scope-official .scope-name { color: var(--official-color); }
+        .scope-custom .scope-name { color: var(--custom-color); }
 
-        .toc-list .toc-h3 {
-            padding-left: 24px;
-            font-size: 12px;
-        }
-
-        /* Main Content */
-        .main-content {
-            margin-left: 260px;
-            min-height: 100vh;
-        }
-
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 40px 32px;
-        }
-
-        /* Hero Section */
+        /* Hero */
         .hero {
-            background: linear-gradient(135deg, rgba(0, 212, 255, 0.08) 0%, rgba(10, 20, 32, 0) 50%, rgba(255, 140, 66, 0.05) 100%);
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.08) 0%, rgba(10, 20, 32, 0) 50%, rgba(74, 222, 128, 0.05) 100%);
             border: 1px solid var(--border-subtle);
             border-radius: 20px;
-            padding: 60px 48px;
+            padding: 56px 48px;
             text-align: center;
             margin-bottom: 40px;
             position: relative;
             overflow: hidden;
         }
-
         .hero::before {
-            content: "";
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
+            content: ""; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
             background: radial-gradient(circle at 30% 30%, rgba(0, 212, 255, 0.06) 0%, transparent 40%),
-                        radial-gradient(circle at 70% 70%, rgba(255, 140, 66, 0.04) 0%, transparent 40%);
+                        radial-gradient(circle at 70% 70%, rgba(74, 222, 128, 0.04) 0%, transparent 40%);
             pointer-events: none;
         }
-
         .hero-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: rgba(0, 212, 255, 0.12);
-            border: 1px solid var(--border-strong);
-            padding: 10px 20px;
-            border-radius: 50px;
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--accent-primary);
-            margin-bottom: 28px;
+            display: inline-flex; align-items: center; gap: 8px;
+            background: rgba(0, 212, 255, 0.12); border: 1px solid var(--border-strong);
+            padding: 10px 20px; border-radius: 50px; font-size: 13px; font-weight: 600;
+            color: var(--accent-primary); margin-bottom: 28px;
         }
-
-        .hero-badge::before {
-            content: "◎";
-            font-size: 14px;
-        }
-
         .hero h1 {
-            font-size: 42px;
-            font-weight: 800;
-            line-height: 1.2;
-            margin-bottom: 20px;
+            font-size: 40px; font-weight: 800; line-height: 1.2; margin-bottom: 20px;
             background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent-primary) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
         }
+        .hero-subtitle { font-size: 17px; opacity: 0.8; max-width: 680px; margin: 0 auto 32px; }
+        .hero-meta { display: flex; justify-content: center; gap: 32px; flex-wrap: wrap; font-size: 13px; opacity: 0.7; }
 
-        .hero-subtitle {
-            font-size: 18px;
-            opacity: 0.8;
-            max-width: 640px;
-            margin: 0 auto 32px;
-        }
-
-        .hero-meta {
-            display: flex;
-            justify-content: center;
-            gap: 32px;
-            flex-wrap: wrap;
-            font-size: 13px;
-            opacity: 0.7;
-        }
-
-        .hero-meta span {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        /* Structural Guide */
-        .guide-bar {
-            display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
-            margin-bottom: 40px;
-        }
-
-        .guide-tag {
-            padding: 8px 16px;
-            border-radius: 8px;
-            font-size: 13px;
-            font-weight: 500;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
+        /* Guide Tags */
+        .guide-bar { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 40px; }
+        .guide-tag { padding: 8px 16px; border-radius: 8px; font-size: 13px; font-weight: 500; display: flex; align-items: center; gap: 6px; }
         .guide-tag.arch { background: rgba(0, 212, 255, 0.12); color: var(--accent-primary); }
         .guide-tag.risk { background: rgba(248, 113, 113, 0.12); color: var(--danger); }
         .guide-tag.trend { background: rgba(96, 165, 250, 0.12); color: var(--info); }
         .guide-tag.action { background: rgba(255, 140, 66, 0.12); color: var(--accent-action); }
 
-        /* Section Title */
-        h2 {
-            font-size: 26px;
-            font-weight: 700;
-            margin: 48px 0 24px;
-            padding-bottom: 12px;
-            border-bottom: 2px solid var(--border-subtle);
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        h2 .section-num {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 36px;
-            height: 36px;
-            background: var(--accent-primary);
-            color: var(--bg-primary);
-            border-radius: 10px;
-            font-size: 16px;
-            font-weight: 800;
-        }
-
-        h3 {
-            font-size: 20px;
-            font-weight: 600;
-            margin: 32px 0 16px;
-            color: var(--accent-primary);
-        }
-
-        h4 {
-            font-size: 16px;
-            font-weight: 600;
-            margin: 24px 0 12px;
-            opacity: 0.95;
-        }
-
-        p {
-            margin-bottom: 16px;
-            opacity: 0.92;
-        }
+        /* Section */
+        h2 { font-size: 26px; font-weight: 700; margin: 48px 0 24px; padding-bottom: 12px; border-bottom: 2px solid var(--border-subtle); display: flex; align-items: center; gap: 12px; }
+        h2 .section-num { display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; background: var(--accent-primary); color: var(--bg-primary); border-radius: 10px; font-size: 16px; font-weight: 800; }
+        h3 { font-size: 20px; font-weight: 600; margin: 32px 0 16px; color: var(--accent-primary); }
+        h4 { font-size: 16px; font-weight: 600; margin: 24px 0 12px; }
+        p { margin-bottom: 16px; opacity: 0.92; }
 
         /* Cards */
         .card {
-            background: var(--card-bg);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid var(--border-subtle);
-            border-radius: 16px;
-            padding: 24px;
-            margin-bottom: 20px;
+            background: var(--card-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border-subtle); border-radius: 16px; padding: 24px; margin-bottom: 20px;
         }
+        .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin: 24px 0; }
 
-        .card-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 20px;
-            margin: 24px 0;
-        }
-
-        /* Executive Summary */
+        /* Exec Summary */
         .exec-summary {
-            background: linear-gradient(135deg, rgba(0, 212, 255, 0.08), rgba(255, 140, 66, 0.05));
-            border: 1px solid var(--border-strong);
-            border-radius: 16px;
-            padding: 28px;
-            margin-bottom: 32px;
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.08), rgba(74, 222, 128, 0.05), rgba(255, 140, 66, 0.05));
+            border: 1px solid var(--border-strong); border-radius: 16px; padding: 28px; margin-bottom: 32px;
         }
+        .consensus-box { display: flex; gap: 16px; flex-wrap: wrap; margin: 20px 0; }
+        .consensus-item { flex: 1; min-width: 220px; background: var(--bg-content); border: 1px solid var(--border-subtle); border-radius: 12px; padding: 18px; }
+        .consensus-item .model-name { font-size: 13px; font-weight: 700; color: var(--accent-primary); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .consensus-item p { font-size: 14px; margin: 0; opacity: 0.9; }
+        .one-liner { background: var(--bg-content); border-left: 4px solid var(--accent-action); padding: 20px 24px; border-radius: 0 12px 12px 0; font-size: 17px; font-weight: 600; margin-top: 20px; }
 
-        .consensus-box {
-            display: flex;
-            gap: 16px;
-            flex-wrap: wrap;
-            margin: 20px 0;
+        /* Three-way Winner Row */
+        .winner-row {
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 24px 0;
         }
-
-        .consensus-item {
-            flex: 1;
-            min-width: 220px;
-            background: var(--bg-content);
-            border: 1px solid var(--border-subtle);
-            border-radius: 12px;
-            padding: 18px;
+        .winner-card {
+            background: var(--bg-content); border: 1px solid var(--border-subtle);
+            border-radius: 12px; padding: 20px; text-align: center;
         }
+        .winner-card .wc-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.6; margin-bottom: 8px; }
+        .winner-card h5 { font-size: 15px; margin-bottom: 8px; }
+        .winner-card p { font-size: 12px; margin: 0; opacity: 0.75; }
+        .winner-hermes { border-top: 3px solid var(--hermes-color); }
+        .winner-hermes h5 { color: var(--hermes-color); }
+        .winner-official { border-top: 3px solid var(--official-color); }
+        .winner-official h5 { color: var(--official-color); }
+        .winner-custom { border-top: 3px solid var(--custom-color); }
+        .winner-custom h5 { color: var(--custom-color); }
 
-        .consensus-item .model-name {
-            font-size: 13px;
-            font-weight: 700;
-            color: var(--accent-primary);
-            margin-bottom: 8px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .consensus-item p {
-            font-size: 14px;
-            margin: 0;
-            opacity: 0.9;
-        }
-
-        .one-liner {
-            background: var(--bg-content);
-            border-left: 4px solid var(--accent-action);
-            padding: 20px 24px;
-            border-radius: 0 12px 12px 0;
-            font-size: 17px;
-            font-weight: 600;
-            margin-top: 20px;
-        }
-
-        /* Architecture Diagram */
-        .arch-flow {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            margin: 28px 0;
-        }
-
-        .arch-layer {
-            display: flex;
-            align-items: stretch;
-            gap: 16px;
-            min-height: 80px;
-        }
-
-        .layer-label {
-            width: 80px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: var(--accent-primary);
-            color: var(--bg-primary);
-            border-radius: 12px;
-            font-weight: 800;
-            font-size: 18px;
-            flex-shrink: 0;
-        }
-
-        .layer-content {
-            flex: 1;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-        }
-
-        .layer-col {
-            background: var(--bg-content);
-            border: 1px solid var(--border-subtle);
-            border-radius: 12px;
-            padding: 16px 20px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-
-        .layer-col h5 {
-            font-size: 13px;
-            font-weight: 700;
-            color: var(--accent-primary);
-            margin-bottom: 6px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .layer-col p {
-            font-size: 14px;
-            margin: 0;
-            opacity: 0.85;
-            line-height: 1.5;
-        }
-
-        .layer-col strong {
-            color: var(--accent-primary);
-        }
-
-        .layer-col.openclaw { border-left: 3px solid var(--accent-primary); }
-        .layer-col.hermes { border-left: 3px solid var(--accent-action); }
+        /* Architecture Flow */
+        .arch-flow { display: flex; flex-direction: column; gap: 12px; margin: 28px 0; }
+        .arch-layer { display: flex; align-items: stretch; gap: 16px; min-height: 80px; }
+        .layer-label { width: 80px; display: flex; align-items: center; justify-content: center; background: var(--accent-primary); color: var(--bg-primary); border-radius: 12px; font-weight: 800; font-size: 18px; flex-shrink: 0; }
+        .layer-content { flex: 1; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+        .layer-col { background: var(--bg-content); border: 1px solid var(--border-subtle); border-radius: 12px; padding: 14px 16px; display: flex; flex-direction: column; justify-content: center; }
+        .layer-col h5 { font-size: 12px; font-weight: 700; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .layer-col p { font-size: 13px; margin: 0; opacity: 0.85; line-height: 1.5; }
+        .layer-col strong { }
+        .layer-col.hermes { border-left: 3px solid var(--hermes-color); }
+        .layer-col.hermes h5 { color: var(--hermes-color); }
+        .layer-col.official { border-left: 3px solid var(--official-color); }
+        .layer-col.official h5 { color: var(--official-color); }
+        .layer-col.custom { border-left: 3px solid var(--custom-color); }
+        .layer-col.custom h5 { color: var(--custom-color); }
 
         /* Details */
-        details {
-            background: var(--bg-content);
-            border: 1px solid var(--border-subtle);
-            border-radius: 12px;
-            margin-bottom: 12px;
-            overflow: hidden;
-        }
-
-        summary {
-            padding: 16px 20px;
-            font-weight: 600;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            list-style: none;
-            user-select: none;
-        }
-
-        summary::-webkit-details-marker {
-            display: none;
-        }
-
-        summary::before {
-            content: "▸";
-            color: var(--accent-primary);
-            font-size: 14px;
-            transition: transform 0.2s;
-        }
-
-        details[open] summary::before {
-            transform: rotate(90deg);
-        }
-
-        details[open] summary {
-            border-bottom: 1px solid var(--border-subtle);
-        }
-
-        .details-body {
-            padding: 20px;
-        }
+        details { background: var(--bg-content); border: 1px solid var(--border-subtle); border-radius: 12px; margin-bottom: 12px; overflow: hidden; }
+        summary { padding: 16px 20px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 10px; list-style: none; user-select: none; }
+        summary::-webkit-details-marker { display: none; }
+        summary::before { content: "▸"; color: var(--accent-primary); font-size: 14px; transition: transform 0.2s; }
+        details[open] summary::before { transform: rotate(90deg); }
+        details[open] summary { border-bottom: 1px solid var(--border-subtle); }
+        .details-body { padding: 20px; }
 
         /* Model Cards */
-        .model-card {
-            background: var(--card-bg);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--border-subtle);
-            border-radius: 16px;
-            padding: 28px;
-            margin-bottom: 20px;
-            position: relative;
-        }
-
-        .model-header {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            margin-bottom: 16px;
-        }
-
-        .model-avatar {
-            width: 48px;
-            height: 48px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 800;
-            font-size: 18px;
-            color: var(--bg-primary);
-        }
-
+        .model-card { background: var(--card-bg); backdrop-filter: blur(20px); border: 1px solid var(--border-subtle); border-radius: 16px; padding: 28px; margin-bottom: 20px; position: relative; }
+        .model-header { display: flex; align-items: center; gap: 14px; margin-bottom: 16px; }
+        .model-avatar { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 18px; color: var(--bg-primary); }
         .avatar-glm { background: linear-gradient(135deg, #4ADE80, #22C55E); }
         .avatar-qwen { background: linear-gradient(135deg, #60A5FA, #3B82F6); }
         .avatar-ds { background: linear-gradient(135deg, #A78BFA, #8B5CF6); }
-
-        .model-title {
-            flex: 1;
-        }
-
-        .model-title h4 {
-            font-size: 18px;
-            margin: 0;
-        }
-
-        .model-tag {
-            font-size: 12px;
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-weight: 500;
-            display: inline-block;
-            margin-top: 4px;
-        }
-
+        .model-title { flex: 1; }
+        .model-title h4 { font-size: 18px; margin: 0; }
+        .model-tag { font-size: 12px; padding: 4px 10px; border-radius: 20px; font-weight: 500; display: inline-block; margin-top: 4px; }
         .tag-glm { background: rgba(74, 222, 128, 0.15); color: #4ADE80; }
         .tag-qwen { background: rgba(96, 165, 250, 0.15); color: #60A5FA; }
         .tag-ds { background: rgba(167, 139, 250, 0.15); color: #A78BFA; }
-
-        .model-highlight {
-            background: var(--bg-content);
-            border-left: 3px solid var(--accent-primary);
-            padding: 14px 18px;
-            border-radius: 0 10px 10px 0;
-            margin: 16px 0;
-            font-weight: 500;
-        }
+        .model-highlight { background: var(--bg-content); border-left: 3px solid var(--accent-primary); padding: 14px 18px; border-radius: 0 10px 10px 0; margin: 16px 0; font-weight: 500; }
 
         /* Quote Box */
-        .quote-box {
-            background: linear-gradient(135deg, rgba(167, 139, 250, 0.1), rgba(139, 92, 246, 0.05));
-            border: 1px solid rgba(167, 139, 250, 0.25);
-            border-radius: 12px;
-            padding: 20px 24px;
-            font-style: italic;
-            font-size: 16px;
-            margin: 20px 0;
-            position: relative;
-        }
-
-        .quote-box::before {
-            content: """;
-            font-size: 48px;
-            color: rgba(167, 139, 250, 0.3);
-            position: absolute;
-            top: 8px;
-            left: 16px;
-            line-height: 1;
-        }
-
-        .quote-box p {
-            margin: 0;
-            padding-left: 24px;
-        }
-
-        .quote-author {
-            text-align: right;
-            font-size: 13px;
-            font-style: normal;
-            opacity: 0.7;
-            margin-top: 12px;
-        }
+        .quote-box { background: linear-gradient(135deg, rgba(167, 139, 250, 0.1), rgba(139, 92, 246, 0.05)); border: 1px solid rgba(167, 139, 250, 0.25); border-radius: 12px; padding: 20px 24px; font-style: italic; font-size: 16px; margin: 20px 0; position: relative; }
+        .quote-box::before { content: """"; font-size: 48px; color: rgba(167, 139, 250, 0.3); position: absolute; top: 8px; left: 16px; line-height: 1; }
+        .quote-box p { margin: 0; padding-left: 24px; }
+        .quote-author { text-align: right; font-size: 13px; font-style: normal; opacity: 0.7; margin-top: 12px; }
 
         /* Tables */
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-            font-size: 14px;
-            background: var(--bg-content);
-            border-radius: 12px;
-            overflow: hidden;
-            border: 1px solid var(--border-subtle);
-        }
-
-        th {
-            background: rgba(0, 212, 255, 0.1);
-            color: var(--accent-primary);
-            font-weight: 600;
-            text-align: left;
-            padding: 14px 16px;
-            border-bottom: 1px solid var(--border-subtle);
-        }
-
-        td {
-            padding: 14px 16px;
-            border-bottom: 1px solid var(--border-subtle);
-            vertical-align: top;
-        }
-
-        tr:last-child td {
-            border-bottom: none;
-        }
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px; background: var(--bg-content); border-radius: 12px; overflow: hidden; border: 1px solid var(--border-subtle); }
+        th { background: rgba(0, 212, 255, 0.1); color: var(--accent-primary); font-weight: 600; text-align: left; padding: 14px 16px; border-bottom: 1px solid var(--border-subtle); }
+        td { padding: 14px 16px; border-bottom: 1px solid var(--border-subtle); vertical-align: top; }
+        tr:last-child td { border-bottom: none; }
 
         /* Heatmap */
-        .heatmap {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 12px;
-            margin: 20px 0;
-        }
-
-        .heat-cell {
-            background: var(--bg-content);
-            border: 1px solid var(--border-subtle);
-            border-radius: 12px;
-            padding: 18px;
-            text-align: center;
-        }
-
-        .heat-cell .label {
-            font-size: 12px;
-            opacity: 0.7;
-            margin-bottom: 8px;
-        }
-
-        .heat-cell .value {
-            font-size: 24px;
-            font-weight: 800;
-        }
-
+        .heatmap { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin: 20px 0; }
+        .heat-cell { background: var(--bg-content); border: 1px solid var(--border-subtle); border-radius: 12px; padding: 18px; text-align: center; }
+        .heat-cell .label { font-size: 12px; opacity: 0.7; margin-bottom: 8px; }
+        .heat-cell .value { font-size: 24px; font-weight: 800; }
         .heat-high { border-color: var(--danger); background: rgba(248, 113, 113, 0.08); }
         .heat-high .value { color: var(--danger); }
         .heat-med { border-color: var(--warning); background: rgba(251, 191, 36, 0.08); }
@@ -604,207 +234,85 @@
         .heat-low .value { color: var(--success); }
 
         /* ROI Matrix */
-        .roi-matrix {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 16px;
-            margin: 24px 0;
-        }
-
-        .roi-card {
-            background: var(--bg-content);
-            border: 1px solid var(--border-subtle);
-            border-radius: 12px;
-            padding: 20px;
-            text-align: center;
-        }
-
-        .roi-card h5 {
-            font-size: 14px;
-            margin-bottom: 12px;
-        }
-
+        .roi-matrix { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 24px 0; }
+        .roi-card { background: var(--bg-content); border: 1px solid var(--border-subtle); border-radius: 12px; padding: 20px; text-align: center; }
+        .roi-card h5 { font-size: 14px; margin-bottom: 12px; }
         .roi-a { border-top: 3px solid var(--success); }
         .roi-b { border-top: 3px solid var(--warning); }
         .roi-c { border-top: 3px solid var(--danger); }
 
         /* Action Items */
-        .action-list {
-            display: flex;
-            flex-direction: column;
-            gap: 14px;
-            margin: 24px 0;
-        }
-
-        .action-item {
-            display: flex;
-            gap: 16px;
-            background: var(--bg-content);
-            border: 1px solid var(--border-subtle);
-            border-radius: 12px;
-            padding: 20px;
-            align-items: flex-start;
-        }
-
-        .priority-badge {
-            padding: 6px 14px;
-            border-radius: 8px;
-            font-size: 12px;
-            font-weight: 800;
-            text-transform: uppercase;
-            flex-shrink: 0;
-        }
-
+        .action-list { display: flex; flex-direction: column; gap: 14px; margin: 24px 0; }
+        .action-item { display: flex; gap: 16px; background: var(--bg-content); border: 1px solid var(--border-subtle); border-radius: 12px; padding: 20px; align-items: flex-start; }
+        .priority-badge { padding: 6px 14px; border-radius: 8px; font-size: 12px; font-weight: 800; text-transform: uppercase; flex-shrink: 0; }
         .p0 { background: rgba(248, 113, 113, 0.15); color: var(--danger); border: 1px solid rgba(248, 113, 113, 0.3); }
         .p1 { background: rgba(251, 191, 36, 0.15); color: var(--warning); border: 1px solid rgba(251, 191, 36, 0.3); }
         .p2 { background: rgba(74, 222, 128, 0.15); color: var(--success); border: 1px solid rgba(74, 222, 128, 0.3); }
+        .action-content { flex: 1; }
+        .action-content h5 { font-size: 15px; margin-bottom: 6px; }
+        .action-meta { display: flex; gap: 16px; font-size: 12px; opacity: 0.7; margin-top: 8px; }
 
-        .action-content {
-            flex: 1;
-        }
-
-        .action-content h5 {
-            font-size: 15px;
-            margin-bottom: 6px;
-        }
-
-        .action-meta {
-            display: flex;
-            gap: 16px;
-            font-size: 12px;
-            opacity: 0.7;
-            margin-top: 8px;
-        }
-
-        /* Tooltips in Glossary */
-        .glossary-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 16px;
-            margin: 24px 0;
-        }
-
-        .glossary-item {
-            background: var(--bg-content);
-            border: 1px solid var(--border-subtle);
-            border-radius: 10px;
-            padding: 16px;
-        }
-
-        .glossary-item dt {
-            font-weight: 600;
-            color: var(--accent-primary);
-            margin-bottom: 6px;
-            font-size: 14px;
-        }
-
-        .glossary-item dd {
-            font-size: 13px;
-            opacity: 0.85;
-            margin: 0;
-        }
+        /* Glossary */
+        .glossary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; margin: 24px 0; }
+        .glossary-item { background: var(--bg-content); border: 1px solid var(--border-subtle); border-radius: 10px; padding: 16px; }
+        .glossary-item dt { font-weight: 600; color: var(--accent-primary); margin-bottom: 6px; font-size: 14px; }
+        .glossary-item dd { font-size: 13px; opacity: 0.85; margin: 0; }
 
         /* Visualization Bar */
-        .viz-bar {
-            display: flex;
-            height: 32px;
-            border-radius: 8px;
-            overflow: hidden;
-            margin: 16px 0;
-            background: var(--bg-content);
-            border: 1px solid var(--border-subtle);
-        }
-
-        .viz-segment {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 11px;
-            font-weight: 600;
-        }
-
+        .viz-bar { display: flex; height: 32px; border-radius: 8px; overflow: hidden; margin: 16px 0; background: var(--bg-content); border: 1px solid var(--border-subtle); }
+        .viz-segment { display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; }
         .viz-compatible { background: rgba(74, 222, 128, 0.25); color: #86EFAC; }
         .viz-soft { background: rgba(251, 191, 36, 0.25); color: #FCD34D; }
         .viz-hard { background: rgba(248, 113, 113, 0.25); color: #FCA5A5; }
         .viz-enhance { background: rgba(96, 165, 250, 0.25); color: #93C5FD; }
 
-        /* Responsive */
-        @media (max-width: 1100px) {
-            .toc-sidebar {
-                display: none;
-            }
-            .main-content {
-                margin-left: 0;
-            }
-        }
+        /* Highlight Box */
+        .highlight-box { background: rgba(255, 140, 66, 0.08); border: 1px solid rgba(255, 140, 66, 0.2); border-radius: 10px; padding: 16px 20px; margin: 16px 0; }
+        .highlight-box p { margin: 0; }
+        .highlight-box.green { background: rgba(74, 222, 128, 0.08); border-color: rgba(74, 222, 128, 0.2); }
+        .highlight-box.green p { color: var(--success); }
+        .highlight-box.blue { background: rgba(0, 212, 255, 0.08); border-color: rgba(0, 212, 255, 0.2); }
+        .highlight-box.blue p { color: var(--accent-primary); }
 
-        @media (max-width: 768px) {
-            .container {
-                padding: 24px 16px;
-            }
-            .hero {
-                padding: 40px 24px;
-            }
-            .hero h1 {
-                font-size: 28px;
-            }
-            .layer-content {
-                grid-template-columns: 1fr;
-            }
-            .heatmap, .roi-matrix {
-                grid-template-columns: 1fr 1fr;
-            }
-            .arch-layer {
-                flex-direction: column;
-            }
-            .layer-label {
-                width: 100%;
-                padding: 12px;
-            }
-        }
-
-        /* Lists */
-        ul, ol {
-            margin: 12px 0 12px 20px;
-        }
-
-        li {
-            margin-bottom: 8px;
-            opacity: 0.9;
-        }
-
-        .highlight-box {
-            background: rgba(255, 140, 66, 0.08);
-            border: 1px solid rgba(255, 140, 66, 0.2);
-            border-radius: 10px;
-            padding: 16px 20px;
-            margin: 16px 0;
-        }
-
-        .highlight-box p {
-            margin: 0;
-        }
-
-        .status-badge {
-            display: inline-block;
-            padding: 4px 10px;
-            border-radius: 6px;
-            font-size: 12px;
-            font-weight: 600;
-            margin-left: 8px;
-        }
-
+        .status-badge { display: inline-block; padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 600; margin-left: 8px; }
         .badge-success { background: rgba(74, 222, 128, 0.15); color: var(--success); }
         .badge-warning { background: rgba(251, 191, 36, 0.15); color: var(--warning); }
         .badge-danger { background: rgba(248, 113, 113, 0.15); color: var(--danger); }
         .badge-info { background: rgba(96, 165, 250, 0.15); color: var(--info); }
+
+        /* Layer Winner Badge */
+        .layer-win-badge {
+            display: inline-block; font-size: 10px; font-weight: 800; text-transform: uppercase;
+            letter-spacing: 0.5px; padding: 2px 7px; border-radius: 4px; margin-top: 4px;
+        }
+        .win-hermes { background: rgba(255, 140, 66, 0.2); color: var(--hermes-color); }
+        .win-official { background: rgba(0, 212, 255, 0.2); color: var(--official-color); }
+        .win-custom { background: rgba(74, 222, 128, 0.2); color: var(--custom-color); }
+
+        /* Responsive */
+        @media (max-width: 1100px) {
+            .toc-sidebar { display: none; }
+            .main-content { margin-left: 0; }
+        }
+        @media (max-width: 768px) {
+            .container { padding: 24px 16px; }
+            .hero { padding: 40px 24px; }
+            .hero h1 { font-size: 28px; }
+            .layer-content { grid-template-columns: 1fr; }
+            .heatmap, .roi-matrix { grid-template-columns: 1fr 1fr; }
+            .arch-layer { flex-direction: column; }
+            .layer-label { width: 100%; padding: 12px; }
+            .scope-banner { grid-template-columns: 1fr; }
+            .winner-row { grid-template-columns: 1fr; }
+            .layer-col.official { display: none; }
+            .layer-col.custom { display: none; }
+        }
+
+        ul, ol { margin: 12px 0 12px 20px; }
+        li { margin-bottom: 8px; opacity: 0.9; }
     </style>
 </head>
 <body>
-<div style="background: linear-gradient(90deg, #1a2a3a 0%, #0f1c2e 100%); border-left: 4px solid #f59e0b; padding: 16px 20px; margin: 20px auto; max-width: 900px; border-radius: 8px; font-size: 14px; color: #e2e8f0; line-height: 1.6;">
-  <strong style="color: #f59e0b;">⚠️ 对比范围说明</strong><br/>
-  本报告的核心对比基线是 <strong>官方原版 OpenClaw 框架</strong>（开源项目 <code>github.com/openclaw/openclaw</code>）。文中提到的「蜂群引擎」「PUA-Lite」「四实例互联」「25+ Skills」等属于作者（Will）基于官方框架的<strong>私有生产增强</strong>，并非 OpenClaw 官方自带能力。官方 OpenClaw 提供的是 Harness 的 L2~L6 框架底座；私有增强则是在该底座上搭建的生产级业务系统。
-</div>
     <!-- TOC Sidebar -->
     <nav class="toc-sidebar">
         <div class="toc-title">目录导航</div>
@@ -824,15 +332,32 @@
 
     <main class="main-content">
         <div class="container">
+
+            <!-- Comparison Scope Banner -->
+            <div class="scope-banner" style="margin-top: 32px;">
+                <div class="scope-item scope-hermes">
+                    <div class="scope-name">🟠 Hermes</div>
+                    <p class="scope-desc">记忆层专用系统。Honcho 架构，1024维向量 + BM25+rerank 混合检索，专注 L1/L4 记忆管理精度的极致化。</p>
+                </div>
+                <div class="scope-item scope-official">
+                    <div class="scope-name">🔵 Official OpenClaw</div>
+                    <p class="scope-desc">开源 Harness 框架（github.com/openclaw/openclaw）。覆盖 L1-L6 完整框架，提供工具生态、MCP、browser automation、channel 插件等基础能力。</p>
+                </div>
+                <div class="scope-item scope-custom">
+                    <div class="scope-name">🟢 Will's Custom</div>
+                    <p class="scope-desc">基于官方框架的生产级部署：25+ 自定义 Skills、蜂群引擎、PUA-Lite 约束框架、四实例架构（ユキ/ナツ/ハル/アキ）、watchdog-pair 监控。</p>
+                </div>
+            </div>
+
             <!-- Hero -->
             <section id="hero" class="hero">
                 <div class="hero-badge">多模型交叉验证报告</div>
-                <h1>Hermes vs OpenClaw<br>技术对比分析</h1>
-                <p class="hero-subtitle">基于 GLM-5、Qwen3.5、DeepSeek Thinking 三方独立分析，结合 Harness Engineering 六层模型，对两种 Agent 技术栈进行全景式评估</p>
+                <h1>三强鼎立：Agent Harness<br>技术全景对比</h1>
+                <p class="hero-subtitle">基于 GLM-5、Qwen3.5、DeepSeek Thinking 三方独立分析，对 Hermes、Official OpenClaw、Will's Custom 三种技术路线进行全景式评估与战略定位</p>
                 <div class="hero-meta">
-                    <span>🤖 4 个模型参与</span>
+                    <span>🤖 3 方系统对比</span>
                     <span>📊 6 层架构拆解</span>
-                    <span>🎯 11 个核心章节</span>
+                    <span>🎯 3 种战略路径</span>
                     <span>📝 纯 HTML 交付</span>
                 </div>
             </section>
@@ -849,23 +374,42 @@
             <section id="summary">
                 <h2><span class="section-num">0</span>执行摘要</h2>
                 <div class="exec-summary">
-                    <h3>🎯 三模型核心共识</h3>
+                    <h3>🎯 三方核心共识</h3>
                     <div class="consensus-box">
                         <div class="consensus-item">
                             <div class="model-name">GLM-5（工程落地视角）</div>
-                            <p>OpenClaw 是生产验证的完整 Harness，Hermes 替代风险极高，不应在核心业务上赌未经验证的组件。</p>
+                            <p>Official OpenClaw 提供 L2-L6 完整框架底座，Will's Custom 在此之上实现了生产级执行验证。Hermes 在 L1/L4 有技术亮点，但缺乏独立完整 Harness 的基础设施。</p>
                         </div>
                         <div class="consensus-item">
                             <div class="model-name">Qwen3.5（架构演进视角）</div>
-                            <p>两者不是竞争关系。Hermes 是 L1 Context 层的专用记忆系统，最可能的路径是成为 OpenClaw 的「记忆后端」。</p>
+                            <p>三者定位清晰：Hermes = 记忆神经，Official OpenClaw = 躯体框架，Will's Custom = 武装到牙齿的生产引擎。最可能的路径是模块组合，而非三者竞争。</p>
                         </div>
                         <div class="consensus-item">
                             <div class="model-name">DeepSeek（工程思辨视角）</div>
-                            <p>「精致 L4」是一种技术幻觉。记忆是面子，工具和错误处理才是里子。优先补 L2/L5/L6，再考虑 L4 极致化。</p>
+                            <p>「精致 L4」是技术幻觉。记忆层做得再好也掩盖不了 L2/L3/L5/L6 的不足。先把里子（工具、编排、约束）做好，再考虑面子（记忆精度）升级。</p>
                         </div>
                     </div>
+
+                    <div class="winner-row">
+                        <div class="winner-card winner-hermes">
+                            <div class="wc-label">L1/L4 胜出</div>
+                            <h5>Hermes</h5>
+                            <p>记忆检索精度与上下文管理专项优化</p>
+                        </div>
+                        <div class="winner-card winner-official">
+                            <div class="wc-label">L2-L6 胜出</div>
+                            <h5>Official OpenClaw</h5>
+                            <p>完整框架底座，工具生态与插件体系</p>
+                        </div>
+                        <div class="winner-card winner-custom">
+                            <div class="wc-label">生产执行胜出</div>
+                            <h5>Will's Custom</h5>
+                            <p>25+ Skills、蜂群引擎、四实例架构的完整验证</p>
+                        </div>
+                    </div>
+
                     <div class="one-liner">
-                        💡 一句话战略结论：OpenClaw 为主，Hermes 仅做边缘轻量试点；若未来深度整合，Hermes 应作为 OpenClaw 的「记忆后端」而非替代品。
+                        💡 一句话战略结论：Official OpenClaw 是框架基座，Will's Custom 是生产验证态，Hermes 是可借鉴的记忆组件。优先发展 Will's Custom（L2-L6 生产闭环），选择性吸收 Hermes 的 L1/L4 技术思路。
                     </div>
                 </div>
             </section>
@@ -873,86 +417,147 @@
             <!-- Part 1: Architecture -->
             <section id="architecture">
                 <h2><span class="section-num">1</span>Harness Engineering 六层架构全景对比</h2>
-                <p>Harness Engineering 将 Agent 系统抽象为六个层级（L1-L6），从上层的上下文信息边界到底层的约束校验与失败恢复。以下对比展示了 OpenClaw 作为完整 Harness 与 Hermes/Honcho 作为记忆子系统的结构性差异。</p>
+                <p>Harness Engineering 将 Agent 系统抽象为六个层级（L1-L6），从上下文信息边界到底层约束校验与失败恢复。以下三列对比展示了 Hermes、Official OpenClaw、Will's Custom 的结构性差异与各自优势区间。</p>
 
                 <div class="arch-flow">
                     <div class="arch-layer">
                         <div class="layer-label">L6</div>
                         <div class="layer-content">
-                            <div class="layer-col openclaw">
-                                <h5>OpenClaw</h5>
-                                <p><strong>PUA-Lite</strong> 三条红线 + 五步方法论 + 失败升级机制。含 <strong>circuit breaker</strong> 熔断与闭环验证。约束层是生产级 Harness 的底线。</p>
-                            </div>
                             <div class="layer-col hermes">
-                                <h5>Hermes / Honcho</h5>
-                                <p>未见明确设计。Honcho 本身不处理行为约束或失败恢复逻辑，这些属于上层 Harness 的职责。</p>
+                                <h5>Hermes</h5>
+                                <p>无明确设计。作为记忆层子系统，安全约束依赖上层 Harness。</p>
+                                <span class="layer-win-badge win-hermes">N/A</span>
+                            </div>
+                            <div class="layer-col official">
+                                <h5>Official OpenClaw</h5>
+                                <p>基础行为约束框架，三条红线设计，无 PUA-Lite 级别的生产级闭环。</p>
+                                <span class="layer-win-badge win-official">基础</span>
+                            </div>
+                            <div class="layer-col custom">
+                                <h5>Will's Custom</h5>
+                                <p><strong>PUA-Lite</strong> 三条红线 + 五步方法论 + 失败升级 + circuit breaker 熔断。约束层是生产级底线。</p>
+                                <span class="layer-win-badge win-custom">★★★★★</span>
                             </div>
                         </div>
                     </div>
                     <div class="arch-layer">
                         <div class="layer-label">L5</div>
                         <div class="layer-content">
-                            <div class="layer-col openclaw">
-                                <h5>OpenClaw</h5>
-                                <p><strong>heartbeat + watchdog-pair</strong> 双实例互监、PUA-Lite 闭环验证、蜂群独立 Review Agent。观测与评估体系已验证。</p>
-                            </div>
                             <div class="layer-col hermes">
-                                <h5>Hermes / Honcho</h5>
-                                <p>未见明确设计。作为记忆层，不原生提供系统级观测能力。</p>
+                                <h5>Hermes</h5>
+                                <p>无系统级观测设计。记忆检索可作为观测数据源，但不提供独立的监控机制。</p>
+                                <span class="layer-win-badge win-hermes">N/A</span>
+                            </div>
+                            <div class="layer-col official">
+                                <h5>Official OpenClaw</h5>
+                                <p>基础日志和 session 管理，无多实例互监机制。</p>
+                                <span class="layer-win-badge win-official">基础</span>
+                            </div>
+                            <div class="layer-col custom">
+                                <h5>Will's Custom</h5>
+                                <p><strong>watchdog-pair</strong> 双实例互监 + heartbeat 定时检查 + 蜂群独立 Review Agent。观测体系已生产验证。</p>
+                                <span class="layer-win-badge win-custom">★★★★★</span>
                             </div>
                         </div>
                     </div>
                     <div class="arch-layer">
                         <div class="layer-label">L4</div>
                         <div class="layer-content">
-                            <div class="layer-col openclaw">
-                                <h5>OpenClaw</h5>
-                                <p>memory-lancedb v2.0、daily notes、procedures、shared-knowledge + 四实例同步。但实现<strong>偏文件化</strong>，检索架构有优化空间。</p>
-                            </div>
                             <div class="layer-col hermes">
-                                <h5>Hermes / Honcho</h5>
-                                <p><strong>强项</strong>。Honcho 核心即结构化记忆，原生支持 session-level + user-level state 管理，1024维向量 + BM25+rerank 混合检索。</p>
+                                <h5>Hermes</h5>
+                                <p><strong>主场。</strong> 1024维向量 + BM25+rerank 混合检索 + MiniMax/Kimi embeddings 双兜底。记忆精度最高。</p>
+                                <span class="layer-win-badge win-hermes">★★★★★</span>
+                            </div>
+                            <div class="layer-col official">
+                                <h5>Official OpenClaw</h5>
+                                <p>memory-lancedb v2.0、daily notes、procedures。实现偏文件化，无 rerank。</p>
+                                <span class="layer-win-badge win-official">★★★</span>
+                            </div>
+                            <div class="layer-col custom">
+                                <h5>Will's Custom</h5>
+                                <p>在官方基础上扩展 shared-knowledge + 四实例同步。但检索架构与官方相同，无 BM25+rerank。</p>
+                                <span class="layer-win-badge win-custom">★★★</span>
                             </div>
                         </div>
                     </div>
                     <div class="arch-layer">
                         <div class="layer-label">L3</div>
                         <div class="layer-content">
-                            <div class="layer-col openclaw">
-                                <h5>OpenClaw</h5>
-                                <p><strong>强项</strong>。蜂群引擎（Swarm Engine）、subagent 编排、cron 调度、ClawFlow、auto-pipeline / auto-dev-loop 均已生产验证。</p>
-                            </div>
                             <div class="layer-col hermes">
-                                <h5>Hermes / Honcho</h5>
-                                <p>未明确。relay 层目前看起来主要是请求转发，不具备复杂的执行编排能力。</p>
+                                <h5>Hermes</h5>
+                                <p>无执行编排设计。relay 层为请求转发，无 subagent/cron/workflow 能力。</p>
+                                <span class="layer-win-badge win-hermes">N/A</span>
+                            </div>
+                            <div class="layer-col official">
+                                <h5>Official OpenClaw</h5>
+                                <p>提供 subagent 机制、基础 cron 调度、ClawFlow 工作流框架。</p>
+                                <span class="layer-win-badge win-official">★★★★</span>
+                            </div>
+                            <div class="layer-col custom">
+                                <h5>Will's Custom</h5>
+                                <p><strong>Swarm Engine 蜂群引擎</strong>（多 agent 并行 + 交叉验证）+ <strong>auto-pipeline/auto-dev-loop</strong> 完整自动化闭环。生产验证级。</p>
+                                <span class="layer-win-badge win-custom">★★★★★</span>
                             </div>
                         </div>
                     </div>
                     <div class="arch-layer">
                         <div class="layer-label">L2</div>
                         <div class="layer-content">
-                            <div class="layer-col openclaw">
-                                <h5>OpenClaw</h5>
-                                <p><strong>非常丰富</strong>。MCP、browser automation（playwright-cli / CDP）、Peekaboo、多 channel 插件（Telegram / Discord / Lark）。</p>
-                            </div>
                             <div class="layer-col hermes">
-                                <h5>Hermes / Honcho</h5>
-                                <p>几乎未见。Hermes 的侧重点是 memory relay，没有 expose 出丰富的工具调用层。</p>
+                                <h5>Hermes</h5>
+                                <p>无工具生态。侧重点是 memory relay，不暴露工具调用接口。</p>
+                                <span class="layer-win-badge win-hermes">N/A</span>
+                            </div>
+                            <div class="layer-col official">
+                                <h5>Official OpenClaw</h5>
+                                <p><strong>强项。</strong> MCP、browser automation（playwright/CDP/Lightpanda）、Peekaboo、多 channel 插件（Telegram/Discord/Lark）。</p>
+                                <span class="layer-win-badge win-official">★★★★★</span>
+                            </div>
+                            <div class="layer-col custom">
+                                <h5>Will's Custom</h5>
+                                <p>在官方工具生态上构建了 25+ 自定义 Skills，涵盖猫舍运营、品牌传播、医疗咨询等垂直领域。工具落地能力最强。</p>
+                                <span class="layer-win-badge win-custom">★★★★★</span>
                             </div>
                         </div>
                     </div>
                     <div class="arch-layer">
                         <div class="layer-label">L1</div>
                         <div class="layer-content">
-                            <div class="layer-col openclaw">
-                                <h5>OpenClaw</h5>
-                                <p>成熟。Skills 渐进式披露、System Prompt 分层、LCM 上下文压缩。但在检索精度上仍有提升空间。</p>
-                            </div>
                             <div class="layer-col hermes">
-                                <h5>Hermes / Honcho</h5>
-                                <p><strong>强项</strong>。Honcho 专为上下文和记忆管理设计，BM25 rerank、1024维向量，检索召回质量高。</p>
+                                <h5>Hermes</h5>
+                                <p><strong>强项。</strong> 专为上下文和记忆管理设计，BM25 rerank + 1024维向量，检索召回质量最高。</p>
+                                <span class="layer-win-badge win-hermes">★★★★★</span>
+                            </div>
+                            <div class="layer-col official">
+                                <h5>Official OpenClaw</h5>
+                                <p>Skills 渐进式披露、System Prompt 分层、LCM 上下文压缩。框架成熟，但检索精度有优化空间。</p>
+                                <span class="layer-win-badge win-official">★★★★</span>
+                            </div>
+                            <div class="layer-col custom">
+                                <h5>Will's Custom</h5>
+                                <p>在官方基础上扩展了 AGENTS.md + SOUL.md + IDENTITY.md + USER.md 多层人格注入，个性化程度最高。</p>
+                                <span class="layer-win-badge win-custom">★★★★</span>
                             </div>
                         </div>
+                    </div>
+                </div>
+
+                <!-- Winner summary table -->
+                <div class="winner-row">
+                    <div class="winner-card winner-hermes">
+                        <div class="wc-label">强项区间</div>
+                        <h5>L1 Context / L4 Memory</h5>
+                        <p>BM25+rerank 混合检索，记忆精度业界领先</p>
+                    </div>
+                    <div class="winner-card winner-official">
+                        <div class="wc-label">框架优势</div>
+                        <h5>L2 Tools / L3 Orchestration</h5>
+                        <p>MCP + browser automation + channel 插件完整生态</p>
+                    </div>
+                    <div class="winner-card winner-custom">
+                        <div class="wc-label">生产验证</div>
+                        <h5>L5 Observability / L6 Constraints</h5>
+                        <p>watchdog-pair + PUA-Lite + 25+ Skills 全链路闭环</p>
                     </div>
                 </div>
 
@@ -961,87 +566,102 @@
                 <details>
                     <summary>L1 Context 信息边界 — 谁的上下文管理更强？</summary>
                     <div class="details-body">
-                        <p>OpenClaw 在 L1 层面已经相当成熟。通过 Skills 渐进式披露机制，系统可以按需加载能力模块；System Prompt 分层设计保证了不同场景下的提示词隔离；LCM（Lossless Context Management）上下文压缩技术则在长对话场景下保持了内存可控。</p>
-                        <p>然而，Hermes/Honcho 的优势在于其专门为上下文管理设计了一套检索增强体系：1024维向量 + BM25+rerank 混合检索。这意味着在「从历史记忆中召回相关信息」这一具体任务上，Hermes 的召回质量理论上更高。OpenClaw 当前的记忆检索主要依赖 LanceDB 的向量搜索，尚未引入 BM25 和 rerank。</p>
-                        <div class="highlight-box">
-                            <p><strong>关键洞察：</strong>OpenClaw 的 L1 是「系统的、工程化的」，Hermes 的 L1 是「专业的、聚焦的」。前者覆盖全面，后者在单点上有技术优势。</p>
+                        <p>Official OpenClaw 在 L1 层面已经相当成熟，通过 Skills 渐进式披露机制、System Prompt 分层设计和 LCM 上下文压缩技术，覆盖了主流 Harness 场景。Will's Custom 在此基础上叠加了 AGENTS.md + SOUL.md + IDENTITY.md + USER.md 四层人格注入，使 Agent 的上下文更具个性化特征。</p>
+                        <p>然而，Hermes 的优势在于其专门为上下文管理设计的检索增强体系：1024维向量 + BM25+rerank 混合检索，在「从历史记忆中召回相关信息」这一具体任务上，理论精度高于 Official OpenClaw 的纯向量检索方案。</p>
+                        <div class="highlight-box blue">
+                            <p><strong>关键洞察：</strong>Official OpenClaw 的 L1 是「框架级全面覆盖」，Hermes 的 L1 是「专项精度极致化」，Will's Custom 的 L1 是「人格化深度定制」。三者层次不同，不可直接比较。</p>
                         </div>
                     </div>
                 </details>
 
                 <details>
-                    <summary>L2 工具系统 — Hermes 的明显短板</summary>
+                    <summary>L2 工具系统 — Official OpenClaw 的绝对主场</summary>
                     <div class="details-body">
-                        <p>这是 OpenClaw 与 Hermes 差距最大的一层。OpenClaw 拥有丰富的工具生态：</p>
+                        <p>这是 Official OpenClaw 与 Hermes 差距最大的一层，也是 Will's Custom 继承并扩展的核心领域：</p>
                         <ul>
-                            <li><strong>MCP</strong>：Model Context Protocol，统一工具调用接口</li>
+                            <li><strong>MCP（Model Context Protocol）</strong>：Anthropic 提出的标准化工具调用接口</li>
                             <li><strong>Browser Automation</strong>：playwright-cli、CDP、Lightpanda 三轨道方案</li>
                             <li><strong>Peekaboo</strong>：macOS UI 自动化</li>
                             <li><strong>Channel 插件</strong>：Telegram、Discord、Lark（飞书）等多平台集成</li>
                         </ul>
-                        <p>Hermes 目前构建在 localhost:8000 的 Honcho 记忆架构 + localhost:4100 的 provider relay 之上，其核心定位是记忆层，没有 expose 出对等的工具系统。如果 Hermes 要独立发展为完整 Harness，L2 需要从 0 开始建设。</p>
+                        <p>Will's Custom 在此基础上构建了 25+ 垂直领域 Skills，使工具系统从「通用能力」升级为「业务赋能」。Hermes 目前没有任何工具生态设计，若要独立发展为完整 Harness，L2 需要从零建设。</p>
+                        <div class="highlight-box green">
+                            <p><strong>结论：</strong>L2 工具系统 = Official OpenClaw 框架优势 + Will's Custom 生产落地。Hermes 不在此层竞争。</p>
+                        </div>
                     </div>
                 </details>
 
                 <details>
-                    <summary>L3 执行编排 — 蜂群引擎的护城河</summary>
+                    <summary>L3 执行编排 — Will's Custom 的护城河</summary>
                     <div class="details-body">
-                        <p>OpenClaw 的执行编排能力是其核心竞争力之一：</p>
+                        <p>Official OpenClaw 提供了 subagent 机制、基础 cron 调度和 ClawFlow 工作流引擎。Will's Custom 在此基础上实现了：</p>
                         <ul>
                             <li><strong>Swarm Engine 蜂群引擎</strong>：多 agent 并行执行 + 交叉验证 + 独立审查</li>
-                            <li><strong>Subagent 机制</strong>：任务可以递归分解到子 agent</li>
-                            <li><strong>Cron 调度</strong>：定时任务自动化</li>
-                            <li><strong>ClawFlow</strong>：工作流编排引擎</li>
-                            <li><strong>Auto-pipeline / Auto-dev-loop</strong>：非代码批量任务和代码开发的自动化闭环</li>
+                            <li><strong>Auto-pipeline</strong>：非代码批量任务自动化（文案/素材/整理）</li>
+                            <li><strong>Auto-dev-loop</strong>：代码功能开发全自动循环引擎</li>
+                            <li><strong>ClawFlow</strong>：复杂任务的工作流编排</li>
                         </ul>
-                        <p>Hermes 目前没有看到对等的执行编排设计。其 relay 层（localhost:4100）更像是模型请求的转发适配器，而非任务编排中枢。</p>
+                        <p>Hermes 没有任何执行编排设计，relay 层仅做请求转发，无法支撑多步骤复杂任务的自动化执行。</p>
+                        <div class="highlight-box green">
+                            <p><strong>结论：</strong>L3 = Official OpenClaw 框架底座 + Will's Custom 蜂群引擎生产验证。Hermes 不在此层竞争。</p>
+                        </div>
                     </div>
                 </details>
 
                 <details>
                     <summary>L4 记忆与状态 — Hermes 的主场</summary>
                     <div class="details-body">
-                        <p>这是 Hermes/Honcho 的设计原点，也是其最强的一层：</p>
+                        <p>这是 Hermes 的设计原点，也是其最具技术差异化的一层：</p>
                         <ul>
                             <li><strong>1024维向量</strong>：更高的语义表达能力</li>
                             <li><strong>MiniMax / Kimi embeddings 双兜底</strong>：模型可用性保障</li>
                             <li><strong>BM25 + rerank 混合检索</strong>：关键词召回 + 语义重排序，稳定性优于纯向量检索</li>
                             <li><strong>Session-level + User-level state</strong>：结构化记忆管理</li>
                         </ul>
-                        <p>OpenClaw 的记忆体系包括 memory-lancedb v2.0、daily notes、procedures、shared-knowledge 和四实例同步，但实现方式偏文件化，检索架构相对简单。这也是 DeepSeek 指出「精致 L4 是技术幻觉」的语境——记忆层做得再好，也不能掩盖其他层级的不足。</p>
+                        <p>Official OpenClaw 的记忆体系包括 memory-lancedb v2.0、daily notes、procedures、shared-knowledge，但实现偏文件化，检索架构相对简单。Will's Custom 在此基础上增加了四实例同步，但检索机制与官方相同。</p>
+                        <div class="highlight-box blue">
+                            <p><strong>结论：</strong>L4 记忆精度 = Hermes 明显领先，Official OpenClaw 和 Will's Custom 的检索架构应借鉴 Hermes 的 BM25+rerank 设计。</p>
+                        </div>
                     </div>
                 </details>
 
                 <details>
-                    <summary>L5 评估与观测 — OpenClaw 的成熟体系</summary>
+                    <summary>L5 评估与观测 — Will's Custom 的生产级优势</summary>
                     <div class="details-body">
-                        <p>OpenClaw 在生产环境中运行了一套完整的观测体系：</p>
+                        <p>Official OpenClaw 提供基础的 session 管理与日志记录，但缺乏多实例互监机制。Will's Custom 在此基础上构建了完整的生产级观测体系：</p>
                         <ul>
                             <li><strong>Heartbeat</strong>：各实例定时健康检查</li>
-                            <li><strong>Watchdog-pair</strong>：ユキ/ナツ/ハル/アキ 四实例互相监控</li>
+                            <li><strong>Watchdog-pair</strong>：ユキ/ナツ/ハル/アキ 四实例互相监控，宕机自动重启</li>
                             <li><strong>PUA-Lite 闭环验证</strong>：行为结果必须通过验证命令确认</li>
                             <li><strong>蜂群 Review Agent</strong>：多模型交叉验证的独立审查机制</li>
                         </ul>
-                        <p>Hermes 作为新兴项目，尚未建立起同等级别的观测能力。</p>
+                        <p>Hermes 作为基础设施层，不提供独立的观测能力。</p>
+                        <div class="highlight-box green">
+                            <p><strong>结论：</strong>L5 观测 = Official OpenClaw 基础框架 + Will's Custom watchdog-pair 生产验证。Hermes 不在此层竞争。</p>
+                        </div>
                     </div>
                 </details>
 
                 <details>
-                    <summary>L6 约束/校验/失败恢复 — Harness 的底线</summary>
+                    <summary>L6 约束/校验/失败恢复 — Will's Custom 的行为底线</summary>
                     <div class="details-body">
-                        <p>OpenClaw 的 PUA-Lite 框架提供了系统级的约束机制：</p>
+                        <p>Official OpenClaw 提供了基础的行为约束设计，但缺乏生产级的闭环验证机制。Will's Custom 的 PUA-Lite 框架则提供了系统级的安全保障：</p>
                         <ul>
                             <li><strong>三条红线</strong>：闭环验证、事实驱动、禁止原地打转</li>
                             <li><strong>五步方法论</strong>：主动执行、卡住升级、子 agent 验证等</li>
                             <li><strong>Circuit breaker</strong>：连续失败后的自动熔断保护</li>
+                            <li><strong>执行记录 + 截图认证</strong>：行为可审计、可回溯</li>
                         </ul>
                         <p>Hermes/Honcho 的定位是基础设施层，安全约束需要上层 Harness 来保障。</p>
+                        <div class="highlight-box green">
+                            <p><strong>结论：</strong>L6 约束 = Official OpenClaw 基础框架 + Will's Custom PUA-Lite 生产级闭环。Hermes 不在此层竞争。</p>
+                        </div>
                     </div>
                 </details>
 
                 <div class="card">
                     <h4>📌 基础结论</h4>
-                    <p><strong>OpenClaw 是覆盖 L1-L6 的完整 Harness；Hermes 更像是优秀的 Memory/Context 子系统。</strong>两者在架构定位上有本质区别。</p>
+                    <p><strong>三者在 Harness Engineering 六层模型中占据不同生态位：Hermes 专精 L1/L4，Official OpenClaw 提供 L1-L6 框架底座，Will's Custom 在底座上实现 L2-L6 生产级执行验证。</strong>不是竞争，是分层协作。</p>
                 </div>
             </section>
 
@@ -1058,15 +678,15 @@
                         </div>
                     </div>
                     <div class="model-highlight">
-                        OpenClaw 具有压倒性优势（25+ Skills、四实例、watchdog 均已生产验证）；Hermes 若替代 OpenClaw，业务停摆风险极高。
+                        Official OpenClaw 提供完整框架，Will's Custom 在其上实现了生产级验证；Hermes 的 L1/L4 精度优势在 L2/L3/L5/L6 的缺失面前不值一提。
                     </div>
                     <ul>
-                        <li><strong>工程成本</strong>：OpenClaw 的 25+ Skills、四实例架构、watchdog-pair 监控体系都已经历生产验证。Hermes 若要从零集成到同等级别，迁移成本极高。</li>
-                        <li><strong>替代风险</strong>：<span class="status-badge badge-danger">🔴 极高风险</span> Hermes 替代 OpenClaw 将导致 25+ Skills 归零、蜂群引擎报废、四实例架构断裂、福楽キャッテリー等品牌业务至少停摆 2-4 周。</li>
-                        <li><strong>共存复杂度</strong>：<span class="status-badge badge-warning">🟡 中等偏高</span> 双记忆体系并存会引入双倍的故障排查和学习成本，而边际改进有限，得不偿失。</li>
+                        <li><strong>工程成本</strong>：Will's Custom 的 25+ Skills、四实例架构、watchdog-pair 监控体系已经历真实生产验证。Hermes 若要达到同等水平，L2-L6 需要从零重建。</li>
+                        <li><strong>风险评估</strong>：<span class="status-badge badge-danger">🔴 Hermes 替代 Will's Custom</span> — 业务停摆 2-4 周，25+ Skills 归零，蜂群引擎报废，四实例架构断裂。</li>
+                        <li><strong>最优路径</strong>：以 Official OpenClaw 为框架基座，Will's Custom 为生产执行态，借鉴 Hermes 的 L4 检索思路，不替换现有架构。</li>
                     </ul>
-                    <div class="highlight-box">
-                        <p><strong>GLM-5 结论：</strong>OpenClaw 为主，Hermes 仅做边缘轻量试点。不要在核心业务上赌未经验证的组件。</p>
+                    <div class="highlight-box green">
+                        <p><strong>GLM-5 结论：</strong>Official OpenClaw 是躯体骨架，Will's Custom 是武装完毕的生产引擎，Hermes 是可借鉴的记忆模块。三者组合，不是三选一。</p>
                     </div>
                 </div>
 
@@ -1079,21 +699,21 @@
                         </div>
                     </div>
                     <div class="model-highlight">
-                        Hermes 是 L1 Context 层的专用记忆系统，OpenClaw 是覆盖 L1~L6 的完整 Harness。两者不是同一维度的竞争关系。
+                        三者定位清晰：Hermes = 记忆神经，Official OpenClaw = 躯体骨架，Will's Custom = 武装引擎。最可能的路径是模块组合，而非三者竞争。
                     </div>
-                    <h4>Hermes 独立发展的 3 个结构性瓶颈</h4>
+                    <h4>Hermes 的结构性瓶颈（为何不能独立替代）</h4>
                     <ol>
-                        <li><strong>L2~L6 空洞化</strong>：没有意图解析、工具调用、协作网络、约束机制</li>
+                        <li><strong>L2~L6 空洞化</strong>：没有工具调用、协作网络、约束机制、观测体系</li>
                         <li><strong>多实例协作缺失</strong>：无法融入 ユキ/ナツ/ハル/アキ 四实例拓扑</li>
                         <li><strong>安全约束不完整</strong>：无 PUA-Lite 级别的行为验证与熔断</li>
                     </ol>
-                    <h4>OpenClaw 应向 Hermes 学习 2 点</h4>
+                    <h4>Official OpenClaw 应向 Hermes 学习的 2 点</h4>
                     <ol>
-                        <li><strong>BM25+rerank 混合检索</strong>：比单纯向量检索更稳定</li>
+                        <li><strong>BM25+rerank 混合检索</strong>：比单纯向量检索更稳定，应引入 L4 层</li>
                         <li><strong>Provider Relay 的轻量化适配</strong>：统一接口、解耦底层模型细节</li>
                     </ol>
-                    <div class="highlight-box">
-                        <p><strong>Qwen3.5 结论：</strong>OpenClaw 是躯体，Hermes 是记忆神经。两者整合，而不是二选一。Hermes 最可能的路径是成为 OpenClaw 的「记忆后端」。</p>
+                    <div class="highlight-box blue">
+                        <p><strong>Qwen3.5 结论：</strong>Official OpenClaw + Will's Custom 是主架构，Hermes 的 L4 检索技术值得借鉴但不必全盘整合。三者协同而非竞争。</p>
                     </div>
                 </div>
 
@@ -1108,14 +728,14 @@
                     <div class="model-highlight">
                         "精致 L4" 是一种技术幻觉。记忆层做得精致最危险之处在于，它会让人产生"系统很成熟"的错觉。
                     </div>
-                    <p>DeepSeek 提出了 Harness Engineering 领域一个常被忽视的洞察：<strong>Agent 的失败模式几乎从不来自模型不够聪明，而总是来自 Harness 的某个环节断裂。</strong> L4 过于精致可能会掩盖 L2/L3/L5/L6 的实际粗糙。</p>
+                    <p>DeepSeek 提出了一个常被忽视的洞察：<strong>Agent 的失败模式几乎从不来自模型不够聪明，而总是来自 Harness 的某个环节断裂。</strong> Hermes 在 L1/L4 的极致投入，可能会掩盖 L2/L3/L5/L6 的实际粗糙。</p>
                     <p>同时，DeepSeek 观察到 OpenAI 和 Anthropic 在记忆上的权重都很克制。以 Claude Code 为例，它采用「极其克制的记忆策略」——仅在 <code>.claude</code> 项目文件中写入结构化记忆，而不构建通用会话间记忆系统。这反映了一种工程哲学：</p>
                     <div class="quote-box">
                         <p>记忆应该是确定性的、文件化的、人类可审计的。</p>
                     </div>
                     <p>OpenAI 和 Anthropic 将绝大部分工程资源花在工具调用、错误恢复、安全沙箱上，而非记忆层。这与当前市场过度追捧「长记忆」的风气形成鲜明对比。</p>
                     <div class="quote-box">
-                        <p>记忆是 Agent 的面子，工具和错误处理才是里子。先把里子做好，再考虑面子升级。</p>
+                        <p>记忆是 Agent 的面子，工具和错误处理才是里子。先把里子做好（L2-L6），再考虑面子升级（L4）。Will's Custom 的 PUA-Lite + watchdog-pair 才是正确的投入方向。</p>
                         <div class="quote-author">— DeepSeek Thinking</div>
                     </div>
                 </div>
@@ -1128,16 +748,13 @@
                 <h3>子议题一：L4 精致化是否是陷阱？</h3>
                 <div class="card">
                     <p>DeepSeek 的核心论点可以归纳为：在一个不完整的 Harness 中，过度投资于 L4 记忆层会产生<strong>技术幻觉</strong>。</p>
-                    <p>具体来说：</p>
-                    <ul>
-                        <li>「这个 Agent 记得三个月前的事」在演示中极具说服力</li>
-                        <li>观众会因此推断「这个系统很成熟」</li>
-                        <li>但实际上，系统的失败可能发生在工具调用（L2）、执行编排（L3）、观测评估（L5）或安全约束（L6）中的任何一环</li>
-                    </ul>
-                    <p>这并不意味着记忆层不重要，而是说 investing 的优先级应该遵循 Harness 的依赖关系：底层（L6 → L5 → L3 → L2）比上层（L1 → L4）更关键。没有稳固的工具、执行、观测和约束系统，再精致的记忆也不过是空中楼阁。</p>
+                    <p>Hermes 在 L1/L4 的极致追求有其合理性——BM25+rerank 混合检索确实比纯向量检索更稳定。但问题在于，L4 再精致也无法弥补 L2（工具）、L3（编排）、L5（观测）、L6（约束）的缺失。</p>
+                    <div class="highlight-box blue">
+                        <p><strong>启示：</strong>Official OpenClaw 和 Will's Custom 应借鉴 Hermes 的 BM25+rerank 检索思路，但无需全盘整合。优先补强 L2/L5/L6，再考虑 L4 极致化。</p>
+                    </div>
                 </div>
 
-                <h3>子议题二：记忆在 OpenAI/Anthropic 的 Harness 里占多大权重？</h3>
+                <h3>子议题二：记忆在顶级 Harness 里占多大权重？</h3>
                 <div class="card">
                     <p>DeepSeek 对 Claude Code 的观察提供了一个重要的行业参照。Claude Code 的记忆策略极其克制：</p>
                     <ul>
@@ -1145,47 +762,41 @@
                         <li><strong>仅在项目文件中写入结构化记忆</strong>（<code>.claude</code> 目录）</li>
                         <li><strong>记忆是确定性的、文件化的、人类可审计的</strong></li>
                     </ul>
-                    <p>这反映了一种工程优先级：OpenAI 和 Anthropic 将绝大部分资源投入在工具调用、错误恢复、安全沙箱上，而不是在记忆层上「军备竞赛」。这与当前市场上许多初创公司将「超长上下文」和「永久记忆」作为核心卖点形成对比。</p>
-                    <div class="highlight-box">
-                        <p><strong>启示：</strong>对于 Will 团队来说，OpenClaw 的 L4 已经足够支撑当前业务。与其追求记忆的极致化，不如把资源投入到工具系统的完善（L2）和安全约束的强化（L6）上。</p>
+                    <p>Official OpenClaw 的 LCM 上下文压缩策略与此哲学一致。Will's Custom 在此基础上扩展了 daily notes + shared-knowledge，但同样遵循文件化、可审计的原则。Hermes 的 1024维向量检索虽然精度更高，但引入了黑盒性——检索结果不可直接审计。</p>
+                    <div class="highlight-box blue">
+                        <p><strong>启示：</strong>L4 的价值不在于检索精度有多高，而在于记忆是否可靠、可审计。Will's Custom 的文件化记忆体系（daily notes + procedures + shared-knowledge）是更符合工程哲学的选择。</p>
                     </div>
                 </div>
 
-                <h3>子议题三：Hermes 是竞争者还是组件？</h3>
+                <h3>子议题三：三者应该如何定位？</h3>
                 <div class="card">
-                    <p>这是本报告最具争议的命题。GLM-5 倾向于将其视为一个需要谨慎评估的<strong>外部替代方案</strong>，而 Qwen3.5 和 DeepSeek 更倾向于将其定位为 OpenClaw 生态的潜在<strong>组件/后端</strong>。</p>
                     <table>
                         <thead>
                             <tr>
-                                <th>视角</th>
-                                <th>将 Hermes 视为竞争者</th>
-                                <th>将 Hermes 视为组件</th>
+                                <th>系统</th>
+                                <th>正确角色</th>
+                                <th>不应做的事</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td>前提假设</td>
-                                <td>Hermes 会发展为完整 Harness</td>
-                                <td>Hermes 专注做记忆层</td>
+                                <td><strong style="color: var(--hermes-color);">Hermes</strong></td>
+                                <td>L1/L4 技术供应商：提供 BM25+rerank 检索方案</td>
+                                <td>独立构建完整 Harness，替代现有生产系统</td>
                             </tr>
                             <tr>
-                                <td>OpenClaw 的姿态</td>
-                                <td>防御性评估，警惕替代风险</td>
-                                <td>开放性整合，取长补短</td>
+                                <td><strong style="color: var(--official-color);">Official OpenClaw</strong></td>
+                                <td>框架底座：提供 L1-L6 完整工具链和插件生态</td>
+                                <td>被遗忘在生产环境之外，作为纯开源演示存在</td>
                             </tr>
                             <tr>
-                                <td>最佳策略</td>
-                                <td>保持距离，边缘试点</td>
-                                <td>插件化接口，逐步集成</td>
-                            </tr>
-                            <tr>
-                                <td>代表模型</td>
-                                <td>GLM-5</td>
-                                <td>Qwen3.5、DeepSeek</td>
+                                <td><strong style="color: var(--custom-color);">Will's Custom</strong></td>
+                                <td>生产执行引擎：在框架底座上实现业务闭环</td>
+                                <td>停止迭代，或在核心业务上冒险替换为未验证系统</td>
                             </tr>
                         </tbody>
                     </table>
-                    <p>从当前 Hermes 的技术现状来看，它只有 L1/L4 的完整设计，L2/L3/L5/L6 基本上是空白。因此，「组件论」可能更符合现实。但这不排除 Hermes 团队未来向完整 Harness 演进的可能性，届时 GLM-5 的警惕将更有价值。</p>
+                    <p>三者定位清晰：Hermes 提供 L1/L4 技术思路，Official OpenClaw 提供框架底座，Will's Custom 实现生产级执行。互补而非竞争。</p>
                 </div>
             </section>
 
@@ -1193,156 +804,164 @@
             <section id="enterprise">
                 <h2><span class="section-num">4</span>企业实战判断</h2>
 
-                <h3>工程成本对比</h3>
+                <h3>三系统工程成本对比</h3>
                 <table>
                     <thead>
                         <tr>
                             <th>维度</th>
-                            <th>OpenClaw（现状）</th>
-                            <th>Hermes（从零集成）</th>
+                            <th style="color: var(--hermes-color);">Hermes</th>
+                            <th style="color: var(--official-color);">Official OpenClaw</th>
+                            <th style="color: var(--custom-color);">Will's Custom</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
                             <td>Skills 生态</td>
+                            <td>无 <span class="status-badge badge-danger">✗</span></td>
+                            <td>基础框架 Skills <span class="status-badge badge-warning">△</span></td>
                             <td>25+ 已验证 <span class="status-badge badge-success">✓</span></td>
-                            <td>需从零重建 <span class="status-badge badge-danger">✗</span></td>
                         </tr>
                         <tr>
                             <td>多实例架构</td>
-                            <td>ユキ/ナツ/ハル/アキ 已运行 <span class="status-badge badge-success">✓</span></td>
                             <td>不支持 <span class="status-badge badge-danger">✗</span></td>
+                            <td>单实例为主 <span class="status-badge badge-warning">△</span></td>
+                            <td>四实例生产运行 <span class="status-badge badge-success">✓</span></td>
                         </tr>
                         <tr>
                             <td>浏览器自动化</td>
-                            <td>三轨道方案已验证 <span class="status-badge badge-success">✓</span></td>
                             <td>无 <span class="status-badge badge-danger">✗</span></td>
+                            <td>三轨道方案 <span class="status-badge badge-success">✓</span></td>
+                            <td>三轨道已验证 <span class="status-badge badge-success">✓</span></td>
                         </tr>
                         <tr>
                             <td>监控/熔断</td>
-                            <td>watchdog + PUA-Lite 已验证 <span class="status-badge badge-success">✓</span></td>
                             <td>无 <span class="status-badge badge-danger">✗</span></td>
+                            <td>基础日志 <span class="status-badge badge-warning">△</span></td>
+                            <td>watchdog + PUA-Lite <span class="status-badge badge-success">✓</span></td>
                         </tr>
                         <tr>
                             <td>记忆检索精度</td>
-                            <td>向量检索，无 rerank <span class="status-badge badge-warning">△</span></td>
-                            <td>BM25+rerank 混合检索 <span class="status-badge badge-success">✓</span></td>
+                            <td>BM25+rerank <span class="status-badge badge-success">✓</span></td>
+                            <td>向量检索 <span class="status-badge badge-warning">△</span></td>
+                            <td>向量检索（同官方） <span class="status-badge badge-warning">△</span></td>
                         </tr>
                         <tr>
-                            <td>Provider 适配</td>
-                            <td>多层 provider 配置 <span class="status-badge badge-warning">△</span></td>
-                            <td> lightweight relay <span class="status-badge badge-success">✓</span></td>
+                            <td>执行编排</td>
+                            <td>无 <span class="status-badge badge-danger">✗</span></td>
+                            <td>subagent + cron <span class="status-badge badge-success">✓</span></td>
+                            <td>蜂群引擎 + auto-loop <span class="status-badge badge-success">✓</span></td>
+                        </tr>
+                        <tr>
+                            <td>生产验证</td>
+                            <td>未验证 <span class="status-badge badge-danger">✗</span></td>
+                            <td>框架级验证 <span class="status-badge badge-warning">△</span></td>
+                            <td>完整生产验证 <span class="status-badge badge-success">✓</span></td>
                         </tr>
                     </tbody>
                 </table>
 
-                <h3>"替代"风险热力图</h3>
+                <h3>三场景风险热力图</h3>
                 <div class="heatmap">
                     <div class="heat-cell heat-high">
-                        <div class="label">业务停摆风险</div>
+                        <div class="label">Hermes 替代 Will's Custom</div>
                         <div class="value">🔴 极高</div>
                     </div>
-                    <div class="heat-cell heat-high">
-                        <div class="label">Skills 归零风险</div>
-                        <div class="value">🔴 极高</div>
+                    <div class="heat-cell heat-low">
+                        <div class="label">Official OpenClaw 独立使用</div>
+                        <div class="value">🟢 低</div>
+                    </div>
+                    <div class="heat-cell heat-low">
+                        <div class="label">Will's Custom 继续迭代</div>
+                        <div class="value">🟢 最低</div>
                     </div>
                     <div class="heat-cell heat-med">
-                        <div class="label">学习成本</div>
-                        <div class="value">🟡 中高</div>
-                    </div>
-                    <div class="heat-cell heat-med">
-                        <div class="label">长期维护成本</div>
-                        <div class="value">🟡 中高</div>
+                        <div class="label">借鉴 Hermes L4 检索</div>
+                        <div class="value">🟡 中</div>
                     </div>
                 </div>
 
-                <h3>"共存"复杂度分析</h3>
-                <div class="card">
-                    <p>双记忆体系（OpenClaw + Hermes）并存的潜在问题：</p>
-                    <ul>
-                        <li><strong>故障定位困难</strong>：「记忆没找到时，是 Hermes 的问题还是 OpenClaw 的问题？」</li>
-                        <li><strong>数据一致性问题</strong>：两份记忆源可能给出矛盾的信息</li>
-                        <li><strong>运维学习成本翻倍</strong>：团队需要同时理解两套系统的行为</li>
-                        <li><strong>边际改进有限</strong>：当前业务对记忆检索精度的提升感知不明显</li>
-                    </ul>
-                    <p>GLM-5 的判断是：共存复杂度中等偏高，但<strong>得不偿失</strong>。DeepSeek 的建议是：可以将其作为「平行层」运行，但不应在核心业务上深度耦合。</p>
-                </div>
-
-                <h3>投入产出（ROI）分级矩阵</h3>
+                <h3>三场景 ROI 分级矩阵</h3>
                 <div class="roi-matrix">
                     <div class="roi-card roi-a">
-                        <h5 style="color: var(--success);">🟢 A 级：维持 OpenClaw 现状</h5>
-                        <p>投入最低，产出最稳定。当前业务已验证，无需承担迁移风险。</p>
+                        <h5 style="color: var(--custom-color);">🟢 A 级：继续发展 Will's Custom</h5>
+                        <p>投入最低（已有基座），产出最稳定。25+ Skills 和四实例架构是竞争壁垒，不应替换。</p>
                     </div>
                     <div class="roi-card roi-b">
-                        <h5 style="color: var(--warning);">🟡 B 级：Hermes 做边缘试点</h5>
-                        <p>投入中等，用于小范围验证记忆层改进。风险可控，但需要额外运维精力。</p>
+                        <h5 style="color: var(--official-color);">🟡 B 级：Official OpenClaw 框架升级</h5>
+                        <p>跟进官方框架更新，完善 MCP 生态和 L2 工具层。保持框架与生产系统的同步。</p>
                     </div>
                     <div class="roi-card roi-c">
-                        <h5 style="color: var(--danger);">🔴 C 级：Hermes 替代 OpenClaw</h5>
-                        <p>投入极高，风险极高，回报不确定。需要重建 L2-L6 全套能力，不现实。</p>
+                        <h5 style="color: var(--danger);">🔴 C 级：Hermes 替代任何一方</h5>
+                        <p>投入极高，风险极高，回报不确定。L2-L6 全部需要从零重建，不现实。</p>
                     </div>
                 </div>
             </section>
 
             <!-- Part 5: Coupling -->
             <section id="coupling">
-                <h2><span class="section-num">5</span>五层耦合分析</h2>
-                <p>DeepSeek 对 OpenClaw × Hermes 替换进行了深入的五层耦合分析。以下是对 L1-L6 每层替换影响的系统评估：</p>
+                <h2><span class="section-num">5</span>三层系统耦合分析</h2>
+                <p>DeepSeek 对三层系统的替换与整合进行了深入分析。以下是每个系统对其他层级的影响评估：</p>
 
                 <div class="viz-bar">
-                    <div class="viz-segment viz-compatible" style="width: 20%;">L1 兼容</div>
-                    <div class="viz-segment viz-hard" style="width: 25%;">L2 硬耦合</div>
-                    <div class="viz-segment viz-soft" style="width: 20%;">L3 软耦合</div>
-                    <div class="viz-segment viz-enhance" style="width: 15%;">L5 增强</div>
-                    <div class="viz-segment viz-hard" style="width: 20%;">L6 需审查</div>
+                    <div class="viz-segment viz-compatible" style="width: 15%;">Hermes→L1兼容</div>
+                    <div class="viz-segment viz-hard" style="width: 20%;">Hermes→L2硬耦合</div>
+                    <div class="viz-segment viz-enhance" style="width: 20%;">Custom→L3增强</div>
+                    <div class="viz-segment viz-enhance" style="width: 20%;">Custom→L5增强</div>
+                    <div class="viz-segment viz-enhance" style="width: 25%;">Custom→L6增强</div>
                 </div>
 
                 <table>
                     <thead>
                         <tr>
                             <th style="width: 12%;">层级</th>
-                            <th style="width: 20%;">耦合类型</th>
-                            <th>影响评估</th>
+                            <th style="width: 20%;">Hermes 影响</th>
+                            <th style="width: 20%;">Official OpenClaw 影响</th>
+                            <th>Will's Custom 影响</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
                             <td><strong>L1</strong></td>
-                            <td><span class="status-badge badge-success">兼容</span></td>
-                            <td>Hermes 的上下文管理能力与 OpenClaw 的 L1 设计方向一致，增强效应为主。替换 L1 不会破坏上层结构。</td>
+                            <td><span class="status-badge badge-success">正向增强</span></td>
+                            <td><span class="status-badge badge-success">框架基座</span></td>
+                            <td>人格化 Context 注入（四层文档），个性化程度最高</td>
                         </tr>
                         <tr>
                             <td><strong>L2</strong></td>
-                            <td><span class="status-badge badge-danger">硬耦合</span></td>
-                            <td>这是最大的风险点。Hermes 的工具抽象与 OpenClaw 的 MCP/browser/channel 插件体系可能不兼容。若 Hermes 没有 expose 出对等的工具接口，大量现有 Skills 将无法工作。</td>
+                            <td><span class="status-badge badge-danger">无贡献</span></td>
+                            <td><span class="status-badge badge-success">框架底座</span></td>
+                            <td>25+ 自定义 Skills，垂直领域工具落地能力最强</td>
                         </tr>
                         <tr>
                             <td><strong>L3</strong></td>
-                            <td><span class="status-badge badge-warning">软耦合</span></td>
-                            <td>执行编排层的耦合程度取决于 Hermes 是否提供 subagent/cron/workflow 能力。目前是软耦合，但需要详细的迁移评估。</td>
+                            <td><span class="status-badge badge-danger">无贡献</span></td>
+                            <td><span class="status-badge badge-success">subagent/cron/ClawFlow</span></td>
+                            <td>Swarm Engine + auto-pipeline + auto-dev-loop，生产级执行</td>
                         </tr>
                         <tr>
                             <td><strong>L4</strong></td>
-                            <td><span class="status-badge badge-success">天然契合</span></td>
-                            <td>这是 Hermes 的设计原点，理论上可以平滑替换。但需要注意数据迁移和格式兼容问题。</td>
+                            <td><span class="status-badge badge-success">技术思路贡献</span></td>
+                            <td><span class="status-badge badge-warning">需借鉴 Hermes</span></td>
+                            <td>四实例同步 + 文件化记忆，与官方同级别，检索精度待升级</td>
                         </tr>
                         <tr>
                             <td><strong>L5</strong></td>
-                            <td><span class="status-badge badge-info">潜在增强</span></td>
-                            <td>如果 Hermes 能记录失败上下文并提供更好的检索，可能对评估与观测层产生正向增强。但这需要上层系统的配合。</td>
+                            <td><span class="status-badge badge-danger">无贡献</span></td>
+                            <td><span class="status-badge badge-warning">基础日志</span></td>
+                            <td>watchdog-pair + heartbeat + 蜂群 Review Agent，生产级观测</td>
                         </tr>
                         <tr>
                             <td><strong>L6</strong></td>
-                            <td><span class="status-badge badge-danger">需严格审查</span></td>
-                            <td>记忆写入不能绕过安全审计层。任何外部记忆系统的引入都必须被纳入 PUA-Lite 的约束框架内，否则可能引入不可控的行为。</td>
+                            <td><span class="status-badge badge-danger">无贡献</span></td>
+                            <td><span class="status-badge badge-warning">基础约束</span></td>
+                            <td>PUA-Lite 三条红线 + 五步方法论 + circuit breaker，生产级闭环</td>
                         </tr>
                     </tbody>
                 </table>
 
                 <div class="card">
                     <h4>💡 核心结论</h4>
-                    <p>L2（工具调用）和 L6（安全边界）是 Hermes 集成 OpenClaw 的<strong>两个硬门槛</strong>。如果这两个问题不解决，任何深度的技术整合都不可行。</p>
+                    <p>L2（工具）、L3（编排）、L5（观测）、L6（约束）是 <strong>Will's Custom 的绝对主场</strong>。Hermes 只在 L1/L4 有技术贡献，但这些贡献是「锦上添花」而非「不可或缺」。Official OpenClaw 是框架底座，Will's Custom 是底座上的生产引擎。</p>
                 </div>
             </section>
 
@@ -1353,45 +972,60 @@
                 <h3>Hermes 的 6-12 个月可能路径</h3>
                 <div class="card">
                     <ol>
-                        <li><strong>路径 A：发展为独立 Harness（概率 20%）</strong>
-                            <p>若团队有充足资金和工程资源，Hermes 可能向 L2-L6 扩展。但考虑到 OpenClaw 已经沉淀了 25+ Skills 和完整的四实例架构，这条路径的投入产出比极低。</p>
+                        <li><strong>路径 A：发展为独立完整 Harness（概率 15%）</strong>
+                            <p>投入产出比极低。L2-L6 全套能力需要大量工程资源，而 Official OpenClaw 已经提供了成熟框架。</p>
                         </li>
-                        <li><strong>路径 B：作为 OpenClaw 的「记忆后端」（概率 55%）</strong>
-                            <p>最符合 Hermes 技术现状和市场需求的路径。专注做好 L1/L4 的记忆层，通过插件接口或 MCP 协议与上层 Harness 集成。</p>
+                        <li><strong>路径 B：作为 L4 检索技术供应商（概率 60%）</strong>
+                            <p>最符合 Hermes 技术现状。专注做好 BM25+rerank 检索方案，通过插件接口或 MCP 协议为 Official OpenClaw/Will's Custom 提供记忆检索增强。</p>
                         </li>
                         <li><strong>路径 C：被收购或并入更大平台（概率 25%）</strong>
-                            <p>若独立发展困难，Hermes/Honcho 的核心技术可能被某个更大的 Agent 平台收购或整合。</p>
+                            <p>若独立发展困难，核心技术可能被某个更大的 Agent 平台收购或整合。</p>
                         </li>
                     </ol>
                 </div>
 
-                <h3>OpenClaw 的 6-12 个月可能路径</h3>
+                <h3>Official OpenClaw 的 6-12 个月可能路径</h3>
                 <div class="card">
                     <ol>
-                        <li><strong>短期：L2 和 L6 强化</strong>
-                            <p>继续完善 MCP 生态、浏览器自动化能力，以及 PUA-Lite 约束框架。这是 DeepSeek 和 Qwen3.5 的共同建议。</p>
+                        <li><strong>短期：完善 L2 工具生态和 L6 约束框架</strong>
+                            <p>继续完善 MCP 生态、浏览器自动化能力。这是框架层面最重要的工作。</p>
                         </li>
-                        <li><strong>中期：L4 检索升级</strong>
-                            <p>在保持现有文件化记忆体系的同时，引入 BM25+rerank 混合检索，向 Hermes 的检索精度看齐。可以借鉴，不一定需要整合。</p>
+                        <li><strong>中期：引入 BM25+rerank 混合检索到 L4 层</strong>
+                            <p>借鉴 Hermes 的技术思路，但保持技术自主。在官方记忆中引入混合检索，提升召回稳定性。</p>
                         </li>
                         <li><strong>长期：插件化 L4 接口</strong>
-                            <p>当 OpenClaw 的 L4 层足够抽象化和插件化时， Hermes 就可以作为一个可选的「记忆后端」被无缝接入。这是 Qwen3.5 预测的「躯体+神经」整合模式。</p>
+                            <p>当 L4 层足够抽象化和插件化时，Hermes 或其他记忆系统可以作为可选后端被无缝接入。</p>
+                        </li>
+                    </ol>
+                </div>
+
+                <h3>Will's Custom 的 6-12 个月可能路径</h3>
+                <div class="card">
+                    <ol>
+                        <li><strong>持续深化 L2-L6 生产闭环</strong>
+                            <p>继续扩大 25+ Skills 覆盖范围，深化蜂群引擎场景，完善 PUA-Lite 约束框架。这是核心竞争壁垒。</p>
+                        </li>
+                        <li><strong>L4 检索升级</strong>
+                            <p>在现有文件化记忆体系基础上，引入 BM25+rerank 混合检索，提升记忆召回精度。不依赖 Hermes 整合，保持技术自主。</p>
+                        </li>
+                        <li><strong>四实例架构扩展</strong>
+                            <p>根据业务需求扩展实例数量或功能分工，保持四实例互监拓扑的健康运行。</p>
                         </li>
                     </ol>
                 </div>
 
                 <h3>2026-2027 行业趋势判断</h3>
                 <div class="card">
-                    <p>DeepSeek 对 2026-2027 年的趋势预测：</p>
+                    <p>三方模型的共识趋势预测：</p>
                     <div class="quote-box">
-                        <p>一统型 Harness（如 OpenClaw）会主导早期市场（开箱即用）；组合型会在成熟生态逐步显现优势（灵活性+可审计性）。</p>
+                        <p>一统型 Harness（Official OpenClaw）会主导早期市场；组合型（专用记忆层 + 专用工具层 + 专用编排层）会在成熟生态逐步显现优势。</p>
                     </div>
                     <p>这意味着：</p>
                     <ul>
-                        <li><strong>2026 年</strong>：市场上大部分团队会选择一个完整的 Harness（如 OpenClaw、Dify、n8n AI Agent）来快速落地</li>
-                        <li><strong>2027 年</strong>：随着生态成熟，组合型架构（专门化的记忆层 + 专门化的工具层 + 专门化的编排层）会获得更多关注</li>
+                        <li><strong>2026 年</strong>：Official OpenClaw 框架 + Will's Custom 生产部署是主流选择</li>
+                        <li><strong>2027 年</strong>：组合型架构（Hermes 的 L4 检索 + Official OpenClaw L2/L3/L5/L6 框架 + Will's Custom L2-L6 生产验证）会成为高阶选项</li>
                     </ul>
-                    <p>Will 团队当前选择 OpenClaw 作为主力 Harness，正好符合 2026 年的市场主流策略。未来若 Hermes 发展为成熟的 L4 组件，再考虑组合也完全不晚。</p>
+                    <p>Will 团队当前的架构选择（Official OpenClaw 底座 + Will's Custom 生产引擎）正好符合 2026 年市场主流策略，同时为 2027 年的组合型演进预留了空间。</p>
                 </div>
             </section>
 
@@ -1399,35 +1033,65 @@
             <section id="roadmap">
                 <h2><span class="section-num">7</span>战略建议行动清单</h2>
 
+                <div style="display:grid; grid-template-columns: repeat(3,1fr); gap: 16px; margin-bottom: 28px;">
+                    <div class="winner-card winner-hermes">
+                        <div class="wc-label">场景 A</div>
+                        <h5>Hermes 单独使用</h5>
+                        <p>仅适合：边缘轻量信息检索场景。不可用于核心业务。</p>
+                    </div>
+                    <div class="winner-card winner-official">
+                        <div class="wc-label">场景 B</div>
+                        <h5>Official OpenClaw 独立</h5>
+                        <p>适合：快速原型验证、开源社区贡献。生产业务需额外加固。</p>
+                    </div>
+                    <div class="winner-card winner-custom">
+                        <div class="wc-label">场景 C</div>
+                        <h5>Will's Custom 生产</h5>
+                        <p>当前最优解。继续迭代，扩大 Skills 覆盖，深化蜂群场景。</p>
+                    </div>
+                </div>
+
                 <div class="action-list">
                     <div class="action-item">
                         <div class="priority-badge p0">P0</div>
                         <div class="action-content">
-                            <h5>保持 OpenClaw 作为核心 Harness，不推进 Hermes 替代计划</h5>
-                            <p>迁移风险极高，现有业务对记忆层精度的提升需求并不迫切。维持现状是最优策略。</p>
+                            <h5>保持 Will's Custom 作为核心生产 Harness</h5>
+                            <p>25+ Skills、四实例架构、watchdog-pair + PUA-Lite 是核心竞争壁垒，不应替换为未验证系统。维持现状是最优策略。</p>
                             <div class="action-meta">
+                                <span>适用场景：C（Will's Custom）</span>
                                 <span>ROI: 🟢 A级</span>
-                                <span>风险: 🟢 极低</span>
                             </div>
                         </div>
                     </div>
                     <div class="action-item">
                         <div class="priority-badge p0">P0</div>
                         <div class="action-content">
-                            <h5>优先补强 L2 工具系统和 L6 安全约束</h5>
-                            <p>MCP 生态完善、浏览器自动化稳定性提升、PUA-Lite 框架的持续落地，这些对业务稳定性的边际贡献远高于记忆层升级。</p>
+                            <h5>跟进 Official OpenClaw 框架更新</h5>
+                            <p>保持框架与生产系统的同步。跟进 MCP 生态完善、L2 工具层稳定性和 L6 约束框架升级。</p>
                             <div class="action-meta">
+                                <span>适用场景：B（Official OpenClaw）</span>
                                 <span>ROI: 🟢 A级</span>
-                                <span>风险: 🟢 低</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="action-item">
+                        <div class="priority-badge p0">P0</div>
+                        <div class="action-content">
+                            <h5>在 Will's Custom 现有架构中研究 BM25+rerank 升级方案</h5>
+                            <p>借鉴 Hermes 的 L4 检索思路，在不引入外部依赖的情况下提升记忆召回精度。保持技术自主，不做 Hermes 深度整合。</p>
+                            <div class="action-meta">
+                                <span>适用场景：C（Will's Custom）</span>
+                                <span>ROI: 🟡 B级</span>
                             </div>
                         </div>
                     </div>
                     <div class="action-item">
                         <div class="priority-badge p1">P1</div>
                         <div class="action-content">
-                            <h5>在边缘场景中引入 Hermes 做轻量试点</h5>
-                            <p>选择一个对记忆检索精度敏感、但业务影响小的场景（如某个通用的信息查询 Agent），单独接入 Hermes，验证其实际效果。</p>
+                            <h5>在边缘场景中探索 Hermes 做轻量试点</h5>
+                            <p>选择一个对记忆检索精度敏感、但业务影响小的场景（如某个信息查询 Agent），单独接入 Hermes 验证其实际效果。风险可控。</p>
                             <div class="action-meta">
+                                <span>适用场景：A（Hermes）</span>
                                 <span>ROI: 🟡 B级</span>
                                 <span>风险: 🟡 中低</span>
                             </div>
@@ -1436,22 +1100,22 @@
                     <div class="action-item">
                         <div class="priority-badge p1">P1</div>
                         <div class="action-content">
-                            <h5>研究 OpenClaw L4 层的 BM25+rerank 升级方案</h5>
-                            <p>不依赖 Hermes，在 OpenClaw 现有记忆架构中引入混合检索。可以借鉴 Hermes 的技术思路，但保持技术自主。</p>
+                            <h5>持续深化 L2 Skills 生态和 L3 蜂群引擎场景</h5>
+                            <p>继续扩大 25+ Skills 覆盖范围，深化 Swarm Engine 在复杂任务中的应用，完善 auto-pipeline / auto-dev-loop 自动化闭环。这是核心竞争壁垒的持续加固。</p>
                             <div class="action-meta">
-                                <span>ROI: 🟡 B级</span>
-                                <span>风险: 🟡 中等</span>
+                                <span>适用场景：C（Will's Custom）</span>
+                                <span>ROI: 🟢 A级</span>
                             </div>
                         </div>
                     </div>
                     <div class="action-item">
-                        <div class="priority-badge p1">P1</div>
+                        <div class="priority-badge p2">P2</div>
                         <div class="action-content">
-                            <h5>设计 OpenClaw 的「插件化 L4 接口」技术方案</h5>
-                            <p>为未来可能的组件化整合做准备。接口设计应遵循确定性、文件化、人类可审计的原则。</p>
+                            <h5>设计 Official OpenClaw 的「插件化 L4 接口」技术方案</h5>
+                            <p>为未来可能的组合型整合做准备。当 L4 层足够抽象化时，Hermes 或其他记忆系统可以作为可选后端被接入。</p>
                             <div class="action-meta">
+                                <span>适用场景：B（Official OpenClaw）</span>
                                 <span>ROI: 🟡 B级</span>
-                                <span>风险: 🟢 低</span>
                             </div>
                         </div>
                     </div>
@@ -1459,21 +1123,10 @@
                         <div class="priority-badge p2">P2</div>
                         <div class="action-content">
                             <h5>持续追踪 Hermes/Honcho 的 L2-L6 演进动态</h5>
-                            <p>如果 Hermes 开始向完整 Harness 方向发展，重新评估竞争关系。如果它坚持走「记忆组件」路线，未来整合的可能性更大。</p>
+                            <p>如果 Hermes 开始向完整 Harness 方向发展，重新评估竞争关系。如果坚持走「记忆组件」路线，未来整合的可能性更大。</p>
                             <div class="action-meta">
                                 <span>ROI: 🟢 A级</span>
                                 <span>风险: 🟢 极低</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="action-item">
-                        <div class="priority-badge p2">P2</div>
-                        <div class="action-content">
-                            <h5>评估 Provider Relay 的轻量化适配思路是否值得引入 OpenClaw</h5>
-                            <p>Hermes 的 relay 层（localhost:4100）在 provider 解耦上有一致性接口设计。研究其是否可以优化 OpenClaw 当前的多 provider 配置复杂度。</p>
-                            <div class="action-meta">
-                                <span>ROI: 🟡 B级</span>
-                                <span>风险: 🟡 中等</span>
                             </div>
                         </div>
                     </div>
@@ -1486,56 +1139,55 @@
                 <div class="glossary-grid">
                     <div class="glossary-item">
                         <dt>Harness Engineering</dt>
-                        <dd>Agent 系统工程的六层模型（L1-L6），涵盖上下文、工具、编排、记忆、观测、约束六个维度。由 Anthropic 和业内学者提出并发展。</dd>
+                        <dd>Agent 系统工程的六层模型（L1-L6），涵盖上下文、工具、编排、记忆、观测、约束六个维度。</dd>
                     </div>
                     <div class="glossary-item">
-                        <dt>Agent</dt>
-                        <dd>能够感知环境、调用工具、执行多步任务并达成目标的 AI 系统。区别于单次对话的 Model，Agent 强调自主性和持续性。</dd>
+                        <dt>Official OpenClaw</dt>
+                        <dd>开源 Harness 框架（github.com/openclaw/openclaw），提供 L1-L6 完整框架底座，包括 MCP、browser automation、channel 插件等。</dd>
                     </div>
                     <div class="glossary-item">
-                        <dt>Model</dt>
-                        <dd>底层的 LLM（如 GPT-4、Claude、kimi-k2.5、MiniMax M2.7 等），负责语言理解和生成，是 Agent 的「大脑」。</dd>
+                        <dt>Will's Custom</dt>
+                        <dd>基于官方框架的生产级部署，包含 25+ 自定义 Skills、蜂群引擎、PUA-Lite 约束框架、四实例架构（ユキ/ナツ/ハル/アキ）、watchdog-pair 监控。</dd>
                     </div>
                     <div class="glossary-item">
-                        <dt>L1-L6</dt>
-                        <dd>Harness Engineering 的六层架构：L1 上下文边界、L2 工具系统、L3 执行编排、L4 记忆状态、L5 评估观测、L6 约束恢复。</dd>
+                        <dt>Hermes</dt>
+                        <dd>记忆层专用系统，Honcho 架构，1024维向量 + BM25+rerank 混合检索，专注 L1/L4 记忆管理精度的极致化。</dd>
                     </div>
                     <div class="glossary-item">
                         <dt>BM25+rerank</dt>
-                        <dd>一种混合检索技术。BM25 是经典的关键词匹配算法，rerank 是使用神经网络对初筛结果进行二次排序的语义精排步骤。</dd>
+                        <dd>一种混合检索技术。BM25 是经典关键词匹配算法，rerank 是使用神经网络对初筛结果进行二次排序的语义精排步骤。</dd>
                     </div>
                     <div class="glossary-item">
-                        <dt>Context Reflect</dt>
-                        <dd>让模型主动回顾和整理上下文信息的过程，常用于在长对话或多轮任务中保持信息一致性和准确召回。</dd>
+                        <dt>PUA-Lite</dt>
+                        <dd>Will's Custom 采用的行为驱动约束框架，包含三条红线（闭环验证、事实驱动、禁止原地打转）和五步方法论。</dd>
+                    </div>
+                    <div class="glossary-item">
+                        <dt>Swarm Engine</dt>
+                        <dd>Will's Custom 的蜂群引擎，通过多 agent 并行执行、独立审查和评分机制，用低端模型数量换高端模型质量。</dd>
+                    </div>
+                    <div class="glossary-item">
+                        <dt>LCM</dt>
+                        <dd>Lossless Context Management，OpenClaw 的上下文压缩技术，用于在不丢失关键信息的前提下控制长对话的上下文长度。</dd>
                     </div>
                     <div class="glossary-item">
                         <dt>MCP</dt>
                         <dd>Model Context Protocol，由 Anthropic 提出的开放协议，用于标准化 LLM 与外部工具/数据源之间的交互接口。</dd>
                     </div>
                     <div class="glossary-item">
-                        <dt>PUA-Lite</dt>
-                        <dd>OpenClaw 采用的行为驱动约束框架，包含三条红线（闭环验证、事实驱动、禁止原地打转）和五步方法论。</dd>
-                    </div>
-                    <div class="glossary-item">
-                        <dt>Swarm Engine</dt>
-                        <dd>OpenClaw 的蜂群引擎，通过多 agent 并行执行、独立审查和评分机制，用低端模型数量换高端模型质量。</dd>
-                    </div>
-                    <div class="glossary-item">
-                        <dt>LCM</dt>
-                        <dd>Lossless Context Management，OpenClaw 的上下文压缩技术，用于在不丢失关键信息的前提下控制长对话的上下文长度。</dd>
+                        <dt>watchdog-pair</dt>
+                        <dd>Will's Custom 的双实例互监系统，四实例（ユキ/ナツ/ハル/アキ）互相监控健康状态，宕机自动重启、告警通知、熔断保护。</dd>
                     </div>
                 </div>
             </section>
 
             <!-- Footer -->
             <footer style="text-align: center; padding: 40px 0; opacity: 0.6; font-size: 13px; border-top: 1px solid var(--border-subtle); margin-top: 40px;">
-                <p>Generated by OpenClaw Subagent · 多模型交叉验证报告 · 2026-04-12</p>
+                <p>Generated by OpenClaw Subagent · 三方系统对比报告 · 2026-04-12</p>
             </footer>
         </div>
     </main>
 
     <script>
-        // Sticky TOC active state
         const sections = document.querySelectorAll('section[id]');
         const tocLinks = document.querySelectorAll('.toc-list a');
 
