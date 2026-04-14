@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Round 3 + 免费模型对比 · 30题综合能力总榜</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --bg: #0d1117; --card: #161b22; --border: #30363d;
+  --gold: #ffd700; --green: #3fb950; --red: #f85149;
+  --blue: #58a6ff; --purple: #bc8cff; --orange: #ffa657;
+  --text: #e6edf3; --muted: #8b949e; --subtext: #c9d1d9;
+}
+body { background: var(--bg); color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  min-height: 100vh; padding: 40px 20px; }
+.container { max-width: 1100px; margin: 0 auto; }
+
+.header { text-align: center; margin-bottom: 50px; }
+.header h1 { font-size: 26px; font-weight: 700; margin-bottom: 10px; }
+.header p { color: var(--muted); font-size: 14px; }
+.badge-row { display: flex; gap: 8px; justify-content: center; margin-top: 14px; flex-wrap: wrap; }
+.badge { padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+.badge-paid { background: rgba(88,166,255,0.15); color: var(--blue); border: 1px solid rgba(88,166,255,0.3); }
+.badge-free { background: rgba(63,185,80,0.15); color: var(--green); border: 1px solid rgba(63,185,80,0.3); }
+.badge-new { background: rgba(188,140,255,0.15); color: var(--purple); border: 1px solid rgba(188,140,255,0.3); }
+
+.card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 28px 30px; margin-bottom: 28px; }
+.card-title { font-size: 16px; font-weight: 600; margin-bottom: 4px; }
+.card-sub { font-size: 12px; color: var(--muted); margin-bottom: 20px; }
+.compare-note { text-align: center; color: var(--muted); font-size: 12px; margin-bottom: 20px; padding: 10px 16px; background: rgba(255,255,255,0.03); border-radius: 8px; border: 1px solid var(--border); }
+
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--border); color: var(--muted); font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; }
+td { padding: 11px 14px; border-bottom: 1px solid rgba(48,54,61,0.6); color: var(--subtext); }
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: rgba(255,255,255,0.02); }
+
+.rank-cell { font-weight: 700; font-size: 14px; width: 36px; }
+.rank-gold { color: var(--gold); }
+.rank-silver { color: #c0c0c0; }
+.rank-bronze { color: #cd7f32; }
+.rank-other { color: var(--muted); }
+
+.model-cell { font-weight: 600; color: var(--text); min-width: 200px; }
+.type-badge { display: inline-block; padding: 2px 7px; border-radius: 6px; font-size: 11px; font-weight: 600; margin-left: 6px; }
+.type-paid { background: rgba(88,166,255,0.15); color: var(--blue); }
+.type-free { background: rgba(63,185,80,0.15); color: var(--green); }
+
+.score-cell { font-weight: 700; font-size: 15px; width: 70px; }
+.score-high { color: var(--green); }
+.score-mid { color: var(--orange); }
+.score-low { color: var(--red); }
+
+.bar-cell { width: 160px; }
+.bar-bg { height: 8px; background: rgba(255,255,255,0.06); border-radius: 4px; overflow: hidden; }
+.bar-fill { height: 100%; border-radius: 4px; transition: width 0.6s ease; }
+.bar-paid { background: linear-gradient(90deg, #58a6ff, #79c0ff); }
+.bar-free { background: linear-gradient(90deg, #3fb950, #56d364); }
+.bar-silver { background: linear-gradient(90deg, #c0c0c0, #d8d8d8); }
+.bar-bronze { background: linear-gradient(90deg, #cd7f32, #e8a060); }
+
+.rank-medal { font-size: 18px; }
+.score-big { font-size: 20px; font-weight: 800; }
+
+/* Dim cards */
+.dim-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(480px, 1fr)); gap: 20px; }
+.dim-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 22px 24px; }
+.dim-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+.dim-icon { font-size: 28px; }
+.dim-title { font-size: 15px; font-weight: 700; color: var(--text); }
+.dim-sub { font-size: 12px; color: var(--muted); }
+.dim-table { font-size: 12px; }
+.dim-rank { width: 28px; font-weight: 700; color: var(--muted); }
+.dim-name { font-weight: 600; color: var(--subtext); padding-left: 4px; }
+.dim-score { font-weight: 700; font-size: 14px; width: 60px; text-align: right; }
+.dim-bar { width: 100px; }
+.dim-bar-bg { height: 6px; background: rgba(255,255,255,0.06); border-radius: 3px; overflow: hidden; }
+.dim-bar-fill { height: 100%; border-radius: 3px; }
+
+.type-tag { font-size: 10px; padding: 1px 5px; border-radius: 4px; margin-left: 4px; font-weight: 600; }
+.tag-paid { background: rgba(88,166,255,0.15); color: var(--blue); }
+.tag-free { background: rgba(63,185,80,0.15); color: var(--green); }
+
+/* Overall table */
+.overall-score { font-size: 22px; font-weight: 800; }
+.overall-high { color: var(--gold); }
+.overall-mid { color: var(--green); }
+.overall-low { color: var(--orange); }
+
+.verdict-box { background: rgba(88,166,255,0.08); border: 1px solid rgba(88,166,255,0.2); border-radius: 10px; padding: 20px 24px; margin-top: 20px; }
+.verdict-title { font-size: 13px; font-weight: 700; color: var(--blue); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
+.verdict-text { font-size: 14px; color: var(--subtext); line-height: 1.7; }
+.verdict-text strong { color: var(--text); }
+
+.highlight-box { background: rgba(63,185,80,0.08); border: 1px solid rgba(63,185,80,0.25); border-radius: 10px; padding: 18px 24px; margin-top: 16px; }
+.highlight-title { font-size: 13px; font-weight: 700; color: var(--green); margin-bottom: 8px; }
+.highlight-text { font-size: 14px; color: var(--subtext); line-height: 1.7; }
+
+.footer { text-align: center; color: var(--muted); font-size: 12px; margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--border); }
+
+/* Tabs */
+.tabs { display: flex; gap: 4px; margin-bottom: 24px; flex-wrap: wrap; }
+.tab-btn { padding: 8px 18px; border-radius: 8px; border: 1px solid var(--border); background: transparent; color: var(--muted); font-size: 13px; cursor: pointer; transition: all 0.2s; }
+.tab-btn:hover { color: var(--text); border-color: var(--muted); }
+.tab-btn.active { background: rgba(88,166,255,0.15); color: var(--blue); border-color: rgba(88,166,255,0.4); }
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* Judge color */
+.j-kimi { color: var(--blue); }
+.j-mm { color: var(--orange); }
+.j-qwen { color: var(--purple); }
+
+.judge-note { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 18px; }
+.judge-chip { padding: 6px 14px; border-radius: 8px; font-size: 12px; font-weight: 600; }
+.judge-chip.kimi { background: rgba(88,166,255,0.12); color: var(--blue); border: 1px solid rgba(88,166,255,0.25); }
+.judge-chip.mm { background: rgba(255,166,87,0.12); color: var(--orange); border: 1px solid rgba(255,166,87,0.25); }
+.judge-chip.qwen { background: rgba(188,140,255,0.12); color: var(--purple); border: 1px solid rgba(188,140,255,0.25); }
+</style>
+</head>
+<body>
+<div class="container">
+
+<div class="header">
+  <h1>🏆 Round 3 + 免费模型 · 30题综合能力总榜</h1>
+  <p>8个付费模型 × 2个免费Groq模型 · 三裁判（kimi / minimax / qwen）× 30题 × 6维度</p>
+  <div class="badge-row">
+    <span class="badge badge-paid">🏅 付费模型（Round 3）</span>
+    <span class="badge badge-free">🌿 免费模型（Groq）</span>
+    <span class="badge badge-new">🆕 含各维度单独榜单</span>
+    <a href="/benchmark-methodology" style="padding:4px 14px;border-radius:20px;font-size:12px;font-weight:600;background:rgba(255,166,87,0.12);color:#ffa657;border:1px solid rgba(255,166,87,0.3);text-decoration:none;">📋 评测方法论</a>
+  </div>
+</div>
+
+<!-- ===== OVERALL TAB ===== -->
+<div class="card">
+  <div class="card-title">📊 总榜 · 三裁判综合平均</div>
+  <div class="card-sub">满分100分（c×0.5 + comp×0.15 + depth×0.25 + clarity×0.1）</div>
+  <div class="compare-note">
+    ⚠️ 付费模型（Round 3）和免费模型（Groq）使用同一裁判团和同一 Rubric，可在同一标准下对比分数。
+  </div>
+  <table>
+    <thead>
+      <tr>
+        <th>#</th><th>模型</th><th>类型</th><th>综合总分</th><th>进度</th>
+        <th class="j-kimi">kimi法官</th><th class="j-mm">minimax法官</th><th class="j-qwen">qwen法官</th>
+      </tr>
+    </thead>
+    <tbody id="main-tbody"></tbody>
+  </table>
+</div>
+
+<!-- ===== JUDGE TAB ===== -->
+<div class="card">
+  <div class="card-title">⚖️ 各法官详细评分</div>
+  <div class="card-sub">三位法官对同一批答案的打分差异</div>
+  <div class="judge-note">
+    <div class="judge-chip kimi">kimi 法官 — 温和稳定，100%成功</div>
+    <div class="judge-chip mm">minimax 法官 — 尺度最严，免费模型常得低分</div>
+    <div class="judge-chip qwen">qwen 法官 — 中等偏严，Qwen家族内部打 分偏严</div>
+  </div>
+  <table>
+    <thead>
+      <tr>
+        <th>#</th><th>模型</th><th>类型</th>
+        <th class="j-kimi">kimi</th><th class="j-mm">minimax</th><th class="j-qwen">qwen</th>
+        <th>综合</th>
+      </tr>
+    </thead>
+    <tbody id="judge-tbody"></tbody>
+  </table>
+</div>
+
+<!-- ===== DIM TABS ===== -->
+<div class="card">
+  <div class="card-title">📐 各维度单独榜单</div>
+  <div class="card-sub">每个维度独立排名，免费模型在各维度的真实实力一览无余</div>
+
+  <div class="tabs" id="dim-tabs"></div>
+  <div id="dim-panels"></div>
+</div>
+
+<!-- Key insights -->
+<div class="card">
+  <div class="card-title">🔍 关键发现</div>
+  <div class="verdict-box" style="margin-top:0">
+    <div class="verdict-title">💡 免费模型的真实定位</div>
+    <div class="verdict-text">
+      <strong>qwen3-32b（免费）综合 85.4，排名第9</strong>，超越付费 Model-D（kimi-k2.5, 93.2）和 Model-H（GPT-5.4, 93.3）。<br>
+      <strong>llama-3.3-70b（免费）综合 71.4，排名第10</strong>，垫底于所有付费模型，被 minimax 法官打出 61.7 分的全场最低分。
+    </div>
+  </div>
+  <div class="highlight-box">
+    <div class="highlight-title">🌟 免费模型最强维度：Agent 指令遵循</div>
+    <div class="highlight-text">
+      qwen3-32b 在 Agent 维度（90.0分）与付费顶流 Model-G（Qwen 3.5+, 90.2）和 Model-C（Qwen 3.6+, 90.0）<strong>并列第3名</strong>，几乎追平最强付费模型！编程（85.0）和语言（87.9）也是亮点。<br>
+      但数学（84.5）和推理（89.7）差距明显，尤其数学 M01 高斯积分题免费模型几乎交白卷。
+    </div>
+  </div>
+  <div class="highlight-box">
+    <div class="highlight-title">📐 付费模型最强维度：数学</div>
+    <div class="highlight-text">
+      付费模型数学全部95+，Top6全在95以上。免费模型数学最高仅84.5（qwen3-32b），差距约10分。<br>
+      推理题差距较小（qwen3-32b 第9名89.7，接近第8名 Model-D 93.4）。
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  数据来源：Will AI Lab · Round 3 三裁判评测（2026-04-14/15）· Groq 免费模型评测（2026-04-15）· 30题 × 6维度
+</div>
+</div>
+
+<script>
+// ===== ALL DATA =====
+const ALL_MODELS = [
+  // Round 3 paid models (from summaries, converted to 0-100)
+  {rank:1,  name:'Model-A', identity:'🥇 小米 MiMo',           type:'paid', kimi:95.83, mm:99.17, qwen:97.67, avg:97.56,
+   dims:{M:95.9, P:90.8, R:94.7, A:89.6, L:90.5}},
+  {rank:2,  name:'Model-F', identity:'🥈 Claude Opus 4.6',     type:'paid', kimi:94.83, mm:100.00,qwen:96.40, avg:97.08,
+   dims:{M:95.6, P:90.6, R:94.3, A:86.6, L:89.8}},
+  {rank:3,  name:'Model-C', identity:'🥉 Qwen 3.6 Plus',       type:'paid', kimi:93.17, mm:96.43, qwen:96.43, avg:95.34,
+   dims:{M:95.6, P:88.8, R:94.3, A:90.0, L:91.4}},
+  {rank:4,  name:'Model-B', identity:'GPT-5.4-mini',          type:'paid', kimi:96.83, mm:92.23, qwen:96.48, avg:95.18,
+   dims:{M:94.5, P:87.6, R:91.0, A:84.5, L:85.9}},
+  {rank:5,  name:'Model-G', identity:'Qwen 3.5 Plus',        type:'paid', kimi:95.67, mm:95.67, qwen:92.50, avg:94.61,
+   dims:{M:96.1, P:89.0, R:95.1, A:90.2, L:85.2}},
+  {rank:6,  name:'Model-E', identity:'MiniMax M2.7',          type:'paid', kimi:96.00, mm:95.50, qwen:88.67, avg:93.39,
+   dims:{M:96.3, P:87.5, R:92.7, A:88.9, L:73.2}},
+  {rank:7,  name:'Model-H', identity:'GPT-5.4',              type:'paid', kimi:94.17, mm:91.00, qwen:94.57, avg:93.25,
+   dims:{M:93.9, P:89.7, R:94.3, A:86.7, L:86.8}},
+  {rank:8,  name:'Model-D', identity:'Kimi K2.5',             type:'paid', kimi:95.17, mm:92.67, qwen:91.67, avg:93.17,
+   dims:{M:94.1, P:83.0, R:93.4, A:80.9, L:83.8}},
+  // Groq free models (3-judge average)
+  {rank:9,  name:'qwen3-32b', identity:'🌿 Qwen 3-32B (免费)', type:'free', kimi:87.6, mm:81.5, qwen:87.1, avg:85.4,
+   dims:{M:84.5, P:85.0, R:89.7, A:90.0, L:87.9}},
+  {rank:10, name:'llama',     identity:'🌿 Llama 3.3 70B (免费)',type:'free', kimi:69.8, mm:61.7, qwen:82.6, avg:71.4,
+   dims:{M:77.7, P:73.5, R:76.0, A:64.0, L:68.1}},
+];
+
+const DIM_META = [
+  {key:'M', name:'数学', icon:'📐', desc:'5题 · 计算/证明', color:'#ffa657'},
+  {key:'P', name:'编程', icon:'💻', desc:'7题 · 算法/代码', color:'#58a6ff'},
+  {key:'R', name:'推理', icon:'🧠', desc:'5题 · 逻辑/博弈', color:'#bc8cff'},
+  {key:'A', name:'Agent',icon:'🤖', desc:'7题 · 指令遵循/工具调用', color:'#3fb950'},
+  {key:'L', name:'语言', icon:'🗣️', desc:'6题 · 中文4+日语2', color:'#ff6e6e'},
+];
+
+// ===== BUILD OVERALL TABLE =====
+function buildMainTable() {
+  const tbody = document.getElementById('main-tbody');
+  ALL_MODELS.forEach(m => {
+    const rankClass = m.rank===1?'rank-gold':m.rank===2?'rank-silver':m.rank===3?'rank-bronze':'rank-other';
+    const scoreClass = m.avg>=95?'score-high':m.avg>=85?'score-mid':'score-low';
+    const barClass = m.type==='free'?'bar-free':'bar-paid';
+    const barW = m.avg.toFixed(1);
+    const tag = m.type==='free'?'<span class="type-tag tag-free">免费</span>':'<span class="type-tag tag-paid">付费</span>';
+    const medal = m.rank<=3?'<span class="rank-medal">'+['🥇','🥈','🥉'][m.rank-1]+'</span>':`<span class="${rankClass}">${m.rank}</span>`;
+    const row = `<tr>
+      <td class="rank-cell">${m.rank<=3?['🥇','🥈','🥉'][m.rank-1]:`<span style="color:var(--muted)">${m.rank}</span>`}</td>
+      <td class="model-cell">${m.identity}${tag}</td>
+      <td>${tag}</td>
+      <td class="score-cell ${scoreClass} overall-score ${m.avg>=95?'overall-high':m.avg>=85?'overall-mid':'overall-low'}">${m.avg.toFixed(1)}</td>
+      <td class="bar-cell">
+        <div class="bar-bg"><div class="bar-fill ${barClass}" style="width:${(m.avg/100*100).toFixed(1)}%"></div></div>
+      </td>
+      <td class="j-kimi" style="font-weight:600">${m.kimi.toFixed(1)}</td>
+      <td class="j-mm" style="font-weight:600">${m.mm.toFixed(1)}</td>
+      <td class="j-qwen" style="font-weight:600">${m.qwen.toFixed(1)}</td>
+    </tr>`;
+    tbody.insertAdjacentHTML('beforeend', row);
+  });
+}
+
+// ===== BUILD JUDGE TABLE =====
+function buildJudgeTable() {
+  const tbody = document.getElementById('judge-tbody');
+  ALL_MODELS.forEach(m => {
+    const tag = m.type==='free'?'<span class="type-tag tag-free">免费</span>':'<span class="type-tag tag-paid">付费</span>';
+    const avgClass = m.avg>=95?'score-high':m.avg>=85?'score-mid':'score-low';
+    const row = `<tr>
+      <td class="rank-cell"><span style="color:var(--muted)">${m.rank}</span></td>
+      <td class="model-cell">${m.identity}${tag}</td>
+      <td>${tag}</td>
+      <td class="j-kimi" style="font-weight:600">${m.kimi.toFixed(1)}</td>
+      <td class="j-mm" style="font-weight:600">${m.mm.toFixed(1)}</td>
+      <td class="j-qwen" style="font-weight:600">${m.qwen.toFixed(1)}</td>
+      <td class="score-cell ${avgClass}">${m.avg.toFixed(1)}</td>
+    </tr>`;
+    tbody.insertAdjacentHTML('beforeend', row);
+  });
+}
+
+// ===== BUILD DIMENSION TABS & PANELS =====
+function buildDimTabs() {
+  const tabsEl = document.getElementById('dim-tabs');
+  const panelsEl = document.getElementById('dim-panels');
+
+  DIM_META.forEach((dim, i) => {
+    // Get all models sorted by this dimension
+    const sorted = [...ALL_MODELS].sort((a,b) => b.dims[dim.key] - a.dims[dim.key]);
+    const maxScore = sorted[0].dims[dim.key];
+
+    // Tab button
+    const btn = document.createElement('button');
+    btn.className = 'tab-btn' + (i===0?' active':'');
+    btn.innerHTML = `${dim.icon} ${dim.name}`;
+    btn.onclick = () => {
+      document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+      document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('dp-'+dim.key).classList.add('active');
+    };
+    tabsEl.appendChild(btn);
+
+    // Panel
+    const panel = document.createElement('div');
+    panel.id = 'dp-'+dim.key;
+    panel.className = 'tab-panel' + (i===0?' active':'');
+
+    let tableHtml = `
+      <table class="dim-table">
+        <thead>
+          <tr>
+            <th style="width:32px">#</th>
+            <th>模型</th>
+            <th>类型</th>
+            <th style="text-align:right;width:70px">${dim.name}得分</th>
+            <th style="width:120px">进度</th>
+          </tr>
+        </thead>
+        <tbody>
+    `;
+
+    sorted.forEach((m, idx) => {
+      const score = m.dims[dim.key];
+      const pct = (score / 100 * 100).toFixed(1);
+      const scoreClass = score>=95?'score-high':score>=85?'score-mid':'score-low';
+      const tag = m.type==='free'?'<span class="type-tag tag-free">免费</span>':'<span class="type-tag tag-paid">付费</span>';
+      const barColor = m.type==='free' ? '#3fb950' : (idx===0?'#ffd700':idx===1?'#c0c0c0':idx===2?'#cd7f32':'#58a6ff');
+      const medal = idx===0?'🥇':idx===1?'🥈':idx===2?'🥉':null;
+
+      tableHtml += `<tr style="border-bottom:1px solid rgba(48,54,61,0.6)">
+        <td style="font-weight:700;color:${idx<3?'var(--gold)':'var(--muted)'};font-size:14px">${medal||(idx+1)}</td>
+        <td style="font-weight:600;color:var(--subtext)">${m.identity}${tag}</td>
+        <td>${tag}</td>
+        <td class="score-cell ${scoreClass}" style="font-size:16px;font-weight:800">${score.toFixed(1)}</td>
+        <td>
+          <div style="display:flex;align-items:center;gap:8px">
+            <div style="flex:1;height:8px;background:rgba(255,255,255,0.06);border-radius:4px;overflow:hidden">
+              <div style="height:100%;width:${pct}%;background:${barColor};border-radius:4px;transition:width 0.6s"></div>
+            </div>
+          </div>
+        </td>
+      </tr>`;
+    });
+
+    tableHtml += '</tbody></table>';
+    panel.innerHTML = tableHtml;
+    panelsEl.appendChild(panel);
+  });
+}
+
+// Init
+buildMainTable();
+buildJudgeTable();
+buildDimTabs();
+</script>
+</body>
+</html>

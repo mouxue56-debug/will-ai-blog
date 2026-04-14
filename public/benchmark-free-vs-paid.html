@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>免费模型 vs 付费模型 · 30题六维度全对比</title>
+<style>
+:root {
+  --bg: #0A1420;
+  --card: #111D2E;
+  --border: #1E3A5F;
+  --accent: #00D4AA;
+  --accent2: #FF6B6B;
+  --accent3: #FFD93D;
+  --text: #E8F0FE;
+  --muted: #7B9CB8;
+  --paid: #3B82F6;
+  --free: #F59E0B;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--bg); color: var(--text); font-family: 'Inter','Noto Sans JP',sans-serif; min-height: 100vh; }
+
+.header {
+  background: linear-gradient(135deg, #0A1420 0%, #0F2744 100%);
+  border-bottom: 1px solid var(--border);
+  padding: 24px 40px;
+  position: sticky;
+  top: 0; z-index: 100;
+}
+.header h1 { font-size: 1.5rem; font-weight: 700; color: var(--accent); letter-spacing: -0.02em; }
+.header .subtitle { color: var(--muted); font-size: 0.85rem; margin-top: 4px; }
+.header .badge-row { margin-top: 12px; display: flex; gap: 8px; flex-wrap: wrap; }
+.badge { padding: 3px 10px; border-radius: 12px; font-size: 0.72rem; font-weight: 600; }
+.badge-paid { background: rgba(59,130,246,0.2); color: var(--paid); border: 1px solid var(--paid); }
+.badge-free { background: rgba(245,158,11,0.2); color: var(--free); border: 1px solid var(--free); }
+.badge-dim { background: rgba(0,212,170,0.15); color: var(--accent); border: 1px solid var(--accent); }
+
+.tabs { display: flex; gap: 4px; padding: 16px 40px 0; background: var(--bg); border-bottom: 1px solid var(--border); overflow-x: auto; }
+.tab { padding: 8px 16px; border-radius: 8px 8px 0 0; cursor: pointer; font-size: 0.82rem; font-weight: 600; color: var(--muted); border: 1px solid transparent; border-bottom: none; transition: all 0.15s; white-space: nowrap; }
+.tab:hover { color: var(--text); }
+.tab.active { background: var(--card); color: var(--accent); border-color: var(--border); border-bottom-color: var(--card); }
+
+.content { padding: 24px 40px; }
+.section-title { font-size: 1rem; font-weight: 700; margin-bottom: 16px; color: var(--text); display: flex; align-items: center; gap: 8px; }
+.section-title::before { content: ''; width: 3px; height: 16px; background: var(--accent); border-radius: 2px; }
+
+.panel { display: none; }
+.panel.active { display: block; }
+
+/* Legend */
+.legend { display: flex; gap: 20px; margin-bottom: 20px; flex-wrap: wrap; }
+.legend-item { display: flex; align-items: center; gap: 6px; font-size: 0.8rem; }
+.legend-dot { width: 10px; height: 10px; border-radius: 50%; }
+.legend-bar { width: 24px; height: 6px; border-radius: 3px; }
+
+/* Table */
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+thead th { text-align: left; padding: 8px 12px; color: var(--muted); font-weight: 600; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 1px solid var(--border); position: sticky; top: 0; background: var(--bg); }
+tbody tr { border-bottom: 1px solid rgba(30,58,95,0.5); transition: background 0.1s; }
+tbody tr:hover { background: rgba(0,212,170,0.04); }
+td { padding: 10px 12px; vertical-align: middle; }
+.td-rank { font-weight: 800; font-size: 1rem; width: 40px; }
+.td-model { font-weight: 600; min-width: 160px; }
+.td-score { font-weight: 700; font-size: 1rem; min-width: 60px; }
+.td-dim { font-size: 0.78rem; min-width: 52px; text-align: center; }
+.td-bar { min-width: 100px; }
+
+.rank-1 { color: #FFD700; }
+.rank-2 { color: #C0C0C0; }
+.rank-3 { color: #CD7F32; }
+.rank-paid { background: rgba(59,130,246,0.08); }
+.rank-free { background: rgba(245,158,11,0.06); }
+
+.model-tag { display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px; border-radius: 6px; font-size: 0.7rem; font-weight: 700; }
+.model-paid { background: rgba(59,130,246,0.2); color: var(--paid); }
+.model-free { background: rgba(245,158,11,0.2); color: var(--free); }
+
+.score-bar-wrap { background: rgba(255,255,255,0.06); border-radius: 3px; height: 6px; width: 100px; overflow: hidden; }
+.score-bar { height: 100%; border-radius: 3px; transition: width 0.4s ease; }
+.bar-paid { background: linear-gradient(90deg, var(--paid), #60A5FA); }
+.bar-free { background: linear-gradient(90deg, var(--free), #FBBF24); }
+
+/* Radar chart */
+.radar-section { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 16px; }
+.radar-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
+.radar-card h3 { font-size: 0.9rem; font-weight: 700; margin-bottom: 16px; color: var(--accent); }
+.radar-svg { width: 100%; height: auto; }
+
+/* Score comparison cards */
+.compare-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; margin-top: 16px; }
+.compare-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 16px; }
+.compare-card h4 { font-size: 0.82rem; font-weight: 700; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
+.compare-row { display: flex; justify-content: space-between; align-items: center; padding: 4px 0; font-size: 0.8rem; }
+.compare-row .label { color: var(--muted); }
+.compare-row .val { font-weight: 700; }
+.compare-row .val.highlight { color: var(--accent); font-size: 1rem; }
+.dim-tag { display: inline-block; padding: 1px 6px; border-radius: 4px; font-size: 0.65rem; font-weight: 700; }
+.dim-M { background: rgba(59,130,246,0.2); color: #60A5FA; }
+.dim-P { background: rgba(16,185,129,0.2); color: #34D399; }
+.dim-R { background: rgba(168,85,247,0.2); color: #A855F7; }
+.dim-A { background: rgba(249,115,22,0.2); color: #FB923C; }
+.dim-L { background: rgba(236,72,153,0.2); color: #F472B6; }
+
+/* Note */
+.note { background: rgba(245,158,11,0.08); border: 1px solid rgba(245,158,11,0.3); border-radius: 8px; padding: 12px 16px; font-size: 0.78rem; color: var(--muted); margin-top: 16px; line-height: 1.6; }
+.note strong { color: var(--free); }
+
+/* Judge variance */
+.variance-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; margin-top: 16px; }
+.variance-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 16px; }
+.variance-card h4 { font-size: 0.85rem; font-weight: 700; margin-bottom: 12px; }
+.variance-row { display: flex; justify-content: space-between; padding: 3px 0; font-size: 0.78rem; }
+.variance-row .label { color: var(--muted); }
+.variance-row .gap { font-weight: 700; }
+.gap-huge { color: var(--accent2); }
+.gap-large { color: var(--accent3); }
+.gap-normal { color: var(--accent); }
+.gap-small { color: var(--muted); }
+
+/* Footer */
+.footer { text-align: center; padding: 32px 40px; color: var(--muted); font-size: 0.75rem; border-top: 1px solid var(--border); margin-top: 32px; }
+
+@media (max-width: 768px) {
+  .header, .content, .tabs { padding-left: 16px; padding-right: 16px; }
+  .radar-section { grid-template-columns: 1fr; }
+  table { font-size: 0.75rem; }
+  .td-bar { display: none; }
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>🌐 免费模型 vs 付费模型 · 30题六维度全对比</h1>
+  <div class="subtitle">30题LLM综合能力测试 · 付费模型（Round 2双裁判）× 免费模型（Groq × Kimi/MiniMax法官）</div>
+  <div class="badge-row">
+    <span class="badge badge-paid">🟦 付费模型 13款</span>
+    <span class="badge badge-free">🟨 免费模型 2款</span>
+    <span class="badge badge-dim">📐 6维度对比</span>
+  </div>
+</div>
+
+<div class="tabs">
+  <div class="tab active" data-tab="overall">总排名</div>
+  <div class="tab" data-tab="M">📐 数学</div>
+  <div class="tab" data-tab="P">💻 编程</div>
+  <div class="tab" data-tab="R">🧠 推理</div>
+  <div class="tab" data-tab="A">🎯 Agent</div>
+  <div class="tab" data-tab="L">🌏 语言</div>
+  <div class="tab" data-tab="groq">🆓 Groq专项</div>
+  <div class="tab" data-tab="method">📊 测评说明</div>
+</div>
+
+<div class="content">
+
+<!-- ===================== 总排名 ===================== -->
+<div class="panel active" id="panel-overall">
+  <div class="section-title">总排名 · 付费模型 Round 2</div>
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot" style="background:var(--paid)"></div>付费API模型</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--free)"></div>Groq免费模型</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--accent)"></div>参考系（仅供参考，非同条件对比）</div>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>#</th><th>模型</th><th>类型</th><th>总分</th><th>条形</th><th>M</th><th>P</th><th>R</th><th>A</th><th>L-CN</th><th>L-JP</th>
+        </tr>
+      </thead>
+      <tbody id="overall-tbody"></tbody>
+    </table>
+  </div>
+
+  <div class="note">
+    <strong>⚠️ 注意：Groq 免费模型与 Round 2 付费模型使用了不同的评分标准</strong>（Groq 测试：4维度加权 40/25/25/10；Round 2：6维度×双裁判匿名盲评），
+    分数不可直接对比。右侧「Groq专项」标签页有同条件下免费模型对比。
+  </div>
+</div>
+
+<!-- ===================== 数学 ===================== -->
+<div class="panel" id="panel-M">
+  <div class="section-title">📐 数学维度 · M01-M05（5题）</div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>#</th><th>模型</th><th>类型</th><th>均分</th><th>条形</th><th>说明</th></tr></thead>
+      <tbody id="M-tbody"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ===================== 编程 ===================== -->
+<div class="panel" id="panel-P">
+  <div class="section-title">💻 编程维度 · P01-P07（7题）</div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>#</th><th>模型</th><th>类型</th><th>均分</th><th>条形</th><th>说明</th></tr></thead>
+      <tbody id="P-tbody"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ===================== 推理 ===================== -->
+<div class="panel" id="panel-R">
+  <div class="section-title">🧠 推理维度 · R01-R05（5题）</div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>#</th><th>模型</th><th>类型</th><th>均分</th><th>条形</th><th>说明</th></tr></thead>
+      <tbody id="R-tbody"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ===================== Agent ===================== -->
+<div class="panel" id="panel-A">
+  <div class="section-title">🎯 指令遵循 / Agent · A01-A07（7题）</div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>#</th><th>模型</th><th>类型</th><th>均分</th><th>条形</th><th>说明</th></tr></thead>
+      <tbody id="A-tbody"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ===================== 语言 ===================== -->
+<div class="panel" id="panel-L">
+  <div class="section-title">🌏 语言维度 · L01-L06（6题：中文4题 + 日语2题）</div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>#</th><th>模型</th><th>类型</th><th>语言均分</th><th>L-CN</th><th>L-JP</th><th>条形</th></tr></thead>
+      <tbody id="L-tbody"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ===================== Groq专项 ===================== -->
+<div class="panel" id="panel-groq">
+  <div class="section-title">🆓 Groq 免费模型同条件对比</div>
+  <div class="note">
+    以下为<strong>同条件对比</strong>：两个模型均在 Groq 平台 × 同一套30题 × 同一法官（kimi + minimax）评分，可直接对比。
+  </div>
+
+  <div class="compare-grid">
+    <div class="compare-card">
+      <h4>📊 总体得分（两法官平均）</h4>
+      <div class="compare-row"><span class="label">🥇 qwen3-32b</span><span class="val highlight">84.5</span></div>
+      <div class="compare-row"><span class="label">🥈 llama-3.3-70b</span><span class="val highlight">65.8</span></div>
+      <div class="compare-row"><span class="label">差距</span><span class="val" style="color:var(--accent)">+18.7 qwen胜</span></div>
+    </div>
+    <div class="compare-card">
+      <h4>📐 数学（kimi法官）</h4>
+      <div class="compare-row"><span class="label">qwen3-32b</span><span class="val highlight">78.5</span></div>
+      <div class="compare-row"><span class="label">llama-3.3-70b</span><span class="val">73.7</span></div>
+      <div class="compare-row"><span class="label">差距</span><span class="val">+4.8 qwen胜</span></div>
+    </div>
+    <div class="compare-card">
+      <h4>💻 编程（kimi法官）</h4>
+      <div class="compare-row"><span class="label">qwen3-32b</span><span class="val highlight">86.1</span></div>
+      <div class="compare-row"><span class="label">llama-3.3-70b</span><span class="val">70.8</span></div>
+      <div class="compare-row"><span class="label">差距</span><span class="val" style="color:var(--accent)">+15.3 qwen胜</span></div>
+    </div>
+    <div class="compare-card">
+      <h4>🧠 推理（kimi法官）</h4>
+      <div class="compare-row"><span class="label">qwen3-32b</span><span class="val highlight">89.0</span></div>
+      <div class="compare-row"><span class="label">llama-3.3-70b</span><span class="val">73.8</span></div>
+      <div class="compare-row"><span class="label">差距</span><span class="val" style="color:var(--accent2)">+15.2 qwen胜</span></div>
+    </div>
+    <div class="compare-card">
+      <h4>🎯 Agent（kimi法官）</h4>
+      <div class="compare-row"><span class="label">qwen3-32b</span><span class="val highlight">91.3</span></div>
+      <div class="compare-row"><span class="label">llama-3.3-70b</span><span class="val">62.3</span></div>
+      <div class="compare-row"><span class="label">差距</span><span class="val" style="color:var(--accent2)">+29.0 qwen胜</span></div>
+    </div>
+    <div class="compare-card">
+      <h4>🌏 语言（kimi法官）</h4>
+      <div class="compare-row"><span class="label">qwen3-32b</span><span class="val highlight">91.6</span></div>
+      <div class="compare-row"><span class="label">llama-3.3-70b</span><span class="val">71.0</span></div>
+      <div class="compare-row"><span class="label">差距</span><span class="val" style="color:var(--accent2)">+20.6 qwen胜</span></div>
+    </div>
+  </div>
+
+  <div class="section-title" style="margin-top:28px">🔍 Groq 模型逐题对比</div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>题号</th><th>维度</th><th>qwen3-32b</th><th>llama-3.3-70b</th><th>差距</th><th>说明</th></tr></thead>
+      <tbody id="groq-q-tbody"></tbody>
+    </table>
+  </div>
+
+  <div class="section-title" style="margin-top:28px">⚖️ 法官分歧分析</div>
+  <div class="variance-grid">
+    <div class="variance-card">
+      <h4>qwen3-32b · 法官分歧</h4>
+      <div class="variance-row"><span class="label">M01 高斯积分</span><span class="gap gap-huge">kimi 45 vs mm 18 = 差27</span></div>
+      <div class="variance-row"><span class="label">R01 蓝眼睛岛</span><span class="gap gap-large">kimi 94 vs mm 80 = 差14</span></div>
+      <div class="variance-row"><span class="label">R03 博弈论</span><span class="gap gap-large">kimi 87 vs mm 76 = 差11</span></div>
+      <div class="variance-row"><span class="label">E01 总体分歧</span><span class="gap gap-normal">avg Δ = 4.1</span></div>
+    </div>
+    <div class="variance-card">
+      <h4>llama-3.3-70b · 法官分歧</h4>
+      <div class="variance-row"><span class="label">M01 高斯积分</span><span class="gap gap-huge">kimi 6.8 vs mm 1.8 = 差5.0</span></div>
+      <div class="variance-row"><span class="label">R01 蓝眼睛岛</span><span class="gap gap-huge">kimi 11.5 vs mm 1.8 = 差9.7</span></div>
+      <div class="variance-row"><span class="label">P01 LRU Cache</span><span class="gap gap-huge">kimi 20.0 vs mm 2.2 = 差17.8</span></div>
+      <div class="variance-row"><span class="label">A03 指令冲突</span><span class="gap gap-huge">kimi 17.2 vs mm 17.2 = 差0</span></div>
+    </div>
+  </div>
+
+  <div class="section-title" style="margin-top:28px">🎯 付费参考系（Round 2 同维度对比）</div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>维度</th><th>Round 2 第1名</th><th>Round 2 均分</th><th>qwen3-32b Groq</th><th>差距</th></tr></thead>
+      <tbody id="paid-ref-tbody"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ===================== 方法说明 ===================== -->
+<div class="panel" id="panel-method">
+  <div class="section-title">📊 测评方法说明</div>
+
+  <div class="compare-grid">
+    <div class="compare-card">
+      <h4>🟦 Round 2 · 付费模型测评</h4>
+      <div class="compare-row"><span class="label">题库</span><span class="val">30题 v2（6维度）</span></div>
+      <div class="compare-row"><span class="label">裁判</span><span class="val">Opus 4.6 + GPT-5.4 匿名盲评</span></div>
+      <div class="compare-row"><span class="label">模型数</span><span class="val">13款付费API模型</span></div>
+      <div class="compare-row"><span class="label">评分</span><span class="val">6维度加权总分</span></div>
+      <div class="compare-row"><span class="label">日期</span><span class="val">2026-04-10</span></div>
+    </div>
+    <div class="compare-card">
+      <h4>🟨 Groq · 免费模型测评</h4>
+      <div class="compare-row"><span class="label">题库</span><span class="val">同一30题 v2</span></div>
+      <div class="compare-row"><span class="label">裁判</span><span class="val">kimi-k2.5 + minimax-m2.7</span></div>
+      <div class="compare-row"><span class="label">模型数</span><span class="val">2款（qwen3-32b + llama-3.3-70b）</span></div>
+      <div class="compare-row"><span class="label">评分</span><span class="val">4维度加权（40/25/25/10）</span></div>
+      <div class="compare-row"><span class="label">日期</span><span class="val">2026-04-15</span></div>
+    </div>
+  </div>
+
+  <div class="note" style="margin-top:20px">
+    <strong>⚠️ 分数不可跨组直接对比</strong> — 两组使用了不同的：<br>
+    ① 裁判模型不同（Opus+GPT-5.4 vs kimi+minimax）<br>
+    ② 评分维度不同（6维度 vs 4维度）<br>
+    ③ 评分标准不同（Round 2 更严格，权重偏向语言）<br>
+    <strong>正确的对比方式：</strong>同组内（付费vs付费、免费vs免费）可排名；跨组比较只能看趋势和参考系。
+  </div>
+</div>
+
+</div>
+
+<div class="footer">
+  数据来源：Round 2（2026-04-10）× 13付费模型双裁判测评 + Groq免费模型测试（2026-04-15）<br>
+  本页面仅供对比参考，分数不可跨组直接对比
+</div>
+
+<script>
+// ==================== DATA ====================
+const ROUND2 = [
+  {rank:1,  model:"claude-sonnet-4.6",    paid:true,  total:928.2, M:959, P:912, R:947, A:896, LC:909, LJ:900},
+  {rank:2,  model:"qwen3.6-plus",          paid:true,  total:924.1, M:956, P:888, R:943, A:900, LC:931, LJ:898},
+  {rank:3,  model:"qwen3.5-plus",          paid:true,  total:923.3, M:961, P:890, R:951, A:902, LC:905, LJ:799},
+  {rank:4,  model:"glm-5-turbo",            paid:true,  total:921.5, M:953, P:904, R:924, A:873, LC:905, LJ:882},
+  {rank:5,  model:"claude-opus-4.6",       paid:true,  total:919.4, M:956, P:906, R:943, A:866, LC:892, LJ:904},
+  {rank:6,  model:"kimi-today",             paid:true,  total:914.7, M:942, P:916, R:948, A:827, LC:933, LJ:906},
+  {rank:7,  model:"glm-5.1",               paid:true,  total:913.4, M:955, P:879, R:949, A:859, LC:888, LJ:857},
+  {rank:8,  model:"gpt-5.4",               paid:true,  total:909.0, M:939, P:897, R:943, A:867, LC:849, LJ:886},
+  {rank:9,  model:"gpt-5.4-mini",          paid:true,  total:900.0, M:945, P:876, R:910, A:845, LC:832, LJ:886},
+  {rank:10, model:"deepseek-reasoner",       paid:true,  total:898.7, M:943, P:868, R:934, A:819, LC:886, LJ:833},
+  {rank:11, model:"minimax-m2.7",           paid:true,  total:894.8, M:963, P:875, R:927, A:889, LC:757, LJ:706},
+  {rank:12, model:"deepseek-chat",          paid:true,  total:889.9, M:943, P:871, R:898, A:830, LC:885, LJ:810},
+  {rank:13, model:"kimi-2.6-code-preview",  paid:true,  total:877.7, M:941, P:830, R:934, A:809, LC:879, LJ:797},
+];
+
+const GROQ = {
+  qwen: { kimi_total:87.6, mm_total:81.5, avg_total:84.5,
+    dims_kimi:{M:78.5, P:86.1, R:89.0, A:91.3, L:91.6},
+    dims_mm:{M:72.3, P:81.6, R:79.7, A:87.1, L:84.0},
+  },
+  llama: { kimi_total:69.8, mm_total:61.7, avg_total:65.8,
+    dims_kimi:{M:73.7, P:70.8, R:73.8, A:62.3, L:71.0},
+    dims_mm:{M:71.2, P:68.0, R:66.3, A:50.0, L:56.4},
+  }
+};
+
+// Per-question comparison data
+const GROQ_Q = [
+  {q:'M01', dim:'M', qwen:34.5, llama:6.8, diff:27.7, note:'llama完全跑题'},
+  {q:'M02', dim:'M', qwen:92.0, llama:90.8, diff:1.2, note:'几乎相同'},
+  {q:'M03', dim:'M', qwen:90.8, llama:90.8, diff:0.0, note:'完全相同'},
+  {q:'M04', dim:'M', qwen:89.5, llama:89.5, diff:0.0, note:'完全相同'},
+  {q:'M05', dim:'M', qwen:85.8, llama:90.8, diff:-5.0, note:'llama更好'},
+  {q:'P01', dim:'P', qwen:81.2, llama:20.0, diff:61.2, note:'llama严重跑题'},
+  {q:'P02', dim:'P', qwen:87.8, llama:57.2, diff:30.6, note:'qwen大幅领先'},
+  {q:'P03', dim:'P', qwen:89.6, llama:85.8, diff:3.8, note:'接近'},
+  {q:'P04', dim:'P', qwen:84.2, llama:83.2, diff:1.0, note:'接近'},
+  {q:'P05', dim:'P', qwen:88.2, llama:80.8, diff:7.4, note:'qwen略优'},
+  {q:'P06', dim:'P', qwen:86.2, llama:90.2, diff:-4.0, note:'llama更好'},
+  {q:'P07', dim:'P', qwen:85.5, llama:78.2, diff:7.3, note:'qwen略优'},
+  {q:'R01', dim:'R', qwen:93.2, llama:11.5, diff:81.7, note:'llama逻辑崩溃'},
+  {q:'R02', dim:'R', qwen:90.8, llama:93.2, diff:-2.4, note:'llama略优'},
+  {q:'R03', dim:'R', qwen:87.0, llama:90.8, diff:-3.8, note:'llama略优'},
+  {q:'R04', dim:'R', qwen:93.2, llama:85.8, diff:7.4, note:'qwen略优'},
+  {q:'R05', dim:'R', qwen:80.8, llama:87.8, diff:-7.0, note:'llama略优'},
+  {q:'A01', dim:'A', qwen:91.2, llama:87.0, diff:4.2, note:'接近'},
+  {q:'A02', dim:'A', qwen:89.6, llama:69.5, diff:20.1, note:'qwen大幅领先'},
+  {q:'A03', dim:'A', qwen:95.0, llama:17.2, diff:77.8, note:'llama指令理解崩溃'},
+  {q:'A04', dim:'A', qwen:84.5, llama:85.8, diff:-1.3, note:'接近'},
+  {q:'A05', dim:'A', qwen:95.5, llama:70.5, diff:25.0, note:'qwen大幅领先'},
+  {q:'A06', dim:'A', qwen:89.2, llama:35.0, diff:54.2, note:'qwen大幅领先'},
+  {q:'A07', dim:'A', qwen:94.3, llama:71.0, diff:23.3, note:'qwen大幅领先'},
+  {q:'L01', dim:'L', qwen:89.2, llama:86.2, diff:3.0, note:'接近'},
+  {q:'L02', dim:'L', qwen:91.2, llama:71.8, diff:19.4, note:'qwen领先'},
+  {q:'L03', dim:'L', qwen:93.1, llama:75.5, diff:17.6, note:'qwen领先'},
+  {q:'L04', dim:'L', qwen:96.5, llama:56.8, diff:39.7, note:'qwen大幅领先'},
+  {q:'L05', dim:'L', qwen:87.3, llama:72.2, diff:15.1, note:'qwen领先'},
+  {q:'L06', dim:'L', qwen:92.3, llama:63.5, diff:28.8, note:'qwen大幅领先'},
+];
+
+// ==================== RENDER ====================
+const MAX_SCORE = 100;
+const DIM_COLS = {M:'M',P:'P',R:'R',A:'A',LC:'L-CN',LJ:'L-JP'};
+const DIM_LABELS = {M:'📐数学',P:'💻编程',R:'🧠推理',A:'🎯Agent',LC:'🌏L-CN',LJ:'🎌L-JP'};
+const DIM_NOTES = {
+  M:' minimax-m2.7数学第1(96.3)，qwen3.5-plus第2(96.1)',
+  P:' kimi-today编程第1(91.6)，Opus4.6第3(90.6)',
+  R:' qwen3.5-plus推理第1(95.1)，glm-5.1第2(94.9)',
+  A:' qwen3.5-plus Agent第1(90.2)，qwen3.6-plus第2(90.0)',
+  LC:' kimi-today中文第1(93.3)，qwen3.6-plus第2(93.1)',
+  LJ:' kimi-today日语第1(90.7)，Opus4.6第2(90.4)',
+};
+
+function bar(width, paid) {
+  const cls = paid ? 'bar-paid' : 'bar-free';
+  return `<div class="score-bar-wrap"><div class="score-bar ${cls}" style="width:${width}%"></div></div>`;
+}
+
+function rankClass(r) {
+  if (r === 1) return 'rank-1';
+  if (r === 2) return 'rank-2';
+  if (r === 3) return 'rank-3';
+  return '';
+}
+
+function tag(type) {
+  if (type === 'paid') return '<span class="model-tag model-paid">付费API</span>';
+  return '<span class="model-tag model-free">Groq免费</span>';
+}
+
+function overallRow(m) {
+  const w = (m.total / 930 * 100).toFixed(1);
+  return `<tr class="${m.paid?'rank-paid':'rank-free'}">
+    <td class="td-rank ${rankClass(m.rank)}">${m.rank <= 3 ? ['🥇','🥈','🥉'][m.rank-1] : m.rank}</td>
+    <td class="td-model">${m.model}</td>
+    <td>${tag('paid')}</td>
+    <td class="td-score">${m.total}</td>
+    <td class="td-bar">${bar(w, true)}</td>
+    <td class="td-dim"><span class="dim-tag dim-M">${m.M}</span></td>
+    <td class="td-dim"><span class="dim-tag dim-P">${m.P}</span></td>
+    <td class="td-dim"><span class="dim-tag dim-R">${m.R}</span></td>
+    <td class="td-dim"><span class="dim-tag dim-A">${m.A}</span></td>
+    <td class="td-dim"><span class="dim-tag dim-L">${m.LC}</span></td>
+    <td class="td-dim"><span class="dim-tag dim-L">${m.LJ}</span></td>
+  </tr>`;
+}
+
+function dimRow(rank, model, type, score, note) {
+  const w = (score / 970 * 100).toFixed(1);
+  return `<tr class="${type === 'paid' ? 'rank-paid' : 'rank-free'}">
+    <td class="td-rank ${rankClass(rank)}">${rank <= 3 ? ['🥇','🥈','🥉'][rank-1] : rank}</td>
+    <td class="td-model">${model}</td>
+    <td>${tag(type)}</td>
+    <td class="td-score">${score}</td>
+    <td class="td-bar">${bar(w, type === 'paid')}</td>
+    <td style="color:var(--muted);font-size:0.75rem">${note || ''}</td>
+  </tr>`;
+}
+
+function langRow(rank, model, type, score, lc, lj) {
+  const w = (score / 940 * 100).toFixed(1);
+  return `<tr class="${type === 'paid' ? 'rank-paid' : 'rank-free'}">
+    <td class="td-rank ${rankClass(rank)}">${rank <= 3 ? ['🥇','🥈','🥉'][rank-1] : rank}</td>
+    <td class="td-model">${model}</td>
+    <td>${tag(type)}</td>
+    <td class="td-score">${score}</td>
+    <td class="td-dim"><span class="dim-tag dim-L">${lc}</span></td>
+    <td class="td-dim"><span class="dim-tag dim-L">${lj}</span></td>
+    <td class="td-bar">${bar(w, type === 'paid')}</td>
+  </tr>`;
+}
+
+// Build overall table
+const tbody = document.getElementById('overall-tbody');
+ROUND2.forEach(m => { tbody.innerHTML += overallRow(m); });
+
+// Add Groq models as reference rows (with note)
+const groqRef = [
+  {rank:'—', model:'qwen3-32b（Groq）', paid:false, total:84.5, M:78.5, P:86.1, R:89.0, A:91.3, LC:91.6, LJ:84.0, refNote:'(参考，非同条件)'},
+  {rank:'—', model:'llama-3.3-70b（Groq）', paid:false, total:65.8, M:73.7, P:70.8, R:73.8, A:62.3, LC:71.0, LJ:56.4, refNote:'(参考，非同条件)'},
+];
+groqRef.forEach(m => {
+  const w = (m.total / 930 * 100).toFixed(1);
+  tbody.innerHTML += `<tr class="rank-free" style="opacity:0.7">
+    <td class="td-rank">—</td>
+    <td class="td-model">${m.model}</td>
+    <td>${tag('free')}</td>
+    <td class="td-score">${m.total}${m.refNote || ''}</td>
+    <td class="td-bar">${bar(w, false)}</td>
+    <td class="td-dim"><span class="dim-tag dim-M">${m.M}</span></td>
+    <td class="td-dim"><span class="dim-tag dim-P">${m.P}</span></td>
+    <td class="td-dim"><span class="dim-tag dim-R">${m.R}</span></td>
+    <td class="td-dim"><span class="dim-tag dim-A">${m.A}</span></td>
+    <td class="td-dim"><span class="dim-tag dim-L">${m.LC}</span></td>
+    <td class="td-dim"><span class="dim-tag dim-L">${m.LJ}</span></td>
+  </tr>`;
+});
+
+// Build dimension tables
+function buildDimTable(dimKey, scoreKey, noteKey) {
+  const sorted = [...ROUND2].sort((a,b) => b[scoreKey] - a[scoreKey]);
+  const tbody = document.getElementById(`${dimKey}-tbody`);
+  if (!tbody) return;
+  sorted.forEach((m, i) => {
+    tbody.innerHTML += dimRow(i+1, m.model, 'paid', m[scoreKey], DIM_NOTES[dimKey]);
+  });
+  // Add Groq model if relevant
+  if (['M','P','R','A','L'].includes(dimKey)) {
+    const gModel = dimKey === 'L' ? GROQ.qwen : GROQ.qwen;
+    const gScore = gModel.dims_kimi[dimKey] || 0;
+    const gLLaMAScore = GROQ.llama.dims_kimi[dimKey] || 0;
+    tbody.innerHTML += dimRow('—', 'qwen3-32b（Groq）', 'free', gScore, '(参考，同条件对比)');
+    tbody.innerHTML += dimRow('—', 'llama-3.3-70b（Groq）', 'free', gLLaMAScore, '(参考，同条件对比)');
+  }
+}
+
+buildDimTable('M', 'M', 'M');
+buildDimTable('P', 'P', 'P');
+buildDimTable('R', 'R', 'R');
+buildDimTable('A', 'A', 'A');
+
+// Language table
+const LSorted = [...ROUND2].sort((a,b) => (b.LC+b.LJ)/2 - (a.LC+a.LJ)/2);
+const ltbody = document.getElementById('L-tbody');
+LSorted.forEach((m, i) => {
+  const avg = ((m.LC + m.LJ) / 2).toFixed(1);
+  ltbody.innerHTML += langRow(i+1, m.model, 'paid', avg, m.LC, m.LJ);
+});
+ltbody.innerHTML += langRow('—','qwen3-32b（Groq）','free', '85.5','87.3','84.0');
+ltbody.innerHTML += langRow('—','llama-3.3-70b（Groq）','free', '63.7','71.0','56.4');
+
+// Groq per-question table
+const gqtbody = document.getElementById('groq-q-tbody');
+GROQ_Q.forEach(r => {
+  const dimLabel = {M:'📐数学',P:'💻编程',R:'🧠推理',A:'🎯Agent',L:'🌏语言'}[r.dim];
+  const diffColor = r.diff > 20 ? 'color:#FF6B6B' : r.diff > 5 ? 'color:#FFD93D' : 'color:#00D4AA';
+  gqtbody.innerHTML += `<tr>
+    <td><strong>${r.q}</strong></td>
+    <td><span class="dim-tag dim-${r.dim}">${dimLabel}</span></td>
+    <td style="font-weight:700;color:#F59E0B">${r.qwen}</td>
+    <td style="font-weight:700;color:#60A5FA">${r.llama}</td>
+    <td style="font-weight:700;${diffColor}">${r.diff > 0 ? '+' : ''}${r.diff}</td>
+    <td style="color:var(--muted);font-size:0.78rem">${r.note}</td>
+  </tr>`;
+});
+
+// Paid ref table
+const paidRefData = [
+  {dim:'📐数学', top1:'minimax-m2.7 (96.3)', paid_avg:'94.4', qwen_groq:'78.5', gap:'-15.9'},
+  {dim:'💻编程', top1:'kimi-today (91.6)', paid_avg:'88.4', qwen_groq:'86.1', gap:'-2.3'},
+  {dim:'🧠推理', top1:'qwen3.5-plus (95.1)', paid_avg:'93.2', qwen_groq:'89.0', gap:'-4.2'},
+  {dim:'🎯Agent', top1:'qwen3.5-plus (90.2)', paid_avg:'85.5', qwen_groq:'91.3', gap:'+5.8'},
+  {dim:'🌏语言', top1:'kimi-today (91.3)', paid_avg:'86.8', qwen_groq:'85.5', gap:'-1.3'},
+];
+const prtbody = document.getElementById('paid-ref-tbody');
+paidRefData.forEach(r => {
+  const gapColor = r.gap.startsWith('+') ? 'color:#00D4AA' : 'color:#FF6B6B';
+  prtbody.innerHTML += `<tr>
+    <td><strong>${r.dim}</strong></td>
+    <td>${r.top1}</td>
+    <td>${r.paid_avg}</td>
+    <td style="font-weight:700;color:#F59E0B">${r.qwen_groq}</td>
+    <td style="font-weight:700;${gapColor}">${r.gap}</td>
+  </tr>`;
+});
+
+// ==================== TABS ====================
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    tab.classList.add('active');
+    const panelId = `panel-${tab.dataset.tab}`;
+    document.getElementById(panelId)?.classList.add('active');
+  });
+});
+</script>
+</body>
+</html>
