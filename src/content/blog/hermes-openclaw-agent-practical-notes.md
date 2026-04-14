@@ -13,7 +13,7 @@ excerpt:
   ja: "Hermes Agentが話題だが、急いで移行するな。Hermes vs OpenClawの優劣を深く比較し、マルチインスタンス協調アーキテクチャと6層セキュリティの実戦経験を共有。ツールは変わるが、知識と経験は失われない。"
   en: "Hermes Agent is hot, but don't rush to migrate. Deep comparison of Hermes vs OpenClaw, sharing multi-instance collaborative architecture and six-layer security protection from real-world experience."
 coverImage: ""
-audioUrl: ""
+audioUrl: "/audio/hermes-openclaw-blog.mp3"
 willComment:
   zh: "Hermes 32K star不是泡沫，但OpenClaw也没过时。我的选择：两边都用。4个OpenClaw+1个Hermes，每天凌晨4:15一起做梦，六层防护守底线。像养孩子一样把个人助理养大。"
   ja: "Hermesの32Kスターはバブルではないが、OpenClawも時代遅れではない。私の選択：両方使う。OpenClaw×4+Hermes×1、毎朝4:15に一緒に夢を見る、6層防御がベースラインを守る。子供のように育てる。"
