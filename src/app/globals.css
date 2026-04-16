@@ -8,47 +8,64 @@
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 
-  /* Brand colors - 福楽冰淇淋色系 (WCAG AA compliant) */
-  --color-brand-mint: #5eead4;
-  --color-brand-coral: #fbbf24;
-  --color-brand-cyan: #38bdf8;
-  --color-brand-mango: #fcd34d;
-  --color-brand-taro: #c084fc;
+  /* 🍨 Ice Cream Design System — 对齐 fuluckpet.com 精确色值 */
+  --color-brand-mint: #7DD3C0;       /* 主色 */
+  --color-brand-mint-dark: #5BC4A8;
+  --color-brand-strawberry: #F9B8D0; /* 草莓（不是 coral 橙色）*/
+  --color-brand-blueberry: #B8D4F9;
+  --color-brand-mango: #FFE5A0;
+  --color-brand-taro: #D4BCF0;
+  --color-brand-peach: #FFDAB8;
+
+  /* 牛奶色 (超柔和背景) */
+  --color-milk-mint: #F0FFFA;
+  --color-milk-strawberry: #FFF8FB;
+  --color-milk-blueberry: #F5FAFF;
+  --color-milk-mango: #FFFCF0;
+  --color-milk-taro: #F8F4FF;
+  --color-milk-peach: #FFF7F0;
 }
 
 :root {
-  --background: 30 6% 97%; /* #fafaf9 warm white */
-  --foreground: 240 10% 9%;
+  /* Warm cream background (fuluckpet 基准) */
+  --background: 42 100% 97%;    /* #FFFCF0 bg-cream */
+  --foreground: 180 14% 35%;    /* #5A7A7A text-heading (带绿调灰) */
   --card: 0 0% 100%;
-  --card-foreground: 240 10% 9%;
+  --card-foreground: 180 8% 38%; /* #5A6A6A text-body */
   --popover: 0 0% 100%;
-  --popover-foreground: 240 10% 9%;
-  --primary: 240 6% 13%;
-  --primary-foreground: 0 0% 97%;
-  --secondary: 240 6% 96%;
-  --secondary-foreground: 240 6% 13%;
-  --muted: 240 6% 96%;
-  --muted-foreground: 240 5% 32%; /* improved contrast for light mode - WCAG AA */
-  --accent: 240 6% 96%;
-  --accent-foreground: 240 6% 13%;
+  --popover-foreground: 180 14% 35%;
+  --primary: 167 50% 66%;        /* #7DD3C0 mint */
+  --primary-foreground: 0 0% 100%;
+  --secondary: 33 100% 97%;      /* #FFF7F0 peach-milk */
+  --secondary-foreground: 180 14% 35%;
+  --muted: 42 100% 97%;          /* cream */
+  --muted-foreground: 180 14% 60%; /* #90A8A8 text-note */
+  --accent: 167 50% 97%;         /* mint-milk */
+  --accent-foreground: 167 40% 38%;
   --destructive: 0 84% 60%;
-  --border: 240 6% 90%;
-  --input: 240 6% 90%;
-  --ring: 240 5% 65%;
-  --chart-1: 220 70% 50%;
-  --chart-2: 160 60% 45%;
-  --chart-3: 30 80% 55%;
-  --chart-4: 280 65% 60%;
-  --chart-5: 340 75% 55%;
-  --radius: 0.625rem;
-  --sidebar: 0 0% 97%;
-  --sidebar-foreground: 240 10% 9%;
-  --sidebar-primary: 240 6% 13%;
-  --sidebar-primary-foreground: 0 0% 97%;
-  --sidebar-accent: 240 6% 96%;
-  --sidebar-accent-foreground: 240 6% 13%;
-  --sidebar-border: 240 6% 90%;
-  --sidebar-ring: 240 5% 65%;
+  --border: 180 14% 92%;         /* soft border */
+  --input: 180 14% 92%;
+  --ring: 167 50% 66%;           /* mint */
+  --chart-1: 167 50% 66%;        /* mint */
+  --chart-2: 328 82% 85%;        /* strawberry */
+  --chart-3: 42 100% 82%;        /* mango */
+  --chart-4: 276 62% 84%;        /* taro */
+  --chart-5: 212 85% 85%;        /* blueberry */
+  --radius: 1rem;                /* 16px, 更柔和 */
+  --sidebar: 42 100% 97%;        /* cream */
+  --sidebar-foreground: 180 14% 35%;
+  --sidebar-primary: 167 50% 66%;  /* mint */
+  --sidebar-primary-foreground: 0 0% 100%;
+  --sidebar-accent: 167 50% 97%;   /* mint-milk */
+  --sidebar-accent-foreground: 167 40% 38%;
+  --sidebar-border: 180 14% 92%;
+  --sidebar-ring: 167 50% 66%;
+
+  /* Ice Cream shadows (warm green-tinted, 不用纯黑) */
+  --shadow-ice-soft: 0 2px 20px rgba(90, 122, 122, 0.06);
+  --shadow-ice-card: 0 4px 24px rgba(90, 122, 122, 0.08);
+  --shadow-ice-hover: 0 12px 40px rgba(90, 122, 122, 0.14);
+  --shadow-ice-float: 0 20px 60px rgba(90, 122, 122, 0.12);
 }
 
 .dark {
@@ -133,10 +150,96 @@
   }
   body {
     @apply bg-background text-foreground;
+    font-size: 17px;
+    line-height: 1.85;           /* 温暖宽松 */
+    letter-spacing: 0.005em;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
   html {
     @apply font-sans;
+    scroll-behavior: smooth;
   }
+  h1, h2, h3, h4 {
+    letter-spacing: -0.01em;
+    line-height: 1.3;
+  }
+}
+
+/* ═══════════ 🍨 Ice Cream Signature Components ═══════════ */
+
+/* Scroll Progress Bar (四色品牌签名，所有 Will 网站共用) */
+.scroll-progress-bar {
+  position: fixed; top: 0; left: 0;
+  width: 0%; height: 3px;
+  background: linear-gradient(90deg,
+    var(--color-brand-mint, #7DD3C0),
+    var(--color-brand-strawberry, #F9B8D0),
+    var(--color-brand-mango, #FFE5A0),
+    var(--color-brand-taro, #D4BCF0));
+  z-index: 9999;
+  transition: width 0.1s linear;
+  pointer-events: none;
+}
+
+/* Ice Cream 按钮变体（supplement shadcn Button） */
+.btn-icecream-primary {
+  background: var(--color-brand-mint);
+  color: white;
+  padding: 12px 28px;
+  border-radius: 9999px;
+  font-weight: 500;
+  font-size: 15px;
+  border: none;
+  box-shadow: 0 4px 12px rgba(125, 211, 192, 0.3);
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  text-decoration: none;
+}
+.btn-icecream-primary:hover {
+  background: var(--color-brand-mint-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(125, 211, 192, 0.45);
+}
+
+/* Ice Cream 卡片 */
+.card-icecream {
+  background: white;
+  border-radius: 1.5rem;
+  padding: 2rem;
+  box-shadow: 0 4px 24px rgba(90, 122, 122, 0.08);
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  border: 1px solid rgba(125, 211, 192, 0.1);
+}
+.card-icecream:hover {
+  box-shadow: 0 12px 40px rgba(90, 122, 122, 0.14);
+  transform: translateY(-4px);
+  border-color: rgba(125, 211, 192, 0.25);
+}
+
+/* Milk 背景区块 */
+.bg-milk-mint { background: var(--color-milk-mint); }
+.bg-milk-strawberry { background: var(--color-milk-strawberry); }
+.bg-milk-blueberry { background: var(--color-milk-blueberry); }
+.bg-milk-mango { background: var(--color-milk-mango); }
+.bg-milk-taro { background: var(--color-milk-taro); }
+.bg-milk-peach { background: var(--color-milk-peach); }
+
+/* Warm shadow utilities */
+.shadow-ice-soft { box-shadow: var(--shadow-ice-soft); }
+.shadow-ice-card { box-shadow: var(--shadow-ice-card); }
+.shadow-ice-hover { box-shadow: var(--shadow-ice-hover); }
+
+/* Brand gradient text */
+.text-brand-gradient {
+  background: linear-gradient(135deg, var(--color-brand-mint), var(--color-brand-strawberry), var(--color-brand-taro));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
 
 /* ── Dynamic ambient background (dark mode) ─────────────── */
