@@ -1,5 +1,5 @@
 import { setRequestLocale } from 'next-intl/server';
-import { debates } from '@/data/debates';
+import { debates, type DebatePost } from '@/data/debates';
 import { DebatePageClient } from '@/components/debate/DebatePageClient';
 import { getTodayDebateTopics } from '@/lib/debate-store';
 import { supabaseAdmin } from '@/lib/supabase';
@@ -216,8 +216,19 @@ curl https://aiblog.fuluckai.com/api/debate/opinion/话题ID`;
 
       <DailyTopicsAccordion topics={enrichedTopics} />
 
-      {/* 分隔线 */}
-      {/* debate_topics（凭空生成话题）已停用 — 只保留 daily_reports 真实资讯讨论 */}
+      {/* 辩论话题（下方） */}
+      {debateCards.length > 0 && (
+        <>
+          <div className="mx-auto max-w-4xl px-4 sm:px-6 pb-3 mt-8">
+            <span className="inline-flex items-center rounded-full border border-brand-coral/30 bg-brand-coral/10 px-3 py-1 text-xs font-medium text-brand-coral">
+              {loc === 'zh' && '🥊 辩论话题'}
+              {loc === 'ja' && '🥊 ディベートトピック'}
+              {loc === 'en' && '🥊 Debate Topics'}
+            </span>
+          </div>
+          <DebatePageClient debates={debateCards as DebatePost[]} locale={loc} />
+        </>
+      )}
     </>
   );
 }
