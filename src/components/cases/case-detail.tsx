@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { motion, AnimatePresence, useReducedMotion } from 'motion/react';
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
@@ -8,48 +8,6 @@ import type { CaseStudy } from '@/data/cases';
 
 type Locale = 'zh' | 'ja' | 'en';
 
-/**
- * CountUp — extracts a number from a value string and animates from 0.
- * Keeps prefixes/suffixes intact (e.g., "95%" → animates 0→95, keeps "%").
- */
-function CountUpValue({ value, inView }: { value: string; inView: boolean }) {
-  const match = value.match(/^([^\d]*)([\d.]+)(.*)$/);
-  const [displayNum, setDisplayNum] = useState(0);
-
-  const prefix = match?.[1] ?? '';
-  const target = match ? parseFloat(match[2]) : 0;
-  const suffix = match?.[3] ?? '';
-  const isFloat = match ? match[2].includes('.') : false;
-
-  useEffect(() => {
-    if (!inView || !match) return;
-    const duration = 1200;
-    const start = performance.now();
-    let raf: number;
-
-    function tick(now: number) {
-      const elapsed = now - start;
-      const progress = Math.min(elapsed / duration, 1);
-      // ease-out cubic
-      const eased = 1 - Math.pow(1 - progress, 3);
-      setDisplayNum(eased * target);
-      if (progress < 1) raf = requestAnimationFrame(tick);
-    }
-
-    raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
-  }, [inView, target, match]);
-
-  if (!match) return <>{value}</>;
-
-  return (
-    <>
-      {prefix}
-      {isFloat ? displayNum.toFixed(1) : Math.round(displayNum)}
-      {suffix}
-    </>
-  );
-}
 
 function ExpandableSection({
   title,
@@ -123,8 +81,6 @@ function ExpandableSection({
 }
 
 function MetricsGrid({ metrics, locale }: { metrics: CaseStudy['metrics']; locale: Locale }) {
-  const prefersReducedMotion = useReducedMotion();
-
   return (
     <motion.div
       initial={{ opacity: 0, y: 16 }}

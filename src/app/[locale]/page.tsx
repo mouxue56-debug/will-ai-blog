@@ -1,7 +1,6 @@
 import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
 import { PageTransition } from '@/components/shared/PageTransition';
-import { ScrollReveal } from '@/components/shared/ScrollReveal';
 import { HeroSection } from '@/components/home/hero-section';
 import { StoryTimeline } from '@/components/home/StoryTimeline';
 import { LatestUpdates } from '@/components/home/LatestUpdates';

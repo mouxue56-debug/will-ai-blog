@@ -27,7 +27,7 @@ async function callKimi(kimiKey: string, prompt: string, maxTokens = 200): Promi
   return null;
 }
 
-async function generateTrilingualTitles(title: string, _content: string) {
+async function generateTrilingualTitles(title: string) {
   const CFG_PATH = path.join(os.homedir(), '.openclaw/openclaw.json');
   const cfg = JSON.parse(fs.readFileSync(CFG_PATH, 'utf-8'));
   const kimiKey = cfg?.models?.providers?.kimi?.apiKey;
@@ -94,7 +94,6 @@ ${JSON.stringify(titles)}
   if (translations.length !== titles.length) return null;
 
   // 替换 content 里的标题
-  let idx = 0;
   let content_zh = content;
   let content_ja = content;
 
@@ -112,7 +111,6 @@ ${JSON.stringify(titles)}
     // 只替换第一个未替换的同标题（从左到右）
     content_zh = content_zh.replace(`[${orig}]`, `[${trans.zh}]`);
     content_ja = content_ja.replace(`[${orig}]`, `[${trans.ja}]`);
-    idx++;
   }
 
   return { content_zh, content_ja };
@@ -196,7 +194,7 @@ export async function POST(req: Request) {
 
   if (!title_zh && title) {
     // 用 Kimi 生成三语标题
-    const trilingualTitles = await generateTrilingualTitles(title, content);
+    const trilingualTitles = await generateTrilingualTitles(title);
     tri_title_zh = trilingualTitles.zh;
     tri_title_ja = trilingualTitles.ja;
     tri_title_en = trilingualTitles.en;

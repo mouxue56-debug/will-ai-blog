@@ -10,6 +10,7 @@ import { CATEGORY_KEYS } from '@/lib/blog-types';
 import { Link } from '@/i18n/navigation';
 import { SpotlightCard, BorderBeam } from '@/components/ui/aceternity';
 import { getCoverUrl } from '@/lib/storage';
+import Image from 'next/image';
 
 const CATEGORY_TAG_COLORS: Record<BlogCategory, string> = {
   ai: 'bg-brand-cyan/15 text-brand-cyan border border-brand-cyan/20',
@@ -107,10 +108,11 @@ export function BlogCard({ post, isLatest = false, index = 0 }: BlogCardProps) {
                 whileHover={{ scale: 1.04 }}
                 transition={{ duration: 0.3 }}
               >
-                <img
-                  src={post.coverImage?.startsWith('/covers/') ? getCoverUrl(post.slug) : post.coverImage}
+                <Image
+                  src={post.coverImage?.startsWith('/covers/') ? getCoverUrl(post.slug) : post.coverImage!}
                   alt={title}
-                  className="w-full h-full object-cover"
+                  fill
+                  className="object-cover"
                   onError={() => setImageError(true)}
                 />
                 {/* 悬停时的微光效果 */}

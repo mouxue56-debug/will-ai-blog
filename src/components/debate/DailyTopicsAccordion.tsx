@@ -138,13 +138,6 @@ export function DailyTopicsAccordion({ topics }: DailyTopicsAccordionProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [topics]);
 
-  // 获取当前 locale 对应的标题
-  const getTopicTitle = (topic: DailyTopic) => {
-    if (locale === 'ja') return topic.display_title_ja || topic.title_ja || topic.title;
-    if (locale === 'en') return topic.display_title_en || topic.title_en || topic.title;
-    return topic.display_title_zh || topic.title_zh || topic.title;
-  };
-
   const handleToggle = (index: number) => {
     setOpenIndex(index === openIndex ? -1 : index);
   };
@@ -233,10 +226,6 @@ export function DailyTopicsAccordion({ topics }: DailyTopicsAccordionProps) {
             return item.title_zh || item.title_en || item.title || '';
           };
           
-          // Use trilingual topic title (from daily_reports.title_zh/ja/en) or category name
-          const displayTitle = getTopicTitle(topic) !== topic.title
-            ? getTopicTitle(topic)
-            : getTopicDisplayName(topic.topic_type, t);
           const inputValue = commentInputs[topic.slug] || '';
           const isSubmitting = submitting[topic.slug] || false;
 

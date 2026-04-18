@@ -379,7 +379,6 @@ export async function checkAndIncrementRateLimit(
 }
 
 /** @deprecated Use checkAndIncrementRateLimit with IP hash instead */
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function incrementOpinionRateLimit(_apiKey: string): Promise<number | null> {
   return null;
 }

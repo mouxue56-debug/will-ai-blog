@@ -14,6 +14,7 @@ import { MobileTableOfContents } from './mobile-table-of-contents';
 import { CommentSection } from './CommentSection';
 import { AudioPlayer } from '@/components/shared/AudioPlayer';
 import { getCoverUrl, getAudioUrl } from '@/lib/storage';
+import Image from 'next/image';
 
 const CATEGORY_TAG_COLORS: Record<BlogCategory, string> = {
   ai: 'bg-brand-cyan/15 text-brand-cyan',
@@ -62,7 +63,7 @@ function getContentSourceLabel(contentSource: BlogPost['contentSource'], locale:
   return contentSource === 'original' ? 'Original' : 'AI Organized';
 }
 
-export function BlogDetail({ post, prevPost, nextPost, comments, postSlug, headings }: BlogDetailProps) {
+export function BlogDetail({ post, prevPost, nextPost, comments: _comments, postSlug, headings }: BlogDetailProps) {
   const locale = useLocale();
   const t = useTranslations('blog');
   const title = post.title[locale] || post.title.zh || post.title.en || '';
@@ -85,10 +86,12 @@ export function BlogDetail({ post, prevPost, nextPost, comments, postSlug, headi
           <article className="min-w-0 max-w-4xl">
             {post.coverImage && (
               <div className="relative w-full aspect-video overflow-hidden rounded-xl mb-8 max-w-3xl mx-auto">
-                <img
+                <Image
                   src={post.coverImage?.startsWith('/covers/') ? getCoverUrl(post.slug) : post.coverImage}
                   alt={post.title[locale] || post.title.zh}
-                  className="w-full h-full object-cover"
+                  fill
+                  className="object-cover"
+                  priority
                 />
               </div>
             )}
