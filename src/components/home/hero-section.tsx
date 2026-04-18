@@ -5,14 +5,12 @@ import { motion, useScroll, useTransform } from 'motion/react';
 import { useState, useCallback, useEffect, useRef } from 'react';
 import { Link } from '@/i18n/navigation';
 import { AudioPlayer } from '@/components/shared/AudioPlayer';
-import { getIllustrationUrl } from '@/lib/storage';
-import Image from 'next/image';
 
 const nodes = [
-  { id: 'yuki', color: '#38bdf8', x: 50, y: 20 },
-  { id: 'natsu', color: '#5eead4', x: 85, y: 45 },
-  { id: 'haru', color: '#c084fc', x: 50, y: 75 },
-  { id: 'aki', color: '#fbbf24', x: 15, y: 45 },
+  { id: 'yuki', color: '#22d3ee', x: 50, y: 20 },
+  { id: 'natsu', color: '#4ade80', x: 85, y: 45 },
+  { id: 'haru', color: '#a78bfa', x: 50, y: 75 },
+  { id: 'aki', color: '#fb923c', x: 15, y: 45 },
 ];
 
 const connections = [
@@ -39,7 +37,7 @@ function useParticles(count: number) {
   const [particles, setParticles] = useState<Particle[]>([]);
 
   useEffect(() => {
-    const colors = ['#38bdf8', '#5eead4', '#c084fc', '#fbbf24', '#a78bfa'];
+    const colors = ['#22d3ee', '#4ade80', '#a78bfa', '#fb923c', '#fbbf24'];
     const newParticles: Particle[] = [];
     for (let i = 0; i < count; i++) {
       newParticles.push({
@@ -64,7 +62,7 @@ function AnimatedGradientBackground() {
     <div className="absolute inset-0 -z-10 overflow-hidden">
       {/* Primary gradient orbs */}
       <motion.div
-        className="absolute left-1/4 top-0 h-96 w-96 rounded-full bg-brand-mint/[0.08] blur-[120px]"
+        className="absolute left-1/4 top-0 h-96 w-96 rounded-full bg-brand-coral/[0.10] blur-[120px]"
         animate={{
           x: [0, 30, 0],
           y: [0, -20, 0],
@@ -77,7 +75,7 @@ function AnimatedGradientBackground() {
         }}
       />
       <motion.div
-        className="absolute right-1/4 top-20 h-80 w-80 rounded-full bg-brand-cyan/[0.08] blur-[100px]"
+        className="absolute right-1/4 top-20 h-80 w-80 rounded-full bg-brand-mint/[0.10] blur-[100px]"
         animate={{
           x: [0, -25, 0],
           y: [0, 30, 0],
@@ -90,7 +88,7 @@ function AnimatedGradientBackground() {
         }}
       />
       <motion.div
-        className="absolute bottom-10 left-1/3 h-72 w-72 rounded-full bg-brand-taro/[0.06] blur-[100px]"
+        className="absolute bottom-10 left-1/3 h-72 w-72 rounded-full bg-brand-taro/[0.08] blur-[100px]"
         animate={{
           x: [0, 40, 0],
           y: [0, -25, 0],
@@ -174,7 +172,7 @@ function LightBeams() {
     <div className="absolute inset-0 -z-5 overflow-hidden pointer-events-none">
       {/* Diagonal beam 1 */}
       <motion.div
-        className="absolute h-[2px] w-[200%] bg-gradient-to-r from-transparent via-brand-mint/30 to-transparent"
+        className="absolute h-[2px] w-[200%] bg-gradient-to-r from-transparent via-brand-coral/30 to-transparent"
         style={{
           top: '20%',
           left: '-50%',
@@ -191,7 +189,7 @@ function LightBeams() {
       />
       {/* Diagonal beam 2 */}
       <motion.div
-        className="absolute h-[1px] w-[200%] bg-gradient-to-r from-transparent via-brand-cyan/20 to-transparent"
+        className="absolute h-[1px] w-[200%] bg-gradient-to-r from-transparent via-brand-mint/20 to-transparent"
         style={{
           top: '60%',
           left: '-50%',
@@ -208,7 +206,7 @@ function LightBeams() {
       />
       {/* Horizontal beam */}
       <motion.div
-        className="absolute h-[1px] w-full bg-gradient-to-r from-transparent via-brand-taro/20 to-transparent"
+        className="absolute h-[1px] w-full bg-gradient-to-r from-transparent via-brand-mango/20 to-transparent"
         style={{ top: '40%' }}
         animate={{
           x: ['-100%', '100%'],
@@ -320,9 +318,9 @@ function AINetwork() {
         {/* Gradient definition for flowing lines */}
         <defs>
           <linearGradient id="gradient-flow" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#38bdf8" stopOpacity="0" />
-            <stop offset="50%" stopColor="#5eead4" stopOpacity="1" />
-            <stop offset="100%" stopColor="#c084fc" stopOpacity="0" />
+            <stop offset="0%" stopColor="#22d3ee" stopOpacity="0" />
+            <stop offset="50%" stopColor="#4ade80" stopOpacity="1" />
+            <stop offset="100%" stopColor="#fb923c" stopOpacity="0" />
           </linearGradient>
           <filter id="glow">
             <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
@@ -451,8 +449,8 @@ function AINetwork() {
           cx="150"
           cy="130"
           r={8}
-          fill="rgba(94,234,212,0.3)"
-          stroke="#5eead4"
+          fill="rgba(74,222,128,0.3)"
+          stroke="#4ade80"
           strokeWidth="1"
           animate={{
             opacity: [0.5, 1, 0.5],
@@ -463,7 +461,7 @@ function AINetwork() {
             ease: 'easeInOut',
           }}
         />
-        <text x="150" y="131" textAnchor="middle" dominantBaseline="middle" fill="#5eead4" fontSize="6" fontWeight="700">
+        <text x="150" y="131" textAnchor="middle" dominantBaseline="middle" fill="#4ade80" fontSize="6" fontWeight="700">
           W
         </text>
 
@@ -477,7 +475,7 @@ function AINetwork() {
               y1="130"
               x2={pos.x}
               y2={pos.y}
-              stroke="rgba(94,234,212,0.08)"
+              stroke="rgba(74,222,128,0.10)"
               strokeWidth="0.5"
               strokeDasharray="3,5"
               animate={{
@@ -500,7 +498,7 @@ function AINetwork() {
 function AnimatedTitle({ text }: { text: string }) {
   return (
     <motion.h1
-      className="bg-gradient-to-r from-brand-mint via-brand-cyan to-brand-taro bg-clip-text text-4xl font-bold tracking-tight text-transparent sm:text-5xl lg:text-6xl"
+      className="bg-gradient-to-r from-brand-coral via-brand-mango to-brand-mint bg-clip-text text-4xl font-bold tracking-tight text-transparent sm:text-5xl lg:text-6xl"
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
@@ -543,7 +541,7 @@ export function HeroSection() {
       <div
         className="pointer-events-none absolute inset-0 -z-10"
         style={{
-          background: 'radial-gradient(ellipse 60% 50% at 50% -10%, rgba(0,212,255,0.12) 0%, transparent 70%)',
+          background: 'radial-gradient(ellipse 60% 50% at 50% -10%, rgba(251,146,60,0.10) 0%, transparent 70%)',
         }}
       />
       {/* Animated background layers */}
@@ -560,10 +558,10 @@ export function HeroSection() {
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.5 }}
-              className="mb-6 inline-flex items-center gap-2 rounded-full border border-brand-mint/20 bg-brand-mint/[0.06] px-4 py-1.5 text-xs font-medium text-brand-mint"
+              className="mb-6 inline-flex items-center gap-2 rounded-full border border-brand-coral/25 bg-brand-coral/[0.07] px-4 py-1.5 text-xs font-medium text-brand-coral"
             >
               <motion.span
-                className="h-1.5 w-1.5 rounded-full bg-brand-mint"
+                className="h-1.5 w-1.5 rounded-full bg-brand-coral"
                 animate={{
                   scale: [1, 1.2, 1],
                   opacity: [1, 0.7, 1],
@@ -614,7 +612,7 @@ export function HeroSection() {
             >
               <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }} transition={{ delay: 0.3 }}>
                 <Link href="/blog">
-                  <span className="inline-flex items-center rounded-full border border-brand-mint/25 bg-brand-mint/[0.08] px-4 py-2 text-sm font-medium text-brand-mint transition-colors hover:bg-brand-mint/[0.14]">
+                  <span className="inline-flex items-center rounded-full border border-brand-coral/30 bg-brand-coral/[0.10] px-4 py-2 text-sm font-medium text-brand-coral transition-colors hover:bg-brand-coral/[0.18]">
                     {t('hero_cta_blog')}
                   </span>
                 </Link>
@@ -642,7 +640,7 @@ export function HeroSection() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.8 + i * 0.1, duration: 0.3 }}
                 >
-                  <Link href={`/${path}`} className="transition-colors hover:text-brand-mint">
+                  <Link href={`/${path}`} className="transition-colors hover:text-brand-coral">
                     {navT(path as 'blog' | 'timeline' | 'about')}
                   </Link>
                 </motion.div>
@@ -668,7 +666,7 @@ export function HeroSection() {
                   transition={{ delay: 1 + i * 0.1, duration: 0.3, type: 'spring' }}
                 >
                   <motion.span
-                    className="bg-gradient-to-r from-brand-mint to-brand-cyan bg-clip-text text-2xl font-bold text-transparent sm:text-3xl"
+                    className="bg-gradient-to-r from-brand-coral to-brand-mango bg-clip-text text-2xl font-bold text-transparent sm:text-3xl"
                     whileHover={{ scale: 1.1 }}
                   >
                     {stat.value}

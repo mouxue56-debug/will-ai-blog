@@ -12,21 +12,21 @@ import { SpotlightCard, BorderBeam } from '@/components/ui/aceternity';
 import { getCoverUrl } from '@/lib/storage';
 
 const CATEGORY_TAG_COLORS: Record<BlogCategory, string> = {
-  ai: 'bg-brand-cyan/15 text-brand-cyan shadow-[0_0_8px_rgba(56,189,248,0.15)]',
-  tech: 'bg-brand-mint/15 text-brand-mint shadow-[0_0_8px_rgba(94,234,212,0.15)]',
-  life: 'bg-brand-coral/15 text-brand-coral shadow-[0_0_8px_rgba(251,191,36,0.15)]',
-  cats: 'bg-brand-mango/15 text-brand-mango shadow-[0_0_8px_rgba(252,211,77,0.15)]',
-  business: 'bg-brand-taro/15 text-brand-taro shadow-[0_0_8px_rgba(192,132,252,0.15)]',
-  learning: 'bg-brand-cyan/15 text-brand-cyan shadow-[0_0_8px_rgba(0,212,255,0.15)]',
+  ai: 'bg-brand-cyan/15 text-brand-cyan border border-brand-cyan/20',
+  tech: 'bg-brand-mint/15 text-brand-mint border border-brand-mint/20',
+  life: 'bg-brand-coral/15 text-brand-coral border border-brand-coral/20',
+  cats: 'bg-brand-mango/15 text-brand-mango border border-brand-mango/20',
+  business: 'bg-brand-taro/15 text-brand-taro border border-brand-taro/20',
+  learning: 'bg-brand-strawberry/15 text-brand-strawberry border border-brand-strawberry/20',
 };
 
 const COVER_GRADIENTS: Record<BlogCategory, string> = {
-  ai: 'from-brand-cyan/20 to-brand-cyan/5',
-  tech: 'from-brand-mint/20 to-brand-mint/5',
-  life: 'from-brand-coral/20 to-brand-coral/5',
-  cats: 'from-brand-mango/20 to-brand-mango/5',
-  business: 'from-brand-taro/20 to-brand-taro/5',
-  learning: 'from-brand-cyan/20 to-brand-cyan/5',
+  ai: 'from-brand-cyan/25 via-brand-cyan/10 to-transparent',
+  tech: 'from-brand-mint/25 via-brand-mint/10 to-transparent',
+  life: 'from-brand-coral/25 via-brand-coral/10 to-transparent',
+  cats: 'from-brand-mango/25 via-brand-mango/10 to-transparent',
+  business: 'from-brand-taro/25 via-brand-taro/10 to-transparent',
+  learning: 'from-brand-strawberry/25 via-brand-strawberry/10 to-transparent',
 };
 
 const COVER_ICONS: Record<BlogCategory, string> = {
@@ -39,12 +39,12 @@ const COVER_ICONS: Record<BlogCategory, string> = {
 };
 
 const BORDER_BEAM_COLORS: Record<BlogCategory, { from: string; to: string }> = {
-  ai: { from: '#38bdf8', to: '#818cf8' },
-  tech: { from: '#5eead4', to: '#34d399' },
-  life: { from: '#fbbf24', to: '#f87171' },
-  cats: { from: '#fcd34d', to: '#fbbf24' },
-  business: { from: '#c084fc', to: '#a855f7' },
-  learning: { from: '#00d4ff', to: '#5ef0c8' },
+  ai: { from: '#22d3ee', to: '#4ade80' },
+  tech: { from: '#4ade80', to: '#22d3ee' },
+  life: { from: '#fb923c', to: '#f472b6' },
+  cats: { from: '#fbbf24', to: '#fb923c' },
+  business: { from: '#a78bfa', to: '#f472b6' },
+  learning: { from: '#f472b6', to: '#a78bfa' },
 };
 
 interface BlogCardProps {
@@ -83,8 +83,8 @@ export function BlogCard({ post, isLatest = false, index = 0 }: BlogCardProps) {
             {/* BorderBeam for latest post - 始终显示 */}
             {isLatest && (
               <BorderBeam
-                colorFrom="#5eead4"
-                colorTo="#38bdf8"
+                colorFrom="#fb923c"
+                colorTo="#4ade80"
                 size={180}
                 duration={10}
               />
@@ -183,8 +183,8 @@ export function BlogCard({ post, isLatest = false, index = 0 }: BlogCardProps) {
               </div>
 
               {/* Title with hover animation */}
-              <motion.h2 
-                className="text-lg font-semibold leading-snug line-clamp-2 transition-colors group-hover:text-brand-cyan"
+              <motion.h2
+                className="text-lg font-semibold leading-snug line-clamp-2 transition-colors group-hover:text-brand-coral"
                 animate={{
                   y: isHovered ? -2 : 0,
                 }}
