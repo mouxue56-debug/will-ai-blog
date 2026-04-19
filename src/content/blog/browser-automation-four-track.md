@@ -6,6 +6,7 @@ title:
   en: "The Right Way for AI to Control Browsers: Four Tracks + Four-Dimension Decision Matrix"
 category: "learning"
 date: "2026-03-29"
+coverImage: /covers/minimax/browser-automation-four-track.jpg
 author: Will
 readingTime: 12
 excerpt:

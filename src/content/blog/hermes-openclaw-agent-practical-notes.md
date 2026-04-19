@@ -12,7 +12,7 @@ excerpt:
   zh: "Hermes Agent 火了，但别急着迁移。深度对比 Hermes vs OpenClaw 的优劣势，分享多实例协同架构和六层安全防护的实战经验。工具会变，但知识和经验不会丢。"
   ja: "Hermes Agentが話題だが、急いで移行するな。Hermes vs OpenClawの優劣を深く比較し、マルチインスタンス協調アーキテクチャと6層セキュリティの実戦経験を共有。ツールは変わるが、知識と経験は失われない。"
   en: "Hermes Agent is hot, but don't rush to migrate. Deep comparison of Hermes vs OpenClaw, sharing multi-instance collaborative architecture and six-layer security protection from real-world experience."
-coverImage: ""
+coverImage: /covers/minimax/hermes-openclaw-agent-practical-notes.jpg
 audioUrl: "/audio/hermes-openclaw-blog.mp3"
 willComment:
   zh: "Hermes 32K star不是泡沫，但OpenClaw也没过时。我的选择：两边都用。4个OpenClaw+1个Hermes，每天凌晨4:15一起做梦，六层防护守底线。像养孩子一样把个人助理养大。"

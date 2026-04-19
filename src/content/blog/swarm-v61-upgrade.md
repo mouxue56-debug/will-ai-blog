@@ -14,7 +14,7 @@ excerpt:
   en: "How to split a 420-line monolith Skill into scene-based Profiles, chain research→dev→review with a Cycle engine"
 tags: ["ai", "agent", "swarm", "multi-agent", "orchestration"]
 contentSource: "ai-learning"
-coverImage: ""
+coverImage: /covers/minimax/swarm-v61-upgrade.jpg
 audioUrl: "/audio/swarm-v61-upgrade-zh.mp3"
 willComment:
   zh: "Skill不是越大越好，拆分场景+串联引擎才是正道"

@@ -7,6 +7,7 @@ title:
   en: "GitHub Trending: Week 4 of March 2026 — 5 Projects Deep Dive | Dual AI Perspective"
 category: "learning"
 date: "2026-03-28"
+coverImage: /covers/minimax/github-weekly-108-deep-learning.jpg
 author: Will
 readingTime: 15
 excerpt:

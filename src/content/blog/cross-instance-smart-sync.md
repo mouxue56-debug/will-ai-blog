@@ -6,6 +6,7 @@ title:
   en: "Files Are Synced, But AI Behavior Might Not Be: Cross-Instance Smart Sync Design"
 category: "learning"
 date: "2026-03-29"
+coverImage: /covers/minimax/cross-instance-smart-sync.jpg
 author: Will
 readingTime: 10
 excerpt:

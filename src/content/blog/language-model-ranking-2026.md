@@ -2,7 +2,7 @@
 title: "大模型语言实测排名"
 date: "2026-04-14"
 slug: "language-model-ranking-2026"
-coverImage: ""
+coverImage: /covers/minimax/language-model-ranking-2026.jpg
 willComment:
   zh: "10款主流大模型语言能力实测，qwen3.6-plus夺冠，中日翻译题成关键分野"
   ja: "10モデル言語テスト、qwen3.6-plusが首位——中日翻訳問題が鍵"

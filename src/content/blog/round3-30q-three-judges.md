@@ -2,7 +2,7 @@
 title: "30 题 LLM 综合能力榜（Round 3 · 8选手 × 三裁判盲评）"
 date: "2026-04-14"
 slug: "round3-30q-three-judges"
-coverImage: ""
+coverImage: /covers/minimax/round3-30q-three-judges.jpg
 willComment:
   zh: "8大模型30题三裁判盲测，小米mimo夺冠（97.56）；全部24个评分完整，无一缺失；三裁判差异揭示：minimax对顶级模型偏心，qwen对竞品严格"
   ja: "8モデル30問・三裁判盲検テスト、小米mimoが首位（97.56）——全24評価完了、欠けなし。裁判のばらつき：minimaxはトップモデルに甘く、qwenは競合に厳しい"

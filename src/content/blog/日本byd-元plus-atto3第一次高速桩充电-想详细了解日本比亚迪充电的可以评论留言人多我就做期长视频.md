@@ -3,7 +3,7 @@
 title:
   zh: "用OpenCloud在本地搭建个人AI助手系统 — 低成本聚合API+TG机器人"
   ja: "【日本初】BYDアット3（元PLUS）で高速充電器初体験！日本でのBYD充電事情、詳しく知りたい方はコメントで教えてください。リクエストが多ければ動画で深掘りします
-
+coverImage: /covers/minimax/日本byd-元plus-atto3第一次高速桩充电-想详细了解日本比亚迪充电的可以评论留言人多我就做期长视频.jpg
 ---
 
 またはよりYouTube風に：

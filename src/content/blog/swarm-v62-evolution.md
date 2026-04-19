@@ -6,6 +6,7 @@ title:
   en: "Swarm Engine v6.2 Complete Evolution: From Solo to Multi-Model Collaboration"
 category: "learning"
 date: "2026-03-29"
+coverImage: /covers/minimax/swarm-v62-evolution.jpg
 author: Will
 readingTime: 45
 excerpt:

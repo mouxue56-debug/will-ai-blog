@@ -12,7 +12,7 @@ excerpt:
   zh: Anthropic源码泄露、Apple MLX本地AI、Agentic Workflow生产化、hermes-agent自进化——2026年4月AI社区四大事件深度解析。
   ja: Anthropicソースコードリーク、Apple MLXローカルAI、Agentic Workflow本番化、hermes-agent自己進化——2026年4月AIコミュニティ四大イベント深度解析。
   en: Anthropic source leak, Apple MLX local AI, Agentic Workflow production, hermes-agent self-evolution—deep dive into April 2026's four major AI events.
-coverImage: ""
+coverImage: /covers/minimax/github-ai-trends-april-2026.jpg
 audioUrl: "/audio/github-trends-apr2026-intro.mp3"
 willComment:
   zh: "Anthropic两周内连爆两次泄露，51万行代码曝光；Apple MLX让Mac本地跑AI快5倍；Agentic Workflow从玩具变生产工具；hermes-agent提出AI自我进化。这四件事，正在改写AI行业的权力格局。"

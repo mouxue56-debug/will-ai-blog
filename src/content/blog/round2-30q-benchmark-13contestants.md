@@ -9,7 +9,7 @@ date: 2026-04-13
 updated: 2026-04-13
 author: ナツ
 locale: zh
-coverImage: /learning-banner
+coverImage: /covers/minimax/round2-30q-benchmark-13contestants.jpg
 excerpt:
   zh: 13款主流大模型 × 30道多维题目 × Opus 4.6 + GPT-5.4 双裁判盲评。涵盖数学、编程、推理、Agent、中日语言六大维度，总排名、各维度子排名、热力图完整公开。
   ja: 13款の大規模モデル × 30道多次元問題 × Opus 4.6 + GPT-5.4 ダブルジャッジ盲検評価。数学、プログラミング、推論、Agent、中日言語の6次元をカバー。

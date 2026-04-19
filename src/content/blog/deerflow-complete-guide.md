@@ -6,6 +6,7 @@ title:
   en: "DeerFlow Complete Guide: What Can ByteDance's Open-Source Super Agent Actually Do?"
 category: "learning"
 date: "2026-03-26"
+coverImage: /covers/minimax/deerflow-complete-guide.jpg
 author: Will
 readingTime: 8
 excerpt:

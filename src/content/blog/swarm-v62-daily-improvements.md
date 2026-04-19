@@ -6,6 +6,7 @@ title:
   en: "What My AI Team Did Today: 5 Swarm System Improvements"
 category: "learning"
 date: "2026-03-29"
+coverImage: /covers/minimax/swarm-v62-daily-improvements.jpg
 author: Will
 readingTime: 15
 excerpt:

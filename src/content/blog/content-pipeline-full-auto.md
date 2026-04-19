@@ -6,6 +6,7 @@ title:
   en: "One Command, Full Pipeline: Designing a Fully Automated AI Content System"
 category: "learning"
 date: "2026-03-29"
+coverImage: /covers/minimax/content-pipeline-full-auto.jpg
 author: Will
 readingTime: 10
 excerpt:
