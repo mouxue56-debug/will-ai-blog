@@ -1,11 +1,11 @@
 import type { Metadata } from 'next';
 import { getAllPosts } from '@/lib/blog';
 import { getTranslations } from 'next-intl/server';
-import { Link } from '@/i18n/navigation';
 import { setRequestLocale } from 'next-intl/server';
-import { BookOpen, Clock, Calendar } from 'lucide-react';
+import { BookOpen } from 'lucide-react';
 import Image from 'next/image';
 import { getIllustrationUrl } from '@/lib/storage';
+import { LearningIndex } from '@/components/learning/LearningIndex';
 
 export async function generateMetadata({
   params,
@@ -126,118 +126,35 @@ export default async function LearningPage({
         style={{ height: '1px', background: 'linear-gradient(90deg, transparent, rgba(0,212,255,0.2), transparent)' }}
       />
 
-      {/* Posts Grid */}
-      <section className="mx-auto max-w-4xl px-4 py-12">
+      {/* Posts Grid with sub-menu filter */}
+      <section className="py-12">
         {learningPosts.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-24 text-center">
             <div
               className="mb-6 flex h-20 w-20 items-center justify-center rounded-full"
-              style={{
-                background: 'rgba(0,212,255,0.08)',
-                border: '1px solid rgba(0,212,255,0.15)',
-              }}
+              style={{ background: 'rgba(0,212,255,0.08)', border: '1px solid rgba(0,212,255,0.15)' }}
             >
               <BookOpen className="h-9 w-9 text-cyan-500/50" />
             </div>
             <p className="text-lg font-medium text-slate-400">{t('no_posts')}</p>
           </div>
         ) : (
-          <div className="flex flex-col gap-4">
-            {learningPosts.map((post, cardIndex) => {
-              const title =
-                typeof post.title === 'string'
-                  ? post.title
-                  : (post.title as Record<string, string>)[locale] ||
-                    (post.title as Record<string, string>).zh ||
-                    '';
-
-              const excerpt =
-                typeof post.excerpt === 'string'
-                  ? post.excerpt
-                  : (post.excerpt as Record<string, string>)[locale] ||
-                    (post.excerpt as Record<string, string>).zh ||
-                    '';
-
-              const cardAnimClass = `animate-fade-in-up-card-${Math.min(cardIndex, 9)}`;
-
-              return (
-                <Link
-                  key={post.slug}
-                  href={`/blog/${post.slug}`}
-                  className="group block"
-                >
-                  <article
-                    className={`k2w-card relative rounded-2xl p-6 transition-all duration-300 ${cardAnimClass}`}
-                    style={{
-                      background: '#0D1825',
-                      border: '1px solid rgba(0,212,255,0.12)',
-                    }}
-                  >
-                    {/* Top glow line on hover */}
-                    <div
-                      className="absolute inset-x-0 top-0 h-[1px] rounded-t-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                      style={{
-                        background:
-                          'linear-gradient(90deg, transparent, rgba(0,212,255,0.6), transparent)',
-                      }}
-                    />
-
-                    <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:gap-6">
-                      {/* Left: icon */}
-                      <div
-                        className="hidden sm:flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl"
-                        style={{
-                          background: 'rgba(0,212,255,0.08)',
-                          border: '1px solid rgba(0,212,255,0.15)',
-                        }}
-                      >
-                        <BookOpen className="h-5 w-5 text-cyan-400" />
-                      </div>
-
-                      {/* Right: content */}
-                      <div className="flex-1 min-w-0">
-                        <h2 className="mb-2 text-lg font-semibold text-white group-hover:text-cyan-300 transition-colors duration-200 leading-snug">
-                          {title}
-                        </h2>
-
-                        {excerpt && (
-                          <p className="mb-3 text-sm text-slate-400 leading-relaxed line-clamp-2">
-                            {excerpt}
-                          </p>
-                        )}
-
-                        <div className="flex flex-wrap items-center gap-4 text-xs text-slate-500">
-                          {post.date && (
-                            <span className="flex items-center gap-1">
-                              <Calendar className="h-3 w-3" />
-                              {post.date}
-                            </span>
-                          )}
-                          <span className="flex items-center gap-1">
-                            <Clock className="h-3 w-3" />
-                            {post.readingTime} {t('min_read')}
-                          </span>
-                        </div>
-                      </div>
-
-                      {/* Arrow */}
-                      <div className="hidden sm:flex flex-shrink-0 items-center self-center">
-                        <svg
-                          className="h-4 w-4 text-slate-600 group-hover:text-cyan-400 group-hover:translate-x-1 transition-all duration-200"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                          strokeWidth={2}
-                        >
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-                        </svg>
-                      </div>
-                    </div>
-                  </article>
-                </Link>
-              );
-            })}
-          </div>
+          <LearningIndex
+            locale={locale as 'zh' | 'ja' | 'en'}
+            minReadLabel={t('min_read')}
+            posts={learningPosts.map((p) => ({
+              slug: p.slug,
+              title: typeof p.title === 'string'
+                ? { zh: p.title, ja: p.title, en: p.title }
+                : (p.title as Record<string, string>),
+              excerpt: typeof p.excerpt === 'string'
+                ? { zh: p.excerpt, ja: p.excerpt, en: p.excerpt }
+                : (p.excerpt as Record<string, string>),
+              date: p.date,
+              readingTime: p.readingTime,
+              tags: p.tags ?? [],
+            }))}
+          />
         )}
       </section>
     </main>

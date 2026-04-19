@@ -329,6 +329,22 @@ body::before {
     0 20px 48px rgba(255, 123, 156, 0.24);
 }
 
+/* ── Debate masonry chip header (tinted strip with theme-aware fg) ─ */
+.chip-tint {
+  background: var(--tint-light);
+}
+.chip-tint .chip-fg {
+  color: var(--chip-fg-light);
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.35);
+}
+:root.dark .chip-tint {
+  background: var(--tint-dark);
+}
+:root.dark .chip-tint .chip-fg {
+  color: var(--chip-fg-dark);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.45);
+}
+
 /* ── Liquid Glass pill (chip / button / tab) ─────────────── */
 .glass-pill {
   background: rgba(255, 255, 255, 0.06);

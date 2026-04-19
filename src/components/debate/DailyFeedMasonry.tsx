@@ -40,41 +40,53 @@ interface DailyFeedMasonryProps {
   topics: DailyTopic[];
 }
 
-const typeMeta: Record<TopicType, { emoji: string; tint: string; textColor: string; label: { zh: string; ja: string; en: string } }> = {
+const typeMeta: Record<TopicType, { emoji: string; tintLight: string; tintDark: string; fgLight: string; fgDark: string; label: { zh: string; ja: string; en: string } }> = {
   ai: {
     emoji: '🧠',
-    tint: 'linear-gradient(135deg, rgba(180,142,224,0.42), rgba(120,100,200,0.20))',
-    textColor: 'hsl(276 45% 28%)',
+    tintLight: 'linear-gradient(135deg, rgba(180,142,224,0.55), rgba(150,115,210,0.32))',
+    tintDark: 'linear-gradient(135deg, rgba(180,142,224,0.70), rgba(120,100,200,0.45))',
+    fgLight: 'hsl(276 55% 22%)',
+    fgDark: 'hsl(276 95% 92%)',
     label: { zh: 'AI 动态', ja: 'AIニュース', en: 'AI Pulse' },
   },
   economy: {
     emoji: '💹',
-    tint: 'linear-gradient(135deg, rgba(92,201,167,0.42), rgba(76,170,140,0.20))',
-    textColor: 'hsl(159 55% 22%)',
+    tintLight: 'linear-gradient(135deg, rgba(92,201,167,0.55), rgba(76,170,140,0.32))',
+    tintDark: 'linear-gradient(135deg, rgba(92,201,167,0.70), rgba(76,170,140,0.45))',
+    fgLight: 'hsl(159 60% 18%)',
+    fgDark: 'hsl(159 90% 90%)',
     label: { zh: '经济观察', ja: '経済', en: 'Economy' },
   },
   github: {
     emoji: '🔥',
-    tint: 'linear-gradient(135deg, rgba(255,123,156,0.42), rgba(255,203,69,0.28))',
-    textColor: 'hsl(338 60% 28%)',
+    tintLight: 'linear-gradient(135deg, rgba(255,123,156,0.55), rgba(255,203,69,0.38))',
+    tintDark: 'linear-gradient(135deg, rgba(255,123,156,0.70), rgba(255,203,69,0.50))',
+    fgLight: 'hsl(338 65% 24%)',
+    fgDark: 'hsl(338 95% 94%)',
     label: { zh: 'GitHub 热榜', ja: 'GitHub', en: 'GitHub Trending' },
   },
   social: {
     emoji: '📊',
-    tint: 'linear-gradient(135deg, rgba(255,203,69,0.40), rgba(255,123,156,0.22))',
-    textColor: 'hsl(33 80% 28%)',
+    tintLight: 'linear-gradient(135deg, rgba(255,203,69,0.55), rgba(255,123,156,0.34))',
+    tintDark: 'linear-gradient(135deg, rgba(255,203,69,0.70), rgba(255,123,156,0.48))',
+    fgLight: 'hsl(33 85% 24%)',
+    fgDark: 'hsl(48 100% 92%)',
     label: { zh: '社交数据', ja: 'SNS指標', en: 'Social Pulse' },
   },
   japan_cn: {
     emoji: '🗾',
-    tint: 'linear-gradient(135deg, rgba(255,165,190,0.40), rgba(180,142,224,0.22))',
-    textColor: 'hsl(338 70% 30%)',
+    tintLight: 'linear-gradient(135deg, rgba(255,165,190,0.55), rgba(180,142,224,0.34))',
+    tintDark: 'linear-gradient(135deg, rgba(255,165,190,0.70), rgba(180,142,224,0.48))',
+    fgLight: 'hsl(338 75% 26%)',
+    fgDark: 'hsl(338 95% 94%)',
     label: { zh: '在日华人', ja: '在日中国人', en: 'Japan CN Life' },
   },
   politics: {
     emoji: '🌏',
-    tint: 'linear-gradient(135deg, rgba(92,201,167,0.40), rgba(180,142,224,0.22))',
-    textColor: 'hsl(200 60% 25%)',
+    tintLight: 'linear-gradient(135deg, rgba(92,201,167,0.55), rgba(180,142,224,0.34))',
+    tintDark: 'linear-gradient(135deg, rgba(92,201,167,0.70), rgba(180,142,224,0.48))',
+    fgLight: 'hsl(200 65% 22%)',
+    fgDark: 'hsl(200 95% 92%)',
     label: { zh: '时事政经', ja: '時事経済', en: 'Geopolitics' },
   },
 };
@@ -197,14 +209,16 @@ export function DailyFeedMasonry({ topics }: DailyFeedMasonryProps) {
                 >
                   {/* 彩色 tint header (小红书视觉锚) */}
                   <div
-                    className="flex items-center gap-2 px-4 py-3"
-                    style={{ background: meta.tint }}
+                    className="chip-tint flex items-center gap-2 px-4 py-3"
+                    style={{
+                      ['--tint-light' as string]: meta.tintLight,
+                      ['--tint-dark' as string]: meta.tintDark,
+                      ['--chip-fg-light' as string]: meta.fgLight,
+                      ['--chip-fg-dark' as string]: meta.fgDark,
+                    } as React.CSSProperties}
                   >
-                    <span className="text-lg">{meta.emoji}</span>
-                    <span
-                      className="text-[11.5px] font-bold tracking-wider uppercase dark:text-foreground/90"
-                      style={{ color: meta.textColor }}
-                    >
+                    <span className="text-lg drop-shadow-sm">{meta.emoji}</span>
+                    <span className="chip-fg text-[11.5px] font-bold tracking-wider uppercase">
                       {meta.label[locale as 'zh' | 'ja' | 'en'] ?? meta.label.zh}
                     </span>
                   </div>

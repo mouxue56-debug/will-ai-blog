@@ -6,7 +6,6 @@ import { HeroSection } from '@/components/home/hero-section';
 import { StoryTimeline } from '@/components/home/StoryTimeline';
 import { LatestUpdates } from '@/components/home/LatestUpdates';
 import { MyWorld } from '@/components/home/MyWorld';
-import { AIDashboard } from '@/components/home/ai-dashboard';
 import { AboutWill } from '@/components/home/AboutWill';
 import { TodayFeedTeaser } from '@/components/home/TodayFeedTeaser';
 import { AgentsStrip } from '@/components/home/AgentsStrip';
@@ -96,8 +95,6 @@ export default async function HomePage({
         <LatestUpdates />
 
         <MyWorld />
-
-        <AIDashboard />
         </div>
       </PageTransition>
     </>
