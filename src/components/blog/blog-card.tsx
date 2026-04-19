@@ -9,7 +9,6 @@ import type { BlogPost, BlogCategory } from '@/lib/blog-types';
 import { CATEGORY_KEYS } from '@/lib/blog-types';
 import { Link } from '@/i18n/navigation';
 import { SpotlightCard, BorderBeam } from '@/components/ui/aceternity';
-import { getCoverUrl } from '@/lib/storage';
 
 const CATEGORY_TAG_COLORS: Record<BlogCategory, string> = {
   ai: 'bg-brand-cyan/15 text-brand-cyan shadow-[0_0_8px_rgba(56,189,248,0.15)]',
@@ -108,7 +107,7 @@ export function BlogCard({ post, isLatest = false, index = 0 }: BlogCardProps) {
                 transition={{ duration: 0.3 }}
               >
                 <img
-                  src={post.coverImage?.startsWith('/covers/') ? getCoverUrl(post.slug) : post.coverImage}
+                  src={post.coverImage}
                   alt={title}
                   className="w-full h-full object-cover"
                   onError={() => setImageError(true)}
@@ -209,8 +208,8 @@ export function BlogCard({ post, isLatest = false, index = 0 }: BlogCardProps) {
                   })}
                 </time>
                 <span className="ml-auto text-muted-foreground/60">by {post.author}</span>
-                {/* 历史归档标签：文章日期早于博客正式启动日 */}
-                {post.date < '2026-03-22' && (
+                {/* 历史归档标签：使用 contentSource 判断，与 blog-detail 保持一致 */}
+                {post.contentSource === 'ai-organized' && (
                   <span className="ml-1 inline-flex items-center rounded-full bg-amber-500/10 border border-amber-500/20 px-2 py-0.5 text-[10px] font-medium text-amber-500">
                     AI整理
                   </span>

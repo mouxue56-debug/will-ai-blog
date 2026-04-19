@@ -25,7 +25,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const lang = (locale === 'zh' || locale === 'ja' || locale === 'en') ? locale : 'zh';
   const title = caseStudy.title[lang];
   const description = caseStudy.subtitle[lang];
-  const ogImageUrl = `https://aiblog.fuluckai.com/api/og?title=${encodeURIComponent(title)}&lang=${encodeURIComponent(lang)}`;
+  const ogImageUrl = `https://aiblog.fuluckai.com/covers/cases/${slug}.jpg`;
 
   return {
     title,
@@ -36,8 +36,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       type: 'article',
       images: [{
         url: ogImageUrl,
-        width: 1200,
-        height: 630,
+        width: 1280,
+        height: 720,
         alt: `${title} OG image`,
       }],
     },
@@ -67,7 +67,7 @@ export default async function CaseDetailPage({ params }: Props) {
   const lang = (locale === 'zh' || locale === 'ja' || locale === 'en') ? locale : 'zh';
   const title = caseStudy.title[lang];
   const description = caseStudy.subtitle[lang];
-  const ogImageUrl = `https://aiblog.fuluckai.com/api/og?title=${encodeURIComponent(title)}&lang=${encodeURIComponent(lang)}`;
+  const ogImageUrl = `https://aiblog.fuluckai.com/covers/cases/${slug}.jpg`;
 
   const jsonLd = {
     '@context': 'https://schema.org',

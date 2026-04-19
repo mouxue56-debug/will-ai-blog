@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { motion, useReducedMotion } from 'motion/react';
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
@@ -15,6 +15,8 @@ export function CaseCard({ c, locale }: { c: CaseStudy; locale: string }) {
   const highlightedMetrics = c.metrics;
   const prefersReducedMotion = useReducedMotion();
   const cardRef = useRef(null);
+  const [heroError, setHeroError] = useState(false);
+  const heroSrc = `/covers/cases/${c.slug}.jpg`;
 
   return (
     <Link href={`/cases/${c.slug}`}>
@@ -26,10 +28,24 @@ export function CaseCard({ c, locale }: { c: CaseStudy; locale: string }) {
         <SpotlightCard className="p-0 glass-card border-white/[0.06] bg-card/80 dark:bg-white/[0.03] cursor-pointer overflow-hidden h-full">
           <div className="group flex h-full flex-col">
             <div
-              className={`relative flex h-48 items-center justify-center bg-gradient-to-br ${c.gradient} opacity-90 sm:h-56`}
+              className={`relative flex h-48 items-center justify-center overflow-hidden sm:h-56 ${heroError ? `bg-gradient-to-br ${c.gradient} opacity-90` : ''}`}
             >
-              <span className="text-7xl drop-shadow-lg select-none sm:text-8xl">{c.icon}</span>
-              <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,.04)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,.04)_1px,transparent_1px)] bg-[size:32px_32px]" />
+              {!heroError && (
+                <img
+                  src={heroSrc}
+                  alt={c.title[loc]}
+                  loading="lazy"
+                  onError={() => setHeroError(true)}
+                  className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.04]"
+                />
+              )}
+              {heroError && (
+                <>
+                  <span className="text-7xl drop-shadow-lg select-none sm:text-8xl">{c.icon}</span>
+                  <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,.04)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,.04)_1px,transparent_1px)] bg-[size:32px_32px]" />
+                </>
+              )}
+              <span className="absolute right-3 top-3 rounded-full bg-white/25 backdrop-blur-md px-2 py-0.5 text-2xl shadow-sm">{c.icon}</span>
             </div>
 
             <div className="flex flex-1 flex-col p-5 sm:p-6">

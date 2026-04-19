@@ -1,27 +1,20 @@
 ---
-
+slug: japan-byd-atto3-highway-charging
+coverImage: /covers/minimax/japan-byd-atto3-highway-charging.jpg
 title:
-  zh: "用OpenCloud在本地搭建个人AI助手系统 — 低成本聚合API+TG机器人"
-  ja: "【日本初】BYDアット3（元PLUS）で高速充電器初体験！日本でのBYD充電事情、詳しく知りたい方はコメントで教えてください。リクエストが多ければ動画で深掘りします
-coverImage: /covers/minimax/日本byd-元plus-atto3第一次高速桩充电-想详细了解日本比亚迪充电的可以评论留言人多我就做期长视频.jpg
----
-
-またはよりYouTube風に：
-
-日本でBYDアット3（元PLUS）初めての高速充電！充電事情気になる人はコ"
-  en: "Build Your Personal AI Assistant with OpenCloud — Low-Cost API + Telegram Bot"
+  zh: "日本BYD Atto3高速快充首次体验 — 比亚迪在日本怎么充电"
+  ja: "【日本初】BYDアット3（元PLUS）で高速充電器初体験！日本でのBYD充電事情まとめ"
+  en: "First Highway Fast Charge with BYD Atto3 in Japan — EV Charging Experience"
 date: "2023-07-07"
 category: "life"
 tags: ["bilibili", "自动生成"]
 excerpt:
-  zh: "用每月40元的低价聚合API，在本地电脑上搭建OpenCloud个人AI助手，通过Telegram远程操控，支持DeepSeek/Kimi等主流大模型。"
-  ja: "用每月40元的低价聚合API，在本地电脑上搭建OpenCloud个人AI助手，通过Telegram远程操控，支持DeepSeek/Kimi等主流大模型。"
-  en: "用每月40元的低价聚合API，在本地电脑上搭建OpenCloud个人AI助手，通过Telegram远程操控，支持DeepSeek/Kimi等主流大模型。"
+  zh: "提车一周，带比亚迪Atto3去高速服务区体验CHAdeMO快充。23%充到80%约35分钟，充电成本约为油车的一半。"
+  ja: "納車1週間でBYDアット3を高速SAのCHAdeMO急速充電器でテスト。23%から80%まで約35分、コストはガソリン車の半額以下。"
+  en: "One week after buying a BYD Atto3 in Japan, tested CHAdeMO fast charging at a highway service area. 23% to 80% in ~35 minutes at half the cost of gasoline."
 source: "bilibili"
 bvid: BV1Fz4y1J75d
-
----------
-
+---
 
 # 日本 BYD 元 PLUS Atto 3 第一次高速桩充电体验
 

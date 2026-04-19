@@ -1,10 +1,11 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence, useReducedMotion } from 'motion/react';
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 import type { CaseStudy } from '@/data/cases';
+import { CaseMarkdown } from './case-markdown';
 
 type Locale = 'zh' | 'ja' | 'en';
 
@@ -67,9 +68,7 @@ function ExpandableSection({
     return (
       <div className="space-y-3">
         <h3 className="text-lg font-semibold">{title}</h3>
-        <p className="text-muted-foreground leading-relaxed whitespace-pre-line">
-          {content}
-        </p>
+        <CaseMarkdown content={content} />
       </div>
     );
   }
@@ -111,9 +110,7 @@ function ExpandableSection({
             className="overflow-hidden"
           >
             <div className="pt-2 pb-1">
-              <p className="text-muted-foreground leading-relaxed whitespace-pre-line">
-                {content}
-              </p>
+              <CaseMarkdown content={content} />
             </div>
           </motion.div>
         )}
@@ -124,9 +121,23 @@ function ExpandableSection({
 
 function MetricsGrid({ metrics, locale }: { metrics: CaseStudy['metrics']; locale: Locale }) {
   const prefersReducedMotion = useReducedMotion();
+  const [inView, setInView] = useState(false);
+  const ref = React.useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) { setInView(true); observer.disconnect(); } },
+      { threshold: 0.2 },
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
   return (
     <motion.div
+      ref={ref}
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay: 0.1, ease: [0.25, 0.1, 0.25, 1] }}
@@ -141,7 +152,7 @@ function MetricsGrid({ metrics, locale }: { metrics: CaseStudy['metrics']; local
           className="glass-card p-4 text-center space-y-1"
         >
           <div className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-brand-cyan to-brand-mint bg-clip-text text-transparent">
-            {m.value}
+            <CountUpValue value={m.value} inView={inView && !prefersReducedMotion} />
           </div>
           <div className="text-xs sm:text-sm text-muted-foreground">
             {m.label[locale]}
@@ -169,6 +180,14 @@ export function CaseDetail({
       <div
         className={`relative -mx-4 sm:-mx-6 mb-10 overflow-hidden rounded-b-3xl bg-gradient-to-br ${caseStudy.gradient}`}
       >
+        {/* Hero image (falls back to gradient if missing) */}
+        <img
+          src={`/covers/cases/${caseStudy.slug}.jpg`}
+          alt=""
+          className="absolute inset-0 h-full w-full object-cover opacity-80 dark:opacity-65"
+          onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }}
+        />
+        <div className="absolute inset-0 bg-gradient-to-br from-black/20 via-black/10 to-black/30" />
         {/* Grid overlay */}
         <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,.04)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,.04)_1px,transparent_1px)] bg-[size:32px_32px]" />
 

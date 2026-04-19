@@ -2,6 +2,7 @@
 title: "30 题 LLM 综合能力榜（Round 2 · 13选手 × 双裁判）"
 date: "2026-04-14"
 slug: "round2-30q-full-benchmark"
+category: "ai"
 coverImage: /covers/minimax/round2-30q-full-benchmark.jpg
 willComment:
   zh: "13大模型30题实测，claude-sonnet-4.6夺冠；kimi两个时间版本直接对比，3天内跃升37分"

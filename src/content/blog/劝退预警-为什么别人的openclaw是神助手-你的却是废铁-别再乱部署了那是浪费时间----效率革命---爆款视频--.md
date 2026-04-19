@@ -1,11 +1,12 @@
 ---
+slug: openclaw-notebooklm-video-generation
 
 title:
   zh: "AI视频批量生成实战：用OpenCloud+NotebookLM自动化9国语言宣传片"
   ja: "AI動画批量生成の実践：OpenCloud + NotebookLMで9カ国のプロモ影片を自動化"
   en: "Batch AI Video Generation: OpenCloud + NotebookLM for Automated Multilingual Promos"
 date: "2026-03-17"
-coverImage: /covers/minimax/劝退预警-为什么别人的openclaw是神助手-你的却是废铁-别再乱部署了那是浪费时间----效率革命---爆款视频--.jpg
+coverImage: /covers/minimax/openclaw-notebooklm-video-generation.jpg
 category: "ai"
 tags: ["OpenCloud", "AI自动化", "视频生成", "NotebookLM"]
 excerpt:

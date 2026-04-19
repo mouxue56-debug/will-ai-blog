@@ -13,7 +13,7 @@ import { TableOfContents, type TocHeading } from './table-of-contents';
 import { MobileTableOfContents } from './mobile-table-of-contents';
 import { CommentSection } from './CommentSection';
 import { AudioPlayer } from '@/components/shared/AudioPlayer';
-import { getCoverUrl, getAudioUrl } from '@/lib/storage';
+import { getAudioUrl } from '@/lib/storage';
 
 const CATEGORY_TAG_COLORS: Record<BlogCategory, string> = {
   ai: 'bg-brand-cyan/15 text-brand-cyan',
@@ -86,7 +86,7 @@ export function BlogDetail({ post, prevPost, nextPost, comments, postSlug, headi
             {post.coverImage && (
               <div className="relative w-full aspect-video overflow-hidden rounded-xl mb-8 max-w-3xl mx-auto">
                 <img
-                  src={post.coverImage?.startsWith('/covers/') ? getCoverUrl(post.slug) : post.coverImage}
+                  src={post.coverImage}
                   alt={post.title[locale] || post.title.zh}
                   className="w-full h-full object-cover"
                 />

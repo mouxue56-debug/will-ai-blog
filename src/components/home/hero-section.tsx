@@ -5,7 +5,6 @@ import { motion, useScroll, useTransform } from 'motion/react';
 import { useState, useCallback, useEffect, useRef } from 'react';
 import { Link } from '@/i18n/navigation';
 import { AudioPlayer } from '@/components/shared/AudioPlayer';
-import { getIllustrationUrl } from '@/lib/storage';
 import Image from 'next/image';
 
 const nodes = [

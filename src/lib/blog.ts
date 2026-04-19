@@ -131,11 +131,22 @@ export function getAllPosts(): BlogPost[] {
         if (typeof e === 'string') return { zh: e, ja: e, en: e };
         return e;
       })(),
-      tags: typeof data.tags === 'string'
-        ? (data.tags as string).split(',').map(tag => tag.trim()).filter(Boolean)
-        : Array.isArray(data.tags)
-          ? (data.tags as string[]).map(tag => tag.trim()).filter(Boolean)
-          : [],
+      tags: (() => {
+        const t = data.tags;
+        if (!t) return [];
+        if (Array.isArray(t)) return (t as string[]).map((tag: string) => tag.trim()).filter(Boolean);
+        // Guard: YAML list becomes {} (empty object) since our parser doesn't handle list syntax
+        if (typeof t !== 'string') return [];
+        const s = t as string;
+        // Handle JSON array strings like ["ai", "tech"] from frontmatter
+        if (s.startsWith('[')) {
+          try {
+            const parsed = JSON.parse(s) as string[];
+            if (Array.isArray(parsed)) return parsed.map((tag: string) => tag.trim()).filter(Boolean);
+          } catch { /* fall through to CSV */ }
+        }
+        return s.split(',').map((tag: string) => tag.trim()).filter(Boolean);
+      })(),
       readingTime: calculateReadingTime(content),
       content,
       willComment: (data.willComment as Record<string, string>) || undefined,

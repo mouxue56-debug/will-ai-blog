@@ -40,14 +40,14 @@ export async function generateMetadata({
       locale: ogLocale,
       url,
       siteName: "Will's AI Blog",
-      images: [{ url: '/og-image.png', width: 1200, height: 630 }],
+      images: [{ url: '/og-image.jpg', width: 1200, height: 630 }],
     },
     twitter: {
       card: 'summary_large_image',
       title,
       description,
       site: '@fuluckai',
-      images: ['/og-image.png'],
+      images: ['/og-image.jpg'],
     },
   };
 }
