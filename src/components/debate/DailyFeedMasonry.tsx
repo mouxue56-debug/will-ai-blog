@@ -38,20 +38,23 @@ interface DailyFeedMasonryProps {
   topics: DailyTopic[];
 }
 
-const typeMeta: Record<string, { emoji: string; tint: string; label: { zh: string; ja: string; en: string } }> = {
+const typeMeta: Record<string, { emoji: string; tint: string; textColor: string; label: { zh: string; ja: string; en: string } }> = {
   ai: {
     emoji: '🧠',
-    tint: 'linear-gradient(135deg, rgba(180,142,224,0.18), rgba(120,100,200,0.08))',
+    tint: 'linear-gradient(135deg, rgba(180,142,224,0.42), rgba(120,100,200,0.20))',
+    textColor: 'hsl(276 45% 28%)',
     label: { zh: 'AI 动态', ja: 'AIニュース', en: 'AI Pulse' },
   },
   economy: {
     emoji: '💹',
-    tint: 'linear-gradient(135deg, rgba(92,201,167,0.18), rgba(76,170,140,0.08))',
+    tint: 'linear-gradient(135deg, rgba(92,201,167,0.42), rgba(76,170,140,0.20))',
+    textColor: 'hsl(159 55% 22%)',
     label: { zh: '经济观察', ja: '経済', en: 'Economy' },
   },
   github: {
     emoji: '🔥',
-    tint: 'linear-gradient(135deg, rgba(255,123,156,0.18), rgba(255,203,69,0.12))',
+    tint: 'linear-gradient(135deg, rgba(255,123,156,0.42), rgba(255,203,69,0.28))',
+    textColor: 'hsl(338 60% 28%)',
     label: { zh: 'GitHub 热榜', ja: 'GitHub', en: 'GitHub Trending' },
   },
 };
@@ -178,7 +181,10 @@ export function DailyFeedMasonry({ topics }: DailyFeedMasonryProps) {
                     style={{ background: meta.tint }}
                   >
                     <span className="text-lg">{meta.emoji}</span>
-                    <span className="text-xs font-semibold tracking-wide text-foreground/80">
+                    <span
+                      className="text-[11.5px] font-bold tracking-wider uppercase dark:text-foreground/90"
+                      style={{ color: meta.textColor }}
+                    >
                       {meta.label[locale as 'zh' | 'ja' | 'en'] ?? meta.label.zh}
                     </span>
                   </div>

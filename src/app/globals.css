@@ -27,24 +27,36 @@
 }
 
 :root {
-  /* Dior 奶油糖果白 (light) */
-  --background: 36 100% 97%;    /* #FFF8F0 dior-cream */
-  --foreground: 22 27% 19%;     /* #3D2C24 warm-brown (dior-t1) */
+  /* Dior 奶油糖果白 (light) — contrast-boosted */
+  --background: 34 62% 94%;      /* #F6EADA 更温暖的奶油 */
+  --foreground: 22 40% 14%;      /* #3A2418 deeper warm-brown */
   --card: 0 0% 100%;
-  --card-foreground: 180 8% 38%; /* #5A6A6A text-body */
+  --card-foreground: 22 30% 22%; /* #4A3228 readable brown */
   --popover: 0 0% 100%;
-  --popover-foreground: 180 14% 35%;
-  --primary: 167 50% 66%;        /* #7DD3C0 mint */
+  --popover-foreground: 22 30% 22%;
+  --primary: 167 50% 48%;        /* deepened mint for contrast */
   --primary-foreground: 0 0% 100%;
-  --secondary: 33 100% 97%;      /* #FFF7F0 peach-milk */
-  --secondary-foreground: 180 14% 35%;
-  --muted: 42 100% 97%;          /* cream */
-  --muted-foreground: 180 14% 60%; /* #90A8A8 text-note */
-  --accent: 167 50% 97%;         /* mint-milk */
-  --accent-foreground: 167 40% 38%;
+  --secondary: 338 78% 78%;      /* #F6AEC0 dior pink-300 */
+  --secondary-foreground: 338 50% 22%;
+  --muted: 34 40% 90%;           /* softer warm muted */
+  --muted-foreground: 20 18% 38%; /* #6F5C51 brown-gray for legible body muted */
+  --accent: 276 62% 84%;         /* dior lavender-300 */
+  --accent-foreground: 276 40% 28%;
+
+  /* Dior signature accent tokens (direct use) */
+  --dior-pink: 338 100% 73%;       /* #FF7B9C */
+  --dior-pink-soft: 338 90% 88%;   /* #FBC8D4 */
+  --dior-mint: 159 53% 57%;        /* #5CC9A7 */
+  --dior-mint-soft: 159 55% 85%;   /* #BEEBD8 */
+  --dior-lav: 276 57% 72%;         /* #B48EE0 */
+  --dior-lav-soft: 276 60% 88%;    /* #DFC9ED */
+  --dior-yel: 44 100% 64%;         /* #FFCB45 */
+  --dior-yel-soft: 44 100% 85%;    /* #FFE8B3 */
+  --dior-cream: 34 62% 94%;        /* bg */
+  --dior-warm: 22 40% 14%;         /* text */
   --destructive: 0 84% 60%;
-  --border: 180 14% 92%;         /* soft border */
-  --input: 180 14% 92%;
+  --border: 30 35% 82%;          /* warm tan border — visible */
+  --input: 30 35% 82%;
   --ring: 167 50% 66%;           /* mint */
   --chart-1: 167 50% 66%;        /* mint */
   --chart-2: 328 82% 85%;        /* strawberry */
@@ -257,14 +269,15 @@ body::before {
   transition: opacity 0.5s ease;
 }
 
-/* Light mode: Dior 糖果冰淇淋 halo (pink-l / mint-l / lav-l) */
+/* Light mode: Dior 糖果冰淇淋 halo — saturated for visible contrast */
 :root:not(.dark) body::before {
   background:
-    radial-gradient(ellipse 70% 45% at 12% 8%, rgba(255, 209, 220, 0.55), transparent 60%),
-    radial-gradient(ellipse 60% 40% at 88% 22%, rgba(232, 213, 245, 0.48), transparent 60%),
-    radial-gradient(ellipse 60% 40% at 50% 105%, rgba(200, 245, 228, 0.42), transparent 60%),
-    radial-gradient(ellipse 40% 25% at 95% 70%, rgba(255, 240, 196, 0.35), transparent 60%);
-  opacity: 0.95;
+    radial-gradient(ellipse 65% 45% at 10% 5%, rgba(255, 165, 190, 0.68), transparent 58%),
+    radial-gradient(ellipse 55% 40% at 92% 18%, rgba(196, 160, 230, 0.62), transparent 58%),
+    radial-gradient(ellipse 55% 38% at 50% 105%, rgba(138, 220, 195, 0.55), transparent 58%),
+    radial-gradient(ellipse 38% 28% at 96% 72%, rgba(255, 208, 110, 0.45), transparent 58%),
+    radial-gradient(ellipse 45% 30% at 4% 60%, rgba(255, 180, 210, 0.38), transparent 60%);
+  opacity: 1;
 }
 
 /* ── Liquid Glass card utility (dark: 深邃玻璃 / light: 冰面白雾) ── */
@@ -290,27 +303,30 @@ body::before {
     0 14px 40px rgba(8, 12, 24, 0.36);
 }
 
-/* Light mode — Dior 糖果玻璃 (奶油半透 + 粉/薰衣草色调描边) */
+/* Light mode — Dior 糖果玻璃 (contrast boosted) */
 :root:not(.dark) .glass-card {
-  background: rgba(255, 255, 255, 0.68);
-  backdrop-filter: blur(24px) saturate(170%);
-  -webkit-backdrop-filter: blur(24px) saturate(170%);
-  border: 1px solid rgba(240, 230, 246, 0.85);
+  background: rgba(255, 255, 255, 0.82);
+  backdrop-filter: blur(26px) saturate(185%);
+  -webkit-backdrop-filter: blur(26px) saturate(185%);
+  border: 1px solid rgba(230, 200, 215, 0.95);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.95),
-    inset 0 0 0 0.5px rgba(255, 255, 255, 0.4),
-    0 2px 6px rgba(180, 142, 224, 0.06),
-    0 10px 28px rgba(255, 123, 156, 0.08);
+    inset 0 1px 0 rgba(255, 255, 255, 1),
+    inset 0 0 0 0.5px rgba(255, 255, 255, 0.5),
+    0 1px 3px rgba(180, 100, 150, 0.08),
+    0 3px 10px rgba(180, 142, 224, 0.12),
+    0 14px 36px rgba(255, 123, 156, 0.16);
 }
 
 :root:not(.dark) .glass-card:hover {
-  background: rgba(255, 255, 255, 0.85);
-  border-color: rgba(255, 209, 220, 0.9);
+  background: rgba(255, 255, 255, 0.95);
+  border-color: rgba(255, 170, 195, 0.98);
+  transform: translateY(-2px);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 1),
-    inset 0 0 0 0.5px rgba(255, 255, 255, 0.55),
-    0 4px 10px rgba(180, 142, 224, 0.09),
-    0 16px 40px rgba(255, 123, 156, 0.14);
+    inset 0 0 0 0.5px rgba(255, 255, 255, 0.65),
+    0 2px 6px rgba(180, 100, 150, 0.12),
+    0 6px 16px rgba(180, 142, 224, 0.18),
+    0 20px 48px rgba(255, 123, 156, 0.24);
 }
 
 /* ── Liquid Glass pill (chip / button / tab) ─────────────── */
@@ -330,15 +346,19 @@ body::before {
   border-color: rgba(255, 255, 255, 0.16);
 }
 :root:not(.dark) .glass-pill {
-  background: rgba(255, 255, 255, 0.72);
-  border: 1px solid rgba(240, 230, 246, 0.85);
+  background: rgba(255, 255, 255, 0.88);
+  border: 1px solid rgba(230, 200, 215, 0.95);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.95),
-    0 1px 3px rgba(180, 142, 224, 0.07);
+    inset 0 1px 0 rgba(255, 255, 255, 1),
+    0 2px 8px rgba(180, 100, 150, 0.12);
+  color: hsl(var(--foreground));
 }
 :root:not(.dark) .glass-pill:hover {
-  background: rgba(255, 255, 255, 0.9);
-  border-color: rgba(255, 209, 220, 0.9);
+  background: rgba(255, 255, 255, 1);
+  border-color: rgba(255, 170, 195, 1);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 1),
+    0 4px 14px rgba(255, 123, 156, 0.18);
 }
 
 /* ── Liquid Glass nav bar (bottom / header) ──────────────── */
@@ -380,6 +400,56 @@ body::before {
     inset 0 -10px 30px rgba(100, 110, 150, 0.25),
     0 14px 40px rgba(8, 12, 24, 0.50),
     0 0 0 0.5px rgba(255, 255, 255, 0.15);
+}
+
+/* ── Dior candy chips (saturated accent pills) ──────────── */
+.chip-dior {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 9999px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  line-height: 1.4;
+  transition: all 0.25s ease;
+  border: 1px solid transparent;
+}
+.chip-dior-pink  { background: hsl(var(--dior-pink-soft)); color: hsl(338 70% 30%); border-color: hsl(338 80% 78%); }
+.chip-dior-mint  { background: hsl(var(--dior-mint-soft)); color: hsl(159 55% 22%); border-color: hsl(159 50% 62%); }
+.chip-dior-lav   { background: hsl(var(--dior-lav-soft));  color: hsl(276 45% 30%); border-color: hsl(276 55% 72%); }
+.chip-dior-yel   { background: hsl(var(--dior-yel-soft));  color: hsl(33 80% 28%);  border-color: hsl(40 90% 62%); }
+
+.dark .chip-dior-pink { background: rgba(255,123,156,0.18); color: #FFB8CC; border-color: rgba(255,123,156,0.35); }
+.dark .chip-dior-mint { background: rgba(92,201,167,0.18); color: #9EE8CE; border-color: rgba(92,201,167,0.35); }
+.dark .chip-dior-lav  { background: rgba(180,142,224,0.18); color: #D4BCF0; border-color: rgba(180,142,224,0.35); }
+.dark .chip-dior-yel  { background: rgba(255,203,69,0.18); color: #FFE0A0; border-color: rgba(255,203,69,0.35); }
+
+/* ── Dior gradient text (hero titles) ───────────────────── */
+.text-dior-gradient {
+  background: linear-gradient(110deg, #FF7B9C 0%, #B48EE0 45%, #5CC9A7 85%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.dark .text-dior-gradient {
+  background: linear-gradient(110deg, #FFB8CC 0%, #D4BCF0 45%, #9EE8CE 85%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* ── Dior section ribbon (decorative strip behind headings) */
+.ribbon-dior {
+  background: linear-gradient(90deg,
+    rgba(255,123,156,0.14),
+    rgba(180,142,224,0.12),
+    rgba(92,201,167,0.14),
+    rgba(255,203,69,0.12));
+  border-radius: 9999px;
+  padding: 3px 12px;
+  display: inline-block;
 }
 
 /* ── Glow underline for nav ─────────────────────────────── */
