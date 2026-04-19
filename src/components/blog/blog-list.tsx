@@ -111,17 +111,19 @@ export function BlogList({ posts }: BlogListProps) {
     <PageTransition>
       <div className="mx-auto max-w-5xl px-4 py-12 sm:px-6">
         <ScrollReveal direction="fadeIn">
-          <div className="mb-8 overflow-hidden rounded-2xl border border-white/8 bg-card/30">
+          <div className="glass-card mb-8 overflow-hidden rounded-3xl">
             <div className="relative h-48 w-full sm:h-56">
               <Image
                 src={getIllustrationUrl('blog-banner')}
                 alt="Blog banner"
                 fill
-                className="object-cover object-center opacity-80"
+                className="object-cover object-center opacity-60 dark:opacity-80"
               />
-              <div className="absolute inset-0 bg-gradient-to-r from-background/90 via-background/60 to-transparent" />
+              {/* Dior candy wash (light) — hidden in dark */}
+              <div className="absolute inset-0 bg-gradient-to-br from-[rgba(255,209,220,0.55)] via-[rgba(232,213,245,0.40)] to-[rgba(200,245,228,0.35)] dark:hidden" />
+              <div className="absolute inset-0 bg-gradient-to-r from-background/90 via-background/55 to-transparent" />
               <div className="absolute inset-0 flex flex-col justify-center px-6 sm:px-8">
-                <h1 className="text-3xl font-bold">{t('title')}</h1>
+                <h1 className="text-3xl font-bold sm:text-4xl">{t('title')}</h1>
                 <p className="mt-2 text-muted-foreground">{t('subtitle')}</p>
                 <p className="mt-2 max-w-lg text-sm leading-6 text-muted-foreground/80">
                   {t('page_intro')}
@@ -143,10 +145,10 @@ export function BlogList({ posts }: BlogListProps) {
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder={currentCopy.search}
             className={cn(
-              'w-full rounded-full border border-border/60 bg-card/60 py-2.5 pl-11 pr-10',
+              'glass-pill w-full py-2.5 pl-11 pr-10',
               'text-sm placeholder:text-muted-foreground',
               'focus:border-brand-mint/60 focus:outline-none focus:ring-2 focus:ring-brand-mint/40',
-              'backdrop-blur-sm transition-all'
+              'transition-all'
             )}
           />
           {searchQuery && (

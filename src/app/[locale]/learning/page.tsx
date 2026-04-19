@@ -76,14 +76,15 @@ export default async function LearningPage({
       <section className="relative overflow-hidden pt-8 pb-16 px-4">
         {/* Banner 插画 */}
         <div className="mx-auto max-w-4xl mb-8">
-          <div className="relative h-44 sm:h-52 w-full overflow-hidden rounded-2xl border border-white/8">
+          <div className="glass-card relative h-44 sm:h-52 w-full overflow-hidden rounded-3xl">
             <Image
               src={getIllustrationUrl('learning-banner')}
               alt=""
               fill
-              className="object-cover object-center opacity-70"
+              className="object-cover object-center opacity-55 dark:opacity-70"
             />
-            <div className="absolute inset-0 bg-gradient-to-r from-[#080F18]/90 via-[#080F18]/50 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-br from-[rgba(255,209,220,0.5)] via-[rgba(232,213,245,0.35)] to-[rgba(200,245,228,0.35)] dark:hidden" />
+            <div className="absolute inset-0 bg-gradient-to-r from-background/85 via-background/45 to-transparent dark:from-[#080F18]/90 dark:via-[#080F18]/50" />
             <div className="absolute inset-0 flex flex-col justify-center px-6 sm:px-10">
               <span className="mb-2 inline-flex w-fit items-center gap-2 rounded-full border border-cyan-500/30 bg-cyan-500/10 px-4 py-1.5 text-xs font-medium text-cyan-400 tracking-wide uppercase">
                 <BookOpen className="h-3.5 w-3.5" />

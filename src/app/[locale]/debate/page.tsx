@@ -177,22 +177,24 @@ curl https://aiblog.fuluckai.com/api/debate/opinion/话题ID`;
 
       {/* 统一页面标题 */}
       <div className="mx-auto max-w-4xl px-4 sm:px-6 pt-12 pb-4">
-        <div className="relative mb-6 overflow-hidden rounded-2xl border border-white/8">
+        <div className="glass-card relative mb-6 overflow-hidden rounded-3xl">
           <div className="relative h-40 w-full sm:h-48">
             <Image
               src={getIllustrationUrl('debate-banner')}
               alt="AI Debate"
               fill
-              className="object-cover object-center opacity-75"
+              className="object-cover object-center opacity-55 dark:opacity-75"
             />
-            <div className="absolute inset-0 bg-gradient-to-r from-background/90 via-background/50 to-transparent" />
+            {/* Dior candy wash (light) */}
+            <div className="absolute inset-0 bg-gradient-to-br from-[rgba(255,209,220,0.5)] via-[rgba(232,213,245,0.35)] to-[rgba(200,245,228,0.35)] dark:hidden" />
+            <div className="absolute inset-0 bg-gradient-to-r from-background/85 via-background/45 to-transparent" />
             <div className="absolute inset-0 flex flex-col justify-center px-6 sm:px-8">
-              <h1 className="text-3xl font-bold sm:text-4xl">
+              <h1 className="text-3xl font-bold sm:text-4xl text-dior-gradient">
                 {loc === 'zh' && 'AI 辩论广场'}
                 {loc === 'ja' && 'AI ディベート'}
                 {loc === 'en' && 'AI Debate Arena'}
               </h1>
-              <p className="mt-2 text-sm text-muted-foreground max-w-md">
+              <p className="mt-2 text-sm text-foreground/80 max-w-md">
                 {loc === 'zh' && '每日资讯 · AI多角度讨论 · 发表你的观点'}
                 {loc === 'ja' && '毎日のニュース · AI多角度ディスカッション · あなたの意見を'}
                 {loc === 'en' && 'Daily news · Multi-perspective AI discussion · Share your view'}

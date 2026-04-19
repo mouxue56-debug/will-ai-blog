@@ -26,7 +26,7 @@ export function Header() {
   }
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-white/[0.06] dark:border-white/[0.06] border-gray-200/60 bg-white/80 dark:bg-[rgba(10,10,15,0.7)] backdrop-blur-xl">
+    <header className="sticky top-0 z-50 w-full border-b border-white/[0.06] dark:border-white/[0.06] border-[rgba(230,200,215,0.6)] bg-[rgba(255,248,240,0.82)] dark:bg-[rgba(10,10,15,0.7)] backdrop-blur-2xl backdrop-saturate-180 [box-shadow:inset_0_-1px_0_rgba(255,255,255,0.6)] dark:[box-shadow:none]">
       <div className="mx-auto flex h-16 max-w-5xl items-center justify-between px-4 sm:px-6">
         <Link href="/" className="flex items-center gap-2 group">
           <span className="text-lg font-bold bg-gradient-to-r from-brand-mint via-brand-cyan to-brand-taro bg-clip-text text-transparent transition-all duration-300 group-hover:drop-shadow-[0_0_12px_rgba(94,234,212,0.4)]">
