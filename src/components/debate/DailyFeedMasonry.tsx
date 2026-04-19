@@ -14,6 +14,8 @@ interface NewsItem {
   source: string;
 }
 
+type TopicType = 'ai' | 'economy' | 'github' | 'social' | 'japan_cn' | 'politics';
+
 interface DailyTopic {
   id: string;
   title: string;
@@ -24,7 +26,7 @@ interface DailyTopic {
   content_zh?: string;
   content_ja?: string;
   content_en?: string;
-  topic_type: 'ai' | 'economy' | 'github';
+  topic_type: TopicType;
   slug: string;
   author_emoji: string;
   published_at: string;
@@ -38,7 +40,7 @@ interface DailyFeedMasonryProps {
   topics: DailyTopic[];
 }
 
-const typeMeta: Record<string, { emoji: string; tint: string; textColor: string; label: { zh: string; ja: string; en: string } }> = {
+const typeMeta: Record<TopicType, { emoji: string; tint: string; textColor: string; label: { zh: string; ja: string; en: string } }> = {
   ai: {
     emoji: '🧠',
     tint: 'linear-gradient(135deg, rgba(180,142,224,0.42), rgba(120,100,200,0.20))',
@@ -56,6 +58,24 @@ const typeMeta: Record<string, { emoji: string; tint: string; textColor: string;
     tint: 'linear-gradient(135deg, rgba(255,123,156,0.42), rgba(255,203,69,0.28))',
     textColor: 'hsl(338 60% 28%)',
     label: { zh: 'GitHub 热榜', ja: 'GitHub', en: 'GitHub Trending' },
+  },
+  social: {
+    emoji: '📊',
+    tint: 'linear-gradient(135deg, rgba(255,203,69,0.40), rgba(255,123,156,0.22))',
+    textColor: 'hsl(33 80% 28%)',
+    label: { zh: '社交数据', ja: 'SNS指標', en: 'Social Pulse' },
+  },
+  japan_cn: {
+    emoji: '🗾',
+    tint: 'linear-gradient(135deg, rgba(255,165,190,0.40), rgba(180,142,224,0.22))',
+    textColor: 'hsl(338 70% 30%)',
+    label: { zh: '在日华人', ja: '在日中国人', en: 'Japan CN Life' },
+  },
+  politics: {
+    emoji: '🌏',
+    tint: 'linear-gradient(135deg, rgba(92,201,167,0.40), rgba(180,142,224,0.22))',
+    textColor: 'hsl(200 60% 25%)',
+    label: { zh: '时事政经', ja: '時事経済', en: 'Geopolitics' },
   },
 };
 
