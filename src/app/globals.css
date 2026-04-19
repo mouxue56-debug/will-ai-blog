@@ -154,6 +154,10 @@
   --radius-2xl: calc(var(--radius) * 1.8);
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
+  --color-dior-pink: hsl(var(--dior-pink));
+  --color-dior-mint: hsl(var(--dior-mint));
+  --color-dior-lav: hsl(var(--dior-lav));
+  --color-dior-yel: hsl(var(--dior-yel));
 }
 
 @layer base {

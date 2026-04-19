@@ -48,28 +48,33 @@ export default async function LearningPage({
   const learningPosts = allPosts.filter((post) => post.category === 'learning');
 
   return (
-    <main className="min-h-screen" style={{ background: '#080F18' }}>
+    <main className="min-h-screen bg-background">
       <style>{`
         @keyframes fadeInUp {
           from { opacity: 0; transform: translateY(20px); }
           to { opacity: 1; transform: translateY(0); }
         }
-        .animate-fade-in-up { animation: fadeInUp 0.6s ease forwards; }
-        .animate-fade-in-up-delay-1 { animation: fadeInUp 0.6s 0.1s ease both; }
-        .animate-fade-in-up-delay-2 { animation: fadeInUp 0.6s 0.2s ease both; }
-        .animate-fade-in-up-card-0 { animation: fadeInUp 0.5s 0.3s ease both; }
-        .animate-fade-in-up-card-1 { animation: fadeInUp 0.5s 0.4s ease both; }
-        .animate-fade-in-up-card-2 { animation: fadeInUp 0.5s 0.5s ease both; }
-        .animate-fade-in-up-card-3 { animation: fadeInUp 0.5s 0.6s ease both; }
-        .animate-fade-in-up-card-4 { animation: fadeInUp 0.5s 0.7s ease both; }
-        .animate-fade-in-up-card-5 { animation: fadeInUp 0.5s 0.8s ease both; }
-        .animate-fade-in-up-card-6 { animation: fadeInUp 0.5s 0.9s ease both; }
-        .animate-fade-in-up-card-7 { animation: fadeInUp 0.5s 1.0s ease both; }
-        .animate-fade-in-up-card-8 { animation: fadeInUp 0.5s 1.1s ease both; }
-        .animate-fade-in-up-card-9 { animation: fadeInUp 0.5s 1.2s ease both; }
         .k2w-card:hover {
           border-color: rgba(0,212,255,0.35) !important;
-          box-shadow: 0 0 24px rgba(0,212,255,0.08), 0 4px 20px rgba(0,0,0,0.4);
+          box-shadow: 0 0 24px rgba(0,212,255,0.08), 0 4px 20px rgba(0,0,0,0.24);
+        }
+        :root:not(.dark) .k2w-card:hover {
+          border-color: rgba(255,123,156,0.45) !important;
+          box-shadow: 0 0 20px rgba(255,123,156,0.12), 0 6px 22px rgba(180,100,150,0.18);
+        }
+        .learning-title {
+          background: linear-gradient(110deg, #FF7B9C 0%, #B48EE0 45%, #5CC9A7 85%);
+          -webkit-background-clip: text;
+          background-clip: text;
+          -webkit-text-fill-color: transparent;
+          color: transparent;
+        }
+        :root.dark .learning-title {
+          background: linear-gradient(135deg, #00D4FF 0%, #5EF0C8 50%, #00A8E8 100%);
+          -webkit-background-clip: text;
+          background-clip: text;
+          -webkit-text-fill-color: transparent;
+          color: transparent;
         }
       `}</style>
       {/* Hero Section */}
@@ -86,15 +91,14 @@ export default async function LearningPage({
             <div className="absolute inset-0 bg-gradient-to-br from-[rgba(255,209,220,0.5)] via-[rgba(232,213,245,0.35)] to-[rgba(200,245,228,0.35)] dark:hidden" />
             <div className="absolute inset-0 bg-gradient-to-r from-background/85 via-background/45 to-transparent dark:from-[#080F18]/90 dark:via-[#080F18]/50" />
             <div className="absolute inset-0 flex flex-col justify-center px-6 sm:px-10">
-              <span className="mb-2 inline-flex w-fit items-center gap-2 rounded-full border border-cyan-500/30 bg-cyan-500/10 px-4 py-1.5 text-xs font-medium text-cyan-400 tracking-wide uppercase">
+              <span className="mb-2 inline-flex w-fit items-center gap-2 rounded-full border border-dior-pink/30 bg-dior-pink/10 px-4 py-1.5 text-xs font-semibold tracking-wide uppercase text-foreground/80 dark:border-cyan-500/30 dark:bg-cyan-500/10 dark:text-cyan-400">
                 <BookOpen className="h-3.5 w-3.5" />
                 Learning Notes
               </span>
-              <h1 className="text-2xl sm:text-3xl font-bold"
-                style={{background:'linear-gradient(135deg,#00D4FF 0%,#5EF0C8 50%,#00A8E8 100%)',WebkitBackgroundClip:'text',WebkitTextFillColor:'transparent',backgroundClip:'text'}}>
+              <h1 className="learning-title text-2xl sm:text-3xl font-bold">
                 {t('title')}
               </h1>
-              <p className="mt-1 max-w-lg text-sm text-slate-400">{t('subtitle')}</p>
+              <p className="mt-1 max-w-lg text-sm text-muted-foreground dark:text-slate-400">{t('subtitle')}</p>
             </div>
           </div>
         </div>
@@ -109,8 +113,8 @@ export default async function LearningPage({
           {/* Stats bar */}
           {learningPosts.length > 0 && (
             <div className="mt-8 flex items-center justify-center gap-6">
-              <div className="flex items-center gap-1.5 text-sm text-slate-500">
-                <BookOpen className="h-4 w-4 text-cyan-500/70" />
+              <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
+                <BookOpen className="h-4 w-4 text-foreground/60" />
                 <span>
                   {learningPosts.length} 篇笔记
                 </span>
@@ -130,13 +134,10 @@ export default async function LearningPage({
       <section className="py-12">
         {learningPosts.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-24 text-center">
-            <div
-              className="mb-6 flex h-20 w-20 items-center justify-center rounded-full"
-              style={{ background: 'rgba(0,212,255,0.08)', border: '1px solid rgba(0,212,255,0.15)' }}
-            >
-              <BookOpen className="h-9 w-9 text-cyan-500/50" />
+            <div className="glass-card mb-6 flex h-20 w-20 items-center justify-center rounded-full">
+              <BookOpen className="h-9 w-9 text-foreground/40" />
             </div>
-            <p className="text-lg font-medium text-slate-400">{t('no_posts')}</p>
+            <p className="text-lg font-medium text-muted-foreground">{t('no_posts')}</p>
           </div>
         ) : (
           <LearningIndex

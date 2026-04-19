@@ -131,7 +131,7 @@ export function LearningIndex({
               className={`inline-flex items-center gap-2 rounded-full border px-4 py-1.5 text-sm font-semibold transition-all ${
                 isActive
                   ? 'text-white border-transparent'
-                  : 'border-white/10 bg-white/[0.04] text-slate-300 hover:bg-white/[0.08]'
+                  : 'glass-pill text-foreground/75 hover:text-foreground'
               }`}
               style={
                 isActive
@@ -143,7 +143,7 @@ export function LearningIndex({
               }
             >
               <span>{b.label[locale]}</span>
-              <span className={`text-[11px] ${isActive ? 'text-white/80' : 'text-slate-500'}`}>{count}</span>
+              <span className={`text-[11px] ${isActive ? 'text-white/80' : 'text-muted-foreground'}`}>{count}</span>
             </button>
           );
         })}
@@ -152,13 +152,10 @@ export function LearningIndex({
       {/* Post list */}
       {filtered.length === 0 ? (
         <div className="py-16 text-center">
-          <div
-            className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full"
-            style={{ background: 'rgba(0,212,255,0.08)', border: '1px solid rgba(0,212,255,0.15)' }}
-          >
-            <BookOpen className="h-7 w-7 text-cyan-500/50" />
+          <div className="glass-card mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full">
+            <BookOpen className="h-7 w-7 text-foreground/40" />
           </div>
-          <p className="text-sm text-slate-500">
+          <p className="text-sm text-muted-foreground">
             {locale === 'zh' ? '暂无该类笔记' : locale === 'ja' ? 'このカテゴリの記事はまだありません' : 'No posts in this bucket yet'}
           </p>
         </div>
@@ -169,29 +166,23 @@ export function LearningIndex({
             const excerpt = pickLocalized(post.excerpt, locale);
             return (
               <Link key={post.slug} href={`/blog/${post.slug}`} className="group block">
-                <article
-                  className="k2w-card relative rounded-2xl p-6 transition-all duration-300"
-                  style={{ background: '#0D1825', border: '1px solid rgba(0,212,255,0.12)' }}
-                >
+                <article className="k2w-card glass-card relative rounded-2xl p-6 transition-all duration-300">
                   <div
                     className="absolute inset-x-0 top-0 h-[1px] rounded-t-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                    style={{ background: 'linear-gradient(90deg, transparent, rgba(0,212,255,0.6), transparent)' }}
+                    style={{ background: 'linear-gradient(90deg, transparent, rgba(255,123,156,0.55), transparent)' }}
                   />
                   <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:gap-6">
-                    <div
-                      className="hidden sm:flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl"
-                      style={{ background: 'rgba(0,212,255,0.08)', border: '1px solid rgba(0,212,255,0.15)' }}
-                    >
-                      <BookOpen className="h-5 w-5 text-cyan-400" />
+                    <div className="hidden sm:flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-dior-pink/10 border border-dior-pink/25 dark:bg-cyan-500/10 dark:border-cyan-500/20">
+                      <BookOpen className="h-5 w-5 text-dior-pink dark:text-cyan-400" />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <h2 className="mb-2 text-lg font-semibold text-white group-hover:text-cyan-300 transition-colors duration-200 leading-snug">
+                      <h2 className="mb-2 text-lg font-semibold text-foreground group-hover:text-dior-pink dark:group-hover:text-cyan-300 transition-colors duration-200 leading-snug">
                         {title}
                       </h2>
                       {excerpt && (
-                        <p className="mb-3 text-sm text-slate-400 leading-relaxed line-clamp-2">{excerpt}</p>
+                        <p className="mb-3 text-sm text-muted-foreground leading-relaxed line-clamp-2">{excerpt}</p>
                       )}
-                      <div className="flex flex-wrap items-center gap-4 text-xs text-slate-500">
+                      <div className="flex flex-wrap items-center gap-4 text-xs text-muted-foreground">
                         {post.date && (
                           <span className="flex items-center gap-1">
                             <Calendar className="h-3 w-3" />
@@ -205,7 +196,7 @@ export function LearningIndex({
                         {post.tags.slice(0, 3).map((tag) => (
                           <span
                             key={tag}
-                            className="rounded-full border border-white/10 bg-white/[0.04] px-2 py-0.5 text-[10px] uppercase tracking-wider text-slate-400"
+                            className="rounded-full border border-border bg-secondary/50 px-2 py-0.5 text-[10px] uppercase tracking-wider text-muted-foreground"
                           >
                             {tag}
                           </span>
