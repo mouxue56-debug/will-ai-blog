@@ -27,9 +27,9 @@
 }
 
 :root {
-  /* Warm cream background (fuluckpet 基准) */
-  --background: 42 100% 97%;    /* #FFFCF0 bg-cream */
-  --foreground: 180 14% 35%;    /* #5A7A7A text-heading (带绿调灰) */
+  /* Dior 奶油糖果白 (light) */
+  --background: 36 100% 97%;    /* #FFF8F0 dior-cream */
+  --foreground: 22 27% 19%;     /* #3D2C24 warm-brown (dior-t1) */
   --card: 0 0% 100%;
   --card-foreground: 180 8% 38%; /* #5A6A6A text-body */
   --popover: 0 0% 100%;
@@ -242,7 +242,7 @@
   color: transparent;
 }
 
-/* ── Dynamic ambient background (dark mode) ─────────────── */
+/* ── Liquid Glass ambient halo (neutral: 淡蓝 + 浅紫) ───── */
 body::before {
   content: '';
   position: fixed;
@@ -250,44 +250,136 @@ body::before {
   z-index: -1;
   pointer-events: none;
   background:
-    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(94, 234, 212, 0.08), transparent),
-    radial-gradient(ellipse 60% 40% at 80% 50%, rgba(56, 189, 248, 0.05), transparent),
-    radial-gradient(ellipse 60% 40% at 20% 80%, rgba(192, 132, 252, 0.05), transparent);
+    radial-gradient(ellipse 70% 45% at 15% 10%, rgba(150, 180, 220, 0.14), transparent 60%),
+    radial-gradient(ellipse 60% 40% at 85% 20%, rgba(180, 160, 220, 0.12), transparent 60%),
+    radial-gradient(ellipse 70% 50% at 50% 95%, rgba(160, 170, 210, 0.10), transparent 60%);
   opacity: 1;
   transition: opacity 0.5s ease;
 }
 
-/* Light mode: hide the ambient gradients */
+/* Light mode: Dior 糖果冰淇淋 halo (pink-l / mint-l / lav-l) */
 :root:not(.dark) body::before {
-  opacity: 0;
+  background:
+    radial-gradient(ellipse 70% 45% at 12% 8%, rgba(255, 209, 220, 0.55), transparent 60%),
+    radial-gradient(ellipse 60% 40% at 88% 22%, rgba(232, 213, 245, 0.48), transparent 60%),
+    radial-gradient(ellipse 60% 40% at 50% 105%, rgba(200, 245, 228, 0.42), transparent 60%),
+    radial-gradient(ellipse 40% 25% at 95% 70%, rgba(255, 240, 196, 0.35), transparent 60%);
+  opacity: 0.95;
 }
 
-/* ── Glass card utility ─────────────────────────────────── */
+/* ── Liquid Glass card utility (dark: 深邃玻璃 / light: 冰面白雾) ── */
 .glass-card {
-  background: rgba(255, 255, 255, 0.03);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: 16px;
-  transition: border-color 0.3s ease, background 0.3s ease;
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(22px) saturate(160%);
+  -webkit-backdrop-filter: blur(22px) saturate(160%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 18px;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    inset 0 0 0 0.5px rgba(255, 255, 255, 0.04),
+    0 8px 28px rgba(8, 12, 24, 0.28);
+  transition: border-color 0.3s ease, background 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
 }
 
 .glass-card:hover {
-  border-color: rgba(255, 255, 255, 0.12);
-  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.06);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    inset 0 0 0 0.5px rgba(255, 255, 255, 0.05),
+    0 14px 40px rgba(8, 12, 24, 0.36);
 }
 
-/* Light mode glass card */
+/* Light mode — Dior 糖果玻璃 (奶油半透 + 粉/薰衣草色调描边) */
 :root:not(.dark) .glass-card {
-  background: rgba(255, 255, 255, 0.8);
-  border: 1px solid #e5e5e5;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
+  background: rgba(255, 255, 255, 0.68);
+  backdrop-filter: blur(24px) saturate(170%);
+  -webkit-backdrop-filter: blur(24px) saturate(170%);
+  border: 1px solid rgba(240, 230, 246, 0.85);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.95),
+    inset 0 0 0 0.5px rgba(255, 255, 255, 0.4),
+    0 2px 6px rgba(180, 142, 224, 0.06),
+    0 10px 28px rgba(255, 123, 156, 0.08);
 }
 
 :root:not(.dark) .glass-card:hover {
-  background: rgba(255, 255, 255, 0.95);
-  border-color: #d4d4d4;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  background: rgba(255, 255, 255, 0.85);
+  border-color: rgba(255, 209, 220, 0.9);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 1),
+    inset 0 0 0 0.5px rgba(255, 255, 255, 0.55),
+    0 4px 10px rgba(180, 142, 224, 0.09),
+    0 16px 40px rgba(255, 123, 156, 0.14);
+}
+
+/* ── Liquid Glass pill (chip / button / tab) ─────────────── */
+.glass-pill {
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(18px) saturate(160%);
+  -webkit-backdrop-filter: blur(18px) saturate(160%);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  border-radius: 9999px;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.10),
+    0 2px 8px rgba(8, 12, 24, 0.18);
+  transition: all 0.25s ease;
+}
+.glass-pill:hover {
+  background: rgba(255, 255, 255, 0.10);
+  border-color: rgba(255, 255, 255, 0.16);
+}
+:root:not(.dark) .glass-pill {
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(240, 230, 246, 0.85);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.95),
+    0 1px 3px rgba(180, 142, 224, 0.07);
+}
+:root:not(.dark) .glass-pill:hover {
+  background: rgba(255, 255, 255, 0.9);
+  border-color: rgba(255, 209, 220, 0.9);
+}
+
+/* ── Liquid Glass nav bar (bottom / header) ──────────────── */
+.glass-nav {
+  background: rgba(10, 12, 20, 0.55);
+  backdrop-filter: blur(28px) saturate(180%);
+  -webkit-backdrop-filter: blur(28px) saturate(180%);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.35);
+}
+:root:not(.dark) .glass-nav {
+  background: rgba(255, 248, 240, 0.78);
+  border-top: 1px solid rgba(240, 230, 246, 0.85);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.95),
+    0 -2px 12px rgba(180, 142, 224, 0.06);
+}
+
+/* ── Liquid Glass orb (floating action button) ───────────── */
+.glass-orb {
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  background: radial-gradient(circle at 30% 25%,
+    rgba(180, 200, 230, 0.45),
+    rgba(180, 165, 210, 0.30) 60%,
+    rgba(140, 150, 180, 0.20));
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.35),
+    inset 0 -10px 30px rgba(100, 110, 150, 0.20),
+    0 10px 30px rgba(8, 12, 24, 0.40),
+    0 0 0 0.5px rgba(255, 255, 255, 0.10);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.glass-orb:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.45),
+    inset 0 -10px 30px rgba(100, 110, 150, 0.25),
+    0 14px 40px rgba(8, 12, 24, 0.50),
+    0 0 0 0.5px rgba(255, 255, 255, 0.15);
 }
 
 /* ── Glow underline for nav ─────────────────────────────── */

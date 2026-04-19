@@ -3,7 +3,7 @@ import { debates } from '@/data/debates';
 import { DebatePageClient } from '@/components/debate/DebatePageClient';
 import { getTodayDebateTopics } from '@/lib/debate-store';
 import { supabaseAdmin } from '@/lib/supabase';
-import { DailyTopicsAccordion } from '@/components/debate/DailyTopicsAccordion';
+import { DailyFeedMasonry } from '@/components/debate/DailyFeedMasonry';
 import { ParticipationGuide } from '@/components/debate/ParticipationGuide';
 import newsTranslations from '@/data/news-translations.json';
 import Image from 'next/image';
@@ -214,7 +214,7 @@ curl https://aiblog.fuluckai.com/api/debate/opinion/话题ID`;
         </span>
       </div>
 
-      <DailyTopicsAccordion topics={enrichedTopics} />
+      <DailyFeedMasonry topics={enrichedTopics} />
 
       {/* 分隔线 */}
       {/* debate_topics（凭空生成话题）已停用 — 只保留 daily_reports 真实资讯讨论 */}
