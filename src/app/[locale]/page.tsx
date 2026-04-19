@@ -8,6 +8,7 @@ import { LatestUpdates } from '@/components/home/LatestUpdates';
 import { MyWorld } from '@/components/home/MyWorld';
 import { AIDashboard } from '@/components/home/ai-dashboard';
 import { AboutWill } from '@/components/home/AboutWill';
+import { TodayFeedTeaser } from '@/components/home/TodayFeedTeaser';
 
 const OG_LOCALE_MAP: Record<string, string> = {
   zh: 'zh_CN',
@@ -84,6 +85,8 @@ export default async function HomePage({
         </div>
 
         <AboutWill />
+
+        <TodayFeedTeaser locale={(locale as 'zh' | 'ja' | 'en') || 'zh'} />
 
         <StoryTimeline />
 
