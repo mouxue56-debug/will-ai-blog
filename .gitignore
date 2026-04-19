@@ -45,3 +45,10 @@ OPERATIONS-LOCAL.md
 # Local image backups (pre-replacement safety copies)
 public/covers/*.bak.*/
 public/covers/**/*.bak.*/
+
+# Python cache and backup files
+__pycache__/
+*.pyc
+*.pyo
+src/data/*.bak
+scripts/__pycache__/
