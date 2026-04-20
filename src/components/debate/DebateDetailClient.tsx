@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import Link from 'next/link';
 import { marked } from 'marked';
 import { PageTransition } from '@/components/shared/PageTransition';
-import { ArrowLeft, MessageSquare, Send, Reply, ChevronDown, ChevronUp, Bot, User } from 'lucide-react';
+import { ArrowLeft, MessageSquare, Send, Reply, ChevronDown, ChevronUp, Bot, User, BookOpen, Clock } from 'lucide-react';
 import type { DebateLocale, DebateStance, DebateTopic } from '@/lib/debate-store';
 import type { AIOpinion } from '@/data/debates';
 
@@ -296,6 +296,13 @@ export function DebateDetailClient({
     return marked.parse(raw) as string;
   }, [topic.body, locale]);
 
+  // Reading time estimate (avg 400 chars/min for Chinese)
+  const readingMins = useMemo(() => {
+    const raw = topic.body?.[locale] || topic.body?.zh || '';
+    if (!raw) return 0;
+    return Math.max(1, Math.round(raw.length / 400));
+  }, [topic.body, locale]);
+
   // Flat list (no nesting yet) — includes static + dynamic
   const [flatOpinions, setFlatOpinions] = useState<Opinion[]>(() =>
     initialOpinions.map((op, i) => fromAIOpinion(op, i, topic.date)),
@@ -549,16 +556,30 @@ export function DebateDetailClient({
             transition={{ delay: 0.1 }}
             className="mb-8"
           >
-            <div
-              className="glass-card px-6 py-5 prose prose-sm dark:prose-invert max-w-none
-                prose-headings:font-semibold prose-headings:text-foreground
-                prose-p:text-muted-foreground prose-p:leading-relaxed
-                prose-a:text-brand-mint prose-a:no-underline hover:prose-a:underline
-                prose-li:text-muted-foreground prose-strong:text-foreground
-                prose-code:text-brand-mint prose-code:bg-white/5 prose-code:px-1 prose-code:rounded
-                prose-blockquote:border-brand-mint/40 prose-blockquote:text-muted-foreground"
-              dangerouslySetInnerHTML={{ __html: bodyHtml }}
-            />
+            <div className="glass-card overflow-hidden">
+              {/* Article card header */}
+              <div className="flex items-center justify-between px-5 py-3 border-b border-white/8 bg-brand-mint/5">
+                <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-brand-mint">
+                  <BookOpen className="w-3.5 h-3.5" />
+                  {locale === 'zh' ? '新闻正文' : locale === 'ja' ? 'ニュース本文' : 'Article'}
+                </span>
+                {readingMins > 0 && (
+                  <span className="inline-flex items-center gap-1 text-[11px] text-muted-foreground">
+                    <Clock className="w-3 h-3" />
+                    {locale === 'zh'
+                      ? `约 ${readingMins} 分钟`
+                      : locale === 'ja'
+                      ? `約${readingMins}分`
+                      : `~${readingMins} min`}
+                  </span>
+                )}
+              </div>
+              {/* Article body */}
+              <div
+                className="px-6 py-6 news-article"
+                dangerouslySetInnerHTML={{ __html: bodyHtml }}
+              />
+            </div>
           </motion.div>
         )}
 

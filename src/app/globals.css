@@ -639,6 +639,170 @@ body::before {
   }
 }
 
+/* ── News Article Reading Experience ────────────────── */
+
+/*
+  .news-article — applied to the debate detail body container.
+  Replaces prose-sm with a proper magazine-style reading layout.
+  Dark/light modes handled via .dark class on <html>.
+*/
+
+.news-article {
+  font-size: 1rem;
+  line-height: 1.85;
+  color: hsl(var(--foreground) / 0.88);
+}
+
+/* ── Date badge: *2026-04-15* renders as <em> inside <p> ── */
+.news-article p > em:only-child,
+.news-article p:has(> em:only-child) em {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.72rem;
+  font-style: normal;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  padding: 0.18em 0.7em;
+  border-radius: 99px;
+  background: color-mix(in srgb, #7DD3C0 18%, transparent);
+  color: #5BC4A8;
+  border: 1px solid color-mix(in srgb, #7DD3C0 30%, transparent);
+  margin-bottom: 0.25rem;
+}
+
+/* ── H1: hide duplicate title (already shown in page header) ── */
+.news-article h1 {
+  display: none;
+}
+
+/* ── H2: section headers with mint accent strip ── */
+.news-article h2 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  line-height: 1.4;
+  color: hsl(var(--foreground));
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+  padding: 0.55rem 0.9rem 0.55rem 1rem;
+  background: color-mix(in srgb, #7DD3C0 10%, transparent);
+  border-left: 3px solid #7DD3C0;
+  border-radius: 0 8px 8px 0;
+}
+
+/* Highlight Chinese section numbers (一、二、三…) */
+.news-article h2::first-letter {
+  color: #7DD3C0;
+}
+
+/* ── H3: sub-section labels ── */
+.news-article h3 {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: hsl(var(--foreground));
+  margin-top: 1.2rem;
+  margin-bottom: 0.4rem;
+}
+
+/* ── Paragraphs ── */
+.news-article p {
+  color: hsl(var(--muted-foreground));
+  margin-bottom: 0.85rem;
+}
+
+/* ── Bold: key terms and subheadings ── */
+.news-article strong {
+  color: hsl(var(--foreground));
+  font-weight: 600;
+}
+
+/* ── HR: gradient section separator ── */
+.news-article hr {
+  border: none;
+  height: 1px;
+  margin: 1.75rem 0;
+  background: linear-gradient(
+    to right,
+    transparent,
+    color-mix(in srgb, #7DD3C0 50%, transparent) 40%,
+    color-mix(in srgb, #7DD3C0 50%, transparent) 60%,
+    transparent
+  );
+}
+
+/* ── Lists ── */
+.news-article ul,
+.news-article ol {
+  padding-left: 1.4rem;
+  margin-bottom: 0.85rem;
+}
+
+.news-article li {
+  color: hsl(var(--muted-foreground));
+  margin-bottom: 0.3rem;
+  padding-left: 0.2rem;
+}
+
+.news-article ul > li::marker {
+  color: #7DD3C0;
+}
+
+.news-article ol > li::marker {
+  color: #7DD3C0;
+  font-weight: 600;
+}
+
+/* ── Links ── */
+.news-article a {
+  color: #7DD3C0;
+  text-decoration: none;
+  border-bottom: 1px solid color-mix(in srgb, #7DD3C0 35%, transparent);
+  transition: border-color 0.15s;
+}
+
+.news-article a:hover {
+  border-bottom-color: #7DD3C0;
+}
+
+/* Bare GitHub/http URLs on their own line */
+.news-article p > a:only-child {
+  font-size: 0.8rem;
+  opacity: 0.7;
+}
+
+/* ── Blockquote ── */
+.news-article blockquote {
+  border-left: 3px solid color-mix(in srgb, #7DD3C0 50%, transparent);
+  padding: 0.5rem 1rem;
+  margin: 1rem 0;
+  background: color-mix(in srgb, #7DD3C0 6%, transparent);
+  border-radius: 0 8px 8px 0;
+  color: hsl(var(--muted-foreground));
+  font-style: italic;
+}
+
+/* ── Inline code ── */
+.news-article code {
+  font-size: 0.82em;
+  padding: 0.15em 0.45em;
+  border-radius: 5px;
+  background: rgba(255, 255, 255, 0.06);
+  color: #7DD3C0;
+}
+
+.dark .news-article code {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* ── Key stat / callout (bold-only paragraph) ── */
+.news-article p:has(> strong:first-child:last-child) {
+  font-size: 0.9rem;
+  padding: 0.45rem 0.85rem;
+  background: color-mix(in srgb, #7DD3C0 8%, transparent);
+  border-radius: 8px;
+  margin-bottom: 0.75rem;
+}
+
 /* ── Node glow effect for AI network ────────────────── */
 @keyframes node-glow {
   0%, 100% { filter: drop-shadow(0 0 4px var(--glow-color, rgba(94,234,212,0.4))); }
