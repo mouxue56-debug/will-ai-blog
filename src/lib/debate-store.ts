@@ -11,6 +11,7 @@ export interface DebateTopic {
   session: DebateSession;
   title: Record<DebateLocale, string>;
   newsSource: string;
+  newsDate?: string;
   tags: string[];
   createdAt?: string;
 }

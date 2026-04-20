@@ -515,6 +515,9 @@ export function DebateDetailClient({
 
           <div className="glass-card px-4 py-3 text-sm text-muted-foreground italic">
             📰 {t('news_trigger')}: {topic.newsSource}
+            {topic.newsDate && (
+              <span className="ml-2 text-xs opacity-60">({topic.newsDate})</span>
+            )}
           </div>
 
           {/* News Items with translations */}

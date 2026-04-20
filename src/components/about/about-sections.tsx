@@ -17,7 +17,7 @@ import type { LucideIcon } from 'lucide-react';
 import { BorderBeam } from '@/components/ui/aceternity';
 import { PublicCalendar } from '@/components/shared/PublicCalendar';
 import Image from 'next/image';
-import { getIllustrationUrl } from '@/lib/storage';
+import { getIllustrationUrl, getAvatarUrl } from '@/lib/storage';
 
 /* ── Hero / Profile ──────────────────────────────────── */
 
@@ -63,13 +63,14 @@ interface AIAgent {
   bgColor: string;
   beamFrom: string;
   beamTo: string;
+  avatarFile?: string;
 }
 
 const agents: AIAgent[] = [
-  { key: 'yuki', nicknameKey: 'agent_yuki_nickname', roleKey: 'agent_yuki_role', model: 'Claude', color: 'text-brand-mint', bgColor: 'bg-brand-mint/10', beamFrom: '#5eead4', beamTo: '#38bdf8' },
-  { key: 'natsu', nicknameKey: 'agent_natsu_nickname', roleKey: 'agent_natsu_role', model: 'Kimi', color: 'text-brand-coral', bgColor: 'bg-brand-coral/10', beamFrom: '#fbbf24', beamTo: '#f97316' },
-  { key: 'haru', roleKey: 'agent_haru_role', model: 'DeepSeek', color: 'text-brand-cyan', bgColor: 'bg-brand-cyan/10', beamFrom: '#38bdf8', beamTo: '#818cf8' },
-  { key: 'aki', roleKey: 'agent_aki_role', model: 'Qwen', color: 'text-brand-taro', bgColor: 'bg-brand-taro/10', beamFrom: '#c084fc', beamTo: '#e879f9' },
+  { key: 'yuki', nicknameKey: 'agent_yuki_nickname', roleKey: 'agent_yuki_role', model: 'Claude', color: 'text-brand-mint', bgColor: 'bg-brand-mint/10', beamFrom: '#5eead4', beamTo: '#38bdf8', avatarFile: 'yuki' },
+  { key: 'natsu', nicknameKey: 'agent_natsu_nickname', roleKey: 'agent_natsu_role', model: 'Kimi', color: 'text-brand-coral', bgColor: 'bg-brand-coral/10', beamFrom: '#fbbf24', beamTo: '#f97316', avatarFile: 'natu' },
+  { key: 'haru', roleKey: 'agent_haru_role', model: 'DeepSeek', color: 'text-brand-cyan', bgColor: 'bg-brand-cyan/10', beamFrom: '#38bdf8', beamTo: '#818cf8', avatarFile: 'haru' },
+  { key: 'aki', roleKey: 'agent_aki_role', model: 'Qwen', color: 'text-brand-taro', bgColor: 'bg-brand-taro/10', beamFrom: '#c084fc', beamTo: '#e879f9', avatarFile: 'aki' },
 ];
 
 function AITeamSection() {
@@ -116,6 +117,17 @@ function AITeamSection() {
                 duration={8 + i * 2}
                 delay={i * 0.5}
               />
+              {agent.avatarFile && (
+                <div className="w-16 h-20 rounded-xl overflow-hidden ring-1 ring-white/10">
+                  <Image
+                    src={getAvatarUrl(agent.avatarFile)}
+                    alt={agent.key}
+                    width={64}
+                    height={80}
+                    className="w-full h-full object-cover object-top"
+                  />
+                </div>
+              )}
               <div className={`text-2xl sm:text-3xl font-bold ${agent.color}`}>{t(`agent_names.${agent.key}`)}</div>
               {agent.nicknameKey ? (
                 <div className="text-xs text-muted-foreground">{t(agent.nicknameKey)}</div>
