@@ -1,0 +1,255 @@
+---
+slug: six-ai-instances-shared-brain
+title:
+  zh: "我给 6 个 AI 实例造了一个共享大脑"
+  ja: "6 つの AI インスタンスに共有大腦を作った"
+  en: "I Built a Shared Brain for 6 AI Instances"
+category: "learning"
+date: "2026-04-20"
+author: Will
+readingTime: 15
+excerpt:
+  zh: 六个 AI 实例、跨三台 Mac、共享同一本 Obsidian 笔记。每晚自动同步、自愈、归档，永不忘事。完整架构 + 实现细节。
+  ja: 6 つの AI インスタンス、3 台の Mac、1 つの Obsidian ノートを共有。毎晩自動同期・自己修復・アーカイブ。完全なアーキテクチャと実装詳細。
+  en: Six AI instances, three Macs, one shared Obsidian vault. Auto-sync, self-heal, and archive every night. Complete architecture and implementation details.
+coverImage: /covers/openclaw/six-ai-shared-brain.jpg
+tags: ["OpenClaw", "AI Agent", "记忆系统", "多实例协作", "Obsidian", "clawmem"]
+---
+
+# 我给 6 个 AI 实例造了一个共享大脑
+
+> 六个 AI，跨三台 Mac，共享同一本笔记，每晚自愈自整理，永不忘事。
+
+过去半年我同时养了 6 个 AI 实例：4 个 OpenClaw agent（seasonal name：春/夏/秋/冬）、1 个 Hermes、1 个 Claude Code CLI。它们每一个都有自己的"性格"、自己的技能栈、自己在做不同的项目。但很快问题来了：
+
+- 昨天在 A 实例解决的 bug，今天 B 实例完全不知道
+- 每个 AI 都在自己的 MEMORY.md 里写各种铁律，但没有共享
+- 想让某个 agent "去问问别的 agent 知道不知道" → 没机制
+- 重要决策分散在 6 套日志里，找不到
+
+今天我给它们**建了共享大脑**。这篇写完整架构 + 实现细节。
+
+---
+
+## Part 1：生态背景
+
+先介绍玩具。不知道这 3 个平台的可以先认识下。
+
+### OpenClaw
+一个**多智能体编排平台**（国内团队开发）。你可以同时运行几十个 AI agent 实例，每个 agent 有：
+- 独立 workspace 目录
+- 独立 MEMORY.md / SOUL.md（人格 + 经验）
+- 独立的 skill / tool / MCP 配置
+- 可以通过 WebSocket gateway 互相调用
+
+我用它跑 4 个 agent 实例：`yuki / natsu / haru / aki`（日语四季），分布在：
+- 自宅 M4 Mac mini（yuki + natsu 同机 loopback）
+- LAN M2 Mac mini（haru）
+- 移动 MacBook Pro（aki，Tailscale）
+
+### Hermes
+一个**CLI-based 通用 AI 助手**，走 YAML config，支持 MCP servers 原生接入。我用它当"主脑"做日常 coding / 内容生成，配了 MiniMax M2.7 / Kimi / Nous 等多 provider fallback。
+
+### Claude Code CLI
+Anthropic 官方 CLI，支持 MCP、Skills、Plugins、hooks。我用一个"claudet" wrapper 启动，自动加载 Telegram channel plugin 让我能用手机遥控。
+
+这三套是**完全独立的系统**，各自的 config、各自的 memory、各自的工作流。
+
+---
+
+## Part 2：问题 — 记忆孤岛
+
+每个 AI 实例都把记忆写在自己机器的自己目录下：
+
+```
+yuki M4:   ~/.openclaw/workspace/memory/MEMORY.md
+natsu M4:  ~/.openclaw/workspace-natsu/memory/MEMORY.md
+haru M2:   ~/.openclaw/workspace/memory/MEMORY.md
+aki MBP:   ~/.openclaw/workspace/memory/MEMORY.md
+Hermes:    ~/.hermes/profiles/<name>/memory/
+Claude:    ~/.claude/projects/<cwd>/memory/MEMORY.md
+```
+
+6 份不同的记忆。要想"某个 agent 知道的事另一个也知道"，我得**手动复制粘贴**。而且：
+
+- 知识会过时：三周前的 API key 已经轮换了，但某个 agent 还在用
+- 发现重复：同一个决策在 3 个 agent 的 memory 里各记一份，表述还不一样
+- 搜索失灵：我知道某个项目讨论过，但是哪个 agent 讨论的？找遍 6 处
+
+**共享大脑的设计目标**：
+
+1. **SSoT（单一事实源）**：一份 markdown 笔记库，6 实例共读共写
+2. **语义搜索**：不光 grep，能"找关于 X 主题的讨论"
+3. **自愈机制**：记忆旧了自动归档，重复的自动合并
+4. **不同步二进制索引**：每台机自己建 vector 索引（rsync binary 坑太多）
+5. **冲突可控**：多实例同时写 vault 时有明确的仲裁策略
+
+---
+
+## Part 3：架构总览
+
+```
+                          ┌──────────────────────┐
+                          │   Obsidian Vault     │
+                          │   ~/Documents/kb/    │
+                          │   (~1800 .md files)  │
+                          │   ← Single Source of Truth
+                          └──────────┬───────────┘
+                                     │
+                          git bare repo + rsync
+                                     │
+        ┌──────────┬──────────┬─────┴─────┬──────────┐
+        ▼          ▼          ▼           ▼          ▼
+    ┌────────┐ ┌────────┐ ┌────────┐ ┌────────┐ ┌────────┐
+    │ Yuki   │ │ Natsu  │ │ Haru   │ │ Aki    │ │ Hermes │
+    │(M4)    │ │(M4)    │ │(M2 LAN)│ │(MBP TS)│ │(M4)    │
+    └────┬───┘ └────┬───┘ └────┬───┘ └────┬───┘ └────┬───┘
+         │          │          │          │          │
+         └──────────┴──────────┼──────────┴──────────┘
+                               │
+                    ┌──────────┴───────────┐
+                    ▼                      ▼
+              clawmem MCP           LanceDB
+              (语义搜索)            (vector store)
+```
+
+核心组件：
+
+| 组件 | 作用 |
+|------|------|
+| Obsidian Vault | 单一事实源，1800+ markdown 文件 |
+| git bare repo | vault 的版本控制 + 冲突解决 |
+| rsync | 每晚 03:00 同步 vault 到各实例 |
+| clawmem MCP | 语义搜索接口（keyword + hybrid） |
+| LanceDB | 本地 vector store（每台机自建） |
+
+---
+
+## Part 4：实现细节
+
+### 4.1 Vault 结构
+
+```
+~/Documents/kb/
+├── 01-Inbox/           # 临时笔记，待整理
+├── 02-AI 技术/          # AI 相关学习笔记
+├── 03-OpenClaw/         # OpenClaw 配置/skill
+├── 04-猫舎经营/         # 福楽キャッテリー业务
+├── 05-医院项目/         # 慈恵医院 CRM
+├── 06-学习笔记/         # 通用学习记录
+├── MEMORY.md           # 核心记忆索引（所有 agent 共读）
+└── daily/              # 每日笔记（按日期归档）
+```
+
+### 4.2 同步机制
+
+**Dream Cycle（03:00 定时任务）**：
+```bash
+# ユキ (权威源) → rsync → ナツ/ハル/アキ
+rsync -av --delete ~/Documents/kb/ user@host:~/Documents/kb/
+# 各实例自建 LanceDB 索引（不同步 binary）
+```
+
+**冲突解决**：
+- git merge 策略：`-X ours`（ユキ的版本优先）
+- 每天 03:00 同步，避免多实例同时写
+
+### 4.3 clawmem MCP 接口
+
+```typescript
+// clawmem MCP server 提供三个接口
+clawmem_search(query, mode="hybrid", limit=10)
+clawmem_get(docid)  // 6 字符 hex 前缀
+clawmem_similar(docid, limit=5)
+```
+
+**mode 选项**：
+- `keyword`: 传统关键词搜索
+- `semantic`: 向量语义搜索
+- `hybrid`: 混合模式（默认）
+
+### 4.4 LanceDB 索引
+
+每台机器自己建索引，不同步 binary 文件：
+
+```python
+# 每晚同步后自动重建
+lancedb.connect("~/Documents/kb/.lancedb")
+# 只存 text embedding，不存原始内容
+```
+
+---
+
+## Part 5：实际使用场景
+
+### 场景 1：跨实例查询
+```
+Will: "之前讨论的 MiniMax TTS 配置是什么？"
+ナツ：clawmem_search("MiniMax TTS 配置")
+→ 返回 3 个结果（来自ユキ的 2026-03-24 daily note）
+```
+
+### 场景 2：知识沉淀
+```
+完成复杂任务后 → 写入 daily note → 03:00 同步到 vault
+→ 所有实例第二天都能看到
+```
+
+### 场景 3：避免重复踩坑
+```
+ハル：遇到 NocoBase 配置问题
+→ clawmem_search("NocoBase 配置")
+→ 发现ユキ两周前已经解决过，直接复制方案
+```
+
+---
+
+## Part 6：踩坑记录
+
+### 坑 1：rsync 同步 binary 文件
+LanceDB 的 `.lance` 文件是 binary 格式，跨机器 rsync 会损坏。
+**解决**：每台机自建索引，只同步 markdown 源文件。
+
+### 坑 2：git 冲突
+多实例同时写 MEMORY.md 会冲突。
+**解决**：
+- 固定 ユキ 为权威源（`-X ours`）
+- 03:00 定时同步，避免并发写
+
+### 坑 3：语义搜索不准
+初期只用 vector search，召回率低。
+**解决**：改用 hybrid 模式（keyword + vector），召回率提升到 92%。
+
+---
+
+## Part 7：效果对比
+
+| 指标 | 之前（6 孤岛） | 现在（共享大脑） |
+|------|---------------|-----------------|
+| 知识查找时间 | 5-10 分钟（翻 6 处） | 30 秒（clawmem_search） |
+| 重复记录 | 高频（同一事记 3 份） | 几乎为零 |
+| 过时信息 | 常见（忘了更新） | 自动归档 + 版本控制 |
+| 跨实例协作 | 手动复制粘贴 | 自动同步 |
+
+---
+
+## 总结
+
+**核心收益**：
+1. **单一事实源**：不再纠结"哪个版本是对的"
+2. **语义搜索**：30 秒找到任何历史讨论
+3. **自愈机制**：旧知识自动归档，新自动整理
+4. **可扩展**：以后加第 7/8 个 agent，直接接入 vault 即可
+
+**成本**：
+- 每晚 03:00 同步（rsync + git，约 2 分钟）
+- 每台机建 LanceDB 索引（约 5 分钟）
+- 约 1GB 额外存储（vector embeddings）
+
+**开源计划**：
+clawmem MCP server 和 Dream Cycle 脚本准备开源，等我把文档整理好。
+
+---
+
+*Last updated: 2026-04-20*
+*作者：Will（羅方遠）*
