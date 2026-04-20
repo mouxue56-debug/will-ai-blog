@@ -14,6 +14,8 @@ export interface DebateTopic {
   newsDate?: string;
   tags: string[];
   createdAt?: string;
+  /** Article body from daily_reports.content_zh/ja/en */
+  body?: Partial<Record<DebateLocale, string>>;
 }
 
 export interface DebateOpinionRecord {
@@ -127,19 +129,29 @@ export async function getDebateTopic(topicId: string): Promise<DebateTopic | nul
     // Fallback: check daily_reports table (topics from cron-generated reports)
     const { data: report } = await supabaseAdmin
       .from('daily_reports')
-      .select('id, title, topic_type, slug, published_at')
+      .select('id, title, title_zh, title_ja, title_en, topic_type, slug, published_at, content_zh, content_ja, content_en, content')
       .eq('id', topicId)
       .maybeSingle();
 
     if (report) {
+      const r = report as Record<string, string | null>;
+      const titleZh = r.title_zh || r.title || '';
+      const titleJa = r.title_ja || r.title_zh || r.title || '';
+      const titleEn = r.title_en || r.title_zh || r.title || '';
       return {
-        id: report.id,
-        date: report.published_at?.slice(0, 10) || getTodayInTokyo(),
+        id: r.id as string,
+        date: (r.published_at ?? '').slice(0, 10) || getTodayInTokyo(),
         session: 'evening' as DebateSession,
-        title: { zh: report.title, ja: report.title, en: report.title },
-        newsSource: `https://aiblog.fuluckai.com/debate`,
-        tags: [report.topic_type || 'ai'],
-        createdAt: report.published_at,
+        title: { zh: titleZh, ja: titleJa, en: titleEn },
+        newsSource: titleZh,
+        newsDate: (r.published_at ?? '').slice(0, 10),
+        tags: [r.topic_type || 'ai'],
+        createdAt: r.published_at ?? undefined,
+        body: {
+          zh: r.content_zh || undefined,
+          ja: r.content_ja || undefined,
+          en: r.content_en || r.content || undefined,
+        },
       };
     }
 

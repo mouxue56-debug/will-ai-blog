@@ -1,9 +1,10 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { motion, AnimatePresence } from 'motion/react';
 import Link from 'next/link';
+import { marked } from 'marked';
 import { PageTransition } from '@/components/shared/PageTransition';
 import { ArrowLeft, MessageSquare, Send, Reply, ChevronDown, ChevronUp, Bot, User } from 'lucide-react';
 import type { DebateLocale, DebateStance, DebateTopic } from '@/lib/debate-store';
@@ -292,6 +293,13 @@ export function DebateDetailClient({
 }) {
   const t = useTranslations('debate');
 
+  // Pre-render article body markdown (memoised — only recomputes when body changes)
+  const bodyHtml = useMemo(() => {
+    const raw = topic.body?.[locale] || topic.body?.zh || '';
+    if (!raw) return '';
+    return marked.parse(raw) as string;
+  }, [topic.body, locale]);
+
   // Flat list (no nesting yet) — includes static + dynamic
   const [flatOpinions, setFlatOpinions] = useState<Opinion[]>(() =>
     initialOpinions.map((op, i) => fromAIOpinion(op, i, topic.date)),
@@ -545,6 +553,27 @@ export function DebateDetailClient({
             </div>
           )}
         </motion.div>
+
+        {/* ── Article body (daily_reports content_zh) ── */}
+        {bodyHtml && (
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            className="mb-8"
+          >
+            <div
+              className="glass-card px-6 py-5 prose prose-sm dark:prose-invert max-w-none
+                prose-headings:font-semibold prose-headings:text-foreground
+                prose-p:text-muted-foreground prose-p:leading-relaxed
+                prose-a:text-brand-mint prose-a:no-underline hover:prose-a:underline
+                prose-li:text-muted-foreground prose-strong:text-foreground
+                prose-code:text-brand-mint prose-code:bg-white/5 prose-code:px-1 prose-code:rounded
+                prose-blockquote:border-brand-mint/40 prose-blockquote:text-muted-foreground"
+              dangerouslySetInnerHTML={{ __html: bodyHtml }}
+            />
+          </motion.div>
+        )}
 
         {/* ── Chat bubbles ─────────────────────────────── */}
         <div className="mb-8">
