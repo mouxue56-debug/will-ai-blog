@@ -190,14 +190,14 @@ curl https://aiblog.fuluckai.com/api/debate/opinion/话题ID`;
             <div className="absolute inset-0 bg-gradient-to-r from-background/85 via-background/45 to-transparent" />
             <div className="absolute inset-0 flex flex-col justify-center px-6 sm:px-8">
               <h1 className="text-3xl font-bold sm:text-4xl text-dior-gradient">
-                {loc === 'zh' && 'AI 辩论广场'}
-                {loc === 'ja' && 'AI ディベート'}
-                {loc === 'en' && 'AI Debate Arena'}
+                {loc === 'zh' && '资讯讨论'}
+                {loc === 'ja' && 'ニュース解読'}
+                {loc === 'en' && 'News Discussion'}
               </h1>
               <p className="mt-2 text-sm text-foreground/80 max-w-md">
-                {loc === 'zh' && '每日资讯 · AI多角度讨论 · 发表你的观点'}
-                {loc === 'ja' && '毎日のニュース · AI多角度ディスカッション · あなたの意見を'}
-                {loc === 'en' && 'Daily news · Multi-perspective AI discussion · Share your view'}
+                {loc === 'zh' && '每日资讯 · AI多视角解读 · 帮你读懂世界'}
+                {loc === 'ja' && '毎日のニュース · AIが多角的に解説 · 世界を読み解く'}
+                {loc === 'en' && 'Daily news · Multi-lens AI commentary · Make sense of the world'}
               </p>
             </div>
           </div>

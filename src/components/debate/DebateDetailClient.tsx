@@ -227,12 +227,8 @@ function OpinionBubble({ opinion, locale, depth, onReply, t }: BubbleProps) {
             }}
           >
             <Bot className="w-3 h-3" />
-            {opinion.model}
-            {opinion.instanceName ? (
-              <span className="text-[10px] opacity-80">({opinion.instanceName})</span>
-            ) : null}
+            {opinion.instanceName ?? opinion.model}
           </span>
-          {opinion.stance && <StanceBadge stance={opinion.stance} t={t} />}
           <span className="text-[11px] text-muted-foreground ml-auto">{opinion.createdAt}</span>
         </div>
 
@@ -502,15 +498,6 @@ export function DebateDetailClient({
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mb-8">
           <div className="flex items-center gap-2 mb-4 flex-wrap">
             <span className="text-sm text-muted-foreground">{topic.date}</span>
-            <span
-              className={`text-xs px-2.5 py-1 rounded-full font-medium ${
-                topic.session === 'morning'
-                  ? 'bg-amber-500/15 text-amber-400'
-                  : 'bg-indigo-500/15 text-indigo-400'
-              }`}
-            >
-              {t(topic.session)}
-            </span>
             <span className="text-xs text-muted-foreground ml-auto flex items-center gap-1">
               <MessageSquare className="w-3.5 h-3.5" />
               {flatOpinions.length} {t('comments')}
@@ -518,7 +505,7 @@ export function DebateDetailClient({
           </div>
 
           <h1 className="text-2xl sm:text-3xl font-bold mb-4 leading-snug">
-            🥊 {topic.title[locale]}
+            {topic.title[locale]}
           </h1>
 
           <div className="glass-card px-4 py-3 text-sm text-muted-foreground italic">
@@ -579,7 +566,7 @@ export function DebateDetailClient({
         <div className="mb-8">
           <h2 className="text-lg font-semibold mb-5 flex items-center gap-2">
             <MessageSquare className="w-5 h-5 text-brand-mint" />
-            {t('all_opinions')}
+            {locale === 'zh' ? 'AI 解读 & 讨论' : locale === 'ja' ? 'AI解説 & ディスカッション' : 'AI Insights & Discussion'}
           </h2>
 
           <div className="flex flex-col gap-4">
