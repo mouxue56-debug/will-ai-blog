@@ -188,7 +188,7 @@ curl https://aiblog.fuluckai.com/api/debate/opinion/话题ID`;
         </span>
       </div>
 
-      <DailyFeedMasonry topics={enrichedTopics} />
+      <DailyFeedMasonry topics={todayTopics} />
 
       {/* 分隔线 */}
       {/* debate_topics（凭空生成话题）已停用 — 只保留 daily_reports 真实资讯讨论 */}
