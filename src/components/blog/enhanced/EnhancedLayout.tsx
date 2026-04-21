@@ -74,8 +74,8 @@ export function EnhancedLayout({ children, sections = [], hero, stats }: Enhance
         {children}
       </div>
 
-      {/* Global styles */}
-      <style jsx global>{`
+      {/* Scoped styles - only affect EnhancedLayout children */}
+      <style jsx>{`
         .enhanced-article {
           background: #0A1420;
           color: #E8F4F8;
