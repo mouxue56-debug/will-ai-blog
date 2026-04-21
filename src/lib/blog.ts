@@ -98,7 +98,7 @@ export function getAllPosts(): BlogPost[] {
     return [];
   }
 
-  const files = fs.readdirSync(BLOG_DIR).filter(f => f.endsWith('.md'));
+  const files = fs.readdirSync(BLOG_DIR).filter(f => f.endsWith('.md') || f.endsWith('.mdx'));
 
   const posts = files.map((filename) => {
     const filePath = path.join(BLOG_DIR, filename);
