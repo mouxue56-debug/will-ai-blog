@@ -813,6 +813,33 @@ body::before {
   animation: node-glow 3s ease-in-out infinite;
 }
 
+/* ── Enhanced article animation keyframes ────────────────── */
+@keyframes gradientDrift {
+  0%   { background-position: 0%   50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0%   50%; }
+}
+@keyframes heroBreathe {
+  0%, 100% { opacity: 0.7; transform: scale(1); }
+  50%       { opacity: 1;   transform: scale(1.06); }
+}
+@keyframes statPulse {
+  0%, 100% { text-shadow: 0 0 16px rgba(0,212,255,0.25); }
+  50%       { text-shadow: 0 0 32px rgba(0,212,255,0.65), 0 0 56px rgba(0,212,255,0.2); }
+}
+@keyframes fadeUpIn {
+  from { opacity: 0; transform: translateY(26px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes tagPop {
+  from { opacity: 0; transform: scale(0.75) translateY(6px); }
+  to   { opacity: 1; transform: scale(1)    translateY(0); }
+}
+@keyframes borderGlow {
+  0%, 100% { box-shadow: 0 0 0 1px rgba(0,212,255,0.12); }
+  50%       { box-shadow: 0 0 0 1px rgba(0,212,255,0.30), 0 0 20px rgba(0,212,255,0.06); }
+}
+
 /* ═══════════════════════════════════════════════════════════════
    Enhanced Article Layout — dark tech aesthetic
    All styles global so they apply to dangerouslySetInnerHTML content
@@ -838,8 +865,12 @@ body::before {
 .enhanced-hero-bg {
   position: absolute;
   inset: 0;
-  background: radial-gradient(ellipse at 50% 0%, rgba(0,212,255,0.13) 0%, transparent 68%);
   pointer-events: none;
+  background:
+    radial-gradient(ellipse 72% 55% at 28% 0%,  rgba(0,212,255,0.16) 0%, transparent 70%),
+    radial-gradient(ellipse 55% 40% at 80% 25%,  rgba(255,140,66,0.08) 0%, transparent 65%),
+    radial-gradient(ellipse 45% 35% at 50% 100%, rgba(94,240,200,0.07) 0%, transparent 60%);
+  animation: heroBreathe 10s ease-in-out infinite;
 }
 .enhanced-hero-content {
   position: relative;
@@ -864,10 +895,19 @@ body::before {
   font-size: clamp(1.75rem, 4vw, 2.75rem);
   font-weight: 800;
   line-height: 1.25;
-  background: linear-gradient(135deg, #E8F4F8 0%, #00D4FF 100%);
+  background: linear-gradient(
+    135deg,
+    #E8F4F8  0%,
+    #00D4FF  28%,
+    #FF8C42  52%,
+    #5EF0C8  76%,
+    #E8F4F8  100%
+  );
+  background-size: 280% 280%;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  animation: gradientDrift 9s ease infinite, fadeUpIn 0.8s ease 0.1s both;
   margin-bottom: 20px;
 }
 .enhanced-hero-subtitle {
@@ -876,12 +916,14 @@ body::before {
   max-width: 620px;
   margin: 0 auto 20px;
   line-height: 1.75;
+  animation: fadeUpIn 0.8s ease 0.28s both;
 }
 .enhanced-hero-date {
   font-size: 12px;
   color: rgba(232,244,248,0.38);
   margin-bottom: 24px;
   letter-spacing: 0.03em;
+  animation: fadeUpIn 0.7s ease 0.42s both;
 }
 .enhanced-hero-tags {
   display: flex;
@@ -896,7 +938,21 @@ body::before {
   background: rgba(0,212,255,0.07);
   border: 1px solid rgba(0,212,255,0.18);
   color: rgba(232,244,248,0.65);
+  opacity: 0;
+  animation: tagPop 0.5s cubic-bezier(0.34,1.56,0.64,1) forwards;
+  transition: background 0.2s, border-color 0.2s, color 0.2s;
 }
+.enhanced-hero-tag:hover {
+  background: rgba(0,212,255,0.14);
+  border-color: rgba(0,212,255,0.4);
+  color: #E8F4F8;
+}
+.enhanced-hero-tags .enhanced-hero-tag:nth-child(1) { animation-delay: 0.52s; }
+.enhanced-hero-tags .enhanced-hero-tag:nth-child(2) { animation-delay: 0.60s; }
+.enhanced-hero-tags .enhanced-hero-tag:nth-child(3) { animation-delay: 0.68s; }
+.enhanced-hero-tags .enhanced-hero-tag:nth-child(4) { animation-delay: 0.76s; }
+.enhanced-hero-tags .enhanced-hero-tag:nth-child(5) { animation-delay: 0.84s; }
+.enhanced-hero-tags .enhanced-hero-tag:nth-child(6) { animation-delay: 0.92s; }
 
 /* ── Stats Bar ───────────────────────────────── */
 .enhanced-stats-bar {
@@ -907,6 +963,7 @@ body::before {
   border-bottom: 1px solid rgba(0,212,255,0.1);
   background: rgba(0,212,255,0.028);
   padding: 16px 0;
+  animation: fadeUpIn 0.7s ease 0.6s both;
 }
 .enhanced-stat-item {
   display: flex;
@@ -914,20 +971,31 @@ body::before {
   align-items: center;
   padding: 8px 32px;
   border-right: 1px solid rgba(0,212,255,0.09);
+  transition: background 0.3s ease;
 }
 .enhanced-stat-item:last-child { border-right: none; }
+.enhanced-stat-item:hover { background: rgba(0,212,255,0.05); }
 .enhanced-stat-num {
   font-size: 1.75rem;
   font-weight: 800;
   color: #00D4FF;
   line-height: 1;
   margin-bottom: 5px;
+  animation: statPulse 4s ease-in-out infinite;
+  transition: color 0.3s ease;
+}
+.enhanced-stat-item:hover .enhanced-stat-num {
+  color: #5EF0C8;
 }
 .enhanced-stat-label {
   font-size: 10.5px;
   color: rgba(232,244,248,0.42);
   text-transform: uppercase;
   letter-spacing: 0.09em;
+  transition: color 0.3s ease;
+}
+.enhanced-stat-item:hover .enhanced-stat-label {
+  color: rgba(232,244,248,0.65);
 }
 
 /* ── Layout containers ───────────────────────── */
@@ -1021,11 +1089,16 @@ body::before {
   border: 1px solid rgba(0,212,255,0.18);
   border-radius: 14px;
   padding: 22px 20px;
-  transition: border-color 0.3s, box-shadow 0.3s;
+  transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1),
+              border-color 0.3s ease,
+              box-shadow 0.35s ease,
+              background 0.3s ease;
 }
 .card:hover {
-  border-color: rgba(0,212,255,0.4);
-  box-shadow: 0 0 28px rgba(0,212,255,0.07);
+  transform: translateY(-8px) scale(1.015);
+  background: rgba(0,212,255,0.07);
+  border-color: rgba(0,212,255,0.45);
+  box-shadow: 0 20px 48px rgba(0,0,0,0.32), 0 0 30px rgba(0,212,255,0.1);
 }
 .card-icon { font-size: 28px; margin-bottom: 12px; }
 .card-name { color: #00D4FF; font-weight: 700; font-size: 15px; margin-bottom: 6px; }
@@ -1064,9 +1137,18 @@ body::before {
   border-radius: 14px;
   padding: 24px;
   position: relative;
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
 }
 .before-after-col.before { border-left: 3px solid #FF8C42; }
 .before-after-col.after  { border-left: 3px solid #4ADE80; }
+.before-after-col.before:hover {
+  box-shadow: 0 8px 40px rgba(255,140,66,0.18), inset 0 0 0 1px rgba(255,140,66,0.15);
+  transform: translateY(-3px);
+}
+.before-after-col.after:hover {
+  box-shadow: 0 8px 40px rgba(74,222,128,0.14), inset 0 0 0 1px rgba(74,222,128,0.12);
+  transform: translateY(-3px);
+}
 .before-after-label {
   position: absolute;
   top: -1px;
@@ -1122,6 +1204,12 @@ body::before {
   border-radius: 14px;
   padding: 20px 24px;
   margin: 20px 0;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+}
+.insight-box:hover {
+  background: rgba(255,140,66,0.09);
+  border-color: rgba(255,140,66,0.5);
+  box-shadow: 0 0 36px rgba(255,140,66,0.1);
 }
 .insight-title {
   color: #FF8C42;
@@ -1141,6 +1229,12 @@ body::before {
   border-radius: 0 12px 12px 0;
   padding: 20px 24px;
   margin: 20px 0;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+}
+.decision-card:hover {
+  border-color: rgba(255,140,66,0.4);
+  box-shadow: -4px 0 24px rgba(255,140,66,0.14);
+  transform: translateX(4px);
 }
 .decision-header { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
 .decision-badge {
@@ -1188,6 +1282,32 @@ body::before {
 .term:hover::after { opacity: 1; visibility: visible; bottom: calc(100% + 8px); }
 .term-def { color: rgba(232,244,248,0.58); font-size: 13px; }
 
+/* ── Workflow hover interactions ───────────────── */
+.workflow-step {
+  transition: transform 0.25s ease;
+}
+.workflow-step:hover {
+  transform: translateX(5px);
+}
+.step-num {
+  transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1),
+              box-shadow 0.3s ease;
+}
+.workflow-step:hover .step-num {
+  transform: scale(1.2);
+  box-shadow: 0 0 18px rgba(0,212,255,0.5);
+}
+
+/* ── H2 heading hover (inside enhanced article) ─ */
+.enhanced-article .k2w-prose h2 {
+  cursor: default;
+  transition: padding-left 0.25s ease, background 0.25s ease;
+}
+.enhanced-article .k2w-prose h2:hover {
+  background: rgba(0,212,255,0.06);
+  padding-left: 20px;
+}
+
 /* ── Responsive ──────────────────────────────── */
 @media (max-width: 768px) {
   .cards-3 { grid-template-columns: 1fr; }
@@ -1198,4 +1318,52 @@ body::before {
   .enhanced-stat-item { padding: 8px 16px; }
   .enhanced-hero { padding: 60px 16px 40px; }
   .enhanced-hero-title { font-size: 1.75rem; }
+  /* disable spring hover on touch devices */
+  .card:hover { transform: none; }
+  .before-after-col.before:hover,
+  .before-after-col.after:hover { transform: none; }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   Scroll-driven reveal animations
+   (Chrome 115+ / Edge 115+  — graceful fallback: no animation)
+   ═══════════════════════════════════════════════════════════ */
+@supports (animation-timeline: view()) {
+  .enhanced-article .card {
+    animation: fadeUpIn 0.55s ease both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 32%;
+  }
+  .enhanced-article .cards-3 > .card:nth-child(2) {
+    animation-delay: 0.08s;
+  }
+  .enhanced-article .cards-3 > .card:nth-child(3) {
+    animation-delay: 0.16s;
+  }
+  .enhanced-article .before-after {
+    animation: fadeUpIn 0.6s ease both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 28%;
+  }
+  .enhanced-article .workflow {
+    animation: fadeUpIn 0.55s ease both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 24%;
+  }
+  .enhanced-article .insight-box,
+  .enhanced-article .decision-card {
+    animation: fadeUpIn 0.5s ease both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 28%;
+  }
+  .enhanced-article .toc {
+    animation: fadeUpIn 0.5s ease both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 20%;
+  }
+  .enhanced-article .k2w-prose h2 {
+    animation: fadeUpIn 0.45s ease both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 20%;
+  }
 }
