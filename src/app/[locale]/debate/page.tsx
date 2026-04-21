@@ -13,17 +13,16 @@ export default async function DebatePage({ params }: { params: Promise<{ locale:
   setRequestLocale(locale);
   const loc = (locale as Locale) || 'zh';
 
-  // Fetch all daily reports from Supabase (show all dates)
-  const { data: todayTopics } = await supabaseAdmin
+  // Fetch all daily reports from Supabase
+  const { data: allTopics } = await supabaseAdmin
     .from('daily_reports')
     .select('id, title, content, topic_type, slug, author_emoji, published_at, title_zh, title_ja, title_en, content_zh, content_ja, content_en')
-    .in('topic_type', ['ai', 'economy', 'github'])
     .order('published_at', { ascending: false });
 
   // Inject translated newsItems into topics from SSR
   type TranslatedItem = {title_en: string; title_zh: string; title_ja: string; url: string; source: string};
   const translationsMap = newsTranslations as Record<string, TranslatedItem[]>;
-  const enrichedTopics = (todayTopics || []).map((topic) => {
+  const enrichedTopics = (allTopics || []).map((topic) => {
     const newsItems = translationsMap[topic.id];
     if (newsItems) {
       return { 
@@ -73,6 +72,25 @@ export default async function DebatePage({ params }: { params: Promise<{ locale:
       display_title_en: topic.title_en || topic.title,
     };
   });
+
+  // Filter: remove empty/invalid topics, deduplicate by topic_type, keep max 3
+  type DailyTopic = typeof enrichedTopics[number];
+  const VALID_TYPES = ['ai', 'economy', 'github'];
+  const seenTypes = new Set<string>();
+  const todayTopics: DailyTopic[] = [];
+
+  for (const topic of enrichedTopics) {
+    // Skip if topic_type is invalid or already seen (keep only first of each type)
+    if (!topic.topic_type || !VALID_TYPES.includes(topic.topic_type)) continue;
+    if (seenTypes.has(topic.topic_type)) continue;
+    // Skip if no newsItems and content is empty/placeholder
+    const newsCount = topic.newsItems?.length ?? 0;
+    const contentLen = (topic.content?.length ?? 0) + (topic.content_zh?.length ?? 0);
+    if (newsCount === 0 && contentLen < 100) continue;
+    seenTypes.add(topic.topic_type);
+    todayTopics.push(topic);
+    if (todayTopics.length >= 3) break;
+  }
 
 
   const curlExample = `# 1. 获取今日话题
