@@ -139,55 +139,6 @@ export function BlogDetail({ post, prevPost, nextPost, comments, postSlug, headi
                 </div>
               </motion.div>
             )}
-            <motion.header
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              className="mb-8 space-y-4"
-            >
-              <div className="flex flex-wrap items-center gap-2">
-                <span
-                  className={cn(
-                    'inline-flex rounded-full px-3 py-1 text-xs font-medium',
-                    CATEGORY_TAG_COLORS[post.category]
-                  )}
-                >
-                  {t(CATEGORY_KEYS[post.category])}
-                </span>
-                <span
-                  className={cn(
-                    'inline-flex rounded-full px-3 py-1 text-xs font-medium',
-                    CONTENT_SOURCE_BADGE[post.contentSource]
-                  )}
-                >
-                  {contentSourceLabel}
-                </span>
-              </div>
-
-              <h1 className="text-3xl font-bold leading-tight sm:text-4xl">
-                {title}
-              </h1>
-
-              <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground border-t border-border/50 pt-4 mt-4">
-                <span className="flex items-center gap-1.5">
-                  <User className="h-4 w-4" />
-                  {post.author}
-                </span>
-                <span className="flex items-center gap-1.5">
-                  <Calendar className="h-4 w-4" />
-                  <time dateTime={post.date}>
-                    {new Date(post.date).toLocaleDateString(
-                      locale === 'zh' ? 'zh-CN' : locale === 'ja' ? 'ja-JP' : 'en-US',
-                      { year: 'numeric', month: 'long', day: 'numeric' }
-                    )}
-                  </time>
-                </span>
-                <span className="flex items-center gap-1.5">
-                  <Clock className="h-4 w-4" />
-                  {formatReadingTime(post.readingTime, locale)}
-                </span>
-              </div>
-            </motion.header>
 
             <motion.div
               initial={{ opacity: 0 }}
