@@ -331,12 +331,25 @@ export function EnhancedLayout({ children, sections = [], hero, stats }: Enhance
           border-radius: 4px;
         }
 
+        /* Enhanced article inner */
+        .enhanced-article-inner {
+          max-width: 1200px;
+          margin: 0 auto;
+          padding: 48px 24px;
+        }
+        .enhanced-article-content {
+          min-width: 0;
+          max-width: 900px;
+          margin: 0 auto;
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
           .cards-3 { grid-template-columns: 1fr; }
           .toc-grid { grid-template-columns: 1fr; }
           .before-after { grid-template-columns: 1fr; }
           .terms { grid-template-columns: 1fr; }
+          .enhanced-article-inner { padding: 32px 16px; }
         }
       `}</style>
     </div>

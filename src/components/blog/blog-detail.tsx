@@ -95,7 +95,7 @@ export function BlogDetail({ post, prevPost, nextPost, comments, postSlug, headi
     return (
       <PageTransition>
         <EnhancedLayout sections={post.sections || []} hero={hero} stats={stats}>
-          <div className="mx-auto max-w-[1400px] px-4 py-12 sm:px-6">
+          <div className="enhanced-article-inner">
             <Link
               href="/blog"
               className="mb-6 inline-flex items-center gap-1 text-sm text-muted-foreground transition-colors hover:text-foreground"
@@ -104,7 +104,7 @@ export function BlogDetail({ post, prevPost, nextPost, comments, postSlug, headi
               {t('title')}
             </Link>
 
-            <article className="min-w-0 max-w-4xl">
+            <article className="enhanced-article-content">
             {post.coverImage && (
               <div className="relative w-full aspect-video overflow-hidden rounded-xl mb-8 max-w-3xl mx-auto">
                 <img
