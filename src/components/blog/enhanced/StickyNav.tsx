@@ -63,7 +63,7 @@ export function StickyNav({ sections }: { sections: Section[] }) {
           textTransform: 'uppercase',
           marginBottom: '12px',
           paddingBottom: '8px',
-          borderBottom: '1px solid 'rgba(0,212,255,0.1)',
+          borderBottom: '1px solid rgba(0,212,255,0.1)',
         }}
       >
         目录

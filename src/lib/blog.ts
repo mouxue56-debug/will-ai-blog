@@ -83,7 +83,7 @@ function parseFrontmatter(fileContent: string): { data: Record<string, unknown>;
     const nestedMatch = trimmed.match(/^\s+([\w]+):\s*(.+)$/);
     if (nestedMatch && currentObj !== null) {
       const value = nestedMatch[2].replace(/^["']|["']$/g, '');
-      currentObj[nestedMatch[1]] = value;
+      (currentObj as Record<string, string>)[nestedMatch[1]] = value;
       continue;
     }
 
