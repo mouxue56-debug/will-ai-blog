@@ -24,6 +24,16 @@ function stripMarkdown(content: string): string {
     .trim();
 }
 
+// Strip ES6 import/export statements from MDX content
+// MDX files may have import statements at the top that should not be rendered as markdown
+function stripMdxImports(content: string): string {
+  return content
+    .replace(/^import\s+.*?;/gm, '')  // Single-line imports: import { X } from 'Y';
+    .replace(/^export\s+.*?(?:;|$)/gm, '')  // Export statements
+    .replace(/^\n+/, '')  // Remove leading newlines from removed imports
+    .trim();
+}
+
 export function calculateReadingTime(content: string): number {
   const plainText = stripMarkdown(content);
   const cjkChars = (plainText.match(/[\u3400-\u9FFF\uF900-\uFAFF]/g) || []).length;
@@ -141,6 +151,8 @@ export function getAllPosts(): BlogPost[] {
     const filePath = path.join(BLOG_DIR, filename);
     const fileContent = fs.readFileSync(filePath, 'utf-8');
     const { data, content } = parseFrontmatter(fileContent);
+    // For MDX files, strip ES6 import statements that would break MarkdownRenderer
+    const processedContent = filename.endsWith('.mdx') ? stripMdxImports(content) : content;
     const date = (data.date as string) || '';
 
     return {
@@ -184,8 +196,8 @@ export function getAllPosts(): BlogPost[] {
         }
         return s.split(',').map((tag: string) => tag.trim()).filter(Boolean);
       })(),
-      readingTime: calculateReadingTime(content),
-      content,
+      readingTime: calculateReadingTime(processedContent),
+      content: processedContent,
       willComment: (data.willComment as Record<string, string>) || undefined,
       audioUrl: (data.audioUrl as string) || undefined,
       layout: (data.layout as 'default' | 'enhanced') || undefined,
