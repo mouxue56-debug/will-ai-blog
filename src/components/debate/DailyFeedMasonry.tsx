@@ -230,12 +230,8 @@ export function DailyFeedMasonry({ topics }: DailyFeedMasonryProps) {
                   </div>
 
                   <div className="px-5 pt-4 pb-5">
-                    <h3 className="text-base font-semibold leading-snug text-foreground line-clamp-3 group-hover:text-foreground">
-                      {title}
-                    </h3>
-
                     {news.length > 0 && (
-                      <ul className="mt-3 space-y-2 text-sm leading-snug text-foreground/70">
+                      <ul className="mt-1 space-y-2 text-sm leading-snug text-foreground font-medium">
                         {news.slice(0, 5).map((it, idx) => (
                           <li key={idx} className="line-clamp-2">
                             · {localizeTitle(it, locale)}
