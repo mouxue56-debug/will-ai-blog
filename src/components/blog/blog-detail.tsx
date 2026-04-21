@@ -14,6 +14,7 @@ import { MobileTableOfContents } from './mobile-table-of-contents';
 import { CommentSection } from './CommentSection';
 import { AudioPlayer } from '@/components/shared/AudioPlayer';
 import { getAudioUrl } from '@/lib/storage';
+import { EnhancedLayout } from './enhanced/EnhancedLayout';
 
 const CATEGORY_TAG_COLORS: Record<BlogCategory, string> = {
   ai: 'bg-brand-cyan/15 text-brand-cyan',
@@ -69,20 +70,23 @@ export function BlogDetail({ post, prevPost, nextPost, comments, postSlug, headi
   const prevTitle = prevPost ? (prevPost.title[locale] || prevPost.title.zh || prevPost.title.en || '') : '';
   const nextTitle = nextPost ? (nextPost.title[locale] || nextPost.title.zh || nextPost.title.en || '') : '';
   const contentSourceLabel = getContentSourceLabel(post.contentSource, locale);
+  const isEnhanced = post.layout === 'enhanced';
 
-  return (
-    <PageTransition>
-      <div className="mx-auto max-w-[1400px] px-4 py-12 sm:px-6">
-        <Link
-          href="/blog"
-          className="mb-6 inline-flex items-center gap-1 text-sm text-muted-foreground transition-colors hover:text-foreground"
-        >
-          <ChevronLeft className="h-4 w-4" />
-          {t('title')}
-        </Link>
+  // Enhanced layout - use EnhancedLayout component with progress bar, sticky nav, etc.
+  if (isEnhanced) {
+    return (
+      <PageTransition>
+        <EnhancedLayout sections={post.sections || []}>
+          <div className="mx-auto max-w-[1400px] px-4 py-12 sm:px-6">
+            <Link
+              href="/blog"
+              className="mb-6 inline-flex items-center gap-1 text-sm text-muted-foreground transition-colors hover:text-foreground"
+            >
+              <ChevronLeft className="h-4 w-4" />
+              {t('title')}
+            </Link>
 
-        <div className="xl:grid xl:grid-cols-[minmax(0,1fr)_280px] xl:items-start xl:gap-12">
-          <article className="min-w-0 max-w-4xl">
+            <article className="min-w-0 max-w-4xl">
             {post.coverImage && (
               <div className="relative w-full aspect-video overflow-hidden rounded-xl mb-8 max-w-3xl mx-auto">
                 <img
@@ -231,21 +235,26 @@ export function BlogDetail({ post, prevPost, nextPost, comments, postSlug, headi
             </div>
           </article>
 
-          <motion.aside
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.3 }}
-            className="hidden xl:block xl:sticky xl:top-24"
-          >
-            <div className="space-y-4">
-              <TableOfContents headings={headings} />
-            </div>
-          </motion.aside>
-        </div>
+        </article>
 
         {/* Mobile Table of Contents */}
         <MobileTableOfContents headings={headings} />
       </div>
     </PageTransition>
-  );
-}
+  </EnhancedLayout>
+);
+
+  // Standard layout - original rendering for non-enhanced posts
+  return (
+    <PageTransition>
+      <div className="mx-auto max-w-[1400px] px-4 py-12 sm:px-6">
+        <Link
+          href="/blog"
+          className="mb-6 inline-flex items-center gap-1 text-sm text-muted-foreground transition-colors hover:text-foreground"
+        >
+          <ChevronLeft className="h-4 w-4" />
+          {t('title')}
+        </Link>
+
+        <div className="xl:grid xl:grid-cols-[minmax(0,1fr)_280px] xl:items-start xl:gap-12">
+          <article className="min-w-0 max-w-4xl">

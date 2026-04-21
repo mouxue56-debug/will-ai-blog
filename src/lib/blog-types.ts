@@ -17,6 +17,8 @@ export interface BlogPost {
   content: string;
   willComment?: Record<string, string>;
   audioUrl?: string;
+  layout?: 'default' | 'enhanced';
+  sections?: Array<{ id: string; title: string }>;
 }
 
 export interface Comment {
