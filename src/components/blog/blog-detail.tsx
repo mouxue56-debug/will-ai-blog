@@ -75,7 +75,7 @@ export function BlogDetail({ post, prevPost, nextPost, comments, postSlug, headi
   // Enhanced layout - use EnhancedLayout component with progress bar, sticky nav, hero, stats, etc.
   if (isEnhanced) {
     const hero = {
-      eyebrow: post.category === 'learning' ? 'Architecture Deep Dive' : undefined,
+      eyebrow: undefined,
       title: title,
       subtitle: post.excerpt?.[locale] || '',
       date: new Date(post.date).toLocaleDateString(

@@ -8,6 +8,17 @@ import { getIllustrationUrl } from '@/lib/storage';
 
 type Locale = 'zh' | 'ja' | 'en';
 
+// Convert UTC date to JST date string (YYYY-MM-DD)
+function toJstDate(iso: string): string {
+  if (!iso) return 'unknown';
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return iso.slice(0, 10);
+  // Convert to JST (UTC+9) by adding 9 hours
+  const jstTime = d.getTime() + (9 * 60 * 60 * 1000);
+  const jstDate = new Date(jstTime);
+  return jstDate.toISOString().slice(0, 10);
+}
+
 export default async function DebatePage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   setRequestLocale(locale);
@@ -16,7 +27,7 @@ export default async function DebatePage({ params }: { params: Promise<{ locale:
   // Fetch all daily reports from Supabase
   const { data: allTopics } = await supabaseAdmin
     .from('daily_reports')
-    .select('id, title, content, topic_type, slug, author_emoji, published_at, title_zh, title_ja, title_en, content_zh, content_ja, content_en')
+    .select('id, title, content, topic_type, slug, author_emoji, published_at, title_zh, title_ja, title_en, content_zh, content_ja, content_en, report_type')
     .order('published_at', { ascending: false });
 
   // Inject translated newsItems into topics from SSR
@@ -73,12 +84,11 @@ export default async function DebatePage({ params }: { params: Promise<{ locale:
     };
   });
 
-  // Filter: remove topics with no newsItems (empty cards), deduplicate per date
-  type DailyTopic = typeof enrichedTopics[number];
+  // Filter: remove topics with no newsItems (empty cards), deduplicate per date+type+report_type
+  type DailyTopic = typeof enrichedTopics[number] & { report_type?: string };
   const todayTopics: DailyTopic[] = [];
 
-  // Dedup key: chip label from content (e.g. "AI 动态", "GitHub 热榜", "经济观察")
-  // Since topic_type is null for all records, we infer type from content
+  // Dedup key: date + inferred type + report_type (morning/evening)
   const seenKeys = new Set<string>();
 
   for (const topic of enrichedTopics) {
@@ -86,7 +96,7 @@ export default async function DebatePage({ params }: { params: Promise<{ locale:
     const newsCount = topic.newsItems?.length ?? 0;
     if (newsCount === 0) continue;
 
-    // Dedup: infer type from chip-tint header in content
+    // Infer type from content (topic_type may be null for old records)
     const content = topic.content || '';
     let inferredType = '';
     if (/AI|ai|🧠|🤖|📡/.test(content.slice(0, 80))) inferredType = 'ai';
@@ -94,10 +104,12 @@ export default async function DebatePage({ params }: { params: Promise<{ locale:
     else if (/经济|💹|economy|通胀|市场/.test(content.slice(0, 80))) inferredType = 'economy';
     else inferredType = 'other';
 
-    // Use published_at date + inferred type as dedup key
-    const date = (topic.published_at || '').slice(0, 10) || 'unknown';
-    const dedupKey = `${date}::${inferredType}`;
-    if (seenKeys.has(dedupKey)) continue; // keep first (latest) per date+type
+    const reportType = (topic as DailyTopic).report_type || 'evening';
+    // Convert UTC to JST date for grouping (UTC 22:00 = JST 07:00 next day)
+    const jstDate = toJstDate(topic.published_at);
+    // Include report_type so morning and evening of same type are both kept
+    const dedupKey = `${jstDate}::${inferredType}::${reportType}`;
+    if (seenKeys.has(dedupKey)) continue;
     seenKeys.add(dedupKey);
 
     // Set topic_type if missing so the component can use it for styling
@@ -105,7 +117,7 @@ export default async function DebatePage({ params }: { params: Promise<{ locale:
       (topic as Record<string, unknown>).topic_type = inferredType;
     }
 
-    todayTopics.push(topic);
+    todayTopics.push(topic as DailyTopic);
   }
 
 
