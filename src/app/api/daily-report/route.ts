@@ -29,8 +29,13 @@ async function callKimi(kimiKey: string, prompt: string, maxTokens = 200): Promi
 
 async function generateTrilingualTitles(title: string) {
   const CFG_PATH = path.join(os.homedir(), '.openclaw/openclaw.json');
-  const cfg = JSON.parse(fs.readFileSync(CFG_PATH, 'utf-8'));
-  const kimiKey = cfg?.models?.providers?.kimi?.apiKey;
+  let kimiKey: string | undefined;
+  try {
+    const cfg = JSON.parse(fs.readFileSync(CFG_PATH, 'utf-8'));
+    kimiKey = cfg?.models?.providers?.kimi?.apiKey;
+  } catch {
+    // config 文件不存在或解析失败，静默降级
+  }
   
   if (!kimiKey) return { zh: title, ja: title, en: title };
   
@@ -57,8 +62,13 @@ async function generateTrilingualTitles(title: string) {
  */
 async function translateContentNewsItems(content: string): Promise<{ content_zh: string; content_ja: string } | null> {
   const CFG_PATH = path.join(os.homedir(), '.openclaw/openclaw.json');
-  const cfg = JSON.parse(fs.readFileSync(CFG_PATH, 'utf-8'));
-  const kimiKey = cfg?.models?.providers?.kimi?.apiKey;
+  let kimiKey: string | undefined;
+  try {
+    const cfg = JSON.parse(fs.readFileSync(CFG_PATH, 'utf-8'));
+    kimiKey = cfg?.models?.providers?.kimi?.apiKey;
+  } catch {
+    return null;
+  }
   if (!kimiKey) return null;
 
   // 提取所有 [标题](url) 形式的链接标题

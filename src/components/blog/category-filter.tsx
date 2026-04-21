@@ -36,10 +36,10 @@ export function CategoryFilter({ selected, onSelect }: CategoryFilterProps) {
       <button
         onClick={() => onSelect(null)}
         className={cn(
-          'shrink-0 rounded-full px-4 py-1.5 text-sm font-medium border transition-all duration-200',
+          'shrink-0 rounded-full px-4 py-1.5 text-sm font-semibold border transition-all duration-200',
           selected === null
-            ? 'bg-foreground text-background border-foreground'
-            : 'bg-secondary text-secondary-foreground border-border hover:bg-muted'
+            ? 'bg-foreground text-background border-foreground shadow-[0_4px_12px_rgba(61,44,36,0.25)]'
+            : 'glass-pill'
         )}
       >
         {t('all')}
@@ -49,7 +49,7 @@ export function CategoryFilter({ selected, onSelect }: CategoryFilterProps) {
           key={cat}
           onClick={() => onSelect(cat === selected ? null : cat)}
           className={cn(
-            'shrink-0 rounded-full px-4 py-1.5 text-sm font-medium border transition-all duration-200',
+            'shrink-0 rounded-full px-4 py-1.5 text-sm font-semibold border transition-all duration-200',
             selected === cat ? CATEGORY_ACTIVE[cat] : CATEGORY_BG[cat]
           )}
         >

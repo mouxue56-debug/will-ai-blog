@@ -77,6 +77,7 @@ export default async function DebateDetailPage({
     session: staticDebate.session,
     title: staticDebate.topic,
     newsSource: staticDebate.newsSource,
+    newsDate: staticDebate.newsDate,
     tags: staticDebate.tags,
   } : null);
 

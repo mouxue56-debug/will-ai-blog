@@ -5,8 +5,9 @@ import { HeroSection } from '@/components/home/hero-section';
 import { StoryTimeline } from '@/components/home/StoryTimeline';
 import { LatestUpdates } from '@/components/home/LatestUpdates';
 import { MyWorld } from '@/components/home/MyWorld';
-import { AIDashboard } from '@/components/home/ai-dashboard';
 import { AboutWill } from '@/components/home/AboutWill';
+import { TodayFeedTeaser } from '@/components/home/TodayFeedTeaser';
+import { AgentsStrip } from '@/components/home/AgentsStrip';
 
 const OG_LOCALE_MAP: Record<string, string> = {
   zh: 'zh_CN',
@@ -38,14 +39,14 @@ export async function generateMetadata({
       locale: ogLocale,
       url,
       siteName: "Will's AI Blog",
-      images: [{ url: '/og-image.png', width: 1200, height: 630 }],
+      images: [{ url: '/og-image.jpg', width: 1200, height: 630 }],
     },
     twitter: {
       card: 'summary_large_image',
       title,
       description,
       site: '@fuluckai',
-      images: ['/og-image.png'],
+      images: ['/og-image.jpg'],
     },
   };
 }
@@ -84,13 +85,15 @@ export default async function HomePage({
 
         <AboutWill />
 
+        <TodayFeedTeaser locale={(locale as 'zh' | 'ja' | 'en') || 'zh'} />
+
+        <AgentsStrip locale={(locale as 'zh' | 'ja' | 'en') || 'zh'} />
+
         <StoryTimeline />
 
         <LatestUpdates />
 
         <MyWorld />
-
-        <AIDashboard />
         </div>
       </PageTransition>
     </>

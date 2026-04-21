@@ -134,7 +134,7 @@ export function MobileNav() {
         )}
       </AnimatePresence>
 
-      <nav className="fixed bottom-0 left-0 right-0 z-40 border-t border-white/[0.06] dark:border-white/[0.06] border-gray-200/60 bg-white/80 dark:bg-[rgba(10,10,15,0.8)] backdrop-blur-xl md:hidden safe-area-bottom">
+      <nav className="glass-nav fixed bottom-0 left-0 right-0 z-40 md:hidden safe-area-bottom">
         <div className="relative flex items-center justify-around h-16 px-1">
           {(() => {
             const activeIndex = mainTabs.findIndex((tab) => isActive(tab.href));

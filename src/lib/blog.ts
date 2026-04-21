@@ -24,6 +24,16 @@ function stripMarkdown(content: string): string {
     .trim();
 }
 
+// Strip ES6 import/export statements from MDX content
+// MDX files may have import statements at the top that should not be rendered as markdown
+function stripMdxImports(content: string): string {
+  return content
+    .replace(/^import\s+.*?;/gm, '')  // Single-line imports: import { X } from 'Y';
+    .replace(/^export\s+.*?(?:;|$)/gm, '')  // Export statements
+    .replace(/^\n+/, '')  // Remove leading newlines from removed imports
+    .trim();
+}
+
 export function calculateReadingTime(content: string): number {
   const plainText = stripMarkdown(content);
   const cjkChars = (plainText.match(/[\u3400-\u9FFF\uF900-\uFAFF]/g) || []).length;
@@ -50,15 +60,40 @@ function parseFrontmatter(fileContent: string): { data: Record<string, unknown>;
 
   let currentKey = '';
   let currentObj: Record<string, string> | null = null;
+  let currentList: Array<Record<string, string>> | null = null;
+  let currentListItem: Record<string, string> | null = null;
 
   for (const line of frontmatterStr.split('\n')) {
     const trimmed = line.trimEnd();
     if (!trimmed) continue;
     
+    // Check for list item start: "  - key: value" or "  - value"
+    const listItemMatch = trimmed.match(/^\s+-\s+(.*)$/);
+    if (listItemMatch && currentList !== null) {
+      const itemContent = listItemMatch[1];
+      // Check if it's a key-value pair
+      const itemKvMatch = itemContent.match(/^([\w]+):\s*(.*)$/);
+      if (itemKvMatch) {
+        currentListItem = { [itemKvMatch[1]]: itemKvMatch[2].replace(/^["']|["']$/g, '') };
+        currentList.push(currentListItem);
+      } else {
+        // Simple list item
+        currentList.push({ value: itemContent.replace(/^["']|["']$/g, '') });
+      }
+      continue;
+    }
+    
+    // Check for continuation of list item (indented key-value)
+    const listItemContinuation = trimmed.match(/^\s{4,}([\w]+):\s*(.*)$/);
+    if (listItemContinuation && currentListItem !== null && currentList !== null) {
+      currentListItem[listItemContinuation[1]] = listItemContinuation[2].replace(/^["']|["']$/g, '');
+      continue;
+    }
+    
     const nestedMatch = trimmed.match(/^\s+([\w]+):\s*(.+)$/);
     if (nestedMatch && currentObj !== null) {
       const value = nestedMatch[2].replace(/^["']|["']$/g, '');
-      currentObj[nestedMatch[1]] = value;
+      (currentObj as Record<string, string>)[nestedMatch[1]] = value;
       continue;
     }
 
@@ -67,22 +102,34 @@ function parseFrontmatter(fileContent: string): { data: Record<string, unknown>;
       if (currentObj !== null && currentKey) {
         data[currentKey] = currentObj;
         currentObj = null;
+        currentList = null; // Clear list to prevent overwriting object
+      }
+      if (currentList !== null && currentKey) {
+        data[currentKey] = currentList;
+        currentList = null;
+        currentListItem = null;
       }
       
       currentKey = kvMatch[1];
       const value = kvMatch[2].trim();
       
       if (value === '') {
+        // Check if next lines are list items
+        currentList = [];
         currentObj = {};
       } else {
         data[currentKey] = value.replace(/^["']|["']$/g, '');
         currentObj = null;
+        currentList = null;
       }
     }
   }
   
   if (currentObj !== null && currentKey) {
     data[currentKey] = currentObj;
+  }
+  if (currentList !== null && currentKey) {
+    data[currentKey] = currentList;
   }
 
   return { data, content };
@@ -98,12 +145,14 @@ export function getAllPosts(): BlogPost[] {
     return [];
   }
 
-  const files = fs.readdirSync(BLOG_DIR).filter(f => f.endsWith('.md'));
+  const files = fs.readdirSync(BLOG_DIR).filter(f => f.endsWith('.md') || f.endsWith('.mdx'));
 
   const posts = files.map((filename) => {
     const filePath = path.join(BLOG_DIR, filename);
     const fileContent = fs.readFileSync(filePath, 'utf-8');
     const { data, content } = parseFrontmatter(fileContent);
+    // For MDX files, strip ES6 import statements that would break MarkdownRenderer
+    const processedContent = filename.endsWith('.mdx') ? stripMdxImports(content) : content;
     const date = (data.date as string) || '';
 
     return {
@@ -131,15 +180,28 @@ export function getAllPosts(): BlogPost[] {
         if (typeof e === 'string') return { zh: e, ja: e, en: e };
         return e;
       })(),
-      tags: typeof data.tags === 'string'
-        ? (data.tags as string).split(',').map(tag => tag.trim()).filter(Boolean)
-        : Array.isArray(data.tags)
-          ? (data.tags as string[]).map(tag => tag.trim()).filter(Boolean)
-          : [],
-      readingTime: calculateReadingTime(content),
-      content,
+      tags: (() => {
+        const t = data.tags;
+        if (!t) return [];
+        if (Array.isArray(t)) return (t as string[]).map((tag: string) => tag.trim()).filter(Boolean);
+        // Guard: YAML list becomes {} (empty object) since our parser doesn't handle list syntax
+        if (typeof t !== 'string') return [];
+        const s = t as string;
+        // Handle JSON array strings like ["ai", "tech"] from frontmatter
+        if (s.startsWith('[')) {
+          try {
+            const parsed = JSON.parse(s) as string[];
+            if (Array.isArray(parsed)) return parsed.map((tag: string) => tag.trim()).filter(Boolean);
+          } catch { /* fall through to CSV */ }
+        }
+        return s.split(',').map((tag: string) => tag.trim()).filter(Boolean);
+      })(),
+      readingTime: calculateReadingTime(processedContent),
+      content: processedContent,
       willComment: (data.willComment as Record<string, string>) || undefined,
       audioUrl: (data.audioUrl as string) || undefined,
+      layout: (data.layout as 'default' | 'enhanced') || undefined,
+      sections: (data.sections as Array<{ id: string; title: string }>) || undefined,
     } as BlogPost;
   });
 

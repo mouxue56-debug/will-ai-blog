@@ -11,5 +11,10 @@ export function getAudioUrl(filename: string): string {
 }
 
 export function getIllustrationUrl(name: string): string {
-  return `${VERCEL_URL}/covers/illustrations/${name}.jpg?v=3`;
+  // Use relative path so both dev (localhost) and prod (Vercel) serve from /public
+  return `/covers/illustrations/${name}.jpg?v=4`;
+}
+
+export function getAvatarUrl(name: string): string {
+  return `/covers/avatars/${name}.png?v=1`;
 }

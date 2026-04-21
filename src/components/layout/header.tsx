@@ -26,10 +26,10 @@ export function Header() {
   }
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-brand-coral/[0.12] dark:border-white/[0.06] bg-[rgba(255,252,248,0.85)] dark:bg-[rgba(13,10,8,0.8)] backdrop-blur-xl">
+    <header className="sticky top-0 z-50 w-full border-b border-white/[0.06] dark:border-white/[0.06] border-[rgba(230,200,215,0.6)] bg-[rgba(255,248,240,0.82)] dark:bg-[rgba(10,10,15,0.7)] backdrop-blur-2xl backdrop-saturate-180 [box-shadow:inset_0_-1px_0_rgba(255,255,255,0.6)] dark:[box-shadow:none]">
       <div className="mx-auto flex h-16 max-w-5xl items-center justify-between px-4 sm:px-6">
         <Link href="/" className="flex items-center gap-2 group">
-          <span className="text-lg font-bold bg-gradient-to-r from-brand-coral via-brand-mango to-brand-mint bg-clip-text text-transparent transition-all duration-300 group-hover:drop-shadow-[0_0_12px_rgba(251,146,60,0.35)]">
+          <span className="text-lg font-bold bg-gradient-to-r from-brand-mint via-brand-cyan to-brand-taro bg-clip-text text-transparent transition-all duration-300 group-hover:drop-shadow-[0_0_12px_rgba(94,234,212,0.4)]">
             Will&apos;s AI Lab
           </span>
         </Link>
@@ -43,7 +43,7 @@ export function Header() {
                 href={item.href}
                 className={`relative px-3 py-2 text-sm transition-colors rounded-md ${
                   active
-                    ? 'text-brand-coral font-medium'
+                    ? 'text-brand-mint font-medium'
                     : 'text-muted-foreground hover:text-foreground'
                 }`}
               >
@@ -51,9 +51,9 @@ export function Header() {
                 {active && (
                   <motion.div
                     layoutId="desktop-nav-underline"
-                    className="absolute bottom-0 left-2 right-2 h-[2px] rounded-full bg-brand-coral"
+                    className="absolute bottom-0 left-2 right-2 h-[2px] rounded-full bg-brand-mint"
                     style={{
-                      boxShadow: '0 0 8px rgba(251,146,60,0.5), 0 0 20px rgba(251,146,60,0.25)',
+                      boxShadow: '0 0 8px rgba(94,234,212,0.6), 0 0 20px rgba(94,234,212,0.3)',
                     }}
                     transition={{ type: 'spring', stiffness: 400, damping: 30 }}
                   />

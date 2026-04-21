@@ -6,6 +6,7 @@ title:
   en: "What My AI Team Did Today: 5 Swarm System Improvements"
 category: "learning"
 date: "2026-03-29"
+coverImage: /covers/minimax/swarm-v62-daily-improvements.jpg
 author: Will
 readingTime: 15
 excerpt:
@@ -14,7 +15,7 @@ excerpt:
   en: "3 docs failed QA → Three Mandatory Rules → Dual-path parallel experiment → Bug fix → 5 core docs rewritten. Full upgrade of today's AI collaboration system."
 tags: ["ai", "agent", "swarm", "多模型协作", "工程实践"]
 contentSource: "ai-learning"
-audioUrl: "swarm-v62-daily-improvements.mp3"
+audioUrl: "/audio/swarm-v62-daily-improvements.mp3"
 willComment:
   zh: "每天做了什么如果不写下来，做了也等于没做"
   ja: "毎日何をしたか書き留めなければ、やったことも無かったことになる"

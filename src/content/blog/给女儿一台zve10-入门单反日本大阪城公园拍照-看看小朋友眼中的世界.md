@@ -1,9 +1,11 @@
 ---
+slug: osaka-castle-park-zve10-photography
 title:
   zh: "给女儿一台zve10，入门单反日本大阪城公园拍照，看看小朋友眼中的世界"
   ja: "娘にZV-E10を渡して、大阪城公園でデビュー。子供の目に映る世界を覗いてみた"
   en: "Gifting My Daughter a ZV-E10: A Beginner's Photo Walk Through Osaka Castle Park"
 date: "2024-02-29"
+coverImage: /covers/minimax/osaka-castle-park-zve10-photography.jpg
 category: "life"
 tags: ["bilibili", "自动生成"]
 excerpt:

@@ -3,6 +3,7 @@ import { PageTransition } from '@/components/shared/PageTransition';
 import { ScrollReveal } from '@/components/shared/ScrollReveal';
 import { TimelineYearIndexClient } from '@/components/timeline/TimelineYearIndexClient';
 import { Link } from '@/i18n/navigation';
+import { TodayFeedTeaser } from '@/components/home/TodayFeedTeaser';
 
 export default async function TimelinePage({
   params,
@@ -26,6 +27,8 @@ export default async function TimelinePage({
           <h1 className="text-3xl sm:text-4xl font-bold mb-3">{t('title')}</h1>
           <p className="text-muted-foreground max-w-2xl mx-auto">{t('subtitle')}</p>
         </ScrollReveal>
+
+        <TodayFeedTeaser locale={(locale as 'zh' | 'ja' | 'en') || 'zh'} />
 
         <TimelineYearIndexClient />
       </div>

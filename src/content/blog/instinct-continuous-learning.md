@@ -6,6 +6,7 @@ title:
   en: "How AI Continuously Learns: Auto-Accumulating Reusable Skills from Conversations"
 category: "learning"
 date: "2026-03-29"
+coverImage: /covers/minimax/instinct-continuous-learning.jpg
 author: Will
 readingTime: 10
 excerpt:

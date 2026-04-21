@@ -1,0 +1,1735 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我给 6 个 AI 实例造了一个共享大脑 | OpenClaw + Hermes + Claude Code + clawmem 架构实战</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            background: #0A1420;
+            color: #E8F4F8;
+            line-height: 1.7;
+        }
+        a { color: #00D4FF; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+
+        /* ── PROGRESS BAR ── */
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 3px;
+            background: linear-gradient(90deg, #00D4FF, #FF8C42);
+            z-index: 9999;
+            transition: width 0.1s;
+        }
+
+        /* ── STICKY NAV ── */
+        .sticky-nav {
+            position: fixed;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 1000;
+            background: rgba(10,20,32,0.95);
+            border: 1px solid rgba(0,212,255,0.15);
+            border-radius: 12px;
+            padding: 16px 12px;
+            width: 180px;
+            backdrop-filter: blur(12px);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .sticky-nav.visible { opacity: 1; }
+        .sticky-nav-title {
+            color: #00D4FF;
+            font-size: 11px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid rgba(0,212,255,0.1);
+        }
+        .sticky-nav-item {
+            display: block;
+            padding: 6px 8px;
+            color: rgba(232,244,248,0.5);
+            font-size: 12px;
+            text-decoration: none;
+            border-radius: 6px;
+            transition: all 0.2s;
+            margin-bottom: 2px;
+            border-left: 2px solid transparent;
+        }
+        .sticky-nav-item:hover {
+            color: #00D4FF;
+            background: rgba(0,212,255,0.05);
+        }
+        .sticky-nav-item.active {
+            color: #00D4FF;
+            background: rgba(0,212,255,0.08);
+            border-left-color: #00D4FF;
+            font-weight: 600;
+        }
+        .sticky-nav-section {
+            color: rgba(232,244,248,0.3);
+            font-size: 10px;
+            margin: 8px 0 4px 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* ── BACK TO TOP ── */
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: rgba(0,212,255,0.1);
+            border: 1px solid rgba(0,212,255,0.3);
+            color: #00D4FF;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0;
+            transition: all 0.3s;
+            z-index: 1000;
+            font-size: 18px;
+        }
+        .back-to-top.visible {
+            opacity: 1;
+        }
+        .back-to-top:hover {
+            background: rgba(0,212,255,0.2);
+            transform: translateY(-2px);
+        }
+
+        /* ── HERO ── */
+        .hero {
+            background: linear-gradient(135deg, #0A1420 0%, #0D1F35 50%, #0A1420 100%);
+            border-bottom: 1px solid rgba(0,212,255,0.2);
+            padding: 80px 20px 60px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(ellipse at 30% 50%, rgba(0,212,255,0.06) 0%, transparent 60%),
+                        radial-gradient(ellipse at 70% 50%, rgba(255,140,66,0.04) 0%, transparent 60%);
+            animation: heroPulse 8s ease-in-out infinite;
+        }
+        @keyframes heroPulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+        .hero-eyebrow {
+            display: inline-block;
+            background: rgba(0,212,255,0.1);
+            border: 1px solid rgba(0,212,255,0.3);
+            color: #00D4FF;
+            padding: 5px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 24px;
+            position: relative;
+        }
+        .hero h1 {
+            font-size: 2.6rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #00D4FF 0%, #FFFFFF 50%, #FF8C42 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 16px;
+            position: relative;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .hero-sub {
+            color: rgba(232,244,248,0.7);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto 32px;
+            position: relative;
+        }
+        .hero-date {
+            color: rgba(232,244,248,0.4);
+            font-size: 13px;
+            position: relative;
+        }
+        .hero-tags { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-top: 16px; position: relative; }
+        .hero-tag {
+            background: rgba(255,140,66,0.1);
+            border: 1px solid rgba(255,140,66,0.3);
+            color: #FF8C42;
+            padding: 3px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+        }
+
+        /* ── STATS BAR ── */
+        .stats-bar {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1px;
+            background: rgba(0,212,255,0.1);
+            border-bottom: 1px solid rgba(0,212,255,0.15);
+        }
+        .stat-item {
+            background: #0A1420;
+            padding: 24px 20px;
+            text-align: center;
+        }
+        .stat-num {
+            font-size: 2.2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #00D4FF, #FF8C42);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .stat-label { color: rgba(232,244,248,0.5); font-size: 13px; margin-top: 4px; }
+
+        /* ── TOC ── */
+        .toc {
+            background: #0D1825;
+            border: 1px solid rgba(0,212,255,0.12);
+            border-radius: 16px;
+            padding: 28px 32px;
+            margin: 40px auto;
+            max-width: 900px;
+        }
+        .toc-title {
+            color: #00D4FF;
+            font-size: 13px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 16px;
+        }
+        .toc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 32px; }
+        .toc-item { display: flex; align-items: baseline; gap: 10px; padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.04); }
+        .toc-num { color: #FF8C42; font-weight: 700; font-size: 13px; min-width: 20px; }
+        .toc-text { color: rgba(232,244,248,0.8); font-size: 14px; }
+        .toc-item:hover .toc-text { color: #00D4FF; }
+
+        /* ── CONTAINER ── */
+        .container { max-width: 900px; margin: 0 auto; padding: 0 20px; }
+
+        /* ── SECTION ── */
+        .section { margin-bottom: 56px; position: relative; }
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 28px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid rgba(0,212,255,0.15);
+        }
+        .section-num {
+            background: linear-gradient(135deg, #00D4FF, #FF8C42);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: 2rem;
+            font-weight: 800;
+            line-height: 1;
+        }
+        .section-title-group { flex: 1; }
+        h2.section-title-text {
+            font-size: 1.4rem;
+            color: #E8F4F8;
+            font-weight: 700;
+        }
+        .section-subtitle { color: rgba(232,244,248,0.4); font-size: 13px; margin-top: 4px; }
+
+        /* ── CARDS ── */
+        .cards-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 20px 0; }
+        .card {
+            background: rgba(0,212,255,0.04);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(0,212,255,0.18);
+            border-radius: 14px;
+            padding: 22px 20px;
+            transition: all 0.3s;
+        }
+        .card:hover {
+            border-color: rgba(0,212,255,0.4);
+            box-shadow: 0 0 30px rgba(0,212,255,0.07);
+        }
+        .card-icon { font-size: 28px; margin-bottom: 12px; }
+        .card-name { color: #00D4FF; font-weight: 700; font-size: 15px; margin-bottom: 6px; }
+        .card-desc { color: rgba(232,244,248,0.65); font-size: 13px; line-height: 1.6; }
+        .card-tag {
+            display: inline-block;
+            background: rgba(255,140,66,0.12);
+            border: 1px solid rgba(255,140,66,0.3);
+            color: #FF8C42;
+            padding: 2px 10px;
+            border-radius: 10px;
+            font-size: 11px;
+            margin-top: 10px;
+        }
+
+        /* ── DIAGRAM ── */
+        .diagram {
+            background: #0D1825;
+            border: 1px solid rgba(0,212,255,0.15);
+            border-radius: 16px;
+            padding: 32px;
+            margin: 24px 0;
+            overflow-x: auto;
+        }
+        .diagram-svg { display: flex; justify-content: center; }
+        .diagram-svg svg { max-width: 100%; height: auto; }
+
+        /* ── TABLE ── */
+        .table-wrap { margin: 20px 0; overflow-x: auto; }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #0D1825;
+            border: 1px solid rgba(0,212,255,0.12);
+            border-radius: 12px;
+            overflow: hidden;
+            font-size: 14px;
+        }
+        th {
+            background: rgba(0,212,255,0.1);
+            color: #00D4FF;
+            padding: 14px 16px;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 1px solid rgba(0,212,255,0.2);
+            white-space: nowrap;
+        }
+        td { padding: 12px 16px; border-bottom: 1px solid rgba(255,255,255,0.04); vertical-align: top; }
+        tr:last-child td { border-bottom: none; }
+        tr:hover { background: rgba(0,212,255,0.03); }
+        .td-mono { font-family: 'SF Mono', 'Fira Code', monospace; font-size: 13px; color: #FF8C42; }
+        .td-key { color: #FF8C42; font-weight: 600; }
+        .td-ok { color: #4ADE80; }
+
+        /* ── CODE ── */
+        pre {
+            background: #080F1A;
+            border: 1px solid rgba(0,212,255,0.12);
+            border-radius: 12px;
+            padding: 20px 24px;
+            overflow-x: auto;
+            margin: 16px 0;
+            font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+            font-size: 13px;
+            line-height: 1.7;
+            color: #B8D4E8;
+        }
+        code {
+            font-family: 'SF Mono', 'Fira Code', monospace;
+            font-size: 13px;
+            color: #FF8C42;
+            background: rgba(255,140,66,0.08);
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+        .code-comment { color: rgba(232,244,248,0.35); }
+        .code-cmd { color: #00D4FF; }
+        .code-str { color: #4ADE80; }
+        .code-num { color: #FFD580; }
+        pre .code-comment { color: #5A7A8A; }
+
+        /* ── TIMELINE ── */
+        .timeline { padding: 20px 0; }
+        .timeline-list { position: relative; padding-left: 32px; }
+        .timeline-list::before {
+            content: '';
+            position: absolute;
+            left: 7px;
+            top: 8px;
+            bottom: 8px;
+            width: 2px;
+            background: linear-gradient(180deg, #00D4FF 0%, #FF8C42 100%);
+        }
+        .timeline-item { position: relative; padding: 14px 0; }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -29px;
+            top: 20px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #0A1420;
+            border: 2px solid #00D4FF;
+            box-shadow: 0 0 8px rgba(0,212,255,0.4);
+        }
+        .timeline-item.done::before { background: #00D4FF; }
+        .timeline-date { color: #00D4FF; font-weight: 700; font-size: 13px; }
+        .timeline-title { color: #E8F4F8; font-weight: 600; margin: 4px 0 6px; font-size: 15px; }
+        .timeline-body { color: rgba(232,244,248,0.7); font-size: 14px; line-height: 1.7; }
+
+        /* ── PITFALL ── */
+        .pitfall {
+            background: #0D1825;
+            border: 1px solid rgba(0,212,255,0.1);
+            border-left: 3px solid #FF8C42;
+            border-radius: 0 12px 12px 0;
+            padding: 20px 24px;
+            margin: 16px 0;
+        }
+        .pitfall-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+        .pitfall-icon { font-size: 20px; }
+        .pitfall-num { background: rgba(255,140,66,0.15); color: #FF8C42; padding: 2px 10px; border-radius: 8px; font-size: 12px; font-weight: 700; }
+        .pitfall-title { color: #FF8C42; font-weight: 700; font-size: 15px; }
+        .pitfall pre { margin: 10px 0 0; font-size: 12.5px; }
+
+        /* ── WORKFLOW ── */
+        .workflow {
+            background: #0D1825;
+            border: 1px solid rgba(0,212,255,0.12);
+            border-radius: 14px;
+            padding: 24px;
+            margin: 20px 0;
+        }
+        .workflow-title { color: #00D4FF; font-weight: 700; font-size: 14px; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+        .workflow-step { display: flex; gap: 16px; margin-bottom: 14px; align-items: flex-start; }
+        .step-num {
+            background: linear-gradient(135deg, #00D4FF, #FF8C42);
+            color: #0A1420;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 800;
+            flex-shrink: 0;
+        }
+        .step-text { color: rgba(232,244,248,0.85); font-size: 14px; flex: 1; }
+        .step-text strong { color: #00D4FF; }
+        .step-text em { color: #FF8C42; font-style: normal; }
+
+        /* ── TERMS ── */
+        .terms { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 32px; margin: 20px 0; }
+        .term-item { display: flex; align-items: baseline; gap: 8px; }
+        .term {
+            position: relative;
+            color: #FF8C42;
+            font-weight: 700;
+            cursor: help;
+            border-bottom: 1px dashed rgba(255,140,66,0.4);
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+        .term::after {
+            content: attr(data-tip);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(10,20,32,0.98);
+            border: 1px solid rgba(0,212,255,0.3);
+            color: #E8F4F8;
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-size: 12.5px;
+            font-weight: normal;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.25s;
+            z-index: 100;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.6);
+        }
+        .term:hover::after { opacity: 1; visibility: visible; bottom: calc(100% + 8px); }
+        .term-def { color: rgba(232,244,248,0.6); font-size: 13px; }
+
+        /* ── INSIGHT ── */
+        .insight-box {
+            background: rgba(255,140,66,0.06);
+            border: 1px solid rgba(255,140,66,0.25);
+            border-radius: 14px;
+            padding: 20px 24px;
+            margin: 20px 0;
+        }
+        .insight-title { color: #FF8C42; font-weight: 700; font-size: 14px; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+        .insight-title::before { content: '💡'; }
+        .insight-body { color: rgba(232,244,248,0.8); font-size: 14px; line-height: 1.8; }
+
+        /* ── COMPARISON ── */
+        .comparison-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 20px 0; }
+        .comparison-col { background: #0D1825; border: 1px solid rgba(0,212,255,0.12); border-radius: 14px; padding: 22px; }
+        .comparison-header { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+        .comparison-header-good { color: #4ADE80; font-weight: 700; font-size: 14px; }
+        .comparison-header-bad { color: #FF8C42; font-weight: 700; font-size: 14px; }
+        .comparison-item { display: flex; gap: 8px; padding: 5px 0; font-size: 14px; color: rgba(232,244,248,0.75); }
+        .comparison-check { color: #4ADE80; flex-shrink: 0; }
+        .comparison-cross { color: #FF8C42; flex-shrink: 0; }
+
+        /* ── DECISION CARD ── */
+        .decision-card {
+            background: rgba(255,140,66,0.06);
+            border: 1px solid rgba(255,140,66,0.2);
+            border-left: 3px solid #FF8C42;
+            border-radius: 0 12px 12px 0;
+            padding: 20px 24px;
+            margin: 20px 0;
+        }
+        .decision-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+        .decision-badge {
+            background: rgba(255,140,66,0.15);
+            color: #FF8C42;
+            padding: 2px 10px;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+        .decision-title { color: #FF8C42; font-weight: 700; font-size: 14px; }
+        .decision-body { color: rgba(232,244,248,0.8); font-size: 14px; line-height: 1.8; }
+        .decision-meta {
+            display: flex;
+            gap: 16px;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid rgba(255,140,66,0.1);
+        }
+        .decision-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: rgba(232,244,248,0.5);
+            font-size: 12px;
+        }
+
+        /* ── BEFORE/AFTER ── */
+        .before-after {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 24px 0;
+        }
+        .before-after-col {
+            background: #0D1825;
+            border: 1px solid rgba(0,212,255,0.1);
+            border-radius: 14px;
+            padding: 24px;
+            position: relative;
+        }
+        .before-after-col.before { border-left: 3px solid #FF8C42; }
+        .before-after-col.after { border-left: 3px solid #4ADE80; }
+        .before-after-label {
+            position: absolute;
+            top: -1px;
+            right: 20px;
+            padding: 4px 12px;
+            border-radius: 0 0 8px 8px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+        .before-after-label.before {
+            background: rgba(255,140,66,0.15);
+            color: #FF8C42;
+        }
+        .before-after-label.after {
+            background: rgba(74,222,128,0.15);
+            color: #4ADE80;
+        }
+
+        /* ── COLLAPSIBLE ── */
+        .collapse-btn {
+            background: none;
+            border: none;
+            color: #00D4FF;
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 0;
+            width: 100%;
+            text-align: left;
+            font-family: inherit;
+        }
+        .collapse-btn::after {
+            content: '▼';
+            font-size: 10px;
+            transition: transform 0.3s;
+        }
+        .collapse-btn.collapsed::after {
+            transform: rotate(-90deg);
+        }
+        .collapse-content {
+            max-height: 2000px;
+            overflow: hidden;
+            transition: max-height 0.5s ease;
+        }
+        .collapse-content.collapsed {
+            max-height: 0;
+        }
+
+        /* ── FLOW ANIMATION ── */
+        @keyframes flowDash {
+            to { stroke-dashoffset: -20; }
+        }
+        .flow-line {
+            animation: flowDash 1s linear infinite;
+        }
+
+        /* ── HIGHLIGHT BAR ── */
+        .highlight-bar {
+            border-left: 3px solid #00D4FF;
+            padding-left: 16px;
+            margin: 16px 0;
+        }
+
+        /* ── PERFORMANCE CHART ── */
+        .perf-chart {
+            display: flex;
+            align-items: flex-end;
+            gap: 8px;
+            height: 120px;
+            padding: 20px;
+            background: #0D1825;
+            border-radius: 12px;
+            margin: 16px 0;
+        }
+        .perf-bar {
+            flex: 1;
+            background: linear-gradient(180deg, #00D4FF 0%, rgba(0,212,255,0.2) 100%);
+            border-radius: 4px 4px 0 0;
+            position: relative;
+            min-width: 30px;
+        }
+        .perf-bar-label {
+            position: absolute;
+            bottom: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 10px;
+            color: rgba(232,244,248,0.5);
+            white-space: nowrap;
+        }
+        .perf-bar-value {
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 11px;
+            color: #00D4FF;
+            font-weight: 600;
+        }
+
+        /* ── FOOTER ── */
+        .article-footer {
+            border-top: 1px solid rgba(0,212,255,0.15);
+            padding: 40px 0;
+            margin-top: 60px;
+            text-align: center;
+        }
+        .footer-stack { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-bottom: 20px; }
+        .footer-tag { background: rgba(0,212,255,0.08); border: 1px solid rgba(0,212,255,0.2); color: #00D4FF; padding: 4px 14px; border-radius: 20px; font-size: 13px; }
+        .footer-meta { color: rgba(232,244,248,0.35); font-size: 13px; }
+        .footer-fee { color: #4ADE80; font-weight: 700; }
+
+        /* ── DIVIDER ── */
+        .divider { border: none; border-top: 1px solid rgba(0,212,255,0.08); margin: 48px 0; }
+
+        /* ── INTRO TEXT ── */
+        .intro-text {
+            font-size: 16px;
+            line-height: 2;
+            color: rgba(232,244,248,0.85);
+            margin: 24px 0;
+        }
+        .intro-text p { margin-bottom: 16px; }
+
+        /* ── ARCHITECTURE SVG ── */
+        .arch-layer {
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .arch-layer:hover {
+            filter: brightness(1.2);
+        }
+        .arch-layer.expanded rect {
+            stroke: #00D4FF;
+            stroke-width: 2;
+        }
+        .arch-detail {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease;
+            background: #080F1A;
+            border: 1px solid rgba(0,212,255,0.1);
+            border-radius: 8px;
+            margin-top: 8px;
+        }
+        .arch-detail.open {
+            max-height: 500px;
+            padding: 16px;
+        }
+
+        /* ── TOOLTIP ── */
+        .tooltip {
+            position: absolute;
+            background: rgba(10,20,32,0.98);
+            border: 1px solid rgba(0,212,255,0.3);
+            border-radius: 8px;
+            padding: 12px 16px;
+            font-size: 12px;
+            color: #E8F4F8;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.2s;
+            z-index: 10000;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.6);
+            max-width: 280px;
+        }
+        .tooltip.visible { opacity: 1; }
+        .tooltip-title { color: #00D4FF; font-weight: 700; margin-bottom: 4px; }
+        .tooltip-meta { color: rgba(232,244,248,0.5); font-size: 11px; }
+
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 1.8rem; }
+            .stats-bar { grid-template-columns: 1fr 1fr; }
+            .cards-3 { grid-template-columns: 1fr; }
+            .toc-grid { grid-template-columns: 1fr; }
+            .comparison-grid { grid-template-columns: 1fr; }
+            .terms { grid-template-columns: 1fr; }
+            .before-after { grid-template-columns: 1fr; }
+            .sticky-nav { display: none; }
+            .table-wrap { font-size: 12px; }
+            pre { font-size: 11.5px; }
+        }
+
+        @media (max-width: 480px) {
+            .stats-bar { grid-template-columns: 1fr 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Progress Bar -->
+<div class="progress-bar" id="progressBar"></div>
+
+<!-- Sticky Navigation -->
+<nav class="sticky-nav" id="stickyNav">
+    <div class="sticky-nav-title">📑 目录</div>
+    <a href="#part1" class="sticky-nav-item" data-section="part1">01 生态背景</a>
+    <a href="#part2" class="sticky-nav-item" data-section="part2">02 记忆孤岛</a>
+    <a href="#part3" class="sticky-nav-item" data-section="part3">03 架构总览</a>
+    <a href="#part4" class="sticky-nav-item" data-section="part4">04 技术实现</a>
+    <a href="#part5" class="sticky-nav-item" data-section="part5">05 踩坑记录</a>
+    <a href="#part6" class="sticky-nav-item" data-section="part6">06 能力地图</a>
+    <a href="#part7" class="sticky-nav-item" data-section="part7">07 观感收获</a>
+    <a href="#part8" class="sticky-nav-item" data-section="part8">08 建议</a>
+</nav>
+
+<!-- Back to Top -->
+<div class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</div>
+
+<!-- ══════════ HERO ══════════ -->
+<div class="hero">
+    <div class="hero-eyebrow">🏗️ 架构设计 · 实战复盘</div>
+    <h1>我给 6 个 AI 实例<br>造了一个共享大脑</h1>
+    <p class="hero-sub">OpenClaw + Hermes + Claude Code + clawmem 架构实战</p>
+    <div class="hero-date">2026-04-20 · 阅读约 18 分钟</div>
+    <div class="hero-tags">
+        <span class="hero-tag">AI</span>
+        <span class="hero-tag">LLM</span>
+        <span class="hero-tag">Agent架构</span>
+        <span class="hero-tag">Claude</span>
+        <span class="hero-tag">MCP</span>
+        <span class="hero-tag">记忆系统</span>
+        <span class="hero-tag">多实例</span>
+    </div>
+</div>
+
+<!-- ══════════ STATS BAR ══════════ -->
+<div class="stats-bar">
+    <div class="stat-item"><div class="stat-num">6</div><div class="stat-label">AI 实例</div></div>
+    <div class="stat-item"><div class="stat-num">3</div><div class="stat-label">Mac 主机</div></div>
+    <div class="stat-item"><div class="stat-num">~20s</div><div class="stat-label">每日同步耗时</div></div>
+    <div class="stat-item"><div class="stat-num">$0</div><div class="stat-label">额外费用</div></div>
+</div>
+
+<div class="container">
+
+<!-- ══════════ INTRO ══════════ -->
+<div class="section" id="intro" style="margin-top:48px;">
+    <div class="intro-text">
+        <p>六个 AI，跨三台 Mac，共享同一本笔记，每晚自愈自整理，永不忘事。</p>
+        <p>过去半年我同时养了 6 个 AI 实例：4 个 OpenClaw agent（seasonal name：春/夏/秋/冬）、1 个 Hermes、1 个 Claude Code CLI。它们每一个都有自己的"性格"、自己的技能栈、自己在做不同的项目。但很快问题来了——</p>
+        <p>昨天在 A 实例解决的 bug，今天 B 实例完全不知道。每个 AI 都在自己的 MEMORY.md 里写各种铁律，但没有共享。想让某个 agent "去问问别的 agent 知道不知道" → 没机制。重要决策分散在 6 套日志里，找不到。</p>
+        <p><strong style="color:#00D4FF">今天我给它们建了共享大脑。</strong>这篇写完整架构 + 实现细节。</p>
+    </div>
+</div>
+
+<!-- ══════════ BEFORE/AFTER ══════════ -->
+<div class="section">
+    <div class="before-after">
+        <div class="before-after-col before">
+            <div class="before-after-label before">❌ Before</div>
+            <h4 style="color:#FF8C42;margin-bottom:12px;">记忆孤岛</h4>
+            <div class="comparison-item"><span class="comparison-cross">✗</span>6 份独立记忆，互不相通</div>
+            <div class="comparison-item"><span class="comparison-cross">✗</span>同一 bug 重复解决 3 次</div>
+            <div class="comparison-item"><span class="comparison-cross">✗</span>决策散落在各处，找不到</div>
+            <div class="comparison-item"><span class="comparison-cross">✗</span>API key 轮换后某实例还在用旧的</div>
+            <div class="comparison-item"><span class="comparison-cross">✗</span>想"问问别的 agent" → 没机制</div>
+        </div>
+        <div class="before-after-col after">
+            <div class="before-after-label after">✓ After</div>
+            <h4 style="color:#4ADE80;margin-bottom:12px;">共享大脑</h4>
+            <div class="comparison-item"><span class="comparison-check">✓</span>一份 Vault，6 实例共读共写</div>
+            <div class="comparison-item"><span class="comparison-check">✓</span>语义搜索："找关于 X 的讨论"</div>
+            <div class="comparison-item"><span class="comparison-check">✓</span>每晚自愈：自动归档 + 合并重复</div>
+            <div class="comparison-item"><span class="comparison-check">✓</span>决策有迹可循，版本控制</div>
+            <div class="comparison-item"><span class="comparison-check">✓</span>跨实例查询：clawmem 语义检索</div>
+        </div>
+    </div>
+</div>
+
+<!-- ══════════ TOC ══════════ -->
+<div class="toc">
+    <div class="toc-title">📑 目录</div>
+    <div class="toc-grid">
+        <div class="toc-item"><span class="toc-num">01</span><span class="toc-text">生态背景</span></div>
+        <div class="toc-item"><span class="toc-num">02</span><span class="toc-text">问题：记忆孤岛</span></div>
+        <div class="toc-item"><span class="toc-num">03</span><span class="toc-text">架构总览</span></div>
+        <div class="toc-item"><span class="toc-num">04</span><span class="toc-text">技术实现</span></div>
+        <div class="toc-item"><span class="toc-num">05</span><span class="toc-text">踩过的坑 ×7</span></div>
+        <div class="toc-item"><span class="toc-num">06</span><span class="toc-text">六实例能力地图</span></div>
+        <div class="toc-item"><span class="toc-num">07</span><span class="toc-text">观感与收获</span></div>
+        <div class="toc-item"><span class="toc-num">08</span><span class="toc-text">给后来人的建议</span></div>
+    </div>
+</div>
+
+<!-- ══════════ PART 1 ══════════ -->
+<div class="section" id="part1">
+    <div class="section-header">
+        <div class="section-num">01</div>
+        <div class="section-title-group">
+            <h2 class="section-title-text">生态背景</h2>
+            <div class="section-subtitle">三个平台同时跑，各自独立</div>
+        </div>
+    </div>
+
+    <div class="cards-3">
+        <div class="card">
+            <div class="card-icon">🕷️</div>
+            <div class="card-name">OpenClaw</div>
+            <div class="card-desc">多智能体编排平台，同时运行多个 AI agent 实例，每个 agent 有独立 workspace、记忆、技能栈、工具配置</div>
+            <div class="card-tag">4 实例</div>
+        </div>
+        <div class="card">
+            <div class="card-icon">🤖</div>
+            <div class="card-name">Hermes</div>
+            <div class="card-desc">CLI 通用 AI 助手，YAML 配置，支持 MCP servers 原生接入，配 MiniMax M2.7 / Kimi / Nous 多 provider fallback</div>
+            <div class="card-tag">1 实例</div>
+        </div>
+        <div class="card">
+            <div class="card-icon">⚡</div>
+            <div class="card-name">Claude Code CLI</div>
+            <div class="card-desc">Anthropic 官方 CLI，支持 MCP、Skills、Plugins、hooks。Wrapper 启动 + Telegram plugin，手机随时遥控</div>
+            <div class="card-tag">1 实例</div>
+        </div>
+    </div>
+
+    <div class="decision-card">
+        <div class="decision-header">
+            <span class="decision-badge">决策</span>
+            <span class="decision-title">为什么选这三个平台？</span>
+        </div>
+        <div class="decision-body">
+            <p><strong>OpenClaw</strong>：主力平台，支持多实例隔离 + 技能系统 + 记忆管理，适合长期运行的 agent。</p>
+            <p><strong>Hermes</strong>：轻量 CLI，快速测试新模型/新流程，YAML 配置比 JSON 好维护。</p>
+            <p><strong>Claude Code</strong>：Anthropic 官方，MCP 生态最全，Skills 系统成熟，适合复杂项目开发。</p>
+        </div>
+        <div class="decision-meta">
+            <div class="decision-meta-item">📅 2025-10 开始部署</div>
+            <div class="decision-meta-item">🔄 持续迭代中</div>
+        </div>
+    </div>
+
+    <div class="insight-box">
+        <div class="insight-title">三套完全独立的系统</div>
+        <div class="insight-body">各自的 config、各自的 memory、各自的工作流。跨系统共享信息，过去只能靠手动复制粘贴。</div>
+    </div>
+</div>
+
+<hr class="divider">
+
+<!-- ══════════ PART 2 ══════════ -->
+<div class="section" id="part2">
+    <div class="section-header">
+        <div class="section-num">02</div>
+        <div class="section-title-group">
+            <h2 class="section-title-text">问题：记忆孤岛</h2>
+            <div class="section-subtitle">6 份记忆，各自为政</div>
+        </div>
+    </div>
+
+    <div class="table-wrap">
+        <table>
+            <thead><tr><th>实例</th><th>平台</th><th>记忆路径</th></tr></thead>
+            <tbody>
+                <tr><td class="td-key">yuki</td><td>OpenClaw</td><td class="td-mono">~/.openclaw/workspace/memory/MEMORY.md</td></tr>
+                <tr><td class="td-key">natsu</td><td>OpenClaw</td><td class="td-mono">~/.openclaw/workspace-natsu/memory/MEMORY.md</td></tr>
+                <tr><td class="td-key">haru</td><td>OpenClaw</td><td class="td-mono">~/.openclaw/workspace/memory/MEMORY.md</td></tr>
+                <tr><td class="td-key">aki</td><td>OpenClaw</td><td class="td-mono">~/.openclaw/workspace/memory/MEMORY.md</td></tr>
+                <tr><td class="td-key">Hermes</td><td>Hermes</td><td class="td-mono">~/.hermes/profiles/&lt;name&gt;/memory/</td></tr>
+                <tr><td class="td-key">Claude</td><td>Claude Code</td><td class="td-mono">~/.claude/projects/&lt;cwd&gt;/memory/MEMORY.md</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="comparison-grid">
+        <div class="comparison-col">
+            <div class="comparison-header"><span class="comparison-header-bad">❌ 孤岛问题</span></div>
+            <div class="comparison-item"><span class="comparison-cross">✗</span>三周前的 API key 已轮换，某个 agent 还在用</div>
+            <div class="comparison-item"><span class="comparison-cross">✗</span>同一决策在 3 个 agent memory 里各记一份，表述还不一样</div>
+            <div class="comparison-item"><span class="comparison-cross">✗</span>知道讨论过，但想不起是哪个 agent 讨论的</div>
+            <div class="comparison-item"><span class="comparison-cross">✗</span>想"让 agent 去问别的 agent" → 没有机制</div>
+        </div>
+        <div class="comparison-col">
+            <div class="comparison-header"><span class="comparison-header-good">✓ 设计目标</span></div>
+            <div class="comparison-item"><span class="comparison-check">✓</span><strong>SSoT</strong>：一份 markdown 笔记库，6 实例共读共写</div>
+            <div class="comparison-item"><span class="comparison-check">✓</span><strong>语义搜索</strong>：不光 grep，能"找关于 X 主题的讨论"</div>
+            <div class="comparison-item"><span class="comparison-check">✓</span><strong>自愈机制</strong>：记忆旧了自动归档，重复的自动合并</div>
+            <div class="comparison-item"><span class="comparison-check">✓</span><strong>不同步索引</strong>：每台机自己建 vector 索引（二进制同步坑太多）</div>
+        </div>
+    </div>
+</div>
+
+<hr class="divider">
+
+<!-- ══════════ PART 3 ══════════ -->
+<div class="section" id="part3">
+    <div class="section-header">
+        <div class="section-num">03</div>
+        <div class="section-title-group">
+            <h2 class="section-title-text">架构总览</h2>
+            <div class="section-subtitle">Vault 作 SSoT + Git 同步源 + 每机独立建索引</div>
+        </div>
+    </div>
+
+    <!-- Architecture Diagram -->
+    <div class="diagram">
+        <div class="diagram-svg">
+        <svg viewBox="0 0 900 520" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system, BlinkMacSystemFont, sans-serif">
+            <!-- Background grid -->
+            <defs>
+                <pattern id="grid" width="30" height="30" patternUnits="userSpaceOnUse">
+                    <path d="M 30 0 L 0 0 0 30" fill="none" stroke="rgba(0,212,255,0.05)" stroke-width="0.5"/>
+                </pattern>
+                <linearGradient id="vaultGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" style="stop-color:#FF8C42;stop-opacity:0.3"/>
+                    <stop offset="100%" style="stop-color:#00D4FF;stop-opacity:0.1"/>
+                </linearGradient>
+                <filter id="glow">
+                    <feGaussianBlur stdDeviation="3" result="blur"/>
+                    <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                </filter>
+            </defs>
+            <rect width="900" height="520" fill="url(#grid)"/>
+
+            <!-- Central Vault -->
+            <rect x="350" y="20" width="200" height="90" rx="12" fill="url(#vaultGrad)" stroke="#FF8C42" stroke-width="1.5" filter="url(#glow)" class="arch-layer" onclick="toggleArch('vault')"/>
+            <text x="450" y="52" text-anchor="middle" fill="#FF8C42" font-size="13" font-weight="700">📚 Obsidian Vault</text>
+            <text x="450" y="70" text-anchor="middle" fill="rgba(232,244,248,0.6)" font-size="11">~/Documents/kb/</text>
+            <text x="450" y="86" text-anchor="middle" fill="rgba(0,212,255,0.8)" font-size="11">~1800 .md · Single Source of Truth</text>
+
+            <!-- Git sync arrow down from vault -->
+            <line x1="450" y1="110" x2="450" y2="145" stroke="#00D4FF" stroke-width="2" stroke-dasharray="4,3" class="flow-line"/>
+            <text x="470" y="130" fill="rgba(0,212,255,0.7)" font-size="11">git bare + rsync</text>
+
+            <!-- Instances row -->
+            <rect x="80" y="155" width="120" height="55" rx="10" fill="rgba(0,212,255,0.06)" stroke="rgba(0,212,255,0.3)" stroke-width="1" class="arch-layer" onclick="toggleArch('yuki')"/>
+            <text x="140" y="177" text-anchor="middle" fill="#00D4FF" font-size="13" font-weight="700">Yuki</text>
+            <text x="140" y="193" text-anchor="middle" fill="rgba(232,244,248,0.5)" font-size="10">M4 Mac mini</text>
+            <text x="140" y="206" text-anchor="middle" fill="rgba(255,140,66,0.7)" font-size="10">← 主控</text>
+
+            <rect x="230" y="155" width="120" height="55" rx="10" fill="rgba(0,212,255,0.06)" stroke="rgba(0,212,255,0.3)" stroke-width="1" class="arch-layer" onclick="toggleArch('natsu')"/>
+            <text x="290" y="177" text-anchor="middle" fill="#00D4FF" font-size="13" font-weight="700">Natsu</text>
+            <text x="290" y="193" text-anchor="middle" fill="rgba(232,244,248,0.5)" font-size="10">M4 Mac mini</text>
+            <text x="290" y="206" text-anchor="middle" fill="rgba(232,244,248,0.4)" font-size="10">同机 loopback</text>
+
+            <rect x="390" y="155" width="120" height="55" rx="10" fill="rgba(0,212,255,0.06)" stroke="rgba(0,212,255,0.3)" stroke-width="1" class="arch-layer" onclick="toggleArch('haru')"/>
+            <text x="450" y="177" text-anchor="middle" fill="#00D4FF" font-size="13" font-weight="700">Haru</text>
+            <text x="450" y="193" text-anchor="middle" fill="rgba(232,244,248,0.5)" font-size="10">M2 Mac mini LAN</text>
+
+            <rect x="550" y="155" width="120" height="55" rx="10" fill="rgba(0,212,255,0.06)" stroke="rgba(0,212,255,0.3)" stroke-width="1" class="arch-layer" onclick="toggleArch('aki')"/>
+            <text x="610" y="177" text-anchor="middle" fill="#00D4FF" font-size="13" font-weight="700">Aki</text>
+            <text x="610" y="193" text-anchor="middle" fill="rgba(232,244,248,0.5)" font-size="10">MacBook Pro</text>
+            <text x="610" y="206" text-anchor="middle" fill="rgba(232,244,248,0.4)" font-size="10">Tailscale</text>
+
+            <rect x="710" y="155" width="110" height="55" rx="10" fill="rgba(0,212,255,0.06)" stroke="rgba(0,212,255,0.3)" stroke-width="1" class="arch-layer" onclick="toggleArch('hermes')"/>
+            <text x="765" y="177" text-anchor="middle" fill="#00D4FF" font-size="13" font-weight="700">Hermes</text>
+            <text x="765" y="193" text-anchor="middle" fill="rgba(232,244,248,0.5)" font-size="10">M4 Mac mini</text>
+
+            <rect x="710" y="230" width="110" height="55" rx="10" fill="rgba(0,212,255,0.06)" stroke="rgba(0,212,255,0.3)" stroke-width="1" class="arch-layer" onclick="toggleArch('claude')"/>
+            <text x="765" y="252" text-anchor="middle" fill="#00D4FF" font-size="13" font-weight="700">Claude</text>
+            <text x="765" y="268" text-anchor="middle" fill="rgba(232,244,248,0.5)" font-size="10">CLI · 本机</text>
+
+            <!-- Arrows from vault to instances -->
+            <line x1="350" y1="65" x2="170" y2="155" stroke="rgba(255,140,66,0.3)" stroke-width="1" stroke-dasharray="3,3" class="flow-line"/>
+            <line x1="450" y1="110" x2="140" y2="155" stroke="rgba(255,140,66,0.3)" stroke-width="1" stroke-dasharray="3,3" class="flow-line"/>
+            <line x1="450" y1="110" x2="290" y2="155" stroke="rgba(255,140,66,0.3)" stroke-width="1" stroke-dasharray="3,3" class="flow-line"/>
+            <line x1="450" y1="110" x2="450" y2="155" stroke="rgba(255,140,66,0.3)" stroke-width="1" stroke-dasharray="3,3" class="flow-line"/>
+            <line x1="550" y1="65" x2="610" y2="155" stroke="rgba(255,140,66,0.3)" stroke-width="1" stroke-dasharray="3,3" class="flow-line"/>
+            <line x1="550" y1="65" x2="765" y2="155" stroke="rgba(255,140,66,0.3)" stroke-width="1" stroke-dasharray="3,3" class="flow-line"/>
+            <line x1="710" y1="90" x2="765" y2="230" stroke="rgba(255,140,66,0.3)" stroke-width="1" stroke-dasharray="3,3" class="flow-line"/>
+
+            <!-- MCP Layer -->
+            <line x1="30" y1="255" x2="870" y2="255" stroke="rgba(0,212,255,0.1)" stroke-width="1"/>
+            <text x="30" y="248" fill="rgba(0,212,255,0.5)" font-size="10" letter-spacing="1">MCP LAYER</text>
+
+            <!-- MCP boxes per instance -->
+            <rect x="80" y="268" width="120" height="45" rx="8" fill="rgba(0,212,255,0.08)" stroke="rgba(0,212,255,0.25)" stroke-width="1"/>
+            <text x="140" y="285" text-anchor="middle" fill="rgba(0,212,255,0.9)" font-size="11" font-weight="600">obsidian-kb</text>
+            <text x="140" y="300" text-anchor="middle" fill="rgba(232,244,248,0.5)" font-size="10">精确字符串 · 文件名</text>
+
+            <rect x="230" y="268" width="120" height="45" rx="8" fill="rgba(255,140,66,0.08)" stroke="rgba(255,140,66,0.25)" stroke-width="1"/>
+            <text x="290" y="285" text-anchor="middle" fill="rgba(255,140,66,0.9)" font-size="11" font-weight="600">clawmem</text>
+            <text x="290" y="300" text-anchor="middle" fill="rgba(232,244,248,0.5)" font-size="10">语义 + BM25 混合检索</text>
+
+            <rect x="390" y="268" width="120" height="45" rx="8" fill="rgba(0,212,255,0.08)" stroke="rgba(0,212,255,0.25)" stroke-width="1"/>
+            <text x="450" y="285" text-anchor="middle" fill="rgba(0,212,255,0.9)" font-size="11" font-weight="600">obsidian-kb</text>
+            <text x="450" y="300" text-anchor="middle" fill="rgba(232,244,248,0.5)" font-size="10">精确字符串 · 文件名</text>
+
+            <rect x="550" y="268" width="120" height="45" rx="8" fill="rgba(255,140,66,0.08)" stroke="rgba(255,140,66,0.25)" stroke-width="1"/>
+            <text x="610" y="285" text-anchor="middle" fill="rgba(255,140,66,0.9)" font-size="11" font-weight="600">clawmem</text>
+            <text x="610" y="300" text-anchor="middle" fill="rgba(232,244,248,0.5)" font-size="10">语义 + BM25 混合检索</text>
+
+            <rect x="710" y="268" width="110" height="45" rx="8" fill="rgba(0,212,255,0.08)" stroke="rgba(0,212,255,0.25)" stroke-width="1"/>
+            <text x="765" y="285" text-anchor="middle" fill="rgba(0,212,255,0.9)" font-size="11" font-weight="600">MCP servers</text>
+            <text x="765" y="300" text-anchor="middle" fill="rgba(232,244,248,0.5)" font-size="10">obsidian + clawmem</text>
+
+            <!-- LanceDB layer -->
+            <line x1="30" y1="340" x2="870" y2="340" stroke="rgba(0,212,255,0.1)" stroke-width="1"/>
+            <text x="30" y="333" fill="rgba(0,212,255,0.5)" font-size="10" letter-spacing="1">VECTOR LAYER</text>
+
+            <rect x="155" y="350" width="200" height="50" rx="10" fill="rgba(0,212,255,0.06)" stroke="rgba(0,212,255,0.2)" stroke-width="1"/>
+            <text x="255" y="368" text-anchor="middle" fill="rgba(0,212,255,0.9)" font-size="12" font-weight="700">LanceDB</text>
+            <text x="255" y="385" text-anchor="middle" fill="rgba(232,244,248,0.5)" font-size="10">per-host · not synced · 本地向量索引</text>
+            <line x1="255" y1="313" x2="255" y2="350" stroke="rgba(0,212,255,0.2)" stroke-width="1" stroke-dasharray="3,3"/>
+            <line x1="610" y1="313" x2="610" y2="350" stroke="rgba(255,140,66,0.2)" stroke-width="1" stroke-dasharray="3,3"/>
+            <line x1="765" y1="313" x2="765" y2="350" stroke="rgba(0,212,255,0.2)" stroke-width="1" stroke-dasharray="3,3"/>
+
+            <!-- Dream Cycle annotation -->
+            <rect x="560" y="350" width="200" height="50" rx="10" fill="rgba(255,140,66,0.06)" stroke="rgba(255,140,66,0.25)" stroke-width="1"/>
+            <text x="660" y="368" text-anchor="middle" fill="rgba(255,140,66,0.9)" font-size="12" font-weight="700">🌙 Dream Cycle</text>
+            <text x="660" y="385" text-anchor="middle" fill="rgba(232,244,248,0.5)" font-size="10">03:00 · yuki 独占触发 · clawmem curate</text>
+
+            <!-- Sync arrows between instances and vault -->
+            <path d="M 140 210 Q 140 130 350 90" stroke="rgba(255,140,66,0.2)" stroke-width="1" fill="none" stroke-dasharray="3,3" class="flow-line"/>
+            <path d="M 450 210 Q 450 130 450 110" stroke="rgba(255,140,66,0.2)" stroke-width="1" fill="none" stroke-dasharray="3,3" class="flow-line"/>
+            <path d="M 610 210 Q 610 100 550 90" stroke="rgba(255,140,66,0.2)" stroke-width="1" fill="none" stroke-dasharray="3,3" class="flow-line"/>
+
+            <!-- 4 Core Decisions -->
+            <rect x="30" y="430" width="840" height="80" rx="12" fill="rgba(0,212,255,0.03)" stroke="rgba(0,212,255,0.15)" stroke-width="1"/>
+            <text x="50" y="452" fill="rgba(0,212,255,0.6)" font-size="10" letter-spacing="1">核心决策</text>
+            <text x="50" y="472" fill="rgba(232,244,248,0.75)" font-size="12">① Vault 作 SSoT</text>
+            <text x="50" y="490" fill="rgba(232,244,248,0.5)" font-size="11">② Git 同步源文件，不同步索引</text>
+            <text x="310" y="472" fill="rgba(232,244,248,0.75)" font-size="12">③ 单点触发（yuki）+ 双向同步</text>
+            <text x="310" y="490" fill="rgba(232,244,248,0.5)" font-size="11">④ 冲突策略 -X ours 偏 yuki</text>
+            <text x="620" y="472" fill="#FF8C42" font-size="12" font-weight="600">整套 cycle 约 20 秒</text>
+            <text x="620" y="490" fill="rgba(232,244,248,0.5)" font-size="11">vault 28MB · 6 步全跑</text>
+        </svg>
+        </div>
+        
+        <!-- Architecture Details (Collapsible) -->
+        <div class="arch-detail" id="arch-vault">
+            <h4 style="color:#FF8C42;margin-bottom:8px;">📚 Vault 详情</h4>
+            <p style="color:rgba(232,244,248,0.7);font-size:13px;line-height:1.6;">
+                <strong>路径：</strong>~/Documents/knowledge-base/<br>
+                <strong>大小：</strong>~28MB (~1800 .md 文件)<br>
+                <strong>结构：</strong>01-项目/ 02-AI技术/ 03-猫舎/ 04-医院/ 05-个人/<br>
+                <strong>Git：</strong>bare repo ~/git/vault.git<br>
+                <strong>Obsidian：</strong>Daily Notes + Templater + Git 插件
+            </p>
+        </div>
+        <div class="arch-detail" id="arch-yuki">
+            <h4 style="color:#00D4FF;margin-bottom:8px;">🕷️ Yuki 详情</h4>
+            <p style="color:rgba(232,244,248,0.7);font-size:13px;line-height:1.6;">
+                <strong>角色：</strong>主控 + 技术架构<br>
+                <strong>主机：</strong>M4 Mac mini (192.168.1.100)<br>
+                <strong>端口：</strong>18789<br>
+                <strong>MCP：</strong>obsidian-kb (精确搜索)<br>
+                <strong>特殊：</strong>Dream Cycle 触发器
+            </p>
+        </div>
+        <div class="arch-detail" id="arch-natsu">
+            <h4 style="color:#00D4FF;margin-bottom:8px;">🌻 Natsu 详情</h4>
+            <p style="color:rgba(232,244,248,0.7);font-size:13px;line-height:1.6;">
+                <strong>角色：</strong>SNS 运营 + 内容创作<br>
+                <strong>主机：</strong>M4 Mac mini (同机 loopback)<br>
+                <strong>端口：</strong>18790<br>
+                <strong>MCP：</strong>clawmem (语义搜索)<br>
+                <strong>特殊：</strong>与 Yuki 共享主机，rsync 走本地
+            </p>
+        </div>
+    </div>
+
+    <div class="decision-card">
+        <div class="decision-header">
+            <span class="decision-badge">架构决策</span>
+            <span class="decision-title">为什么用 Git 而不是云同步？</span>
+        </div>
+        <div class="decision-body">
+            <p><strong>考虑过：</strong>Dropbox / iCloud / Syncthing / GitHub</p>
+            <p><strong>排除原因：</strong></p>
+            <ul style="margin-left:20px;color:rgba(232,244,248,0.7);">
+                <li>Dropbox/iCloud：无版本控制，冲突处理黑盒</li>
+                <li>Syncthing：局域网可用，但无冲突解决策略</li>
+                <li>GitHub：private repo 有 ToS 风险，且 vault 含敏感数据</li>
+            </ul>
+            <p><strong>选择 Git bare + SSH：</strong>完整版本控制 + 自定义冲突策略 + 完全本地</p>
+        </div>
+        <div class="decision-meta">
+            <div class="decision-meta-item">⚡ 延迟：LAN &lt;1ms</div>
+            <div class="decision-meta-item">🔒 安全：SSH key 认证</div>
+        </div>
+    </div>
+</div>
+
+<hr class="divider">
+
+<!-- ══════════ PART 4 ══════════ -->
+<div class="section" id="part4">
+    <div class="section-header">
+        <div class="section-num">04</div>
+        <div class="section-title-group">
+            <h2 class="section-title-text">技术实现深潜</h2>
+            <div class="section-subtitle">4 个核心模块的完整实现</div>
+        </div>
+    </div>
+
+    <!-- 4.1 -->
+    <h3 style="color:#00D4FF;font-size:15px;margin-bottom:12px;">4.1 Vault → Bare Git Repo</h3>
+    <pre><span class="code-comment"># yuki 上</span>
+<span class="code-cmd">cd</span> ~/Documents/knowledge-base
+<span class="code-cmd">git init</span> <span class="code-comment"># 已经有 .git/ (Obsidian Git plugin 建的)</span>
+<span class="code-cmd">mkdir</span> -p ~/git && git init --bare ~/git/vault.git
+<span class="code-cmd">git remote add</span> yuki ~/git/vault.git
+<span class="code-cmd">git push</span> yuki --all</pre>
+
+    <div class="decision-card">
+        <div class="decision-header">
+            <span class="decision-badge">Git 决策</span>
+            <span class="decision-title">为什么用 bare repo 而不是直接 rsync 工作目录？</span>
+        </div>
+        <div class="decision-body">
+            <p>bare repo 作为"中央仓库"，各实例的 working tree 独立：</p>
+            <ul style="margin-left:20px;color:rgba(232,244,248,0.7);">
+                <li>每个实例可以有自己的 uncommitted changes</li>
+                <li>冲突在 bare 层面解决，不污染 working tree</li>
+                <li>Git 的版本控制提供完整历史回溯</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- 4.2 -->
+    <h3 style="color:#00D4FF;font-size:15px;margin-bottom:12px;margin-top:28px;">4.2 远程机镜像 bare + clone working</h3>
+    <pre><span class="code-comment"># yuki 上，rsync 推 bare</span>
+<span class="code-cmd">rsync</span> -aH --delete ~/git/vault.git/ <span class="code-str">haru:~/git/vault.git/</span>
+<span class="code-cmd">rsync</span> -aH --delete ~/git/vault.git/ <span class="code-str">aki:~/git/vault.git/</span>
+
+<span class="code-comment"># 远程机上自己 clone 到 working tree</span>
+<span class="code-cmd">ssh</span> haru <span class="code-str">"cd ~/Documents && git clone ~/git/vault.git knowledge-base"</span>
+<span class="code-cmd">ssh</span> aki <span class="code-str">"cd ~/Documents && git clone ~/git/vault.git knowledge-base"</span></pre>
+
+    <div class="insight-box" style="margin-top:20px;">
+        <div class="insight-title">为什么不用 GitHub？</div>
+        <div class="insight-body">vault 里可能有 API keys、决策日志、business data。即使 private repo，云服务有 ToS 风险、账号封禁风险、legal subpoena。自建 bare + Tailscale + SSH 完全本地控制，延迟更低（LAN 毫秒级）。</div>
+    </div>
+
+    <!-- 4.3 -->
+    <h3 style="color:#00D4FF;font-size:15px;margin-bottom:12px;margin-top:28px;">4.3 clawmem：混合记忆引擎</h3>
+    <div class="comparison-grid">
+        <div class="comparison-col">
+            <div class="comparison-header"><span class="comparison-header-good">✓ 双轨索引</span></div>
+            <div class="comparison-item"><span class="comparison-check">→</span>SQLite FTS5（BM25）精确匹配</div>
+            <div class="comparison-item"><span class="comparison-check">→</span>LanceDB 向量检索</div>
+            <div class="comparison-item"><span class="comparison-check">→</span>Hybrid query 自动加权融合</div>
+            <div class="comparison-item"><span class="comparison-check">→</span>本地 embed server（localhost:8088）</div>
+        </div>
+        <div class="comparison-col">
+            <div class="comparison-header"><span class="comparison-header-good">✓ 自维护能力</span></div>
+            <div class="comparison-item"><span class="comparison-check">→</span><code>consolidate</code> 合并低置信重复</div>
+            <div class="comparison-item"><span class="comparison-check">→</span><code>reflect</code> 跨 session 模式分析</div>
+            <div class="comparison-item"><span class="comparison-check">→</span><code>curate</code> 健康检查 + 轻维护</div>
+            <div class="comparison-item"><span class="comparison-check">→</span><code>lifecycle sweep</code> 自动归档</div>
+        </div>
+    </div>
+
+    <pre style="margin-top:16px;"><span class="code-comment"># 各实例 bootstrap</span>
+<span class="code-cmd">clawmem</span> bootstrap ~/Documents/knowledge-base --name vault
+<span class="code-comment"># → 装 Claude Code hooks + MCP server 注册 + 首次索引 1736 docs</span></pre>
+
+    <div class="decision-card">
+        <div class="decision-header">
+            <span class="decision-badge">索引决策</span>
+            <span class="decision-title">为什么不同步 LanceDB 索引文件？</span>
+        </div>
+        <div class="decision-body">
+            <p>LanceDB 索引是二进制文件，跨平台同步问题多：</p>
+            <ul style="margin-left:20px;color:rgba(232,244,248,0.7);">
+                <li>ARM (M4) 和 x86 的向量索引格式不同</li>
+                <li>索引文件 &gt;100MB，rsync 耗时</li>
+                <li>每台机的文档子集可能不同（选择性同步）</li>
+            </ul>
+            <p><strong>策略：</strong>只同步 markdown 源文件，每台机自己建索引。首次索引 ~2 分钟，后续增量 &lt;10 秒。</p>
+        </div>
+    </div>
+
+    <!-- Performance Chart -->
+    <h3 style="color:#00D4FF;font-size:15px;margin-bottom:12px;margin-top:28px;">性能数据</h3>
+    <div class="perf-chart">
+        <div class="perf-bar" style="height:30%">
+            <div class="perf-bar-value">~2min</div>
+            <div class="perf-bar-label">首次索引</div>
+        </div>
+        <div class="perf-bar" style="height:8%">
+            <div class="perf-bar-value">&lt;10s</div>
+            <div class="perf-bar-label">增量更新</div>
+        </div>
+        <div class="perf-bar" style="height:15%">
+            <div class="perf-bar-value">~20s</div>
+            <div class="perf-bar-label">Dream Cycle</div>
+        </div>
+        <div class="perf-bar" style="height:5%">
+            <div class="perf-bar-value">&lt;1s</div>
+            <div class="perf-bar-label">语义查询</div>
+        </div>
+        <div class="perf-bar" style="height:3%">
+            <div class="perf-bar-value">&lt;100ms</div>
+            <div class="perf-bar-label">精确搜索</div>
+        </div>
+    </div>
+
+    <!-- 4.4 Dream Cycle -->
+    <h3 style="color:#00D4FF;font-size:15px;margin-bottom:12px;margin-top:28px;">4.4 Dream Cycle 脚本核心</h3>
+    <pre><span class="code-comment">#!/bin/bash</span>
+<span class="code-comment"># ~/bin/vault-dream-nightly.sh (03:00 via launchd)</span>
+<span class="code-cmd">set</span> -uo pipefail
+VAULT=<span class="code-str">"$HOME/Documents/knowledge-base"</span>
+BARE=<span class="code-str">"$HOME/git/vault.git"</span>
+CLAWMEM=<span class="code-str">"/opt/homebrew/lib/node_modules/clawmem/bin/clawmem"</span>
+
+<span class="code-comment"># 1. 反向收：让远程 push 本地 working HEAD 到 yuki bare 的临时分支</span>
+<span class="code-cmd">for</span> HOST in haru aki; <span class="code-cmd">do</span>
+  <span class="code-cmd">ssh</span> <span class="code-str">"$HOST"</span> <span class="code-str">"
+    cd ~/Documents/knowledge-base
+    git add -A
+    git diff --staged --quiet || git commit -m 'local changes on $HOST'
+    git push yuki HEAD:from-\$HOST --force
+  "</span>
+<span class="code-cmd">done</span>
+
+<span class="code-comment"># 2. yuki merge 临时分支</span>
+<span class="code-cmd">cd</span> <span class="code-str">"$VAULT"</span>
+<span class="code-cmd">git</span> fetch yuki
+<span class="code-cmd">for</span> HOST in haru aki; <span class="code-cmd">do</span>
+  <span class="code-cmd">git</span> merge --no-edit -X ours <span class="code-str">"yuki/from-\$HOST"</span> || git merge --abort
+  <span class="code-cmd">git</span> push yuki --delete <span class="code-str">"from-\$HOST"</span> 2>/dev/null
+<span class="code-cmd">done</span>
+
+<span class="code-comment"># 3. clawmem 自维护</span>
+<span class="code-str">"$CLAWMEM"</span> curate
+<span class="code-str">"$CLAWMEM"</span> consolidate
+<span class="code-str">"$CLAWMEM"</span> lifecycle sweep
+
+<span class="code-comment"># 4. yuki 自己的改动 commit + push</span>
+<span class="code-cmd">git</span> add -A
+<span class="code-cmd">git</span> diff --staged --quiet || git commit -m <span class="code-str">"dream cycle: $(date +%F\ %R)"</span>
+<span class="code-cmd">git</span> push yuki <span class="code-str">"$BRANCH"</span>
+
+<span class="code-comment"># 5. rsync bare → 远程 bare</span>
+<span class="code-cmd">for</span> HOST in haru aki; <span class="code-cmd">do</span>
+  <span class="code-cmd">rsync</span> -aH --delete <span class="code-str">"$BARE/"</span> <span class="code-str">"$HOST:~/git/vault.git/"</span>
+<span class="code-cmd">done</span>
+
+<span class="code-comment"># 6. 远程 pull + reindex</span>
+<span class="code-cmd">for</span> HOST in haru aki; <span class="code-cmd">do</span>
+  <span class="code-cmd">ssh</span> <span class="code-str">"$HOST"</span> <span class="code-str">"
+    cd ~/Documents/knowledge-base
+    git pull --no-rebase
+    clawmem update --pull
+  "</span>
+<span class="code-cmd">done</span></pre>
+
+    <div class="decision-card">
+        <div class="decision-header">
+            <span class="decision-badge">时序决策</span>
+            <span class="decision-title">为什么选 03:00 而不是 00:00？</span>
+        </div>
+        <div class="decision-body">
+            <p>00:00 问题：</p>
+            <ul style="margin-left:20px;color:rgba(232,244,248,0.7);">
+                <li>可能和日期切换的 cron 任务冲突</li>
+                <li>如果前一天的日志还没写完，会漏同步</li>
+                <li>网络/电力波动时段（部分 VPS 维护窗口）</li>
+            </ul>
+            <p>03:00 优势：</p>
+            <ul style="margin-left:20px;color:rgba(232,244,248,0.7);">
+                <li>所有日常任务已完成（日志、备份等）</li>
+                <li>系统负载最低</li>
+                <li>如果失败，还有 5 小时可以人工干预（上班前）</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<hr class="divider">
+
+<!-- ══════════ PART 5 ══════════ -->
+<div class="section" id="part5">
+    <div class="section-header">
+        <div class="section-num">05</div>
+        <div class="section-title-group">
+            <h2 class="section-title-text">踩过的坑 ×7</h2>
+            <div class="section-subtitle">真实教训，每条都是血泪</div>
+        </div>
+    </div>
+
+    <div class="pitfall">
+        <div class="pitfall-header">
+            <span class="pitfall-icon">🐚</span>
+            <span class="pitfall-num">坑 1</span>
+            <span class="pitfall-title">macOS /bin/bash 是 3.2（2006年的远古版本）</span>
+        </div>
+        <div class="pitfall-body">
+            <p style="color:rgba(232,244,248,0.7);margin-bottom:10px;">Apple 2006 年后没升级 /bin/bash（GPL3 license 原因）。很多现代 bash 特性不能用。</p>
+        </div>
+        <pre><span class="code-comment"># ❌ 不能用</span>
+<span class="code-cmd">declare</span> -A map  <span class="code-comment"># associative array (bash 4+)</span>
+${VAR@Q}         <span class="code-comment"># 引号 quote (bash 4.4+)</span>
+
+<span class="code-comment"># ✅ 替代</span>
+<span class="code-cmd">brew install</span> bash  <span class="code-comment"># 装 bash 5+</span>
+<span class="code-cmd">chsh</span> -s /opt/homebrew/bin/bash  <span class="code-comment"># 切换默认 shell</span>
+<span class="code-cmd">#!/opt/homebrew/bin/bash</span>  <span class="code-comment"># shebang 指定</span></pre>
+    </div>
+
+    <div class="pitfall">
+        <div class="pitfall-header">
+            <span class="pitfall-icon">🐚</span>
+            <span class="pitfall-num">坑 2</span>
+            <span class="pitfall-title">rsync 删除行为不一致</span>
+        </div>
+        <div class="pitfall-body">
+            <p style="color:rgba(232,244,248,0.7);margin-bottom:10px;">rsync --delete 在接收端删除文件，但如果源目录结构变化，可能误删。</p>
+        </div>
+        <pre><span class="code-comment"># ❌ 危险：如果源目录为空，会删光目标</span>
+<span class="code-cmd">rsync</span> -a --delete src/ dest/
+
+<span class="code-comment"># ✅ 安全：加 --max-delete 限制 + 先 dry-run</span>
+<span class="code-cmd">rsync</span> -av --delete --max-delete=10 --dry-run src/ dest/
+<span class="code-cmd">rsync</span> -aH --delete  <span class="code-comment"># -H 保留硬链接（bare repo 需要）</span></pre>
+    </div>
+
+    <div class="pitfall">
+        <div class="pitfall-header">
+            <span class="pitfall-icon">🐚</span>
+            <span class="pitfall-num">坑 3</span>
+            <span class="pitfall-title">Git merge -X ours 不是 "用我们的"</span>
+        </div>
+        <div class="pitfall-body">
+            <p style="color:rgba(232,244,248,0.7);margin-bottom:10px;">-X ours 是 "冲突时选我们的"，不是 "完全覆盖"。如果对面新增了文件，还是会合并进来。</p>
+        </div>
+        <pre><span class="code-comment"># ❌ 误解：以为会完全用 yuki 版本</span>
+<span class="code-cmd">git</span> merge -X ours remote-branch
+
+<span class="code-comment"># ✅ 真正"只保留我们的"</span>
+<span class="code-cmd">git</span> merge --strategy=ours remote-branch  <span class="code-comment"># 完全丢弃对方</span>
+<span class="code-comment"># 或</span>
+<span class="code-cmd">git</span> checkout --ours . && <span class="code-cmd">git</span> add -A  <span class="code-comment"># 冲突后强制选我们的</span></pre>
+    </div>
+
+    <div class="pitfall">
+        <div class="pitfall-header">
+            <span class="pitfall-icon">🐚</span>
+            <span class="pitfall-num">坑 4</span>
+            <span class="pitfall-title">LanceDB 跨 ARM/x86 不兼容</span>
+        </div>
+        <div class="pitfall-body">
+            <p style="color:rgba(232,244,248,0.7);margin-bottom:10px;">M4 (ARM) 和旧 Mac (x86) 的 LanceDB 索引文件不能混用。曾尝试同步索引，结果全量重建。</p>
+        </div>
+        <pre><span class="code-comment"># ❌ 失败尝试</span>
+<span class="code-cmd">rsync</span> -a ~/.clawmem/vault.lance/ haru:~/.clawmem/
+<span class="code-comment"># → haru 上查询报错：vector dimension mismatch</span>
+
+<span class="code-comment"># ✅ 正确：每台机自己建索引</span>
+<span class="code-comment"># yuki 和 haru 分别运行：</span>
+<span class="code-cmd">clawmem</span> bootstrap ~/Documents/knowledge-base --name vault
+<span class="code-comment"># 首次 ~2min，之后增量 &lt;10s</span></pre>
+    </div>
+
+    <div class="pitfall">
+        <div class="pitfall-header">
+            <span class="pitfall-icon">🐚</span>
+            <span class="pitfall-num">坑 5</span>
+            <span class="pitfall-title">SSH key 权限问题</span>
+        </div>
+        <div class="pitfall-body">
+            <p style="color:rgba(232,244,248,0.7);margin-bottom:10px;">macOS 升级后 ~/.ssh 权限被重置，导致免密登录失效，Dream Cycle 卡住。</p>
+        </div>
+        <pre><span class="code-comment"># ❌ 错误权限</span>
+<span class="code-cmd">ls</span> -la ~/.ssh/id_rsa
+<span class="code-comment"># -rw-rw-r--  (group 可写 → SSH 拒绝)</span>
+
+<span class="code-comment"># ✅ 正确权限</span>
+<span class="code-cmd">chmod</span> 700 ~/.ssh
+<span class="code-cmd">chmod</span> 600 ~/.ssh/id_rsa
+<span class="code-cmd">chmod</span> 644 ~/.ssh/id_rsa.pub
+<span class="code-cmd">ssh-add</span> --apple-use-keychain ~/.ssh/id_rsa  <span class="code-comment"># macOS 钥匙串</span></pre>
+    </div>
+
+    <div class="pitfall">
+        <div class="pitfall-header">
+            <span class="pitfall-icon">🐚</span>
+            <span class="pitfall-num">坑 6</span>
+            <span class="pitfall-title">launchd 环境变量不同</span>
+        </div>
+        <div class="pitfall-body">
+            <p style="color:rgba(232,244,248,0.7);margin-bottom:10px;">launchd 运行的脚本没有 ~/.zshrc 里的 PATH，导致 clawmem 命令找不到。</p>
+        </div>
+        <pre><span class="code-comment"># ❌ 失败：假设有 PATH</span>
+<span class="code-cmd">clawmem</span> curate  <span class="code-comment"># launchd: command not found</span>
+
+<span class="code-comment"># ✅ 方案 A：写绝对路径</span>
+CLAWMEM=<span class="code-str">"/opt/homebrew/lib/node_modules/clawmem/bin/clawmem"</span>
+<span class="code-str">"$CLAWMEM"</span> curate
+
+<span class="code-comment"># ✅ 方案 B：launchd plist 里加 EnvironmentVariables</span>
+&lt;key&gt;EnvironmentVariables&lt;/key&gt;
+&lt;dict&gt;
+  &lt;key&gt;PATH&lt;/key&gt;
+  &lt;string&gt;/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin&lt;/string&gt;
+&lt;/dict&gt;</pre>
+    </div>
+
+    <div class="pitfall">
+        <div class="pitfall-header">
+            <span class="pitfall-icon">🐚</span>
+            <span class="pitfall-num">坑 7</span>
+            <span class="pitfall-title">Obsidian Git 插件和脚本冲突</span>
+        </div>
+        <div class="pitfall-body">
+            <p style="color:rgba(232,244,248,0.7);margin-bottom:10px;">Obsidian Git 插件自动 commit，和 Dream Cycle 脚本同时操作，导致 conflict。</p>
+        </div>
+        <pre><span class="code-comment"># ❌ 冲突场景</span>
+<span class="code-comment"># 03:00 Obsidian Git 自动 commit "vault backup: 2026-04-20"</span>
+<span class="code-comment"># 03:00 Dream Cycle 脚本同时 commit "dream cycle: 2026-04-20 03:00"</span>
+<span class="code-comment"># → Git lock 冲突</span>
+
+<span class="code-comment"># ✅ 解决：Obsidian Git 改到 02:30，留 30min 缓冲</span>
+<span class="code-comment"># 或完全禁用自动 commit，只用 Dream Cycle</span></pre>
+    </div>
+</div>
+
+<hr class="divider">
+
+<!-- ══════════ PART 6 ══════════ -->
+<div class="section" id="part6">
+    <div class="section-header">
+        <div class="section-num">06</div>
+        <div class="section-title-group">
+            <h2 class="section-title-text">六实例能力地图</h2>
+            <div class="section-subtitle">谁做什么，一目了然</div>
+        </div>
+    </div>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>实例</th>
+                    <th>角色</th>
+                    <th>核心技能</th>
+                    <th>记忆特点</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="td-key">Yuki</td>
+                    <td>技术架构师</td>
+                    <td>系统架构、代码审查、基础设施</td>
+                    <td>技术决策、架构文档、工具链</td>
+                </tr>
+                <tr>
+                    <td class="td-key">Natsu</td>
+                    <td>SNS 运营</td>
+                    <td>内容创作、品牌文案、数据分析</td>
+                    <td>品牌规范、平台策略、内容日历</td>
+                </tr>
+                <tr>
+                    <td class="td-key">Haru</td>
+                    <td>猫舍助理</td>
+                    <td>客户沟通、预约管理、医疗记录</td>
+                    <td>客户档案、医疗知识、运营流程</td>
+                </tr>
+                <tr>
+                    <td class="td-key">Aki</td>
+                    <td>随身助理</td>
+                    <td>日程管理、信息检索、快速响应</td>
+                    <td>个人偏好、日程安排、临时任务</td>
+                </tr>
+                <tr>
+                    <td class="td-key">Hermes</td>
+                    <td>快速实验</td>
+                    <td>模型测试、原型验证、轻量任务</td>
+                    <td>实验记录、参数调优、对比结果</td>
+                </tr>
+                <tr>
+                    <td class="td-key">Claude</td>
+                    <td>深度开发</td>
+                    <td>复杂项目、代码生成、架构设计</td>
+                    <td>项目上下文、设计决策、代码库</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="insight-box">
+        <div class="insight-title">记忆共享后的变化</div>
+        <div class="insight-body">
+            <p>以前 Yuki 不知道 Natsu 改了品牌色，现在 Vault 里有 <code>topics/品牌规范.md</code>，全员实时同步。</p>
+            <p>以前 Haru 的客户记录只在 Haru 的 memory 里，现在写在 <code>03-猫舎/客户档案/</code>，Yuki 做数据分析时可以直接读。</p>
+        </div>
+    </div>
+</div>
+
+<hr class="divider">
+
+<!-- ══════════ PART 7 ══════════ -->
+<div class="section" id="part7">
+    <div class="section-header">
+        <div class="section-num">07</div>
+        <div class="section-title-group">
+            <h2 class="section-title-text">观感与收获</h2>
+            <div class="section-subtitle">半年实践的真实体会</div>
+        </div>
+    </div>
+
+    <div class="cards-3">
+        <div class="card">
+            <div class="card-icon">🎯</div>
+            <div class="card-name">决策可追溯</div>
+            <div class="card-desc">每个技术选型都有"为什么"记录，三个月后回看不会懵。Git blame 知道是谁、什么时候、为什么做的决定。</div>
+        </div>
+        <div class="card">
+            <div class="card-icon">🔄</div>
+            <div class="card-name">知识自动沉淀</div>
+            <div class="card-desc">重要的对话、决策、踩坑，自动归档到 Vault。不用手动整理，clawmem 会帮你分类。</div>
+        </div>
+        <div class="card">
+            <div class="card-icon">🚀</div>
+            <div class="card-name"> onboarding 加速</div>
+            <div class="card-desc">新实例（或新模型）接入时，读一遍 Vault 就能了解全部上下文，不用从头教。</div>
+        </div>
+    </div>
+
+    <div class="highlight-bar">
+        <p style="color:rgba(232,244,248,0.8);">最大的收获是<strong style="color:#00D4FF">"忘记"的自由</strong>。以前每个细节都要记，现在知道"写进 Vault 就行"，大脑可以专注思考而不是记忆。</p>
+    </div>
+</div>
+
+<hr class="divider">
+
+<!-- ══════════ PART 8 ══════════ -->
+<div class="section" id="part8">
+    <div class="section-header">
+        <div class="section-num">08</div>
+        <div class="section-title-group">
+            <h2 class="section-title-text">给后来人的建议</h2>
+            <div class="section-subtitle">如果你也想建共享大脑</div>
+        </div>
+    </div>
+
+    <div class="workflow">
+        <div class="workflow-title">🚀 最小可行起步（1 小时）</div>
+        <div class="workflow-step">
+            <div class="step-num">1</div>
+            <div class="step-text">建一个 Git repo，放 markdown 文件</div>
+        </div>
+        <div class="workflow-step">
+            <div class="step-num">2</div>
+            <div class="step-text">各实例配好 Git 同步（cron 或手动）</div>
+        </div>
+        <div class="workflow-step">
+            <div class="step-num">3</div>
+            <div class="step-text">先用起来，别追求完美结构</div>
+        </div>
+    </div>
+
+    <div class="workflow">
+        <div class="workflow-title">⚠️ 不要做的事</div>
+        <div class="workflow-step">
+            <div class="step-num">✗</div>
+            <div class="step-text"><em>不要</em>一开始就想完美分类结构 → 先用起来再调整</div>
+        </div>
+        <div class="workflow-step">
+            <div class="step-num">✗</div>
+            <div class="step-text"><em>不要</em>同步二进制索引 → 源文件足够，索引自己建</div>
+        </div>
+        <div class="workflow-step">
+            <div class="step-num">✗</div>
+            <div class="step-text"><em>不要</em>用云 Git 服务存敏感数据 → 自建 bare + SSH</div>
+        </div>
+    </div>
+
+    <div class="decision-card">
+        <div class="decision-header">
+            <span class="decision-badge">决策树</span>
+            <span class="decision-title">你需要共享大脑吗？</span>
+        </div>
+        <div class="decision-body">
+            <p><strong>✓ 需要：</strong>多个 AI 实例 / 跨设备工作 / 长期项目 / 团队协作</p>
+            <p><strong>✗ 不需要：</strong>单个 ChatGPT 账号 / 纯临时任务 / 不重复的工作流</p>
+            <p><strong>临界点：</strong>当你发现"这个我上次好像解决过"超过 3 次，就该建了。</p>
+        </div>
+    </div>
+</div>
+
+<!-- ══════════ FOOTER ══════════ -->
+<div class="article-footer">
+    <div class="footer-stack">
+        <span class="footer-tag">OpenClaw</span>
+        <span class="footer-tag">Hermes</span>
+        <span class="footer-tag">Claude Code</span>
+        <span class="footer-tag">clawmem</span>
+        <span class="footer-tag">LanceDB</span>
+        <span class="footer-tag">Git</span>
+        <span class="footer-tag">Obsidian</span>
+    </div>
+    <div class="footer-meta">
+        <p>Built with ❤️ by 落雪 · 2026-04-20</p>
+        <p style="margin-top:8px;">6 AI 实例 · 3 Mac · 1 个共享大脑</p>
+    </div>
+</div>
+
+</div><!-- /container -->
+
+<!-- Tooltip -->
+<div class="tooltip" id="tooltip">
+    <div class="tooltip-title" id="tooltipTitle"></div>
+    <div class="tooltip-meta" id="tooltipMeta"></div>
+</div>
+
+<!-- JavaScript -->
+<script>
+// Progress Bar
+window.addEventListener('scroll', () => {
+    const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+    const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    const scrolled = (winScroll / height) * 100;
+    document.getElementById('progressBar').style.width = scrolled + '%';
+});
+
+// Sticky Nav
+const stickyNav = document.getElementById('stickyNav');
+const backToTop = document.getElementById('backToTop');
+
+window.addEventListener('scroll', () => {
+    if (window.scrollY > 400) {
+        stickyNav.classList.add('visible');
+        backToTop.classList.add('visible');
+    } else {
+        stickyNav.classList.remove('visible');
+        backToTop.classList.remove('visible');
+    }
+});
+
+// Active Section Highlight
+const sections = document.querySelectorAll('.section[id]');
+const navItems = document.querySelectorAll('.sticky-nav-item');
+
+window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(section => {
+        const sectionTop = section.offsetTop;
+        if (scrollY >= sectionTop - 200) {
+            current = section.getAttribute('id');
+        }
+    });
+    
+    navItems.forEach(item => {
+        item.classList.remove('active');
+        if (item.getAttribute('data-section') === current) {
+            item.classList.add('active');
+        }
+    });
+});
+
+// Smooth Scroll
+navItems.forEach(item => {
+    item.addEventListener('click', (e) => {
+        e.preventDefault();
+        const target = document.getElementById(item.getAttribute('data-section'));
+        target.scrollIntoView({ behavior: 'smooth' });
+    });
+});
+
+// Architecture Toggle
+function toggleArch(layer) {
+    const detail = document.getElementById('arch-' + layer);
+    if (detail) {
+        detail.classList.toggle('open');
+    }
+}
+
+// Collapsible
+function toggleCollapse(btn) {
+    btn.classList.toggle('collapsed');
+    const content = btn.nextElementSibling;
+    if (content) {
+        content.classList.toggle('collapsed');
+    }
+}
+
+// Tooltip
+const tooltip = document.getElementById('tooltip');
+const tooltipTitle = document.getElementById('tooltipTitle');
+const tooltipMeta = document.getElementById('tooltipMeta');
+
+document.querySelectorAll('[data-tooltip]').forEach(el => {
+    el.addEventListener('mouseenter', (e) => {
+        const data = JSON.parse(el.getAttribute('data-tooltip'));
+        tooltipTitle.textContent = data.title;
+        tooltipMeta.textContent = data.meta;
+        tooltip.classList.add('visible');
+    });
+    el.addEventListener('mousemove', (e) => {
+        tooltip.style.left = e.pageX + 10 + 'px';
+        tooltip.style.top = e.pageY + 10 + 'px';
+    });
+    el.addEventListener('mouseleave', () => {
+        tooltip.classList.remove('visible');
+    });
+});
+</script>
+
+</body>
+</html>

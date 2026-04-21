@@ -6,6 +6,7 @@ title:
   en: "Unrecorded Knowledge Is Lost Knowledge: Designing an AI Auto-Save Pipeline"
 category: "learning"
 date: "2026-03-29"
+coverImage: /covers/minimax/knowledge-pipeline-auto-save.jpg
 author: Will
 readingTime: 10
 excerpt:

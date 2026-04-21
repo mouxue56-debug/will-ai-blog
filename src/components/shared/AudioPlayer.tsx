@@ -2,6 +2,7 @@
 import { useState, useRef } from 'react';
 import { Volume2, VolumeX } from 'lucide-react';
 import { getAudioUrl } from '@/lib/storage';
+import { useEffect } from 'react';
 
 const HERO_LABEL: Record<string, string> = {
   zh: '听 Will 自我介绍',
@@ -17,13 +18,14 @@ const STOP_LABEL: Record<string, string> = {
 
 export function AudioPlayer({ locale, src, label }: { locale?: string; src?: string; label?: string }) {
   const [playing, setPlaying] = useState(false);
+  const [loadError, setLoadError] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
   const loc = locale || 'zh';
-  
-  const resolvedSrc = src?.startsWith('/audio/') 
+
+  const resolvedSrc = src?.startsWith('/audio/')
     ? getAudioUrl(src.replace('/audio/', ''))
     : (src || `placeholder-hero-intro-${loc}.mp3`);
-  const audioSrc = resolvedSrc.startsWith('/audio/') 
+  const audioSrc = resolvedSrc.startsWith('/audio/')
     ? getAudioUrl(resolvedSrc.replace('/audio/', ''))
     : resolvedSrc.startsWith('http')
     ? resolvedSrc
@@ -32,20 +34,34 @@ export function AudioPlayer({ locale, src, label }: { locale?: string; src?: str
   const btnLabel = label || HERO_LABEL[loc] || HERO_LABEL['zh'];
   const stopLabel = STOP_LABEL[loc] || STOP_LABEL['zh'];
 
+  // Reset error state when src changes
+  useEffect(() => { setLoadError(false); }, [audioSrc]);
+
   const toggle = () => {
-    if (!audioRef.current) return;
+    if (!audioRef.current || loadError) return;
     if (playing) {
       audioRef.current.pause();
       audioRef.current.currentTime = 0;
+      setPlaying(false);
     } else {
-      audioRef.current.play();
+      audioRef.current.play().then(() => {
+        setPlaying(true);
+      }).catch(() => {
+        setLoadError(true);
+      });
     }
-    setPlaying(!playing);
   };
+
+  if (loadError) return null;
 
   return (
     <>
-      <audio ref={audioRef} src={audioSrc} onEnded={() => setPlaying(false)} />
+      <audio
+        ref={audioRef}
+        src={audioSrc}
+        onEnded={() => setPlaying(false)}
+        onError={() => setLoadError(true)}
+      />
       <button
         onClick={toggle}
         className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium border transition-all duration-200 ${

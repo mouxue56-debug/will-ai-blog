@@ -21,15 +21,16 @@ export default function CasesPage() {
     <PageTransition>
       <div className="mx-auto max-w-5xl px-4 sm:px-6 py-12 sm:py-16">
         <ScrollReveal direction="fadeIn">
-          <div className="mb-10 overflow-hidden rounded-2xl border border-white/8 bg-card/30">
+          <div className="glass-card mb-10 overflow-hidden rounded-3xl">
             <div className="relative h-48 w-full sm:h-56">
               <Image
                 src={getIllustrationUrl('cases-banner')}
                 alt="Cases banner"
                 fill
-                className="object-cover object-center opacity-80"
+                className="object-cover object-center opacity-55 dark:opacity-80"
               />
-              <div className="absolute inset-0 bg-gradient-to-r from-background/90 via-background/60 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-br from-[rgba(255,209,220,0.5)] via-[rgba(232,213,245,0.35)] to-[rgba(200,245,228,0.35)] dark:hidden" />
+              <div className="absolute inset-0 bg-gradient-to-r from-background/85 via-background/55 to-transparent" />
               <div className="absolute inset-0 flex flex-col justify-center px-6 sm:px-8">
                 <h1 className="text-3xl sm:text-4xl font-bold tracking-tight">{t('title')}</h1>
                 <p className="mt-2 text-base text-muted-foreground sm:text-lg">{t('subtitle')}</p>

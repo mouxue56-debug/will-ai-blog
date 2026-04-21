@@ -8,6 +8,8 @@ import { ScrollReveal } from '@/components/shared/ScrollReveal';
 import { CategoryFilter } from './category-filter';
 import { BlogCard } from './blog-card';
 import { ChevronLeft, ChevronRight, Search, X } from 'lucide-react';
+import Image from 'next/image';
+import { getIllustrationUrl } from '@/lib/storage';
 import { cn } from '@/lib/utils';
 import type { BlogPost, BlogCategory } from '@/lib/blog-types';
 
@@ -109,32 +111,23 @@ export function BlogList({ posts }: BlogListProps) {
     <PageTransition>
       <div className="mx-auto max-w-5xl px-4 py-12 sm:px-6">
         <ScrollReveal direction="fadeIn">
-          <div className="mb-8 overflow-hidden rounded-3xl border border-brand-coral/15 dark:border-white/8 bg-gradient-to-br from-brand-coral/8 via-brand-mango/5 to-brand-mint/8 dark:from-brand-coral/10 dark:via-transparent dark:to-brand-mint/8">
-            <div className="relative flex flex-col justify-center px-6 py-10 sm:px-10 sm:py-12">
-              {/* Decorative ice cream dot pattern */}
-              <div className="pointer-events-none absolute right-6 top-4 flex gap-2 opacity-30 sm:right-10 sm:top-6">
-                <span className="h-3 w-3 rounded-full bg-brand-strawberry" />
-                <span className="h-2.5 w-2.5 rounded-full bg-brand-mango mt-0.5" />
-                <span className="h-3.5 w-3.5 rounded-full bg-brand-mint" />
-                <span className="h-2 w-2 rounded-full bg-brand-taro mt-1" />
-                <span className="h-3 w-3 rounded-full bg-brand-cyan" />
-              </div>
-              <div className="pointer-events-none absolute bottom-4 right-14 flex gap-1.5 opacity-20">
-                <span className="h-2 w-2 rounded-full bg-brand-coral" />
-                <span className="h-2.5 w-2.5 rounded-full bg-brand-mint mt-0.5" />
-                <span className="h-2 w-2 rounded-full bg-brand-taro" />
-              </div>
-              <h1 className="text-3xl font-bold sm:text-4xl">{t('title')}</h1>
-              <p className="mt-2 text-muted-foreground font-medium">{t('subtitle')}</p>
-              <p className="mt-2 max-w-lg text-sm leading-6 text-muted-foreground/80">
-                {t('page_intro')}
-              </p>
-              <div className="mt-4 flex gap-2 flex-wrap">
-                {(['🍦', '🤖', '🐱', '🌸', '📝'].map((icon, i) => (
-                  <span key={i} className="inline-flex items-center gap-1 rounded-full bg-white/40 dark:bg-white/5 border border-white/60 dark:border-white/10 px-3 py-1 text-xs font-medium text-foreground/70 backdrop-blur-sm">
-                    {icon}
-                  </span>
-                )))}
+          <div className="glass-card mb-8 overflow-hidden rounded-3xl">
+            <div className="relative h-48 w-full sm:h-56">
+              <Image
+                src={getIllustrationUrl('blog-banner')}
+                alt="Blog banner"
+                fill
+                className="object-cover object-center opacity-60 dark:opacity-80"
+              />
+              {/* Dior candy wash (light) — hidden in dark */}
+              <div className="absolute inset-0 bg-gradient-to-br from-[rgba(255,209,220,0.55)] via-[rgba(232,213,245,0.40)] to-[rgba(200,245,228,0.35)] dark:hidden" />
+              <div className="absolute inset-0 bg-gradient-to-r from-background/90 via-background/55 to-transparent" />
+              <div className="absolute inset-0 flex flex-col justify-center px-6 sm:px-8">
+                <h1 className="text-3xl font-bold sm:text-4xl">{t('title')}</h1>
+                <p className="mt-2 text-muted-foreground">{t('subtitle')}</p>
+                <p className="mt-2 max-w-lg text-sm leading-6 text-muted-foreground/80">
+                  {t('page_intro')}
+                </p>
               </div>
             </div>
           </div>
@@ -152,10 +145,10 @@ export function BlogList({ posts }: BlogListProps) {
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder={currentCopy.search}
             className={cn(
-              'w-full rounded-full border border-border/60 bg-card/60 py-2.5 pl-11 pr-10',
+              'glass-pill w-full py-2.5 pl-11 pr-10',
               'text-sm placeholder:text-muted-foreground',
               'focus:border-brand-mint/60 focus:outline-none focus:ring-2 focus:ring-brand-mint/40',
-              'backdrop-blur-sm transition-all'
+              'transition-all'
             )}
           />
           {searchQuery && (
@@ -195,14 +188,14 @@ export function BlogList({ posts }: BlogListProps) {
               ))}
             </motion.div>
 
-            <div className="mt-8 flex flex-col gap-4 rounded-2xl border border-brand-coral/12 dark:border-white/8 bg-card/50 px-4 py-4 backdrop-blur-sm sm:flex-row sm:items-center sm:justify-between">
+            <div className="mt-8 flex flex-col gap-4 rounded-2xl border border-white/8 bg-card/50 px-4 py-4 backdrop-blur-sm sm:flex-row sm:items-center sm:justify-between">
               <p className="text-sm text-muted-foreground">{currentCopy.page(safeCurrentPage, totalPages)}</p>
               <div className="flex items-center gap-3">
                 <button
                   type="button"
                   onClick={() => setCurrentPage((page) => Math.max(1, page - 1))}
                   disabled={safeCurrentPage === 1}
-                  className="inline-flex items-center gap-2 rounded-full border border-brand-coral/20 dark:border-white/10 px-4 py-2 text-sm text-foreground transition-colors hover:bg-brand-coral/8 dark:hover:bg-white/[0.06] disabled:cursor-not-allowed disabled:opacity-40"
+                  className="inline-flex items-center gap-2 rounded-full border border-white/10 px-4 py-2 text-sm text-foreground transition-colors hover:bg-white/[0.06] disabled:cursor-not-allowed disabled:opacity-40"
                 >
                   <ChevronLeft className="h-4 w-4" />
                   {currentCopy.prev}
@@ -211,7 +204,7 @@ export function BlogList({ posts }: BlogListProps) {
                   type="button"
                   onClick={() => setCurrentPage((page) => Math.min(totalPages, page + 1))}
                   disabled={safeCurrentPage === totalPages}
-                  className="inline-flex items-center gap-2 rounded-full border border-brand-coral/20 dark:border-white/10 px-4 py-2 text-sm text-foreground transition-colors hover:bg-brand-coral/8 dark:hover:bg-white/[0.06] disabled:cursor-not-allowed disabled:opacity-40"
+                  className="inline-flex items-center gap-2 rounded-full border border-white/10 px-4 py-2 text-sm text-foreground transition-colors hover:bg-white/[0.06] disabled:cursor-not-allowed disabled:opacity-40"
                 >
                   {currentCopy.next}
                   <ChevronRight className="h-4 w-4" />

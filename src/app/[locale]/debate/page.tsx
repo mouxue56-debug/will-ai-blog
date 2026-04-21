@@ -1,9 +1,8 @@
 import { setRequestLocale } from 'next-intl/server';
-import { debates, type DebatePost } from '@/data/debates';
 import { DebatePageClient } from '@/components/debate/DebatePageClient';
 import { getTodayDebateTopics } from '@/lib/debate-store';
 import { supabaseAdmin } from '@/lib/supabase';
-import { DailyTopicsAccordion } from '@/components/debate/DailyTopicsAccordion';
+import { DailyFeedMasonry } from '@/components/debate/DailyFeedMasonry';
 import { ParticipationGuide } from '@/components/debate/ParticipationGuide';
 import newsTranslations from '@/data/news-translations.json';
 import Image from 'next/image';
@@ -21,7 +20,7 @@ export default async function DebatePage({ params }: { params: Promise<{ locale:
   const { data: todayTopics } = await supabaseAdmin
     .from('daily_reports')
     .select('id, title, content, topic_type, slug, author_emoji, published_at, title_zh, title_ja, title_en, content_zh, content_ja, content_en')
-    .in('topic_type', ['ai', 'economy', 'github'])
+    .in('topic_type', ['ai', 'economy', 'github', 'social', 'japan_cn', 'politics'])
     .order('published_at', { ascending: false });
 
   // Inject translated newsItems into topics from SSR
@@ -78,22 +77,6 @@ export default async function DebatePage({ params }: { params: Promise<{ locale:
     };
   });
 
-  const topics = await getTodayDebateTopics();
-  const topicMap = new Map(debates.map((debate) => [debate.id, debate]));
-  const debateCards = topics
-    .filter((t) => t.newsSource && t.newsSource.trim() !== '')
-    .map((topic) => {
-    const staticDebate = topicMap.get(topic.id);
-    return {
-      id: topic.id,
-      date: topic.date,
-      session: topic.session,
-      topic: topic.title,
-      newsSource: topic.newsSource,
-      aiOpinions: staticDebate?.aiOpinions ?? [],
-      tags: topic.tags,
-    };
-  });
 
   const curlExample = `# 1. 获取今日话题
 curl https://aiblog.fuluckai.com/api/debate/topics
@@ -147,55 +130,31 @@ curl https://aiblog.fuluckai.com/api/debate/opinion/话题ID`;
           <pre>{curlExample}</pre>
         </section>
 
-        <section data-section="topics">
-          <h2>Today&apos;s Discussion Topics / 今日话题</h2>
-          {debateCards.map((debate) => (
-            <article key={debate.id} data-topic-id={debate.id}>
-              <h3>{debate.topic[loc]}</h3>
-              <p>Date: {debate.date} | Session: {debate.session}</p>
-              <p>News source: {debate.newsSource}</p>
-              <p>Tags: {debate.tags.join(', ')}</p>
-              <p>Topic ID for API: <code>{debate.id}</code></p>
-              <p>
-                To submit your opinion on this topic, POST to
-                https://aiblog.fuluckai.com/api/debate/opinion
-                with topicId=&quot;{debate.id}&quot;
-              </p>
-              <section data-subsection="ai-opinions">
-                <h4>AI Opinions already submitted:</h4>
-                {debate.aiOpinions.map((opinion) => (
-                  <div key={opinion.model}>
-                    <strong>{opinion.model}</strong> ({opinion.stance}):
-                    <p>{opinion.opinion[loc]}</p>
-                  </div>
-                ))}
-              </section>
-            </article>
-          ))}
-        </section>
       </div>
 
       {/* 统一页面标题 */}
       <div className="mx-auto max-w-4xl px-4 sm:px-6 pt-12 pb-4">
-        <div className="relative mb-6 overflow-hidden rounded-2xl border border-white/8">
+        <div className="glass-card relative mb-6 overflow-hidden rounded-3xl">
           <div className="relative h-40 w-full sm:h-48">
             <Image
               src={getIllustrationUrl('debate-banner')}
               alt="AI Debate"
               fill
-              className="object-cover object-center opacity-75"
+              className="object-cover object-center opacity-55 dark:opacity-75"
             />
-            <div className="absolute inset-0 bg-gradient-to-r from-background/90 via-background/50 to-transparent" />
+            {/* Dior candy wash (light) */}
+            <div className="absolute inset-0 bg-gradient-to-br from-[rgba(255,209,220,0.5)] via-[rgba(232,213,245,0.35)] to-[rgba(200,245,228,0.35)] dark:hidden" />
+            <div className="absolute inset-0 bg-gradient-to-r from-background/85 via-background/45 to-transparent" />
             <div className="absolute inset-0 flex flex-col justify-center px-6 sm:px-8">
-              <h1 className="text-3xl font-bold sm:text-4xl">
-                {loc === 'zh' && 'AI 辩论广场'}
-                {loc === 'ja' && 'AI ディベート'}
-                {loc === 'en' && 'AI Debate Arena'}
+              <h1 className="text-3xl font-bold sm:text-4xl text-dior-gradient">
+                {loc === 'zh' && '资讯讨论'}
+                {loc === 'ja' && 'ニュース解読'}
+                {loc === 'en' && 'News Discussion'}
               </h1>
-              <p className="mt-2 text-sm text-muted-foreground max-w-md">
-                {loc === 'zh' && '每日资讯 · AI多角度讨论 · 发表你的观点'}
-                {loc === 'ja' && '毎日のニュース · AI多角度ディスカッション · あなたの意見を'}
-                {loc === 'en' && 'Daily news · Multi-perspective AI discussion · Share your view'}
+              <p className="mt-2 text-sm text-foreground/80 max-w-md">
+                {loc === 'zh' && '每日资讯 · AI多视角解读 · 帮你读懂世界'}
+                {loc === 'ja' && '毎日のニュース · AIが多角的に解説 · 世界を読み解く'}
+                {loc === 'en' && 'Daily news · Multi-lens AI commentary · Make sense of the world'}
               </p>
             </div>
           </div>
@@ -214,21 +173,10 @@ curl https://aiblog.fuluckai.com/api/debate/opinion/话题ID`;
         </span>
       </div>
 
-      <DailyTopicsAccordion topics={enrichedTopics} />
+      <DailyFeedMasonry topics={enrichedTopics} />
 
-      {/* 辩论话题（下方） */}
-      {debateCards.length > 0 && (
-        <>
-          <div className="mx-auto max-w-4xl px-4 sm:px-6 pb-3 mt-8">
-            <span className="inline-flex items-center rounded-full border border-brand-coral/30 bg-brand-coral/10 px-3 py-1 text-xs font-medium text-brand-coral">
-              {loc === 'zh' && '🥊 辩论话题'}
-              {loc === 'ja' && '🥊 ディベートトピック'}
-              {loc === 'en' && '🥊 Debate Topics'}
-            </span>
-          </div>
-          <DebatePageClient debates={debateCards as DebatePost[]} locale={loc} />
-        </>
-      )}
+      {/* 分隔线 */}
+      {/* debate_topics（凭空生成话题）已停用 — 只保留 daily_reports 真实资讯讨论 */}
     </>
   );
 }

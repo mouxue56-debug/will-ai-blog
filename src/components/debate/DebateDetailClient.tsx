@@ -1,11 +1,12 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { motion, AnimatePresence } from 'motion/react';
 import Link from 'next/link';
+import { marked } from 'marked';
 import { PageTransition } from '@/components/shared/PageTransition';
-import { ArrowLeft, MessageSquare, Send, Reply, ChevronDown, ChevronUp, Bot, User } from 'lucide-react';
+import { ArrowLeft, MessageSquare, Send, Reply, ChevronDown, ChevronUp, Bot, User, BookOpen, Clock } from 'lucide-react';
 import type { DebateLocale, DebateStance, DebateTopic } from '@/lib/debate-store';
 import type { AIOpinion } from '@/data/debates';
 
@@ -226,12 +227,8 @@ function OpinionBubble({ opinion, locale, depth, onReply, t }: BubbleProps) {
             }}
           >
             <Bot className="w-3 h-3" />
-            {opinion.model}
-            {opinion.instanceName ? (
-              <span className="text-[10px] opacity-80">({opinion.instanceName})</span>
-            ) : null}
+            {opinion.instanceName ?? opinion.model}
           </span>
-          {opinion.stance && <StanceBadge stance={opinion.stance} t={t} />}
           <span className="text-[11px] text-muted-foreground ml-auto">{opinion.createdAt}</span>
         </div>
 
@@ -291,6 +288,20 @@ export function DebateDetailClient({
   }>;
 }) {
   const t = useTranslations('debate');
+
+  // Pre-render article body markdown (memoised — only recomputes when body changes)
+  const bodyHtml = useMemo(() => {
+    const raw = topic.body?.[locale] || topic.body?.zh || '';
+    if (!raw) return '';
+    return marked.parse(raw) as string;
+  }, [topic.body, locale]);
+
+  // Reading time estimate (avg 400 chars/min for Chinese)
+  const readingMins = useMemo(() => {
+    const raw = topic.body?.[locale] || topic.body?.zh || '';
+    if (!raw) return 0;
+    return Math.max(1, Math.round(raw.length / 400));
+  }, [topic.body, locale]);
 
   // Flat list (no nesting yet) — includes static + dynamic
   const [flatOpinions, setFlatOpinions] = useState<Opinion[]>(() =>
@@ -494,15 +505,6 @@ export function DebateDetailClient({
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mb-8">
           <div className="flex items-center gap-2 mb-4 flex-wrap">
             <span className="text-sm text-muted-foreground">{topic.date}</span>
-            <span
-              className={`text-xs px-2.5 py-1 rounded-full font-medium ${
-                topic.session === 'morning'
-                  ? 'bg-amber-500/15 text-amber-400'
-                  : 'bg-indigo-500/15 text-indigo-400'
-              }`}
-            >
-              {t(topic.session)}
-            </span>
             <span className="text-xs text-muted-foreground ml-auto flex items-center gap-1">
               <MessageSquare className="w-3.5 h-3.5" />
               {flatOpinions.length} {t('comments')}
@@ -510,11 +512,14 @@ export function DebateDetailClient({
           </div>
 
           <h1 className="text-2xl sm:text-3xl font-bold mb-4 leading-snug">
-            🥊 {topic.title[locale]}
+            {topic.title[locale]}
           </h1>
 
           <div className="glass-card px-4 py-3 text-sm text-muted-foreground italic">
             📰 {t('news_trigger')}: {topic.newsSource}
+            {topic.newsDate && (
+              <span className="ml-2 text-xs opacity-60">({topic.newsDate})</span>
+            )}
           </div>
 
           {/* News Items with translations */}
@@ -543,11 +548,46 @@ export function DebateDetailClient({
           )}
         </motion.div>
 
+        {/* ── Article body (daily_reports content_zh) ── */}
+        {bodyHtml && (
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            className="mb-8"
+          >
+            <div className="glass-card overflow-hidden">
+              {/* Article card header */}
+              <div className="flex items-center justify-between px-5 py-3 border-b border-white/8 bg-brand-mint/5">
+                <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-brand-mint">
+                  <BookOpen className="w-3.5 h-3.5" />
+                  {locale === 'zh' ? '新闻正文' : locale === 'ja' ? 'ニュース本文' : 'Article'}
+                </span>
+                {readingMins > 0 && (
+                  <span className="inline-flex items-center gap-1 text-[11px] text-muted-foreground">
+                    <Clock className="w-3 h-3" />
+                    {locale === 'zh'
+                      ? `约 ${readingMins} 分钟`
+                      : locale === 'ja'
+                      ? `約${readingMins}分`
+                      : `~${readingMins} min`}
+                  </span>
+                )}
+              </div>
+              {/* Article body */}
+              <div
+                className="px-6 py-6 news-article"
+                dangerouslySetInnerHTML={{ __html: bodyHtml }}
+              />
+            </div>
+          </motion.div>
+        )}
+
         {/* ── Chat bubbles ─────────────────────────────── */}
         <div className="mb-8">
           <h2 className="text-lg font-semibold mb-5 flex items-center gap-2">
             <MessageSquare className="w-5 h-5 text-brand-mint" />
-            {t('all_opinions')}
+            {locale === 'zh' ? 'AI 解读 & 讨论' : locale === 'ja' ? 'AI解説 & ディスカッション' : 'AI Insights & Discussion'}
           </h2>
 
           <div className="flex flex-col gap-4">

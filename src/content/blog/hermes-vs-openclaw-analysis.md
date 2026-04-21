@@ -6,6 +6,7 @@ title:
   en: "Hermes vs OpenClaw: A Three-Way Harness Engineering Comparison"
 category: "learning"
 date: "2026-04-12"
+coverImage: /covers/minimax/hermes-vs-openclaw-analysis.jpg
 author: Will
 readingTime: 18
 excerpt:

@@ -8,82 +8,110 @@
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 
-  /* Brand colors - 福楽冰淇淋色系 (ice cream palette, WCAG AA compliant) */
-  --color-brand-mint: #4ade80;   /* mint green ice cream */
-  --color-brand-coral: #fb923c;  /* strawberry / coral */
-  --color-brand-cyan: #22d3ee;   /* blueberry / sky */
-  --color-brand-mango: #fbbf24;  /* mango yellow */
-  --color-brand-taro: #a78bfa;   /* taro purple */
-  --color-brand-strawberry: #f472b6; /* strawberry pink */
+  /* 🍨 Ice Cream Design System — 对齐 fuluckpet.com 精确色值 */
+  --color-brand-mint: #7DD3C0;       /* 主色 */
+  --color-brand-mint-dark: #5BC4A8;
+  --color-brand-strawberry: #F9B8D0; /* 草莓（不是 coral 橙色）*/
+  --color-brand-blueberry: #B8D4F9;
+  --color-brand-mango: #FFE5A0;
+  --color-brand-taro: #D4BCF0;
+  --color-brand-peach: #FFDAB8;
+
+  /* 牛奶色 (超柔和背景) */
+  --color-milk-mint: #F0FFFA;
+  --color-milk-strawberry: #FFF8FB;
+  --color-milk-blueberry: #F5FAFF;
+  --color-milk-mango: #FFFCF0;
+  --color-milk-taro: #F8F4FF;
+  --color-milk-peach: #FFF7F0;
 }
 
 :root {
-  --background: 36 60% 98%; /* warm cream #fefcf8 */
-  --foreground: 25 20% 10%;
+  /* Dior 奶油糖果白 (light) — contrast-boosted */
+  --background: 34 62% 94%;      /* #F6EADA 更温暖的奶油 */
+  --foreground: 22 40% 14%;      /* #3A2418 deeper warm-brown */
   --card: 0 0% 100%;
-  --card-foreground: 25 20% 10%;
+  --card-foreground: 22 30% 22%; /* #4A3228 readable brown */
   --popover: 0 0% 100%;
-  --popover-foreground: 25 20% 10%;
-  --primary: 25 15% 12%;
-  --primary-foreground: 36 60% 98%;
-  --secondary: 32 30% 94%; /* warm peach-tinted secondary */
-  --secondary-foreground: 25 15% 12%;
-  --muted: 32 25% 93%;
-  --muted-foreground: 25 12% 34%; /* WCAG AA contrast */
-  --accent: 32 30% 94%;
-  --accent-foreground: 25 15% 12%;
+  --popover-foreground: 22 30% 22%;
+  --primary: 167 50% 48%;        /* deepened mint for contrast */
+  --primary-foreground: 0 0% 100%;
+  --secondary: 338 78% 78%;      /* #F6AEC0 dior pink-300 */
+  --secondary-foreground: 338 50% 22%;
+  --muted: 34 40% 90%;           /* softer warm muted */
+  --muted-foreground: 20 18% 38%; /* #6F5C51 brown-gray for legible body muted */
+  --accent: 276 62% 84%;         /* dior lavender-300 */
+  --accent-foreground: 276 40% 28%;
+
+  /* Dior signature accent tokens (direct use) */
+  --dior-pink: 338 100% 73%;       /* #FF7B9C */
+  --dior-pink-soft: 338 90% 88%;   /* #FBC8D4 */
+  --dior-mint: 159 53% 57%;        /* #5CC9A7 */
+  --dior-mint-soft: 159 55% 85%;   /* #BEEBD8 */
+  --dior-lav: 276 57% 72%;         /* #B48EE0 */
+  --dior-lav-soft: 276 60% 88%;    /* #DFC9ED */
+  --dior-yel: 44 100% 64%;         /* #FFCB45 */
+  --dior-yel-soft: 44 100% 85%;    /* #FFE8B3 */
+  --dior-cream: 34 62% 94%;        /* bg */
+  --dior-warm: 22 40% 14%;         /* text */
   --destructive: 0 84% 60%;
-  --border: 30 20% 88%; /* warm beige border */
-  --input: 30 20% 88%;
-  --ring: 32 40% 70%;
-  --chart-1: 148 60% 52%;  /* mint */
-  --chart-2: 27 95% 60%;   /* coral */
-  --chart-3: 194 85% 49%;  /* cyan */
-  --chart-4: 280 90% 76%;  /* taro */
-  --chart-5: 45 95% 56%;   /* mango */
-  --radius: 0.75rem;       /* slightly rounder for cozy feel */
-  --sidebar: 36 50% 97%;
-  --sidebar-foreground: 25 20% 10%;
-  --sidebar-primary: 25 15% 12%;
-  --sidebar-primary-foreground: 36 60% 98%;
-  --sidebar-accent: 32 30% 94%;
-  --sidebar-accent-foreground: 25 15% 12%;
-  --sidebar-border: 30 20% 88%;
-  --sidebar-ring: 32 40% 70%;
+  --border: 30 35% 82%;          /* warm tan border — visible */
+  --input: 30 35% 82%;
+  --ring: 167 50% 66%;           /* mint */
+  --chart-1: 167 50% 66%;        /* mint */
+  --chart-2: 328 82% 85%;        /* strawberry */
+  --chart-3: 42 100% 82%;        /* mango */
+  --chart-4: 276 62% 84%;        /* taro */
+  --chart-5: 212 85% 85%;        /* blueberry */
+  --radius: 1rem;                /* 16px, 更柔和 */
+  --sidebar: 42 100% 97%;        /* cream */
+  --sidebar-foreground: 180 14% 35%;
+  --sidebar-primary: 167 50% 66%;  /* mint */
+  --sidebar-primary-foreground: 0 0% 100%;
+  --sidebar-accent: 167 50% 97%;   /* mint-milk */
+  --sidebar-accent-foreground: 167 40% 38%;
+  --sidebar-border: 180 14% 92%;
+  --sidebar-ring: 167 50% 66%;
+
+  /* Ice Cream shadows (warm green-tinted, 不用纯黑) */
+  --shadow-ice-soft: 0 2px 20px rgba(90, 122, 122, 0.06);
+  --shadow-ice-card: 0 4px 24px rgba(90, 122, 122, 0.08);
+  --shadow-ice-hover: 0 12px 40px rgba(90, 122, 122, 0.14);
+  --shadow-ice-float: 0 20px 60px rgba(90, 122, 122, 0.12);
 }
 
 .dark {
-  --background: 25 30% 5%; /* #0d0a08 warm dark brown-black */
-  --foreground: 36 20% 90%;
+  --background: 240 47% 4%; /* #0a0a0f deep blue-black */
+  --foreground: 240 5% 90%; /* #e4e4e7 */
   --card: 0 0% 100% / 3%; /* glass card */
-  --card-foreground: 36 20% 90%;
-  --popover: 25 25% 9%;
-  --popover-foreground: 36 20% 90%;
-  --primary: 36 20% 90%;
-  --primary-foreground: 25 25% 9%;
-  --secondary: 25 20% 15%;
-  --secondary-foreground: 36 20% 90%;
-  --muted: 25 20% 15%;
-  --muted-foreground: 30 10% 64%;
-  --accent: 25 20% 15%;
-  --accent-foreground: 36 20% 90%;
+  --card-foreground: 240 5% 90%;
+  --popover: 240 12% 8%;
+  --popover-foreground: 240 5% 90%;
+  --primary: 240 5% 90%;
+  --primary-foreground: 240 12% 8%;
+  --secondary: 240 10% 16%;
+  --secondary-foreground: 240 5% 90%;
+  --muted: 240 10% 16%;
+  --muted-foreground: 240 4% 65%; /* #a1a1aa */
+  --accent: 240 10% 16%;
+  --accent-foreground: 240 5% 90%;
   --destructive: 0 63% 31%;
-  --border: 0 0% 100% / 7%;
+  --border: 0 0% 100% / 6%;
   --input: 0 0% 100% / 15%;
-  --ring: 30 20% 46%;
-  --chart-1: 148 60% 52%;
-  --chart-2: 27 95% 60%;
-  --chart-3: 194 85% 49%;
-  --chart-4: 280 90% 76%;
-  --chart-5: 45 95% 56%;
-  --sidebar: 25 25% 9%;
-  --sidebar-foreground: 36 20% 90%;
-  --sidebar-primary: 280 70% 70%;
-  --sidebar-primary-foreground: 36 20% 90%;
-  --sidebar-accent: 25 20% 15%;
-  --sidebar-accent-foreground: 36 20% 90%;
-  --sidebar-border: 0 0% 100% / 7%;
-  --sidebar-ring: 30 20% 46%;
+  --ring: 240 4% 46%;
+  --chart-1: 220 70% 50%;
+  --chart-2: 160 60% 45%;
+  --chart-3: 30 80% 55%;
+  --chart-4: 280 65% 60%;
+  --chart-5: 340 75% 55%;
+  --sidebar: 240 12% 8%;
+  --sidebar-foreground: 240 5% 90%;
+  --sidebar-primary: 280 65% 60%;
+  --sidebar-primary-foreground: 240 5% 90%;
+  --sidebar-accent: 240 10% 16%;
+  --sidebar-accent-foreground: 240 5% 90%;
+  --sidebar-border: 0 0% 100% / 6%;
+  --sidebar-ring: 240 4% 46%;
 }
 
 @theme inline {
@@ -126,6 +154,10 @@
   --radius-2xl: calc(var(--radius) * 1.8);
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
+  --color-dior-pink: hsl(var(--dior-pink));
+  --color-dior-mint: hsl(var(--dior-mint));
+  --color-dior-lav: hsl(var(--dior-lav));
+  --color-dior-yel: hsl(var(--dior-yel));
 }
 
 @layer base {
@@ -134,63 +166,310 @@
   }
   body {
     @apply bg-background text-foreground;
+    font-size: 17px;
+    line-height: 1.85;           /* 温暖宽松 */
+    letter-spacing: 0.005em;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
   html {
     @apply font-sans;
+    scroll-behavior: smooth;
+  }
+  h1, h2, h3, h4 {
+    letter-spacing: -0.01em;
+    line-height: 1.3;
   }
 }
 
-/* ── Dynamic ambient background ─────────────────────────── */
+/* ═══════════ 🍨 Ice Cream Signature Components ═══════════ */
+
+/* Scroll Progress Bar (四色品牌签名，所有 Will 网站共用) */
+.scroll-progress-bar {
+  position: fixed; top: 0; left: 0;
+  width: 0%; height: 3px;
+  background: linear-gradient(90deg,
+    var(--color-brand-mint, #7DD3C0),
+    var(--color-brand-strawberry, #F9B8D0),
+    var(--color-brand-mango, #FFE5A0),
+    var(--color-brand-taro, #D4BCF0));
+  z-index: 9999;
+  transition: width 0.1s linear;
+  pointer-events: none;
+}
+
+/* Ice Cream 按钮变体（supplement shadcn Button） */
+.btn-icecream-primary {
+  background: var(--color-brand-mint);
+  color: white;
+  padding: 12px 28px;
+  border-radius: 9999px;
+  font-weight: 500;
+  font-size: 15px;
+  border: none;
+  box-shadow: 0 4px 12px rgba(125, 211, 192, 0.3);
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  text-decoration: none;
+}
+.btn-icecream-primary:hover {
+  background: var(--color-brand-mint-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(125, 211, 192, 0.45);
+}
+
+/* Ice Cream 卡片 */
+.card-icecream {
+  background: white;
+  border-radius: 1.5rem;
+  padding: 2rem;
+  box-shadow: 0 4px 24px rgba(90, 122, 122, 0.08);
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  border: 1px solid rgba(125, 211, 192, 0.1);
+}
+.card-icecream:hover {
+  box-shadow: 0 12px 40px rgba(90, 122, 122, 0.14);
+  transform: translateY(-4px);
+  border-color: rgba(125, 211, 192, 0.25);
+}
+
+/* Milk 背景区块 */
+.bg-milk-mint { background: var(--color-milk-mint); }
+.bg-milk-strawberry { background: var(--color-milk-strawberry); }
+.bg-milk-blueberry { background: var(--color-milk-blueberry); }
+.bg-milk-mango { background: var(--color-milk-mango); }
+.bg-milk-taro { background: var(--color-milk-taro); }
+.bg-milk-peach { background: var(--color-milk-peach); }
+
+/* Warm shadow utilities */
+.shadow-ice-soft { box-shadow: var(--shadow-ice-soft); }
+.shadow-ice-card { box-shadow: var(--shadow-ice-card); }
+.shadow-ice-hover { box-shadow: var(--shadow-ice-hover); }
+
+/* Brand gradient text */
+.text-brand-gradient {
+  background: linear-gradient(135deg, var(--color-brand-mint), var(--color-brand-strawberry), var(--color-brand-taro));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* ── Liquid Glass ambient halo (neutral: 淡蓝 + 浅紫) ───── */
 body::before {
   content: '';
   position: fixed;
   inset: 0;
   z-index: -1;
   pointer-events: none;
-  /* Dark mode: warm ice cream glow */
   background:
-    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(74, 222, 128, 0.07), transparent),
-    radial-gradient(ellipse 60% 40% at 80% 50%, rgba(251, 146, 60, 0.05), transparent),
-    radial-gradient(ellipse 60% 40% at 20% 80%, rgba(167, 139, 250, 0.05), transparent);
+    radial-gradient(ellipse 70% 45% at 15% 10%, rgba(150, 180, 220, 0.14), transparent 60%),
+    radial-gradient(ellipse 60% 40% at 85% 20%, rgba(180, 160, 220, 0.12), transparent 60%),
+    radial-gradient(ellipse 70% 50% at 50% 95%, rgba(160, 170, 210, 0.10), transparent 60%);
   opacity: 1;
   transition: opacity 0.5s ease;
 }
 
-/* Light mode: soft warm ice cream pastels */
+/* Light mode: Dior 糖果冰淇淋 halo — saturated for visible contrast */
 :root:not(.dark) body::before {
   background:
-    radial-gradient(ellipse 70% 50% at 20% -10%, rgba(251, 146, 60, 0.07), transparent),
-    radial-gradient(ellipse 60% 40% at 85% 20%, rgba(74, 222, 128, 0.06), transparent),
-    radial-gradient(ellipse 50% 40% at 50% 90%, rgba(167, 139, 250, 0.05), transparent);
+    radial-gradient(ellipse 65% 45% at 10% 5%, rgba(255, 165, 190, 0.68), transparent 58%),
+    radial-gradient(ellipse 55% 40% at 92% 18%, rgba(196, 160, 230, 0.62), transparent 58%),
+    radial-gradient(ellipse 55% 38% at 50% 105%, rgba(138, 220, 195, 0.55), transparent 58%),
+    radial-gradient(ellipse 38% 28% at 96% 72%, rgba(255, 208, 110, 0.45), transparent 58%),
+    radial-gradient(ellipse 45% 30% at 4% 60%, rgba(255, 180, 210, 0.38), transparent 60%);
   opacity: 1;
 }
 
-/* ── Glass card utility ─────────────────────────────────── */
+/* ── Liquid Glass card utility (dark: 深邃玻璃 / light: 冰面白雾) ── */
 .glass-card {
-  background: rgba(255, 255, 255, 0.03);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: 16px;
-  transition: border-color 0.3s ease, background 0.3s ease;
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(22px) saturate(160%);
+  -webkit-backdrop-filter: blur(22px) saturate(160%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 18px;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    inset 0 0 0 0.5px rgba(255, 255, 255, 0.04),
+    0 8px 28px rgba(8, 12, 24, 0.28);
+  transition: border-color 0.3s ease, background 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
 }
 
 .glass-card:hover {
-  border-color: rgba(255, 255, 255, 0.12);
-  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.06);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    inset 0 0 0 0.5px rgba(255, 255, 255, 0.05),
+    0 14px 40px rgba(8, 12, 24, 0.36);
 }
 
-/* Light mode glass card - warm cream style */
+/* Light mode — Dior 糖果玻璃 (contrast boosted) */
 :root:not(.dark) .glass-card {
-  background: rgba(255, 252, 248, 0.85);
-  border: 1px solid rgba(251, 146, 60, 0.12);
-  box-shadow: 0 1px 4px rgba(180, 100, 40, 0.06), 0 1px 2px rgba(180, 100, 40, 0.03);
+  background: rgba(255, 255, 255, 0.82);
+  backdrop-filter: blur(26px) saturate(185%);
+  -webkit-backdrop-filter: blur(26px) saturate(185%);
+  border: 1px solid rgba(230, 200, 215, 0.95);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 1),
+    inset 0 0 0 0.5px rgba(255, 255, 255, 0.5),
+    0 1px 3px rgba(180, 100, 150, 0.08),
+    0 3px 10px rgba(180, 142, 224, 0.12),
+    0 14px 36px rgba(255, 123, 156, 0.16);
 }
 
 :root:not(.dark) .glass-card:hover {
   background: rgba(255, 255, 255, 0.95);
-  border-color: rgba(251, 146, 60, 0.22);
-  box-shadow: 0 4px 16px rgba(251, 146, 60, 0.10);
+  border-color: rgba(255, 170, 195, 0.98);
+  transform: translateY(-2px);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 1),
+    inset 0 0 0 0.5px rgba(255, 255, 255, 0.65),
+    0 2px 6px rgba(180, 100, 150, 0.12),
+    0 6px 16px rgba(180, 142, 224, 0.18),
+    0 20px 48px rgba(255, 123, 156, 0.24);
+}
+
+/* ── Debate masonry chip header (tinted strip with theme-aware fg) ─ */
+.chip-tint {
+  background: var(--tint-light);
+}
+.chip-tint .chip-fg {
+  color: var(--chip-fg-light);
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.35);
+}
+:root.dark .chip-tint {
+  background: var(--tint-dark);
+}
+:root.dark .chip-tint .chip-fg {
+  color: var(--chip-fg-dark);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.45);
+}
+
+/* ── Liquid Glass pill (chip / button / tab) ─────────────── */
+.glass-pill {
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(18px) saturate(160%);
+  -webkit-backdrop-filter: blur(18px) saturate(160%);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  border-radius: 9999px;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.10),
+    0 2px 8px rgba(8, 12, 24, 0.18);
+  transition: all 0.25s ease;
+}
+.glass-pill:hover {
+  background: rgba(255, 255, 255, 0.10);
+  border-color: rgba(255, 255, 255, 0.16);
+}
+:root:not(.dark) .glass-pill {
+  background: rgba(255, 255, 255, 0.88);
+  border: 1px solid rgba(230, 200, 215, 0.95);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 1),
+    0 2px 8px rgba(180, 100, 150, 0.12);
+  color: hsl(var(--foreground));
+}
+:root:not(.dark) .glass-pill:hover {
+  background: rgba(255, 255, 255, 1);
+  border-color: rgba(255, 170, 195, 1);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 1),
+    0 4px 14px rgba(255, 123, 156, 0.18);
+}
+
+/* ── Liquid Glass nav bar (bottom / header) ──────────────── */
+.glass-nav {
+  background: rgba(10, 12, 20, 0.55);
+  backdrop-filter: blur(28px) saturate(180%);
+  -webkit-backdrop-filter: blur(28px) saturate(180%);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.35);
+}
+:root:not(.dark) .glass-nav {
+  background: rgba(255, 248, 240, 0.78);
+  border-top: 1px solid rgba(240, 230, 246, 0.85);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.95),
+    0 -2px 12px rgba(180, 142, 224, 0.06);
+}
+
+/* ── Liquid Glass orb (floating action button) ───────────── */
+.glass-orb {
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  background: radial-gradient(circle at 30% 25%,
+    rgba(180, 200, 230, 0.45),
+    rgba(180, 165, 210, 0.30) 60%,
+    rgba(140, 150, 180, 0.20));
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.35),
+    inset 0 -10px 30px rgba(100, 110, 150, 0.20),
+    0 10px 30px rgba(8, 12, 24, 0.40),
+    0 0 0 0.5px rgba(255, 255, 255, 0.10);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.glass-orb:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.45),
+    inset 0 -10px 30px rgba(100, 110, 150, 0.25),
+    0 14px 40px rgba(8, 12, 24, 0.50),
+    0 0 0 0.5px rgba(255, 255, 255, 0.15);
+}
+
+/* ── Dior candy chips (saturated accent pills) ──────────── */
+.chip-dior {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 9999px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  line-height: 1.4;
+  transition: all 0.25s ease;
+  border: 1px solid transparent;
+}
+.chip-dior-pink  { background: hsl(var(--dior-pink-soft)); color: hsl(338 70% 30%); border-color: hsl(338 80% 78%); }
+.chip-dior-mint  { background: hsl(var(--dior-mint-soft)); color: hsl(159 55% 22%); border-color: hsl(159 50% 62%); }
+.chip-dior-lav   { background: hsl(var(--dior-lav-soft));  color: hsl(276 45% 30%); border-color: hsl(276 55% 72%); }
+.chip-dior-yel   { background: hsl(var(--dior-yel-soft));  color: hsl(33 80% 28%);  border-color: hsl(40 90% 62%); }
+
+.dark .chip-dior-pink { background: rgba(255,123,156,0.18); color: #FFB8CC; border-color: rgba(255,123,156,0.35); }
+.dark .chip-dior-mint { background: rgba(92,201,167,0.18); color: #9EE8CE; border-color: rgba(92,201,167,0.35); }
+.dark .chip-dior-lav  { background: rgba(180,142,224,0.18); color: #D4BCF0; border-color: rgba(180,142,224,0.35); }
+.dark .chip-dior-yel  { background: rgba(255,203,69,0.18); color: #FFE0A0; border-color: rgba(255,203,69,0.35); }
+
+/* ── Dior gradient text (hero titles) ───────────────────── */
+.text-dior-gradient {
+  background: linear-gradient(110deg, #FF7B9C 0%, #B48EE0 45%, #5CC9A7 85%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.dark .text-dior-gradient {
+  background: linear-gradient(110deg, #FFB8CC 0%, #D4BCF0 45%, #9EE8CE 85%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* ── Dior section ribbon (decorative strip behind headings) */
+.ribbon-dior {
+  background: linear-gradient(90deg,
+    rgba(255,123,156,0.14),
+    rgba(180,142,224,0.12),
+    rgba(92,201,167,0.14),
+    rgba(255,203,69,0.12));
+  border-radius: 9999px;
+  padding: 3px 12px;
+  display: inline-block;
 }
 
 /* ── Glow underline for nav ─────────────────────────────── */
@@ -205,9 +484,9 @@ body::before {
   left: 0;
   right: 0;
   height: 2px;
-  background: #4ade80;
+  background: #5eead4;
   border-radius: 1px;
-  box-shadow: 0 0 8px rgba(74, 222, 128, 0.5), 0 0 16px rgba(74, 222, 128, 0.25);
+  box-shadow: 0 0 8px rgba(94, 234, 212, 0.6), 0 0 16px rgba(94, 234, 212, 0.3);
   transform: scaleX(0);
   transition: transform 0.25s ease;
 }
@@ -297,8 +576,8 @@ body::before {
 
 /* ── Pulse ring for timeline dots ───────────────────────── */
 @keyframes dot-pulse {
-  0%, 100% { box-shadow: 0 0 0 0 var(--pulse-color, rgba(74,222,128,0.5)); }
-  50%      { box-shadow: 0 0 0 6px var(--pulse-color, rgba(74,222,128,0)); }
+  0%, 100% { box-shadow: 0 0 0 0 var(--pulse-color, rgba(94,234,212,0.5)); }
+  50%      { box-shadow: 0 0 0 6px var(--pulse-color, rgba(94,234,212,0)); }
 }
 
 .dot-pulse {
@@ -358,6 +637,170 @@ body::before {
     max-width: 100%;
     height: auto;
   }
+}
+
+/* ── News Article Reading Experience ────────────────── */
+
+/*
+  .news-article — applied to the debate detail body container.
+  Replaces prose-sm with a proper magazine-style reading layout.
+  Dark/light modes handled via .dark class on <html>.
+*/
+
+.news-article {
+  font-size: 1rem;
+  line-height: 1.85;
+  color: hsl(var(--foreground) / 0.88);
+}
+
+/* ── Date badge: *2026-04-15* renders as <em> inside <p> ── */
+.news-article p > em:only-child,
+.news-article p:has(> em:only-child) em {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.72rem;
+  font-style: normal;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  padding: 0.18em 0.7em;
+  border-radius: 99px;
+  background: color-mix(in srgb, #7DD3C0 18%, transparent);
+  color: #5BC4A8;
+  border: 1px solid color-mix(in srgb, #7DD3C0 30%, transparent);
+  margin-bottom: 0.25rem;
+}
+
+/* ── H1: hide duplicate title (already shown in page header) ── */
+.news-article h1 {
+  display: none;
+}
+
+/* ── H2: section headers with mint accent strip ── */
+.news-article h2 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  line-height: 1.4;
+  color: hsl(var(--foreground));
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+  padding: 0.55rem 0.9rem 0.55rem 1rem;
+  background: color-mix(in srgb, #7DD3C0 10%, transparent);
+  border-left: 3px solid #7DD3C0;
+  border-radius: 0 8px 8px 0;
+}
+
+/* Highlight Chinese section numbers (一、二、三…) */
+.news-article h2::first-letter {
+  color: #7DD3C0;
+}
+
+/* ── H3: sub-section labels ── */
+.news-article h3 {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: hsl(var(--foreground));
+  margin-top: 1.2rem;
+  margin-bottom: 0.4rem;
+}
+
+/* ── Paragraphs ── */
+.news-article p {
+  color: hsl(var(--muted-foreground));
+  margin-bottom: 0.85rem;
+}
+
+/* ── Bold: key terms and subheadings ── */
+.news-article strong {
+  color: hsl(var(--foreground));
+  font-weight: 600;
+}
+
+/* ── HR: gradient section separator ── */
+.news-article hr {
+  border: none;
+  height: 1px;
+  margin: 1.75rem 0;
+  background: linear-gradient(
+    to right,
+    transparent,
+    color-mix(in srgb, #7DD3C0 50%, transparent) 40%,
+    color-mix(in srgb, #7DD3C0 50%, transparent) 60%,
+    transparent
+  );
+}
+
+/* ── Lists ── */
+.news-article ul,
+.news-article ol {
+  padding-left: 1.4rem;
+  margin-bottom: 0.85rem;
+}
+
+.news-article li {
+  color: hsl(var(--muted-foreground));
+  margin-bottom: 0.3rem;
+  padding-left: 0.2rem;
+}
+
+.news-article ul > li::marker {
+  color: #7DD3C0;
+}
+
+.news-article ol > li::marker {
+  color: #7DD3C0;
+  font-weight: 600;
+}
+
+/* ── Links ── */
+.news-article a {
+  color: #7DD3C0;
+  text-decoration: none;
+  border-bottom: 1px solid color-mix(in srgb, #7DD3C0 35%, transparent);
+  transition: border-color 0.15s;
+}
+
+.news-article a:hover {
+  border-bottom-color: #7DD3C0;
+}
+
+/* Bare GitHub/http URLs on their own line */
+.news-article p > a:only-child {
+  font-size: 0.8rem;
+  opacity: 0.7;
+}
+
+/* ── Blockquote ── */
+.news-article blockquote {
+  border-left: 3px solid color-mix(in srgb, #7DD3C0 50%, transparent);
+  padding: 0.5rem 1rem;
+  margin: 1rem 0;
+  background: color-mix(in srgb, #7DD3C0 6%, transparent);
+  border-radius: 0 8px 8px 0;
+  color: hsl(var(--muted-foreground));
+  font-style: italic;
+}
+
+/* ── Inline code ── */
+.news-article code {
+  font-size: 0.82em;
+  padding: 0.15em 0.45em;
+  border-radius: 5px;
+  background: rgba(255, 255, 255, 0.06);
+  color: #7DD3C0;
+}
+
+.dark .news-article code {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* ── Key stat / callout (bold-only paragraph) ── */
+.news-article p:has(> strong:first-child:last-child) {
+  font-size: 0.9rem;
+  padding: 0.45rem 0.85rem;
+  background: color-mix(in srgb, #7DD3C0 8%, transparent);
+  border-radius: 8px;
+  margin-bottom: 0.75rem;
 }
 
 /* ── Node glow effect for AI network ────────────────── */

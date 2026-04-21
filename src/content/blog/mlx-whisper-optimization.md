@@ -6,6 +6,7 @@ title:
   en: "Sent 10 Voice Messages in the Morning, AI Went Silent | A Real Apple Silicon Optimization Journey"
 category: "learning"
 date: "2026-03-26"
+coverImage: /covers/minimax/mlx-whisper-optimization.jpg
 author: Will
 readingTime: 8
 excerpt:

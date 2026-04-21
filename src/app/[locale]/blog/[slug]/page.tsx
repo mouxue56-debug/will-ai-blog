@@ -135,7 +135,7 @@ export default async function BlogPostPage({ params }: Props) {
       url: `${SITE_URL}/about`,
       image: {
         '@type': 'ImageObject',
-        url: `${SITE_URL}/og-image.png`,
+        url: `${SITE_URL}/og-image.jpg`,
         width: 1200,
         height: 630,
       },
@@ -151,7 +151,7 @@ export default async function BlogPostPage({ params }: Props) {
       url: SITE_URL,
       logo: {
         '@type': 'ImageObject',
-        url: `${SITE_URL}/og-image.png`,
+        url: `${SITE_URL}/og-image.jpg`,
         width: 1200,
         height: 630,
       },
