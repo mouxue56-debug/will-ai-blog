@@ -32,30 +32,23 @@ sections:
     title: "Part 7: 效果对比"
 ---
 
-import { InteractiveDiagram } from '@/components/blog/enhanced/InteractiveDiagram';
-import { DecisionCard, DecisionPoint } from '@/components/blog/enhanced/DecisionCard';
-import { Toc } from '@/components/blog/enhanced/Toc';
-import { BeforeAfter } from '@/components/blog/enhanced/BeforeAfter';
-import { CardGrid } from '@/components/blog/enhanced/CardGrid';
-import { InsightBox } from '@/components/blog/enhanced/InsightBox';
-import { Workflow } from '@/components/blog/enhanced/Workflow';
-import { TermTooltip } from '@/components/blog/enhanced/TermTooltip';
-import { Timeline } from '@/components/blog/enhanced/Timeline';
-
 # 我给 6 个 AI 实例造了一个共享大脑
 
 > 六个 AI，跨三台 Mac，共享同一本笔记，每晚自愈自整理，永不忘事。
 
-<Toc items={[
-  { num: "01", text: "生态背景" },
-  { num: "02", text: "记忆孤岛" },
-  { num: "03", text: "架构总览" },
-  { num: "04", text: "实现细节" },
-  { num: "05", text: "使用场景" },
-  { num: "06", text: "踩坑记录" },
-  { num: "07", text: "效果对比" },
-  { num: "08", text: "总结" }
-]} />
+<div class="toc">
+<div class="toc-title">📑 目录</div>
+<div class="toc-grid">
+<div class="toc-item"><span class="toc-num">01</span><span class="toc-text">生态背景</span></div>
+<div class="toc-item"><span class="toc-num">02</span><span class="toc-text">记忆孤岛</span></div>
+<div class="toc-item"><span class="toc-num">03</span><span class="toc-text">架构总览</span></div>
+<div class="toc-item"><span class="toc-num">04</span><span class="toc-text">实现细节</span></div>
+<div class="toc-item"><span class="toc-num">05</span><span class="toc-text">使用场景</span></div>
+<div class="toc-item"><span class="toc-num">06</span><span class="toc-text">踩坑记录</span></div>
+<div class="toc-item"><span class="toc-num">07</span><span class="toc-text">效果对比</span></div>
+<div class="toc-item"><span class="toc-num">08</span><span class="toc-text">总结</span></div>
+</div>
+</div>
 
 过去半年我同时养了 6 个 AI 实例：4 个 OpenClaw agent（seasonal name：春/夏/秋/冬）、1 个 Hermes、1 个 Claude Code CLI。它们每一个都有自己的"性格"、自己的技能栈、自己在做不同的项目。但很快问题来了：
 
@@ -72,11 +65,26 @@ import { Timeline } from '@/components/blog/enhanced/Timeline';
 
 先介绍玩具。不知道这 3 个平台的可以先认识下。
 
-<CardGrid cards={[
-  { icon: "🌐", name: "OpenClaw", description: "多智能体编排平台，4 个 agent 实例（yuki/natsu/haru/aki），跨 3 台 Mac", tag: "主力" },
-  { icon: "⚡", name: "Hermes", description: "CLI 通用 AI 助手，配 MiniMax M2.7 / Kimi / Nous 多 provider fallback", tag: "辅助" },
-  { icon: "🧠", name: "Claude Code", description: "Anthropic 官方 CLI，支持 MCP、Skills、Plugins，手机遥控", tag: "备用" }
-]} />
+<div class="cards-3">
+<div class="card">
+<div class="card-icon">🌐</div>
+<div class="card-name">OpenClaw</div>
+<div class="card-desc">多智能体编排平台，4 个 agent 实例（yuki/natsu/haru/aki），跨 3 台 Mac</div>
+<div class="card-tag">主力</div>
+</div>
+<div class="card">
+<div class="card-icon">⚡</div>
+<div class="card-name">Hermes</div>
+<div class="card-desc">CLI 通用 AI 助手，配 MiniMax M2.7 / Kimi / Nous 多 provider fallback</div>
+<div class="card-tag">辅助</div>
+</div>
+<div class="card">
+<div class="card-icon">🧠</div>
+<div class="card-name">Claude Code</div>
+<div class="card-desc">Anthropic 官方 CLI，支持 MCP、Skills、Plugins，手机遥控</div>
+<div class="card-tag">备用</div>
+</div>
+</div>
 
 ### OpenClaw
 一个**多智能体编排平台**（国内团队开发）。你可以同时运行几十个 AI agent 实例，每个 agent 有：
@@ -102,26 +110,26 @@ Anthropic 官方 CLI，支持 MCP、Skills、Plugins、hooks。我用一个"clau
 
 ## Part 2：问题 — 记忆孤岛
 
-<BeforeAfter
-  before={{
-    title: "之前",
-    items: [
-      "6 份不同的 MEMORY.md，互不共享",
-      "解决过的 bug 要手动复制给其他实例",
-      "重要决策分散在 6 套日志里",
-      "想跨实例查询 → 没机制"
-    ]
-  }}
-  after={{
-    title: "现在",
-    items: [
-      "单一 Obsidian Vault，所有实例共读",
-      "clawmem_search 30 秒找到任何历史讨论",
-      "每晚 03:00 自动同步 + 归档",
-      "新 agent 接入只需配置 vault 路径"
-    ]
-  }}
-/>
+<div class="before-after">
+<div class="before-after-col before">
+<div class="before-after-label before">❌ Before</div>
+<h4 style="color:#FF8C42;margin-bottom:12px;">记忆孤岛</h4>
+<div class="comparison-item"><span class="comparison-cross">✗</span>6 份独立记忆，互不相通</div>
+<div class="comparison-item"><span class="comparison-cross">✗</span>同一 bug 重复解决 3 次</div>
+<div class="comparison-item"><span class="comparison-cross">✗</span>决策散落在各处，找不到</div>
+<div class="comparison-item"><span class="comparison-cross">✗</span>API key 轮换后某实例还在用旧的</div>
+<div class="comparison-item"><span class="comparison-cross">✗</span>想"问问别的 agent" → 没机制</div>
+</div>
+<div class="before-after-col after">
+<div class="before-after-label after">✓ After</div>
+<h4 style="color:#4ADE80;margin-bottom:12px;">共享大脑</h4>
+<div class="comparison-item"><span class="comparison-check">✓</span>一份 Vault，6 实例共读共写</div>
+<div class="comparison-item"><span class="comparison-check">✓</span>语义搜索："找关于 X 的讨论"</div>
+<div class="comparison-item"><span class="comparison-check">✓</span>每晚自愈：自动归档 + 合并重复</div>
+<div class="comparison-item"><span class="comparison-check">✓</span>决策有迹可循，版本控制</div>
+<div class="comparison-item"><span class="comparison-check">✓</span>跨实例查询：clawmem 语义检索</div>
+</div>
+</div>
 
 每个 AI 实例都把记忆写在自己机器的自己目录下：
 
@@ -152,7 +160,33 @@ Claude:    ~/.claude/projects/<cwd>/memory/MEMORY.md
 
 ## Part 3：架构总览
 
-<InteractiveDiagram />
+<div class="diagram">
+<div class="diagram-svg">
+<svg viewBox="0 0 900 520" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system, BlinkMacSystemFont, sans-serif">
+<!-- Central Vault -->
+<rect x="350" y="20" width="200" height="90" rx="12" fill="url(#vaultGrad)" stroke="#FF8C42" stroke-width="1.5"/>
+<text x="450" y="52" text-anchor="middle" fill="#FF8C42" font-size="13" font-weight="700">📚 Obsidian Vault</text>
+<text x="450" y="70" text-anchor="middle" fill="rgba(232,244,248,0.6)" font-size="11">~/Documents/kb/</text>
+<text x="450" y="86" text-anchor="middle" fill="rgba(0,212,255,0.8)" font-size="11">~1800 .md · Single Source of Truth</text>
+<!-- Instances row -->
+<rect x="80" y="155" width="120" height="55" rx="10" fill="rgba(0,212,255,0.06)" stroke="rgba(0,212,255,0.3)"/>
+<text x="140" y="177" text-anchor="middle" fill="#00D4FF" font-size="13" font-weight="700">Yuki</text>
+<text x="140" y="193" text-anchor="middle" fill="rgba(232,244,248,0.5)" font-size="10">M4 Mac mini</text>
+<rect x="230" y="155" width="120" height="55" rx="10" fill="rgba(0,212,255,0.06)" stroke="rgba(0,212,255,0.3)"/>
+<text x="290" y="177" text-anchor="middle" fill="#00D4FF" font-size="13" font-weight="700">Natsu</text>
+<text x="290" y="193" text-anchor="middle" fill="rgba(232,244,248,0.5)" font-size="10">M4 Mac mini</text>
+<rect x="390" y="155" width="120" height="55" rx="10" fill="rgba(0,212,255,0.06)" stroke="rgba(0,212,255,0.3)"/>
+<text x="450" y="177" text-anchor="middle" fill="#00D4FF" font-size="13" font-weight="700">Haru</text>
+<text x="450" y="193" text-anchor="middle" fill="rgba(232,244,248,0.5)" font-size="10">M2 Mac mini</text>
+<rect x="550" y="155" width="120" height="55" rx="10" fill="rgba(0,212,255,0.06)" stroke="rgba(0,212,255,0.3)"/>
+<text x="610" y="177" text-anchor="middle" fill="#00D4FF" font-size="13" font-weight="700">Aki</text>
+<text x="610" y="193" text-anchor="middle" fill="rgba(232,244,248,0.5)" font-size="10">MacBook Pro</text>
+<rect x="710" y="155" width="110" height="55" rx="10" fill="rgba(0,212,255,0.06)" stroke="rgba(0,212,255,0.3)"/>
+<text x="765" y="177" text-anchor="middle" fill="#00D4FF" font-size="13" font-weight="700">Hermes</text>
+<text x="765" y="193" text-anchor="middle" fill="rgba(232,244,248,0.5)" font-size="10">M4 Mac mini</text>
+</svg>
+</div>
+</div>
 
 核心组件：
 
@@ -173,7 +207,7 @@ Claude:    ~/.claude/projects/<cwd>/memory/MEMORY.md
 ```
 ~/Documents/kb/
 ├── 01-Inbox/           # 临时笔记，待整理
-├── 02-AI 技术/          # AI 相关学习笔记
+├── 02-AI技术/          # AI 相关学习笔记
 ├── 03-OpenClaw/         # OpenClaw 配置/skill
 ├── 04-猫舎经营/         # 福楽キャッテリー业务
 ├── 05-医院项目/         # 慈恵医院 CRM
@@ -184,15 +218,25 @@ Claude:    ~/.claude/projects/<cwd>/memory/MEMORY.md
 
 ### 4.2 同步机制
 
-<Workflow
-  title="🔄 Dream Cycle（03:00 定时任务）"
-  steps={[
-    { num: "1", text: "ユキ (权威源) → git commit → bare repo" },
-    { num: "2", text: "rsync → ナツ/ハル/アキ（只同步 .md 文件）" },
-    { num: "3", text: "各实例自建 LanceDB 索引（不同步 binary）" },
-    { num: "4", text: "冲突解决：-X ours（ユキ版本优先）" }
-  ]}
-/>
+<div class="workflow">
+<div class="workflow-title">🔄 Dream Cycle（03:00 定时任务）</div>
+<div class="workflow-step">
+<div class="step-num">1</div>
+<div class="step-text"><strong>ユキ (权威源)</strong> → git commit → bare repo</div>
+</div>
+<div class="workflow-step">
+<div class="step-num">2</div>
+<div class="step-text"><strong>rsync</strong> → ナツ/ハル/アキ（只同步 .md 文件）</div>
+</div>
+<div class="workflow-step">
+<div class="step-num">3</div>
+<div class="step-text"><strong>各实例自建 LanceDB 索引</strong>（不同步 binary）</div>
+</div>
+<div class="workflow-step">
+<div class="step-num">4</div>
+<div class="step-text"><strong>冲突解决</strong>：-X ours（ユキ版本优先）</div>
+</div>
+</div>
 
 ### 4.3 clawmem MCP 接口
 
@@ -224,13 +268,14 @@ lancedb.connect("~/Documents/kb/.lancedb")
 
 ### 场景 1：跨实例查询
 
-<InsightBox title="真实案例">
-  Will: "之前讨论的 MiniMax TTS 配置是什么？"
-  <br /><br />
-  ナツ：clawmem_search("MiniMax TTS 配置")
-  <br />
-  → 返回 3 个结果（来自ユキ的 2026-03-24 daily note）
-</InsightBox>
+<div class="insight-box">
+<div class="insight-title">真实案例</div>
+<div class="insight-body">
+Will: "之前讨论的 MiniMax TTS 配置是什么？"<br/><br/>
+ナツ：clawmem_search("MiniMax TTS 配置")<br/>
+→ 返回 3 个结果（来自ユキ的 2026-03-24 daily note）
+</div>
+</div>
 
 ### 场景 2：知识沉淀
 
@@ -244,25 +289,35 @@ lancedb.connect("~/Documents/kb/.lancedb")
 
 ## Part 6：踩坑记录
 
-<DecisionCard title="💡 核心决策：为什么选 git + rsync 混合方案？" variant="default">
-  <DecisionPoint label="备选方案" value="纯 git / 纯 rsync / 云同步" />
-  <DecisionPoint label="最终选择" value="git bare repo + rsync 定时同步" />
-  <div className="mt-3 text-slate-400">
-    <p className="mb-2"><strong>纯 git 的问题：</strong>1800+ 文件每次全量 pull 太慢，且 binary 文件（LanceDB）会冲突。</p>
-    <p className="mb-2"><strong>纯 rsync 的问题：</strong>无版本历史，误删无法恢复。</p>
-    <p><strong>混合方案优势：</strong>git 管版本 + rsync 管高效同步，每晚 03:00 无人值守运行。</p>
-  </div>
-</DecisionCard>
+<div class="decision-card">
+<div class="decision-header">
+<span class="decision-badge">💡 决策</span>
+<span class="decision-title">为什么选 git + rsync 混合方案？</span>
+</div>
+<div class="decision-body">
+<p><strong>备选方案</strong>：纯 git / 纯 rsync / 云同步</p>
+<p><strong>最终选择</strong>：git bare repo + rsync 定时同步</p>
+<p style="margin-top:12px;color:rgba(232,244,248,0.6)"><strong>纯 git 的问题：</strong>1800+ 文件每次全量 pull 太慢，且 binary 文件（LanceDB）会冲突。</p>
+<p style="color:rgba(232,244,248,0.6)"><strong>纯 rsync 的问题：</strong>无版本历史，误删无法恢复。</p>
+<p style="color:rgba(232,244,248,0.6)"><strong>混合方案优势：</strong>git 管版本 + rsync 管高效同步，每晚 03:00 无人值守运行。</p>
+</div>
+</div>
 
 ### 坑 1：rsync 同步 binary 文件
 
 LanceDB 的 `.lance` 文件是 binary 格式，跨机器 rsync 会损坏。
 
-<DecisionCard title="⚠️ 教训：Binary 文件同步踩坑" variant="warning">
-  <p className="mb-2"><strong>现象：</strong>LanceDB 的 `.lance` 文件跨机器 rsync 后，语义搜索返回空结果。</p>
-  <p className="mb-2"><strong>原因：</strong>binary 格式对字节序敏感，Mac M4 ↔ M2 架构差异导致损坏。</p>
-  <p><strong>解决：</strong>在 rsync 脚本中排除 <code>.lance</code> 目录，每台机重建索引（5 分钟）。</p>
-</DecisionCard>
+<div class="decision-card" style="border-left-color:#FF8C42;background:rgba(255,140,66,0.06)">
+<div class="decision-header">
+<span class="decision-badge" style="background:rgba(255,140,66,0.15);color:#FF8C42">⚠️ 教训</span>
+<span class="decision-title" style="color:#FF8C42">Binary 文件同步踩坑</span>
+</div>
+<div class="decision-body">
+<p><strong>现象：</strong>LanceDB 的 `.lance` 文件跨机器 rsync 后，语义搜索返回空结果。</p>
+<p><strong>原因：</strong>binary 格式对字节序敏感，Mac M4 ↔ M2 架构差异导致损坏。</p>
+<p><strong>解决：</strong>在 rsync 脚本中排除 <code>.lance</code> 目录，每台机重建索引（5 分钟）。</p>
+</div>
+</div>
 
 ### 坑 2：git 冲突
 
@@ -276,14 +331,18 @@ LanceDB 的 `.lance` 文件是 binary 格式，跨机器 rsync 会损坏。
 
 初期只用 vector search，召回率低。
 
-**解决**：改用 hybrid 模式（keyword + vector），召回率提升到 92%。
-
-<DecisionCard title="✅ 优化：Hybrid 搜索提升召回率" variant="success">
-  <DecisionPoint label="纯 Vector" value="召回率 ~70%，关键词匹配差" />
-  <DecisionPoint label="纯 Keyword" value="召回率 ~65%，语义理解差" />
-  <DecisionPoint label="Hybrid" value="召回率 92%，两者兼顾" />
-  <p className="mt-3 text-slate-400">使用 <code>clawmem_search(query, mode="hybrid")</code> 自动融合两种结果，rerank 后取 top-N。</p>
-</DecisionCard>
+<div class="decision-card" style="border-left-color:#4ADE80;background:rgba(74,222,128,0.06)">
+<div class="decision-header">
+<span class="decision-badge" style="background:rgba(74,222,128,0.15);color:#4ADE80">✅ 优化</span>
+<span class="decision-title" style="color:#4ADE80">Hybrid 搜索提升召回率</span>
+</div>
+<div class="decision-body">
+<p><strong>纯 Vector</strong>：召回率 ~70%，关键词匹配差</p>
+<p><strong>纯 Keyword</strong>：召回率 ~65%，语义理解差</p>
+<p><strong>Hybrid</strong>：召回率 92%，两者兼顾</p>
+<p style="margin-top:12px;color:rgba(232,244,248,0.6)">使用 <code>clawmem_search(query, mode="hybrid")</code> 自动融合两种结果，rerank 后取 top-N。</p>
+</div>
+</div>
 
 ---
 
@@ -316,13 +375,28 @@ clawmem MCP server 和 Dream Cycle 脚本准备开源，等我把文档整理好
 
 ---
 
-<TermTooltip terms={[
-  { term: "SSoT", definition: "Single Source of Truth，单一事实源" },
-  { term: "MCP", definition: "Model Context Protocol，模型上下文协议" },
-  { term: "Hybrid", definition: "混合搜索模式（关键词 + 向量语义）" },
-  { term: "LanceDB", definition: "本地向量数据库，用于语义搜索" },
-  { term: "clawmem", definition: "OpenClaw 记忆系统，提供语义搜索接口" }
-]} />
+<div class="terms">
+<div class="term-item">
+<span class="term" data-tip="Single Source of Truth">SSoT</span>
+<span class="term-def">单一事实源</span>
+</div>
+<div class="term-item">
+<span class="term" data-tip="Model Context Protocol">MCP</span>
+<span class="term-def">模型上下文协议</span>
+</div>
+<div class="term-item">
+<span class="term" data-tip="混合搜索模式">Hybrid</span>
+<span class="term-def">关键词 + 向量语义</span>
+</div>
+<div class="term-item">
+<span class="term" data-tip="本地向量数据库">LanceDB</span>
+<span class="term-def">用于语义搜索</span>
+</div>
+<div class="term-item">
+<span class="term" data-tip="OpenClaw 记忆系统">clawmem</span>
+<span class="term-def">提供语义搜索接口</span>
+</div>
+</div>
 
 ---
 
