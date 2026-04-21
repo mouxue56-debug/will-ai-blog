@@ -13,13 +13,11 @@ export default async function DebatePage({ params }: { params: Promise<{ locale:
   setRequestLocale(locale);
   const loc = (locale as Locale) || 'zh';
 
-  // Fetch TODAY's daily reports only — avoid showing old cards
-  const today = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
+  // Fetch all daily reports from Supabase
   const { data: todayTopics } = await supabaseAdmin
     .from('daily_reports')
     .select('id, title, content, topic_type, slug, author_emoji, published_at, title_zh, title_ja, title_en, content_zh, content_ja, content_en')
     .in('topic_type', ['ai', 'economy', 'github'])
-    .gte('published_at', today)
     .order('published_at', { ascending: false });
 
   // Inject translated newsItems into topics from SSR
