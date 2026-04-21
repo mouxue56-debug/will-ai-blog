@@ -73,23 +73,39 @@ export default async function DebatePage({ params }: { params: Promise<{ locale:
     };
   });
 
-  // Filter: remove empty/invalid topics, deduplicate by topic_type, keep max 3
+  // Filter: remove topics with no newsItems (empty cards), deduplicate per date
   type DailyTopic = typeof enrichedTopics[number];
-  const VALID_TYPES = ['ai', 'economy', 'github'];
-  const seenTypes = new Set<string>();
   const todayTopics: DailyTopic[] = [];
 
+  // Dedup key: chip label from content (e.g. "AI 动态", "GitHub 热榜", "经济观察")
+  // Since topic_type is null for all records, we infer type from content
+  const seenKeys = new Set<string>();
+
   for (const topic of enrichedTopics) {
-    // Skip if topic_type is invalid or already seen (keep only first of each type)
-    if (!topic.topic_type || !VALID_TYPES.includes(topic.topic_type)) continue;
-    if (seenTypes.has(topic.topic_type)) continue;
-    // Skip if no newsItems and content is empty/placeholder
+    // Skip if no newsItems (would render as empty card)
     const newsCount = topic.newsItems?.length ?? 0;
-    const contentLen = (topic.content?.length ?? 0) + (topic.content_zh?.length ?? 0);
-    if (newsCount === 0 && contentLen < 100) continue;
-    seenTypes.add(topic.topic_type);
+    if (newsCount === 0) continue;
+
+    // Dedup: infer type from chip-tint header in content
+    const content = topic.content || '';
+    let inferredType = '';
+    if (/AI|ai|🧠|🤖|📡/.test(content.slice(0, 80))) inferredType = 'ai';
+    else if (/GitHub|github|🔥|💻/.test(content.slice(0, 80))) inferredType = 'github';
+    else if (/经济|💹|economy|通胀|市场/.test(content.slice(0, 80))) inferredType = 'economy';
+    else inferredType = 'other';
+
+    // Use published_at date + inferred type as dedup key
+    const date = (topic.published_at || '').slice(0, 10) || 'unknown';
+    const dedupKey = `${date}::${inferredType}`;
+    if (seenKeys.has(dedupKey)) continue; // keep first (latest) per date+type
+    seenKeys.add(dedupKey);
+
+    // Set topic_type if missing so the component can use it for styling
+    if (!topic.topic_type) {
+      (topic as Record<string, unknown>).topic_type = inferredType;
+    }
+
     todayTopics.push(topic);
-    if (todayTopics.length >= 3) break;
   }
 
 
