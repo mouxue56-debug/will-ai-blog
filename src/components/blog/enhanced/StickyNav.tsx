@@ -52,6 +52,8 @@ export function StickyNav({ sections }: { sections: Section[] }) {
         width: '180px',
         backdropFilter: 'blur(12px)',
         opacity: visible ? 1 : 0,
+        visibility: visible ? 'visible' : 'hidden',
+        pointerEvents: visible ? 'auto' : 'none',
         transition: 'opacity 0.3s',
       }}
     >
