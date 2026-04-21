@@ -72,11 +72,29 @@ export function BlogDetail({ post, prevPost, nextPost, comments, postSlug, headi
   const contentSourceLabel = getContentSourceLabel(post.contentSource, locale);
   const isEnhanced = post.layout === 'enhanced';
 
-  // Enhanced layout - use EnhancedLayout component with progress bar, sticky nav, etc.
+  // Enhanced layout - use EnhancedLayout component with progress bar, sticky nav, hero, stats, etc.
   if (isEnhanced) {
+    const hero = {
+      eyebrow: 'Architecture Deep Dive',
+      title: title,
+      subtitle: post.excerpt?.[locale] || '',
+      date: new Date(post.date).toLocaleDateString(
+        locale === 'zh' ? 'zh-CN' : locale === 'ja' ? 'ja-JP' : 'en-US',
+        { year: 'numeric', month: 'long', day: 'numeric' }
+      ),
+      tags: post.tags || [],
+    };
+
+    const stats = [
+      { label: 'AI Instances', value: '6' },
+      { label: 'Mac Devices', value: '3' },
+      { label: 'Shared Files', value: '1800+' },
+      { label: 'Sync Time', value: '2min' },
+    ];
+
     return (
       <PageTransition>
-        <EnhancedLayout sections={post.sections || []}>
+        <EnhancedLayout sections={post.sections || []} hero={hero} stats={stats}>
           <div className="mx-auto max-w-[1400px] px-4 py-12 sm:px-6">
             <Link
               href="/blog"
