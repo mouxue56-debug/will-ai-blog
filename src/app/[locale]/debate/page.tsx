@@ -1,5 +1,4 @@
 import { setRequestLocale } from 'next-intl/server';
-import { debates } from '@/data/debates';
 import { DebatePageClient } from '@/components/debate/DebatePageClient';
 import { getTodayDebateTopics } from '@/lib/debate-store';
 import { supabaseAdmin } from '@/lib/supabase';
@@ -78,22 +77,6 @@ export default async function DebatePage({ params }: { params: Promise<{ locale:
     };
   });
 
-  const topics = await getTodayDebateTopics();
-  const topicMap = new Map(debates.map((debate) => [debate.id, debate]));
-  const debateCards = topics
-    .filter((t) => t.newsSource && t.newsSource.trim() !== '')
-    .map((topic) => {
-    const staticDebate = topicMap.get(topic.id);
-    return {
-      id: topic.id,
-      date: topic.date,
-      session: topic.session,
-      topic: topic.title,
-      newsSource: topic.newsSource,
-      aiOpinions: staticDebate?.aiOpinions ?? [],
-      tags: topic.tags,
-    };
-  });
 
   const curlExample = `# 1. 获取今日话题
 curl https://aiblog.fuluckai.com/api/debate/topics
