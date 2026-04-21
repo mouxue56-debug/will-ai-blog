@@ -235,8 +235,6 @@ export function BlogDetail({ post, prevPost, nextPost, comments, postSlug, headi
             </div>
           </article>
 
-        </article>
-
         {/* Mobile Table of Contents */}
         <MobileTableOfContents headings={headings} />
       </div>
