@@ -50,10 +50,35 @@ function parseFrontmatter(fileContent: string): { data: Record<string, unknown>;
 
   let currentKey = '';
   let currentObj: Record<string, string> | null = null;
+  let currentList: Array<Record<string, string>> | null = null;
+  let currentListItem: Record<string, string> | null = null;
 
   for (const line of frontmatterStr.split('\n')) {
     const trimmed = line.trimEnd();
     if (!trimmed) continue;
+    
+    // Check for list item start: "  - key: value" or "  - value"
+    const listItemMatch = trimmed.match(/^\s+-\s+(.*)$/);
+    if (listItemMatch && currentList !== null) {
+      const itemContent = listItemMatch[1];
+      // Check if it's a key-value pair
+      const itemKvMatch = itemContent.match(/^([\w]+):\s*(.*)$/);
+      if (itemKvMatch) {
+        currentListItem = { [itemKvMatch[1]]: itemKvMatch[2].replace(/^["']|["']$/g, '') };
+        currentList.push(currentListItem);
+      } else {
+        // Simple list item
+        currentList.push({ value: itemContent.replace(/^["']|["']$/g, '') });
+      }
+      continue;
+    }
+    
+    // Check for continuation of list item (indented key-value)
+    const listItemContinuation = trimmed.match(/^\s{4,}([\w]+):\s*(.*)$/);
+    if (listItemContinuation && currentListItem !== null && currentList !== null) {
+      currentListItem[listItemContinuation[1]] = listItemContinuation[2].replace(/^["']|["']$/g, '');
+      continue;
+    }
     
     const nestedMatch = trimmed.match(/^\s+([\w]+):\s*(.+)$/);
     if (nestedMatch && currentObj !== null) {
@@ -68,21 +93,32 @@ function parseFrontmatter(fileContent: string): { data: Record<string, unknown>;
         data[currentKey] = currentObj;
         currentObj = null;
       }
+      if (currentList !== null && currentKey) {
+        data[currentKey] = currentList;
+        currentList = null;
+        currentListItem = null;
+      }
       
       currentKey = kvMatch[1];
       const value = kvMatch[2].trim();
       
       if (value === '') {
-        currentObj = {};
+        // Check if next lines are list items
+        currentList = [];
+        currentObj = null;
       } else {
         data[currentKey] = value.replace(/^["']|["']$/g, '');
         currentObj = null;
+        currentList = null;
       }
     }
   }
   
   if (currentObj !== null && currentKey) {
     data[currentKey] = currentObj;
+  }
+  if (currentList !== null && currentKey) {
+    data[currentKey] = currentList;
   }
 
   return { data, content };
@@ -151,6 +187,8 @@ export function getAllPosts(): BlogPost[] {
       content,
       willComment: (data.willComment as Record<string, string>) || undefined,
       audioUrl: (data.audioUrl as string) || undefined,
+      layout: (data.layout as 'default' | 'enhanced') || undefined,
+      sections: (data.sections as Array<{ id: string; title: string }>) || undefined,
     } as BlogPost;
   });
 
