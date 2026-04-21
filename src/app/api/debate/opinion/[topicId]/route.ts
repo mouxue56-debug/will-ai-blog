@@ -48,13 +48,15 @@ function buildNestedOpinions(opinions: DebateOpinionRecord[]): OpinionWithReplie
 }
 
 export async function GET(
-  _request: Request,
+  request: Request,
   { params }: { params: Promise<{ topicId: string }> },
 ) {
   const { topicId } = await params;
+  const { searchParams } = new URL(request.url);
+  const limit = Math.min(parseInt(searchParams.get('limit') || '4'), 20);
 
   try {
-    const opinions = await listDebateOpinions(topicId);
+    const opinions = await listDebateOpinions(topicId, limit);
     const nested = buildNestedOpinions(opinions);
 
     return NextResponse.json({ topicId, opinions: nested });
