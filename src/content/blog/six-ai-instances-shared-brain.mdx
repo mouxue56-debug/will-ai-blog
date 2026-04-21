@@ -32,6 +32,9 @@ sections:
     title: "Part 7: 效果对比"
 ---
 
+import { InteractiveDiagram } from '@/components/blog/enhanced/InteractiveDiagram';
+import { DecisionCard, DecisionPoint } from '@/components/blog/enhanced/DecisionCard';
+
 # 我给 6 个 AI 实例造了一个共享大脑
 
 > 六个 AI，跨三台 Mac，共享同一本笔记，每晚自愈自整理，永不忘事。
@@ -129,6 +132,8 @@ Claude:    ~/.claude/projects/<cwd>/memory/MEMORY.md
               (语义搜索)            (vector store)
 ```
 
+<InteractiveDiagram />
+
 核心组件：
 
 | 组件 | 作用 |
@@ -222,9 +227,25 @@ Will: "之前讨论的 MiniMax TTS 配置是什么？"
 
 ## Part 6：踩坑记录
 
+<DecisionCard title="💡 核心决策：为什么选 git + rsync 混合方案？" variant="default">
+  <DecisionPoint label="备选方案" value="纯 git / 纯 rsync / 云同步" />
+  <DecisionPoint label="最终选择" value="git bare repo + rsync 定时同步" />
+  <div className="mt-3 text-slate-400">
+    <p className="mb-2"><strong>纯 git 的问题：</strong>1800+ 文件每次全量 pull 太慢，且 binary 文件（LanceDB）会冲突。</p>
+    <p className="mb-2"><strong>纯 rsync 的问题：</strong>无版本历史，误删无法恢复。</p>
+    <p><strong>混合方案优势：</strong>git 管版本 + rsync 管高效同步，每晚 03:00 无人值守运行。</p>
+  </div>
+</DecisionCard>
+
 ### 坑 1：rsync 同步 binary 文件
 LanceDB 的 `.lance` 文件是 binary 格式，跨机器 rsync 会损坏。
 **解决**：每台机自建索引，只同步 markdown 源文件。
+
+<DecisionCard title="⚠️ 教训：Binary 文件同步踩坑" variant="warning">
+  <p className="mb-2"><strong>现象：</strong>LanceDB 的 `.lance` 文件跨机器 rsync 后，语义搜索返回空结果。</p>
+  <p className="mb-2"><strong>原因：</strong>binary 格式对字节序敏感，Mac M4 ↔ M2 架构差异导致损坏。</p>
+  <p><strong>解决：</strong>在 rsync 脚本中排除 <code>.lance</code> 目录，每台机重建索引（5 分钟）。</p>
+</DecisionCard>
 
 ### 坑 2：git 冲突
 多实例同时写 MEMORY.md 会冲突。
@@ -235,6 +256,13 @@ LanceDB 的 `.lance` 文件是 binary 格式，跨机器 rsync 会损坏。
 ### 坑 3：语义搜索不准
 初期只用 vector search，召回率低。
 **解决**：改用 hybrid 模式（keyword + vector），召回率提升到 92%。
+
+<DecisionCard title="✅ 优化：Hybrid 搜索提升召回率" variant="success">
+  <DecisionPoint label="纯 Vector" value="召回率 ~70%，关键词匹配差" />
+  <DecisionPoint label="纯 Keyword" value="召回率 ~65%，语义理解差" />
+  <DecisionPoint label="Hybrid" value="召回率 92%，两者兼顾" />
+  <p className="mt-3 text-slate-400">使用 <code>clawmem_search(query, mode="hybrid")</code> 自动融合两种结果，rerank 后取 top-N。</p>
+</DecisionCard>
 
 ---
 

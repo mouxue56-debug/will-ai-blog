@@ -238,8 +238,8 @@ export function BlogDetail({ post, prevPost, nextPost, comments, postSlug, headi
         {/* Mobile Table of Contents */}
         <MobileTableOfContents headings={headings} />
       </div>
-    </PageTransition>
-  </EnhancedLayout>
+    </EnhancedLayout>
+  </PageTransition>
 );
 
   // Standard layout - original rendering for non-enhanced posts
