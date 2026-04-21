@@ -112,10 +112,16 @@ function localizeTitle(item: NewsItem, locale: string): string {
   return item.title_zh || item.title_en || item.title || '';
 }
 
+function stripDatePrefix(title: string): string {
+  // 去掉日期前缀如 "2026-04-20 " 或 "2026-04-20🔥"
+  return title.replace(/^\d{4}-\d{2}-\d{2}\s*/, '').replace(/^\d{4}-\d{2}-\d{2}/, '');
+}
+
 function localizeTopicTitle(topic: DailyTopic, locale: string): string {
-  if (locale === 'ja') return topic.display_title_ja || topic.title_ja || topic.title;
-  if (locale === 'en') return topic.display_title_en || topic.title_en || topic.title;
-  return topic.display_title_zh || topic.title_zh || topic.title;
+  const raw = locale === 'ja' ? topic.display_title_ja || topic.title_ja || topic.title
+    : locale === 'en' ? topic.display_title_en || topic.title_en || topic.title
+    : topic.display_title_zh || topic.title_zh || topic.title;
+  return stripDatePrefix(raw);
 }
 
 function formatDate(iso: string, locale: string): string {
@@ -190,7 +196,7 @@ export function DailyFeedMasonry({ topics }: DailyFeedMasonryProps) {
           </div>
 
           {/* 小红书瀑布流 (CSS columns) */}
-          <div className="columns-2 gap-3 sm:gap-4 md:columns-3 lg:columns-4 [column-fill:_balance]">
+          <div className="columns-1 sm:columns-2 lg:columns-3 gap-4 [column-fill:_balance]">
             {list.map((topic) => {
               const meta = typeMeta[topic.topic_type] ?? typeMeta.ai;
               const news =
@@ -209,7 +215,7 @@ export function DailyFeedMasonry({ topics }: DailyFeedMasonryProps) {
                 >
                   {/* 彩色 tint header (小红书视觉锚) */}
                   <div
-                    className="chip-tint flex items-center gap-2 px-4 py-3"
+                    className="chip-tint flex items-center gap-2 px-5 py-4"
                     style={{
                       ['--tint-light' as string]: meta.tintLight,
                       ['--tint-dark' as string]: meta.tintDark,
@@ -223,29 +229,29 @@ export function DailyFeedMasonry({ topics }: DailyFeedMasonryProps) {
                     </span>
                   </div>
 
-                  <div className="px-4 pt-3 pb-4">
-                    <h3 className="text-[15px] font-semibold leading-snug text-foreground line-clamp-3 group-hover:text-foreground">
+                  <div className="px-5 pt-4 pb-5">
+                    <h3 className="text-base font-semibold leading-snug text-foreground line-clamp-3 group-hover:text-foreground">
                       {title}
                     </h3>
 
                     {news.length > 0 && (
-                      <ul className="mt-3 space-y-1.5 text-[12.5px] leading-snug text-muted-foreground">
-                        {news.slice(0, 3).map((it, idx) => (
+                      <ul className="mt-3 space-y-2 text-sm leading-snug text-muted-foreground">
+                        {news.slice(0, 5).map((it, idx) => (
                           <li key={idx} className="line-clamp-2">
                             · {localizeTitle(it, locale)}
                           </li>
                         ))}
                         {news.length > 3 && (
                           <li className="text-[11px] opacity-70">
-                            +{news.length - 3} {locale === 'zh' ? '条' : locale === 'ja' ? '件' : 'more'}
+                            +{news.length - 5} {locale === 'zh' ? '条' : locale === 'ja' ? '件' : 'more'}
                           </li>
                         )}
                       </ul>
                     )}
 
-                    <div className="mt-4 flex items-center justify-between text-[11px] text-muted-foreground">
+                    <div className="mt-4 flex items-center justify-between text-xs text-muted-foreground">
                       <span className="inline-flex items-center gap-1">
-                        <MessageCircle className="h-3 w-3" aria-hidden />
+                        <MessageCircle className="h-3.5 w-3.5" aria-hidden />
                         {count} {locale === 'zh' ? '评' : locale === 'ja' ? '意見' : 'views'}
                       </span>
                       <span className="opacity-70 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all">
