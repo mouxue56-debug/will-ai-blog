@@ -92,6 +92,7 @@ function parseFrontmatter(fileContent: string): { data: Record<string, unknown>;
       if (currentObj !== null && currentKey) {
         data[currentKey] = currentObj;
         currentObj = null;
+        currentList = null; // Clear list to prevent overwriting object
       }
       if (currentList !== null && currentKey) {
         data[currentKey] = currentList;
@@ -105,7 +106,7 @@ function parseFrontmatter(fileContent: string): { data: Record<string, unknown>;
       if (value === '') {
         // Check if next lines are list items
         currentList = [];
-        currentObj = null;
+        currentObj = {};
       } else {
         data[currentKey] = value.replace(/^["']|["']$/g, '');
         currentObj = null;
