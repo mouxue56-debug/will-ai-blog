@@ -123,7 +123,7 @@ export function BlogList({ posts }: BlogListProps) {
               <div className="absolute inset-0 bg-gradient-to-br from-[rgba(255,209,220,0.55)] via-[rgba(232,213,245,0.40)] to-[rgba(200,245,228,0.35)] dark:hidden" />
               <div className="absolute inset-0 bg-gradient-to-r from-background/90 via-background/55 to-transparent" />
               <div className="absolute inset-0 flex flex-col justify-center px-6 sm:px-8">
-                <h1 className="text-3xl font-bold sm:text-4xl">{t('title')}</h1>
+                <h1 className="text-3xl font-bold sm:text-4xl text-dior-gradient text-dior-gradient-breathing">{t('title')}</h1>
                 <p className="mt-2 text-muted-foreground">{t('subtitle')}</p>
                 <p className="mt-2 max-w-lg text-sm leading-6 text-muted-foreground/80">
                   {t('page_intro')}
@@ -195,7 +195,7 @@ export function BlogList({ posts }: BlogListProps) {
                   type="button"
                   onClick={() => setCurrentPage((page) => Math.max(1, page - 1))}
                   disabled={safeCurrentPage === 1}
-                  className="inline-flex items-center gap-2 rounded-full border border-white/10 px-4 py-2 text-sm text-foreground transition-colors hover:bg-white/[0.06] disabled:cursor-not-allowed disabled:opacity-40"
+                  className="inline-flex items-center gap-2 rounded-full border border-white/10 px-4 py-2 text-sm text-foreground transition-all duration-300 hover:border-brand-cyan/30 hover:bg-white/[0.06] hover:shadow-[0_0_18px_-6px_rgba(0,212,255,0.35)] disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:border-white/10 disabled:hover:shadow-none"
                 >
                   <ChevronLeft className="h-4 w-4" />
                   {currentCopy.prev}
@@ -204,7 +204,7 @@ export function BlogList({ posts }: BlogListProps) {
                   type="button"
                   onClick={() => setCurrentPage((page) => Math.min(totalPages, page + 1))}
                   disabled={safeCurrentPage === totalPages}
-                  className="inline-flex items-center gap-2 rounded-full border border-white/10 px-4 py-2 text-sm text-foreground transition-colors hover:bg-white/[0.06] disabled:cursor-not-allowed disabled:opacity-40"
+                  className="inline-flex items-center gap-2 rounded-full border border-white/10 px-4 py-2 text-sm text-foreground transition-all duration-300 hover:border-brand-cyan/30 hover:bg-white/[0.06] hover:shadow-[0_0_18px_-6px_rgba(0,212,255,0.35)] disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:border-white/10 disabled:hover:shadow-none"
                 >
                   {currentCopy.next}
                   <ChevronRight className="h-4 w-4" />
