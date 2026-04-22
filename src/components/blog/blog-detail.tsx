@@ -106,12 +106,16 @@ export function BlogDetail({ post, prevPost, nextPost, comments, postSlug, headi
 
             <article className="enhanced-article-content">
               {post.coverImage && (
-                <div className="relative w-full aspect-video overflow-hidden rounded-xl mb-8 max-w-3xl mx-auto">
+                <div className="enhanced-cover-frame relative w-full aspect-video overflow-hidden rounded-2xl mb-10 max-w-3xl mx-auto">
                   <img
                     src={post.coverImage}
                     alt={post.title[locale] || post.title.zh}
-                    className="w-full h-full object-cover"
+                    className="enhanced-cover-img w-full h-full object-cover"
                   />
+                  {/* Cyan-edged vignette for depth */}
+                  <div className="enhanced-cover-vignette" aria-hidden />
+                  {/* Fine ring that catches ambient light */}
+                  <div className="enhanced-cover-ring" aria-hidden />
                 </div>
               )}
 

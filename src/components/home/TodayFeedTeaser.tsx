@@ -47,7 +47,7 @@ export async function TodayFeedTeaser({ locale }: { locale: Locale }) {
     <section className="py-8 sm:py-12">
       <div className="mx-auto max-w-5xl px-4 sm:px-6">
         <div className="mb-5 flex items-end justify-between">
-          <h2 className="text-2xl sm:text-3xl font-bold text-dior-gradient">{heading}</h2>
+          <h2 className="text-2xl sm:text-3xl font-bold text-dior-gradient text-dior-gradient-breathing">{heading}</h2>
           <Link
             href={`/${locale}/debate`}
             className="inline-flex items-center gap-1 text-sm text-foreground/70 hover:text-foreground transition-colors"
@@ -63,8 +63,19 @@ export async function TodayFeedTeaser({ locale }: { locale: Locale }) {
               <Link
                 key={r.id}
                 href={`/${locale}/debate/${r.id}`}
-                className="glass-card group rounded-2xl p-4 transition-all"
+                className="glass-card group rounded-2xl p-4 transition-all relative overflow-hidden"
+                style={{
+                  // local tint for colored glow on hover
+                  ['--card-accent' as string]: meta.dotColor,
+                }}
               >
+                <span
+                  className="pointer-events-none absolute inset-x-0 top-0 h-px opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                  style={{
+                    background: `linear-gradient(90deg, transparent, ${meta.dotColor}, transparent)`,
+                  }}
+                  aria-hidden
+                />
                 <div className="mb-2 flex items-center gap-2">
                   <span
                     className="h-2 w-2 rounded-full"
@@ -83,7 +94,10 @@ export async function TodayFeedTeaser({ locale }: { locale: Locale }) {
                   <span>
                     {locale === 'zh' ? '参与讨论' : locale === 'ja' ? '議論に参加' : 'Join discussion'}
                   </span>
-                  <span className="ml-auto opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all">
+                  <span
+                    className="ml-auto opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300"
+                    style={{ color: meta.dotColor }}
+                  >
                     →
                   </span>
                 </div>

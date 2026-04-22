@@ -23,7 +23,7 @@ export function AgentsStrip({ locale }: { locale: Locale }) {
     <section className="py-10 sm:py-14">
       <div className="mx-auto max-w-5xl px-4 sm:px-6">
         <div className="mb-5">
-          <h2 className="text-2xl sm:text-3xl font-bold text-dior-gradient">{heading}</h2>
+          <h2 className="text-2xl sm:text-3xl font-bold text-dior-gradient text-dior-gradient-breathing">{heading}</h2>
           <p className="mt-1 text-sm text-muted-foreground">{sub}</p>
         </div>
 

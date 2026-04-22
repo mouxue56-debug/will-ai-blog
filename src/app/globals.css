@@ -299,12 +299,24 @@ body::before {
 }
 
 .glass-card:hover {
-  border-color: rgba(255, 255, 255, 0.14);
+  border-color: rgba(0, 212, 255, 0.22);
   background: rgba(255, 255, 255, 0.06);
+  transform: translateY(-3px);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.12),
     inset 0 0 0 0.5px rgba(255, 255, 255, 0.05),
-    0 14px 40px rgba(8, 12, 24, 0.36);
+    0 18px 42px rgba(8, 12, 24, 0.36),
+    0 0 0 1px rgba(0, 212, 255, 0.06),
+    0 0 24px -4px rgba(0, 212, 255, 0.15);
+}
+
+/* Respect motion preferences — no lift if the user asked for less motion */
+@media (prefers-reduced-motion: reduce) {
+  .glass-card,
+  .glass-card:hover {
+    transition: none;
+    transform: none;
+  }
 }
 
 /* Light mode — Dior 糖果玻璃 (contrast boosted) */
@@ -458,6 +470,21 @@ body::before {
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
+}
+
+/* Subtle breathing animation — reserved for headings that add the
+   `.text-dior-gradient-breathing` class alongside `.text-dior-gradient`.
+   Keeps existing gradient usage static by default. */
+@keyframes diorGradientShift {
+  0%, 100% { background-position: 0% 50%; }
+  50%      { background-position: 100% 50%; }
+}
+.text-dior-gradient-breathing {
+  background-size: 220% 100%;
+  animation: diorGradientShift 12s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .text-dior-gradient-breathing { animation: none; }
 }
 
 /* ── Dior section ribbon (decorative strip behind headings) */
@@ -1306,6 +1333,76 @@ body::before {
 .enhanced-article .k2w-prose h2:hover {
   background: rgba(0,212,255,0.06);
   padding-left: 20px;
+}
+
+/* ── Enhanced article cover image — premium framed treatment ──
+   Thin cyan ring, deepening vignette, slow idle breath on the image.
+   Pure CSS, no JS. Respects prefers-reduced-motion. */
+.enhanced-cover-frame {
+  isolation: isolate;
+  background: linear-gradient(
+    135deg,
+    rgba(0, 212, 255, 0.06) 0%,
+    rgba(94, 240, 200, 0.04) 50%,
+    rgba(255, 140, 66, 0.05) 100%
+  );
+  box-shadow:
+    0 30px 60px -20px rgba(0, 0, 0, 0.55),
+    0 0 0 1px rgba(0, 212, 255, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+.enhanced-cover-img {
+  display: block;
+  transform: scale(1.02);
+  transform-origin: center;
+  animation: coverBreathe 14s ease-in-out infinite;
+  will-change: transform, filter;
+}
+.enhanced-cover-vignette {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      120% 80% at 50% 100%,
+      rgba(10, 20, 32, 0.4) 0%,
+      transparent 55%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(10, 20, 32, 0.18) 0%,
+      transparent 35%,
+      transparent 65%,
+      rgba(10, 20, 32, 0.35) 100%
+    );
+}
+.enhanced-cover-ring {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  box-shadow:
+    inset 0 0 0 1px rgba(0, 212, 255, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+@keyframes coverBreathe {
+  0%, 100% { transform: scale(1.02); filter: saturate(1) brightness(0.98); }
+  50%      { transform: scale(1.045); filter: saturate(1.08) brightness(1.02); }
+}
+@supports (animation-timeline: view()) {
+  .enhanced-cover-img {
+    /* Subtle zoom tied to the article's entry into view */
+    animation: coverEntryZoom 1s ease both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 50%;
+  }
+}
+@keyframes coverEntryZoom {
+  from { transform: scale(1.08); filter: blur(6px) brightness(0.85); opacity: 0; }
+  to   { transform: scale(1.02); filter: blur(0) brightness(1);      opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .enhanced-cover-img { animation: none; transform: none; }
 }
 
 /* ── Responsive ──────────────────────────────── */
