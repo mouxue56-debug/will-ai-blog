@@ -14,7 +14,7 @@ export function CatteryBanner() {
       transition={{ duration: 0.6 }}
       className="mx-auto max-w-5xl px-4 sm:px-6 py-8"
     >
-      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-brand-mint/20 via-brand-cyan/15 to-brand-taro/20 dark:from-brand-mint/10 dark:via-brand-cyan/8 dark:to-brand-taro/10 border border-brand-mint/20 dark:border-brand-mint/10 p-6 sm:p-10">
+      <div className="glass-card relative overflow-hidden rounded-2xl bg-gradient-to-br from-brand-mint/20 via-brand-cyan/15 to-brand-taro/20 dark:from-brand-mint/10 dark:via-brand-cyan/8 dark:to-brand-taro/10 p-6 sm:p-10">
         {/* Decorative elements */}
         <div className="absolute top-4 right-4 text-4xl sm:text-6xl opacity-20 select-none">🐱</div>
         <div className="absolute bottom-4 left-4 text-3xl sm:text-5xl opacity-10 select-none">🐾</div>
@@ -25,7 +25,7 @@ export function CatteryBanner() {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, amount: 0.1 }}
             transition={{ delay: 0.2, duration: 0.5 }}
-            className="text-xl sm:text-2xl font-bold"
+            className="text-xl sm:text-2xl font-bold text-dior-gradient text-dior-gradient-breathing"
           >
             🐱 {t('cattery_title')}
           </motion.h3>
@@ -51,15 +51,15 @@ export function CatteryBanner() {
               href="#"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-brand-mint text-white text-sm font-medium hover:opacity-90 transition-opacity shadow-md shadow-brand-mint/20"
+              className="group inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-brand-mint text-white text-sm font-medium hover:opacity-95 hover:shadow-[0_0_24px_-4px_rgba(125,211,192,0.55)] transition-all duration-300 shadow-md shadow-brand-mint/20"
             >
-              {t('cattery_cta')} →
+              {t('cattery_cta')} <span className="transition-transform duration-300 group-hover:translate-x-0.5">→</span>
             </a>
             <a
               href="#"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-brand-mint/40 text-brand-mint text-sm font-medium hover:bg-brand-mint/10 transition-colors"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-brand-mint/40 text-brand-mint text-sm font-medium hover:bg-brand-mint/10 hover:border-brand-mint/60 transition-colors"
             >
               📱 Instagram
             </a>

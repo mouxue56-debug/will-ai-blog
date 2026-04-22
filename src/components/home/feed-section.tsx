@@ -101,7 +101,7 @@ export function FeedSection({ hideTitle = false }: { hideTitle?: boolean }) {
       <div className="mx-auto max-w-5xl px-4 sm:px-6">
         {!hideTitle && (
           <motion.h2
-            className="text-2xl sm:text-3xl font-bold mb-6"
+            className="text-2xl sm:text-3xl font-bold mb-6 text-dior-gradient text-dior-gradient-breathing"
             initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.5 }}
@@ -117,10 +117,10 @@ export function FeedSection({ hideTitle = false }: { hideTitle?: boolean }) {
               <button
                 key={filter}
                 onClick={() => setActiveFilter(filter)}
-                className={`rounded-full border px-4 py-2 text-sm font-medium transition-colors ${
+                className={`rounded-full border px-4 py-2 text-sm font-medium transition-all duration-300 ${
                   active
-                    ? 'border-brand-mint bg-brand-mint/10 text-brand-mint'
-                    : 'border-border/50 text-muted-foreground hover:border-brand-mint/30 hover:text-foreground'
+                    ? 'border-brand-mint bg-brand-mint/10 text-brand-mint shadow-[0_0_20px_-6px_rgba(125,211,192,0.5)]'
+                    : 'border-border/50 text-muted-foreground hover:border-brand-mint/30 hover:text-foreground hover:bg-brand-mint/5'
                 }`}
               >
                 {t(`feed_filter_${filter}`)}

@@ -613,14 +613,14 @@ export function HeroSection() {
             >
               <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }} transition={{ delay: 0.3 }}>
                 <Link href="/blog">
-                  <span className="inline-flex items-center rounded-full border border-brand-mint/25 bg-brand-mint/[0.08] px-4 py-2 text-sm font-medium text-brand-mint transition-colors hover:bg-brand-mint/[0.14]">
+                  <span className="inline-flex items-center rounded-full border border-brand-mint/25 bg-brand-mint/[0.08] px-4 py-2 text-sm font-medium text-brand-mint transition-all duration-300 hover:bg-brand-mint/[0.14] hover:border-brand-mint/45 hover:shadow-[0_0_22px_-6px_rgba(125,211,192,0.45)]">
                     {t('hero_cta_blog')}
                   </span>
                 </Link>
               </motion.div>
               <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }} transition={{ delay: 0.3 }}>
                 <Link href="/cases">
-                  <span className="inline-flex items-center rounded-full border border-brand-taro/25 bg-brand-taro/[0.08] px-4 py-2 text-sm font-medium text-brand-taro transition-colors hover:bg-brand-taro/[0.14]">
+                  <span className="inline-flex items-center rounded-full border border-brand-taro/25 bg-brand-taro/[0.08] px-4 py-2 text-sm font-medium text-brand-taro transition-all duration-300 hover:bg-brand-taro/[0.14] hover:border-brand-taro/45 hover:shadow-[0_0_22px_-6px_rgba(212,188,240,0.45)]">
                     {t('hero_cta_cases')}
                   </span>
                 </Link>
