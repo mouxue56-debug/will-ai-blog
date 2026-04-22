@@ -24,7 +24,7 @@ export default async function TimelinePage({
         </nav>
 
         <ScrollReveal direction="fadeUp" className="text-center mb-10">
-          <h1 className="text-3xl sm:text-4xl font-bold mb-3">{t('title')}</h1>
+          <h1 className="text-3xl sm:text-4xl font-bold mb-3 text-dior-gradient text-dior-gradient-breathing">{t('title')}</h1>
           <p className="text-muted-foreground max-w-2xl mx-auto">{t('subtitle')}</p>
         </ScrollReveal>
 

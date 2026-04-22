@@ -189,7 +189,7 @@ curl https://aiblog.fuluckai.com/api/debate/opinion/话题ID`;
             <div className="absolute inset-0 bg-gradient-to-br from-[rgba(255,209,220,0.5)] via-[rgba(232,213,245,0.35)] to-[rgba(200,245,228,0.35)] dark:hidden" />
             <div className="absolute inset-0 bg-gradient-to-r from-background/85 via-background/45 to-transparent" />
             <div className="absolute inset-0 flex flex-col justify-center px-6 sm:px-8">
-              <h1 className="text-3xl font-bold sm:text-4xl text-dior-gradient">
+              <h1 className="text-3xl font-bold sm:text-4xl text-dior-gradient text-dior-gradient-breathing">
                 {loc === 'zh' && '资讯讨论'}
                 {loc === 'ja' && 'ニュース解読'}
                 {loc === 'en' && 'News Discussion'}

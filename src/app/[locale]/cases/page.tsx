@@ -32,7 +32,7 @@ export default function CasesPage() {
               <div className="absolute inset-0 bg-gradient-to-br from-[rgba(255,209,220,0.5)] via-[rgba(232,213,245,0.35)] to-[rgba(200,245,228,0.35)] dark:hidden" />
               <div className="absolute inset-0 bg-gradient-to-r from-background/85 via-background/55 to-transparent" />
               <div className="absolute inset-0 flex flex-col justify-center px-6 sm:px-8">
-                <h1 className="text-3xl sm:text-4xl font-bold tracking-tight">{t('title')}</h1>
+                <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-dior-gradient text-dior-gradient-breathing">{t('title')}</h1>
                 <p className="mt-2 text-base text-muted-foreground sm:text-lg">{t('subtitle')}</p>
                 <p className="mt-1 max-w-lg text-sm leading-6 text-muted-foreground/80">{pageIntro}</p>
               </div>

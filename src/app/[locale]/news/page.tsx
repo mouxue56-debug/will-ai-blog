@@ -233,7 +233,7 @@ export default function NewsPage() {
       <div className="mx-auto max-w-3xl px-4 sm:px-6 py-12 sm:py-16">
         {/* Header */}
         <ScrollReveal direction="fadeUp" className="text-center mb-10">
-          <h1 className="text-3xl sm:text-4xl font-bold mb-3">
+          <h1 className="text-3xl sm:text-4xl font-bold mb-3 text-dior-gradient text-dior-gradient-breathing">
             {t('news.title')}
           </h1>
           <p className="text-muted-foreground max-w-2xl mx-auto">
