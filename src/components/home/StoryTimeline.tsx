@@ -127,7 +127,7 @@ export function StoryTimeline() {
             transition={{ duration: 0.5 }}
             className="text-center"
           >
-            <h2 className="text-2xl sm:text-3xl font-bold">
+            <h2 className="text-2xl sm:text-3xl font-bold text-dior-gradient text-dior-gradient-breathing">
               📖 {t('story_section_title')}
             </h2>
             <p className="mt-2 text-muted-foreground">
@@ -143,9 +143,10 @@ export function StoryTimeline() {
 
           {/* Center line — animated progress overlay */}
           <motion.div
-            className="absolute left-[19px] md:left-1/2 md:-translate-x-px top-0 w-0.5 bg-gradient-to-b from-brand-cyan to-brand-mint"
+            className="timeline-spine absolute left-[19px] md:left-1/2 md:-translate-x-px top-0 w-0.5 bg-gradient-to-b from-brand-cyan via-brand-cyan/80 to-brand-mint"
             style={{
               height: lineHeight,
+              boxShadow: '0 0 12px rgba(0, 212, 255, 0.35)',
             }}
           />
 

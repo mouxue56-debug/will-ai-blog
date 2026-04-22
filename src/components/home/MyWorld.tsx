@@ -45,7 +45,7 @@ export function MyWorld() {
         <div className="w-16 h-0.5 bg-gradient-to-r from-[#00D4FF] to-transparent mb-6" />
         <LampEffect color="purple" className="min-h-[140px] -mb-4">
           <motion.h2
-            className="text-2xl sm:text-3xl font-bold"
+            className="text-2xl sm:text-3xl font-bold text-dior-gradient text-dior-gradient-breathing"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.1 }}

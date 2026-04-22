@@ -24,7 +24,7 @@ export function LatestUpdates() {
           transition={{ duration: 0.5 }}
           className="mb-8"
         >
-          <h2 className="text-2xl sm:text-3xl font-bold">
+          <h2 className="text-2xl sm:text-3xl font-bold text-dior-gradient text-dior-gradient-breathing">
             {t('feed_section_title')}
           </h2>
         </motion.div>
