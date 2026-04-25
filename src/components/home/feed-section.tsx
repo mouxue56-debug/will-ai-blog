@@ -43,7 +43,7 @@ function SpotlightCard({ item, index, t }: { item: FeedItem; index: number; t: (
     <Link href={`/blog/${item.slug}`}>
       <motion.div
         ref={cardRef}
-        className="relative flex-shrink-0 w-[300px] sm:w-[340px] glass-card p-5 cursor-pointer overflow-hidden group border-l-2 border-brand-cyan"
+        className="relative flex-shrink-0 w-[260px] sm:w-[340px] glass-card p-5 cursor-pointer overflow-hidden group border-l-2 border-brand-cyan"
         initial={{ opacity: 0, y: 30 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: '-50px' }}
