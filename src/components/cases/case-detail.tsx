@@ -183,7 +183,7 @@ export function CaseDetail({
         {/* Hero image (falls back to gradient if missing) */}
         <img
           src={`/covers/cases/${caseStudy.slug}.jpg`}
-          alt=""
+          alt={caseStudy.title[loc] || caseStudy.title.zh || 'Case study cover'}
           className="absolute inset-0 h-full w-full object-cover opacity-80 dark:opacity-65"
           onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }}
         />

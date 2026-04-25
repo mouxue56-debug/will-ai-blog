@@ -84,7 +84,7 @@ export default async function LearningPage({
           <div className="glass-card relative h-44 sm:h-52 w-full overflow-hidden rounded-3xl">
             <Image
               src={getIllustrationUrl('learning-banner')}
-              alt=""
+              alt={t('title') + ' banner'}
               fill
               className="object-cover object-center opacity-55 dark:opacity-70"
             />

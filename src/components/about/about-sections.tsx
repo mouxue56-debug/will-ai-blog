@@ -121,7 +121,7 @@ function AITeamSection() {
                 <div className="w-16 h-20 rounded-xl overflow-hidden ring-1 ring-white/10">
                   <Image
                     src={getAvatarUrl(agent.avatarFile)}
-                    alt={agent.key}
+                    alt={t(`agent_names.${agent.key}`)}
                     width={64}
                     height={80}
                     className="w-full h-full object-cover object-top"
