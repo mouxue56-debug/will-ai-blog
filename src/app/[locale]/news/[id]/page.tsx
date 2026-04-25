@@ -54,7 +54,7 @@ export default function NewsDetailPage() {
           setNewsItem(convertToFrontendNewsItem(data));
         }
       })
-      .catch(err => console.error('Failed to fetch news item:', err))
+      .catch(() => {})
       .finally(() => setLoading(false));
   }, [newsId, locale]);
 

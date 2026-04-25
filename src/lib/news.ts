@@ -50,7 +50,6 @@ export async function fetchNews(locale: string, limit = 20): Promise<SupabaseNew
     .limit(limit);
   
   if (error) {
-    console.error('fetchNews error:', error);
     return [];
   }
   return data || [];

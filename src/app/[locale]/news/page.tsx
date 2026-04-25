@@ -196,7 +196,7 @@ export default function NewsPage() {
   useEffect(() => {
     fetchNews(locale)
       .then(data => setNewsItems(data.map(convertToFrontendNewsItem)))
-      .catch(err => console.error('Failed to fetch news:', err))
+      .catch(() => {})
       .finally(() => setLoading(false));
   }, [locale]);
 
