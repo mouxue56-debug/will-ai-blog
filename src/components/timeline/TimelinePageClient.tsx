@@ -4,6 +4,7 @@ import { motion } from 'motion/react';
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 import { type TimelineEvent } from '@/lib/timeline-data';
+import type { Locale } from '@/lib/locale';
 
 const categoryConfig: Record<TimelineEvent['category'], { color: string; icon: string }> = {
   cattery: { color: '#f59e0b', icon: '🐾' },
@@ -12,7 +13,7 @@ const categoryConfig: Record<TimelineEvent['category'], { color: string; icon: s
   life: { color: '#fb7185', icon: '🌸' },
 };
 
-function formatDate(dateStr: string, locale: string) {
+function formatDate(dateStr: string, locale: Locale) {
   const date = new Date(dateStr);
   return new Intl.DateTimeFormat(locale, {
     month: 'short',
@@ -20,7 +21,7 @@ function formatDate(dateStr: string, locale: string) {
   }).format(date);
 }
 
-function normalizeTimelineLink(link: string, locale: 'zh' | 'ja' | 'en') {
+function normalizeTimelineLink(link: string, locale: Locale) {
   if (!link.startsWith('/')) return link;
   return link.replace(/^\/(zh|ja|en)(?=\/)/, `/${locale}`);
 }
@@ -30,7 +31,7 @@ export function TimelinePageClient({
   locale,
 }: {
   events: TimelineEvent[];
-  locale: 'zh' | 'ja' | 'en';
+  locale: Locale;
 }) {
   const t = useTranslations('timeline');
 

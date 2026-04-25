@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
 import { motion } from 'motion/react';
 import { lifePosts, type LifePost } from '@/data/life';
+import type { Locale } from '@/lib/locale';
 
 type Category = 'all' | LifePost['category'];
 
@@ -15,9 +16,7 @@ const categoryConfig: { key: Category; emoji: string }[] = [
   { key: 'travel', emoji: '✈️' },
 ];
 
-function LifeCard({ post, index, locale }: { post: LifePost; index: number; locale: string }) {
-  const loc = locale as 'zh' | 'ja' | 'en';
-
+function LifeCard({ post, index, locale }: { post: LifePost; index: number; locale: Locale }) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 30 }}
@@ -37,11 +36,11 @@ function LifeCard({ post, index, locale }: { post: LifePost; index: number; loca
         {/* Content */}
         <div className="p-4">
           <h3 className="font-semibold text-sm sm:text-base leading-snug mb-1.5 line-clamp-2">
-            {post.title[loc]}
+            {post.title[locale]}
           </h3>
           <time className="text-xs text-muted-foreground">{post.date}</time>
           <p className="mt-2 text-xs sm:text-sm text-muted-foreground leading-relaxed line-clamp-3">
-            {post.description[loc]}
+            {post.description[locale]}
           </p>
         </div>
       </div>
@@ -51,7 +50,7 @@ function LifeCard({ post, index, locale }: { post: LifePost; index: number; loca
 
 export function LifeGrid() {
   const t = useTranslations('life');
-  const locale = useLocale();
+  const locale = useLocale() as Locale;
   const [active, setActive] = useState<Category>('all');
 
   const filtered = active === 'all'
