@@ -11,6 +11,7 @@ import { ArrowLeft, ExternalLink, CalendarDays } from 'lucide-react';
 import { fetchNewsById, convertToFrontendNewsItem } from '@/lib/news';
 import { aiInstanceColors, newsCategoryConfig } from '@/data/news';
 import { MarkdownRenderer } from '@/components/blog/markdown-renderer';
+import { BrandedSpinner } from '@/components/shared/BrandedSpinner';
 import type { NewsItem } from '@/data/news';
 
 function AIAvatar({ instance, size = 'md' }: { instance?: string; size?: 'sm' | 'md' | 'lg' }) {
@@ -65,8 +66,8 @@ export default function NewsDetailPage() {
   if (loading) {
     return (
       <PageTransition>
-        <div className="mx-auto max-w-3xl px-4 sm:px-6 py-20 text-center">
-          <p className="text-muted-foreground">Loading...</p>
+        <div className="mx-auto max-w-3xl px-4 sm:px-6 py-20">
+          <BrandedSpinner />
         </div>
       </PageTransition>
     );

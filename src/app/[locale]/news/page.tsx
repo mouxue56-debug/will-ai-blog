@@ -9,6 +9,7 @@ import { ScrollReveal } from '@/components/shared/ScrollReveal';
 import { Badge } from '@/components/ui/badge';
 import { MessageCircle, ChevronDown, ChevronUp, ExternalLink } from 'lucide-react';
 import { fetchNews, convertToFrontendNewsItem } from '@/lib/news';
+import { BrandedSpinner } from '@/components/shared/BrandedSpinner';
 import { aiInstanceColors, newsCategoryConfig } from '@/data/news';
 import type { NewsItem as OriginalNewsItem, NewsCategory } from '@/data/news';
 
@@ -222,8 +223,8 @@ export default function NewsPage() {
   if (loading) {
     return (
       <PageTransition>
-        <div className="mx-auto max-w-3xl px-4 sm:px-6 py-12 sm:py-16 text-center">
-          <p className="text-muted-foreground">Loading news...</p>
+        <div className="mx-auto max-w-3xl px-4 sm:px-6 py-12 sm:py-16">
+          <BrandedSpinner />
         </div>
       </PageTransition>
     );
