@@ -216,7 +216,7 @@ export function DailyFeedMasonry({ topics }: DailyFeedMasonryProps) {
                 topic.newsItems && topic.newsItems.length > 0
                   ? topic.newsItems
                   : parseNewsFromContent(topic.content || '');
-              const title = localizeTopicTitle(topic, locale);
+              const _title = localizeTopicTitle(topic, locale);
               const count = opinionCounts[topic.id] ?? 0;
 
               return (

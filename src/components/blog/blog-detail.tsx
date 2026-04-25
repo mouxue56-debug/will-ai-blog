@@ -63,7 +63,7 @@ function getContentSourceLabel(contentSource: BlogPost['contentSource'], locale:
   return contentSource === 'original' ? 'Original' : 'AI Organized';
 }
 
-export function BlogDetail({ post, prevPost, nextPost, comments, postSlug, headings }: BlogDetailProps) {
+export function BlogDetail({ post, prevPost, nextPost, comments: _comments, postSlug, headings }: BlogDetailProps) {
   const locale = useLocale();
   const t = useTranslations('blog');
   const title = post.title[locale] || post.title.zh || post.title.en || '';

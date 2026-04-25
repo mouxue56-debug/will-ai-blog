@@ -1,7 +1,5 @@
 'use client';
 
-import { ReactNode } from 'react';
-
 interface BeforeAfterProps {
   before: {
     title: string;

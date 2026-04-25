@@ -5,7 +5,7 @@ import { motion, useScroll, useTransform } from 'motion/react';
 import { useState, useCallback, useEffect, useRef } from 'react';
 import { Link } from '@/i18n/navigation';
 import { AudioPlayer } from '@/components/shared/AudioPlayer';
-import Image from 'next/image';
+
 
 const nodes = [
   { id: 'yuki', color: '#38bdf8', x: 50, y: 20 },
