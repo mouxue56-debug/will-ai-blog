@@ -1548,3 +1548,54 @@ body::before {
     animation-range: entry 0% entry 20%;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════
+   prefers-reduced-motion — suppress all non-essential motion
+   Covers particles, beams, pulses, hero animations, hover lifts,
+   scroll-driven reveals, and the global theme transition.
+   ═══════════════════════════════════════════════════════════ */
+@media (prefers-reduced-motion: reduce) {
+  /* Infinite looping animations */
+  .particle,
+  .beam-flow,
+  .beam-flow-reverse,
+  .typing-cursor,
+  .dot-pulse,
+  .node-glow { animation: none; }
+
+  /* One-shot entry/grow animations */
+  .timeline-line-anim { animation: none; transform: scaleY(1); }
+
+  /* Enhanced article hero animations */
+  .enhanced-hero-bg { animation: none; }
+  .enhanced-hero-title { animation: none; background-size: 100% 100%; }
+  .enhanced-hero-subtitle,
+  .enhanced-hero-date { animation: none; }
+  .enhanced-hero-tag { animation: none; opacity: 1; }
+  .enhanced-stat-num { animation: none; }
+
+  /* Hover lift transforms */
+  .btn-icecream-primary:hover { transform: none; }
+  .card-icecream:hover { transform: none; }
+  .glass-orb:hover { transform: none; }
+  .card:hover { transform: none; }
+  .before-after-col.before:hover,
+  .before-after-col.after:hover { transform: none; }
+  .decision-card:hover { transform: none; }
+
+  /* Scroll-driven reveal animations */
+  @supports (animation-timeline: view()) {
+    .enhanced-article .card,
+    .enhanced-article .before-after,
+    .enhanced-article .workflow,
+    .enhanced-article .insight-box,
+    .enhanced-article .decision-card,
+    .enhanced-article .toc,
+    .enhanced-article .k2w-prose h2 { animation: none; }
+  }
+
+  /* Global theme transition — keep only color changes, drop duration */
+  *, *::before, *::after {
+    transition-duration: 0.01ms !important;
+  }
+}
