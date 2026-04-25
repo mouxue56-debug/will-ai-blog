@@ -401,6 +401,7 @@
   "auth": {
     "sign_in": "Sign in",
     "sign_out": "Sign out",
+    "user_menu": "User menu",
     "admin_panel": "Admin panel",
     "welcome_back": "Welcome back",
     "sign_in_to_lab": "Sign in to Will's AI Lab",

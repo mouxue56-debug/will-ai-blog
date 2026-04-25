@@ -401,6 +401,7 @@
   "auth": {
     "sign_in": "ログイン",
     "sign_out": "ログアウト",
+    "user_menu": "ユーザーメニュー",
     "admin_panel": "管理画面",
     "welcome_back": "おかえりなさい",
     "sign_in_to_lab": "Will AI Lab にサインイン",

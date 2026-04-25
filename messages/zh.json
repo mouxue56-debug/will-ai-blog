@@ -401,6 +401,7 @@
   "auth": {
     "sign_in": "登录",
     "sign_out": "登出",
+    "user_menu": "用户菜单",
     "admin_panel": "管理后台",
     "welcome_back": "欢迎回来",
     "sign_in_to_lab": "登录 Will AI Lab",
