@@ -340,6 +340,26 @@ body::before {
   transform: translateX(120%);
 }
 
+/* Hover inner-glow pulse — brief radial glow that fades in on hover */
+.glass-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse 60% 50% at 50% 0%,
+    rgba(0, 212, 255, 0.08) 0%,
+    transparent 70%
+  );
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  z-index: 1;
+}
+.glass-card:hover::after {
+  opacity: 1;
+}
+
 /* Respect motion preferences — no lift or sweep if the user asked for less motion */
 @media (prefers-reduced-motion: reduce) {
   .glass-card,
@@ -347,7 +367,8 @@ body::before {
     transition: none;
     transform: none;
   }
-  .glass-card::before {
+  .glass-card::before,
+  .glass-card::after {
     display: none;
   }
 }
@@ -387,6 +408,15 @@ body::before {
     rgba(255, 255, 255, 0.28) 50%,
     rgba(200, 235, 220, 0.14) 56%,
     transparent 64%
+  );
+}
+
+/* Light-mode inner-glow: softer pink-lavender top glow */
+:root:not(.dark) .glass-card::after {
+  background: radial-gradient(
+    ellipse 60% 50% at 50% 0%,
+    rgba(255, 170, 195, 0.10) 0%,
+    transparent 70%
   );
 }
 
