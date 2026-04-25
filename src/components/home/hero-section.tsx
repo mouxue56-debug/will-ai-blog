@@ -649,7 +649,7 @@ export function HeroSection() {
             </motion.div>
 
             <motion.div
-              className="mt-8 flex items-center gap-6 sm:gap-10"
+              className="mt-8 grid grid-cols-3 gap-x-4 gap-y-2 sm:gap-x-10"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.9, duration: 0.45, ease: 'easeOut' }}
@@ -667,18 +667,14 @@ export function HeroSection() {
                   transition={{ delay: 1 + i * 0.1, duration: 0.3, type: 'spring' }}
                 >
                   <motion.span
-                    className="bg-gradient-to-r from-brand-mint to-brand-cyan bg-clip-text text-2xl font-bold text-transparent sm:text-3xl"
+                    className="bg-gradient-to-r from-brand-mint to-brand-cyan bg-clip-text text-xl font-bold text-transparent sm:text-3xl"
                     whileHover={{ scale: 1.1 }}
                   >
                     {stat.value}
                   </motion.span>
-                  <span className="text-xs text-muted-foreground sm:text-sm">{stat.label}</span>
+                  <span className="text-[11px] text-muted-foreground sm:text-sm">{stat.label}</span>
                 </motion.div>
               ))}
-              
-              {/* Decorative dividers */}
-              <div className="h-10 w-px bg-border" />
-              <div className="h-10 w-px bg-border hidden sm:block" />
             </motion.div>
           </div>
 
