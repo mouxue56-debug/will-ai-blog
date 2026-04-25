@@ -41,7 +41,7 @@ export function Header() {
               <Link
                 key={item.key}
                 href={item.href}
-                className={`relative px-3 py-2 text-sm transition-colors rounded-md ${
+                className={`group relative px-3 py-2 text-sm transition-colors rounded-md ${
                   active
                     ? 'text-brand-mint font-medium'
                     : 'text-muted-foreground hover:text-foreground'
@@ -60,10 +60,7 @@ export function Header() {
                 )}
                 {!active && (
                   <span
-                    className="absolute bottom-0 left-2 right-2 h-[2px] rounded-full bg-brand-mint scale-x-0 group-hover:scale-x-100 hover:scale-x-100 transition-transform duration-200 origin-left"
-                    style={{
-                      boxShadow: '0 0 6px rgba(94,234,212,0.4)',
-                    }}
+                    className="absolute bottom-0 left-2 right-2 h-[2px] rounded-full bg-brand-mint/60 scale-x-0 group-hover:scale-x-100 transition-transform duration-200 origin-left"
                   />
                 )}
               </Link>
