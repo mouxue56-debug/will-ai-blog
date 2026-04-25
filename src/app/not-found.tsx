@@ -43,7 +43,7 @@ export default async function NotFound() {
             </Link>
           </div>
 
-          <div className="mt-12 flex justify-center gap-3 text-muted-foreground/30">
+          <div className="mt-12 flex justify-center gap-3 text-muted-foreground/50">
             <span className="text-lg">🐾</span>
             <span className="text-sm mt-2">🐾</span>
             <span className="text-xs mt-3">🐾</span>
