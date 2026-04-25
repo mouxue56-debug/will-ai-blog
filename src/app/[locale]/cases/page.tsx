@@ -5,12 +5,13 @@ import { PageTransition } from '@/components/shared/PageTransition';
 import { ScrollReveal } from '@/components/shared/ScrollReveal';
 import { CaseCard } from '@/components/cases/case-card';
 import { cases } from '@/data/cases';
+import type { Locale } from '@/lib/locale';
 import Image from 'next/image';
 import { getIllustrationUrl } from '@/lib/storage';
 
 export default function CasesPage() {
   const t = useTranslations('cases');
-  const locale = useLocale() as 'zh' | 'ja' | 'en';
+  const locale = useLocale() as Locale;
   const pageIntro = {
     zh: t('page_intro_zh'),
     ja: t('page_intro_ja'),

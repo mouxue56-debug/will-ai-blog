@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { Copy, Check } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 
-type Locale = 'zh' | 'ja' | 'en';
+import type { Locale } from '@/lib/locale';
 
 function CopyButton({ text }: { text: string }) {
   const [copied, setCopied] = useState(false);

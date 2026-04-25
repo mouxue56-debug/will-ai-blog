@@ -7,7 +7,7 @@ import { Link } from '@/i18n/navigation';
 import type { CaseStudy } from '@/data/cases';
 import { CaseMarkdown } from './case-markdown';
 
-type Locale = 'zh' | 'ja' | 'en';
+import type { Locale } from '@/lib/locale';
 
 /**
  * CountUp — extracts a number from a value string and animates from 0.
@@ -168,10 +168,10 @@ export function CaseDetail({
   locale,
 }: {
   caseStudy: CaseStudy;
-  locale: string;
+  locale: Locale;
 }) {
   const t = useTranslations('cases');
-  const loc = locale as Locale;
+  const loc = locale;
   const prefersReducedMotion = useReducedMotion();
 
   return (

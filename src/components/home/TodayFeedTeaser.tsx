@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { supabaseAdmin } from '@/lib/supabase';
 import { MessageCircle, ArrowRight } from 'lucide-react';
 
-type Locale = 'zh' | 'ja' | 'en';
+import type { Locale } from '@/lib/locale';
 
 interface Row {
   id: string;

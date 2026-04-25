@@ -7,11 +7,11 @@ import { Link } from '@/i18n/navigation';
 import type { CaseStudy } from '@/data/cases';
 import { SpotlightCard } from '@/components/ui/aceternity';
 
-type Locale = 'zh' | 'ja' | 'en';
+import type { Locale } from '@/lib/locale';
 
-export function CaseCard({ c, locale }: { c: CaseStudy; locale: string }) {
+export function CaseCard({ c, locale }: { c: CaseStudy; locale: Locale }) {
   const t = useTranslations('cases');
-  const loc = locale as Locale;
+  const loc = locale;
   const highlightedMetrics = c.metrics;
   const prefersReducedMotion = useReducedMotion();
   const cardRef = useRef(null);

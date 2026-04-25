@@ -6,7 +6,7 @@ import newsTranslations from '@/data/news-translations.json';
 import Image from 'next/image';
 import { getIllustrationUrl } from '@/lib/storage';
 
-type Locale = 'zh' | 'ja' | 'en';
+import type { Locale } from '@/lib/locale';
 
 // Convert UTC date to JST date string (YYYY-MM-DD)
 function toJstDate(iso: string): string {

@@ -2,7 +2,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { getAvatarUrl } from '@/lib/storage';
 
-type Locale = 'zh' | 'ja' | 'en';
+import type { Locale } from '@/lib/locale';
 
 const agents: { id: string; name: string; role: { zh: string; ja: string; en: string }; accent: string }[] = [
   { id: 'yuki', name: 'ユキ',  role: { zh: '技术顾问',       ja: 'テック顧問',     en: 'Tech Advisor' },    accent: '#9EC7E8' },

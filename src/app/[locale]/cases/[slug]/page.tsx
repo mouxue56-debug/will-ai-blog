@@ -4,6 +4,7 @@ import { setRequestLocale } from 'next-intl/server';
 import { cases } from '@/data/cases';
 import { CaseDetail } from '@/components/cases/case-detail';
 import { PageTransition } from '@/components/shared/PageTransition';
+import type { Locale } from '@/lib/locale';
 
 type Props = {
   params: Promise<{ locale: string; slug: string }>;
@@ -100,7 +101,7 @@ export default async function CaseDetailPage({ params }: Props) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <PageTransition>
-        <CaseDetail caseStudy={caseStudy} locale={locale} />
+        <CaseDetail caseStudy={caseStudy} locale={locale as Locale} />
       </PageTransition>
     </>
   );
