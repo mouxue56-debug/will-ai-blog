@@ -51,25 +51,32 @@ export default function LocaleNotFound() {
       <div className="mx-auto max-w-3xl">
         <div className="rounded-3xl border border-white/10 bg-black/30 p-8 shadow-[0_24px_80px_rgba(0,0,0,0.35)] backdrop-blur-xl sm:p-10">
           <h1
-            className="text-[7rem] sm:text-[9rem] font-bold leading-none bg-gradient-to-br from-brand-cyan via-brand-mint to-brand-taro bg-clip-text text-transparent select-none animate-[float_3s_ease-in-out_infinite]"
+            className="text-[7rem] sm:text-[9rem] font-bold leading-none bg-gradient-to-br from-brand-cyan via-brand-mint to-brand-taro bg-clip-text text-transparent select-none"
+            style={{
+              animation:
+                'fadeUp 0.6s ease-out 0.1s forwards, float 3s ease-in-out 0.7s infinite, glitch404 4s ease-in-out 1s infinite',
+              opacity: 0,
+            }}
           >
             404
           </h1>
-          <h2 className="mt-4 text-2xl font-semibold text-foreground sm:text-3xl">
+          <h2
+            className="mt-4 text-2xl font-semibold text-foreground sm:text-3xl opacity-0 animate-[fadeUp_0.6s_ease-out_0.2s_forwards]"
+          >
             {text.headline}
           </h2>
-          <p className="mt-3 max-w-2xl text-sm leading-7 text-muted-foreground sm:text-base">
+          <p className="mt-3 max-w-2xl text-sm leading-7 text-muted-foreground sm:text-base opacity-0 animate-[fadeUp_0.6s_ease-out_0.3s_forwards]">
             {text.body}
           </p>
 
-          <div className="mt-6 rounded-2xl border border-white/8 bg-white/[0.03] p-4 text-sm text-muted-foreground">
+          <div className="mt-6 rounded-2xl border border-white/8 bg-white/[0.03] p-4 text-sm text-muted-foreground opacity-0 animate-[fadeUp_0.6s_ease-out_0.4s_forwards]">
             <div className="flex items-center gap-2 text-foreground">
               <Search className="h-4 w-4 text-brand-mint" />
               <span>{text.searchHint}</span>
             </div>
           </div>
 
-          <div className="mt-8 flex flex-wrap gap-3">
+          <div className="mt-8 flex flex-wrap gap-3 opacity-0 animate-[fadeUp_0.6s_ease-out_0.5s_forwards]">
             <Link
               href="/"
               className="inline-flex items-center gap-2 rounded-full bg-brand-cyan/15 px-5 py-2.5 text-sm font-medium text-brand-cyan transition-colors hover:bg-brand-cyan/25"
@@ -92,7 +99,7 @@ export default function LocaleNotFound() {
             </Link>
           </div>
 
-          <div className="mt-8 border-t border-white/8 pt-5">
+          <div className="mt-8 border-t border-white/8 pt-5 opacity-0 animate-[fadeUp_0.6s_ease-out_0.6s_forwards]">
             <Link
               href="/"
               className="inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground"

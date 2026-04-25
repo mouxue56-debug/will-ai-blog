@@ -950,6 +950,17 @@ body::before {
   0%, 100% { transform: translateY(0); }
   50%      { transform: translateY(-12px); }
 }
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes glitch404 {
+  0%, 100% { text-shadow: none; }
+  20%      { text-shadow: -2px 0 #00D4FF, 2px 0 #FF6B9D; }
+  22%      { text-shadow: none; }
+  55%      { text-shadow: 2px 0 #5EEAD4, -2px 0 #C084FC; }
+  57%      { text-shadow: none; }
+}
 
 /* ═══════════════════════════════════════════════════════════════
    Enhanced Article Layout — dark tech aesthetic
