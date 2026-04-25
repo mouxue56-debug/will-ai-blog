@@ -38,7 +38,7 @@ export function UserMenu() {
   }
 
   const user = session.user
-  const isAdmin = (user as Record<string, unknown>).role === 'admin'
+  const isAdmin = user.role === 'admin'
   const initials = (user.name || 'U').slice(0, 2).toUpperCase()
 
   return (
