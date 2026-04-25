@@ -22,9 +22,9 @@ const socialLinks: FooterLink[] = [
     value: '@fuluck_cattery',
   },
   {
-    href: 'https://github.com/mouxue56-debug/will-ai-blog',
+    href: 'https://github.com/konayuki56',
     label: 'GitHub',
-    value: 'mouxue56-debug/will-ai-blog',
+    value: 'konayuki56',
   },
   {
     href: 'https://www.xiaohongshu.com/user/profile/65b8e6a4000000000d008d37',
