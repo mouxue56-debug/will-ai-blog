@@ -5,6 +5,7 @@ import { motion, useScroll, useTransform } from 'motion/react';
 import { Cat, Bot, Users, Newspaper, Zap } from 'lucide-react';
 import { LampEffect } from '@/components/ui/aceternity';
 import { useTranslations } from 'next-intl';
+import { SectionAccentLine } from '@/components/shared/SectionAccentLine';
 
 interface StoryNode {
   year: string;
@@ -118,7 +119,7 @@ export function StoryTimeline() {
       className="py-16 sm:py-24"
     >
       <div className="mx-auto max-w-5xl px-4 sm:px-6">
-        <div className="w-16 h-0.5 bg-gradient-to-r from-[#00D4FF] to-transparent mb-6 mx-auto" />
+        <SectionAccentLine className="mx-auto" />
         {/* Section title with Lamp */}
         <LampEffect color="green" className="min-h-[160px] mb-4">
           <motion.div

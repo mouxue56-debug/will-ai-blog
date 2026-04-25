@@ -5,6 +5,7 @@ import { motion } from 'motion/react';
 import { Link } from '@/i18n/navigation';
 import { Play, Camera, Music } from 'lucide-react';
 import { LampEffect } from '@/components/ui/aceternity';
+import { SectionAccentLine } from '@/components/shared/SectionAccentLine';
 
 const snsCards = [
   {
@@ -42,7 +43,7 @@ export function MyWorld() {
   return (
     <section className="py-16 sm:py-20">
       <div className="mx-auto max-w-5xl px-4 sm:px-6">
-        <div className="w-16 h-0.5 bg-gradient-to-r from-[#00D4FF] to-transparent mb-6" />
+        <SectionAccentLine />
         <LampEffect color="purple" className="min-h-[140px] -mb-4">
           <motion.h2
             className="text-2xl sm:text-3xl font-bold text-dior-gradient text-dior-gradient-breathing"
