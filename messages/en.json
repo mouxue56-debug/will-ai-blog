@@ -415,6 +415,11 @@
     "sign_in_as_admin": "Sign in as Admin",
     "invalid_password": "Incorrect password"
   },
+  "error": {
+    "title": "Something went wrong",
+    "description": "Failed to load data. Please try again later.",
+    "retry": "Try Again"
+  },
   "notFound": {
     "title": "This cat hid the page",
     "subtitle": "The page may be missing or has moved somewhere else 🐾",

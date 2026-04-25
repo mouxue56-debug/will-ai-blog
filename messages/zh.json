@@ -415,6 +415,11 @@
     "sign_in_as_admin": "以管理员身份登录",
     "invalid_password": "密码不正确"
   },
+  "error": {
+    "title": "出了点问题",
+    "description": "数据加载失败，请稍后重试。",
+    "retry": "重试"
+  },
   "notFound": {
     "title": "这只猫把页面藏起来了",
     "subtitle": "页面可能不存在，或者已经换地方了 🐾",

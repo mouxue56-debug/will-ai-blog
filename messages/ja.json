@@ -415,10 +415,15 @@
     "sign_in_as_admin": "管理者としてサインイン",
     "invalid_password": "パスワードが正しくありません"
   },
+  "error": {
+    "title": "問題が発生しました",
+    "description": "データの読み込みに失敗しました。後でもう一度お試しください。",
+    "retry": "再試行"
+  },
   "notFound": {
     "title": "この猫がページを隠しちゃった",
     "subtitle": "ページが見つからないか、場所が変わったようです 🐾",
-    "description": "The page you're looking for doesn't exist or has been moved.",
+    "description": "The page you're looking for doesn's exist or has been moved.",
     "home": "ホームに戻る",
     "blog": "ブログを見る"
   },
