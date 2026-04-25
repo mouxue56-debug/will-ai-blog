@@ -45,6 +45,8 @@ export function UserMenu() {
     <div className="relative" ref={menuRef}>
       <button
         onClick={() => setOpen(!open)}
+        aria-label={t('sign_out')}
+        aria-expanded={open}
         className="flex items-center gap-2 rounded-full hover:opacity-80 transition-opacity"
       >
         {user.image ? (

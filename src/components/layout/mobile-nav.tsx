@@ -176,6 +176,8 @@ export function MobileNav() {
 
           <button
             onClick={() => setMoreOpen((prev) => !prev)}
+            aria-label={t('more')}
+            aria-expanded={moreOpen}
             className={`flex flex-1 flex-col items-center gap-0.5 py-1.5 min-h-[44px] justify-center transition-colors ${
               moreIsActive || moreOpen
                 ? 'text-brand-mint'
