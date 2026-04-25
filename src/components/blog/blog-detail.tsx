@@ -15,6 +15,8 @@ import { CommentSection } from './CommentSection';
 import { AudioPlayer } from '@/components/shared/AudioPlayer';
 import { getAudioUrl } from '@/lib/storage';
 import { EnhancedLayout } from './enhanced/EnhancedLayout';
+import { ScrollProgressBar } from './enhanced/ScrollProgressBar';
+import { BackToTop } from './enhanced/BackToTop';
 
 const CATEGORY_TAG_COLORS: Record<BlogCategory, string> = {
   ai: 'bg-brand-cyan/15 text-brand-cyan',
@@ -230,6 +232,8 @@ export function BlogDetail({ post, prevPost, nextPost, comments: _comments, post
   // Standard layout - original rendering for non-enhanced posts
   return (
     <PageTransition>
+      <ScrollProgressBar />
+      <BackToTop />
       <div className="mx-auto max-w-[1400px] px-4 py-12 sm:px-6">
         <Link
           href="/blog"
