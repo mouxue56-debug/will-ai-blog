@@ -421,11 +421,11 @@
     "retry": "Try Again"
   },
   "notFound": {
-    "title": "This cat hid the page",
-    "subtitle": "The page may be missing or has moved somewhere else 🐾",
+    "title": "Page not found",
+    "subtitle": "The link may be outdated, or the content has moved somewhere else.",
     "description": "The page you're looking for doesn't exist or has been moved.",
-    "home": "Back Home",
-    "blog": "Read the Blog"
+    "home": "Back home",
+    "blog": "Open blog"
   },
   "cattery": {
     "title": "Cattery Journal",

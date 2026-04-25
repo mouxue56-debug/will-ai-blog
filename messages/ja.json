@@ -421,10 +421,10 @@
     "retry": "再試行"
   },
   "notFound": {
-    "title": "この猫がページを隠しちゃった",
-    "subtitle": "ページが見つからないか、場所が変わったようです 🐾",
-    "description": "The page you're looking for doesn's exist or has been moved.",
-    "home": "ホームに戻る",
+    "title": "ページが見つかりません",
+    "subtitle": "リンク切れか、コンテンツが別の場所へ移動した可能性があります。",
+    "description": "お探しのページは存在しないか、移動された可能性があります。",
+    "home": "ホームへ",
     "blog": "ブログを見る"
   },
   "cattery": {
