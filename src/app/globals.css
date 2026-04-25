@@ -1574,6 +1574,12 @@ body::before {
   .dot-pulse,
   .node-glow { animation: none; }
 
+  /* Tailwind utility animations (bounce, ping, pulse, spin) */
+  .animate-bounce,
+  .animate-ping,
+  .animate-pulse,
+  .animate-spin { animation: none; }
+
   /* One-shot entry/grow animations */
   .timeline-line-anim { animation: none; transform: scaleY(1); }
 
