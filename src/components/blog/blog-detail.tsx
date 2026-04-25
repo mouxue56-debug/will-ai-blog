@@ -170,37 +170,48 @@ export function BlogDetail({ post, prevPost, nextPost, comments: _comments, post
 
               <hr className="my-10 border-border" />
 
-              <nav className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                {prevPost ? (
+              <nav className="space-y-4">
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                  {prevPost ? (
+                    <Link
+                      href={`/blog/${prevPost.slug}`}
+                      className="group flex flex-col gap-1 rounded-lg border p-4 transition-all hover:bg-muted/50"
+                    >
+                      <span className="flex items-center gap-1 text-xs text-muted-foreground">
+                        <ChevronLeft className="h-3 w-3" />
+                        {t('prev_post')}
+                      </span>
+                      <span className="text-sm font-medium line-clamp-1 group-hover:text-brand-cyan">
+                        {prevTitle}
+                      </span>
+                    </Link>
+                  ) : (
+                    <div />
+                  )}
+                  {nextPost && (
+                    <Link
+                      href={`/blog/${nextPost.slug}`}
+                      className="group flex flex-col items-end gap-1 rounded-lg border p-4 transition-all hover:bg-muted/50"
+                    >
+                      <span className="flex items-center gap-1 text-xs text-muted-foreground">
+                        {t('next_post')}
+                        <ChevronRight className="h-3 w-3" />
+                      </span>
+                      <span className="text-sm font-medium line-clamp-1 group-hover:text-brand-cyan">
+                        {nextTitle}
+                      </span>
+                    </Link>
+                  )}
+                </div>
+                <div className="flex justify-center">
                   <Link
-                    href={`/blog/${prevPost.slug}`}
-                    className="group flex flex-col gap-1 rounded-lg border p-4 transition-all hover:bg-muted/50"
+                    href="/blog"
+                    className="inline-flex items-center gap-1 text-sm text-muted-foreground transition-colors hover:text-foreground"
                   >
-                    <span className="flex items-center gap-1 text-xs text-muted-foreground">
-                      <ChevronLeft className="h-3 w-3" />
-                      {t('prev_post')}
-                    </span>
-                    <span className="text-sm font-medium line-clamp-1 group-hover:text-brand-cyan">
-                      {prevTitle}
-                    </span>
+                    <ChevronLeft className="h-4 w-4" />
+                    {t('title')}
                   </Link>
-                ) : (
-                  <div />
-                )}
-                {nextPost && (
-                  <Link
-                    href={`/blog/${nextPost.slug}`}
-                    className="group flex flex-col items-end gap-1 rounded-lg border p-4 transition-all hover:bg-muted/50"
-                  >
-                    <span className="flex items-center gap-1 text-xs text-muted-foreground">
-                      {t('next_post')}
-                      <ChevronRight className="h-3 w-3" />
-                    </span>
-                    <span className="text-sm font-medium line-clamp-1 group-hover:text-brand-cyan">
-                      {nextTitle}
-                    </span>
-                  </Link>
-                )}
+                </div>
               </nav>
 
               <div className="mt-12">
@@ -340,37 +351,48 @@ export function BlogDetail({ post, prevPost, nextPost, comments: _comments, post
 
             <hr className="my-10 border-border" />
 
-            <nav className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-              {prevPost ? (
+            <nav className="space-y-4">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                {prevPost ? (
+                  <Link
+                    href={`/blog/${prevPost.slug}`}
+                    className="group flex flex-col gap-1 rounded-lg border p-4 transition-all hover:bg-muted/50"
+                  >
+                    <span className="flex items-center gap-1 text-xs text-muted-foreground">
+                      <ChevronLeft className="h-3 w-3" />
+                      {t('prev_post')}
+                    </span>
+                    <span className="text-sm font-medium line-clamp-1 group-hover:text-brand-cyan">
+                      {prevTitle}
+                    </span>
+                  </Link>
+                ) : (
+                  <div />
+                )}
+                {nextPost && (
+                  <Link
+                    href={`/blog/${nextPost.slug}`}
+                    className="group flex flex-col items-end gap-1 rounded-lg border p-4 transition-all hover:bg-muted/50"
+                  >
+                    <span className="flex items-center gap-1 text-xs text-muted-foreground">
+                      {t('next_post')}
+                      <ChevronRight className="h-3 w-3" />
+                    </span>
+                    <span className="text-sm font-medium line-clamp-1 group-hover:text-brand-cyan">
+                      {nextTitle}
+                    </span>
+                  </Link>
+                )}
+              </div>
+              <div className="flex justify-center">
                 <Link
-                  href={`/blog/${prevPost.slug}`}
-                  className="group flex flex-col gap-1 rounded-lg border p-4 transition-all hover:bg-muted/50"
+                  href="/blog"
+                  className="inline-flex items-center gap-1 text-sm text-muted-foreground transition-colors hover:text-foreground"
                 >
-                  <span className="flex items-center gap-1 text-xs text-muted-foreground">
-                    <ChevronLeft className="h-3 w-3" />
-                    {t('prev_post')}
-                  </span>
-                  <span className="text-sm font-medium line-clamp-1 group-hover:text-brand-cyan">
-                    {prevTitle}
-                  </span>
+                  <ChevronLeft className="h-4 w-4" />
+                  {t('title')}
                 </Link>
-              ) : (
-                <div />
-              )}
-              {nextPost && (
-                <Link
-                  href={`/blog/${nextPost.slug}`}
-                  className="group flex flex-col items-end gap-1 rounded-lg border p-4 transition-all hover:bg-muted/50"
-                >
-                  <span className="flex items-center gap-1 text-xs text-muted-foreground">
-                    {t('next_post')}
-                    <ChevronRight className="h-3 w-3" />
-                  </span>
-                  <span className="text-sm font-medium line-clamp-1 group-hover:text-brand-cyan">
-                    {nextTitle}
-                  </span>
-                </Link>
-              )}
+              </div>
             </nav>
 
             <div className="mt-12">
