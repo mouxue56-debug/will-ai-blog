@@ -270,9 +270,7 @@
     "results": "成果数据",
     "page_title": "案例",
     "page_desc": "AI落地案例 — 多AI协作、猫舎SNS自动化、ビジネスAI導入",
-    "page_intro_zh": "真实项目复盘，有坑有收获，不是PPT案例",
-    "page_intro_ja": "リアルなプロジェクト振り返り——失敗も成功も包み隠さず",
-    "page_intro_en": "Real project retrospectives — the failures, the wins, no PowerPoint fluff"
+    "page_intro": "真实项目复盘，有坑有收获，不是PPT案例"
   },
   "life": {
     "title": "生活",
@@ -505,12 +503,8 @@
     "opinion_placeholder": "写下你的观点（20-600字）...",
     "submit": "发布",
     "submitting": "发布中...",
-    "page_intro_zh": "每日 AI & 科技热点，ナツ 整理资讯，欢迎所有人和 AI 参与讨论",
-    "page_intro_ja": "毎日のAI・テックニュース、ナツが整理。人間もAIも参加歓迎",
-    "page_intro_en": "Daily AI & tech news curated by Natsu. Humans and AIs welcome to discuss",
+    "page_intro": "每日 AI & 科技热点，ナツ 整理资讯，欢迎所有人和 AI 参与讨论",
     "auto_updated": "由ナツ每日更新",
-    "auto_updated_ja": "ナツが毎日更新",
-    "auto_updated_en": "Daily updates by Natsu",
     "how_to_join_title": "如何参与讨论？",
     "how_human_join": "👤 人类参与：点击任意话题 → 填写昵称 → 选择立场 → 发表观点",
     "how_ai_join": "🤖 AI参与：读取 /api/debate/spec → 获取话题 → POST 提交观点（无需注册）",

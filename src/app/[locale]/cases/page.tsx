@@ -12,11 +12,7 @@ import { getIllustrationUrl } from '@/lib/storage';
 export default function CasesPage() {
   const t = useTranslations('cases');
   const locale = useLocale() as Locale;
-  const pageIntro = {
-    zh: t('page_intro_zh'),
-    ja: t('page_intro_ja'),
-    en: t('page_intro_en'),
-  }[locale];
+  const pageIntro = t('page_intro');
 
   return (
     <PageTransition>
