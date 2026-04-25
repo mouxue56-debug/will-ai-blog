@@ -154,6 +154,7 @@ export function BlogList({ posts }: BlogListProps) {
               type="button"
               onClick={() => setSearchQuery('')}
               className="absolute right-3 top-1/2 rounded-full p-1 transition-colors hover:bg-muted/60"
+              aria-label="Clear search"
             >
               <X className="h-3.5 w-3.5 text-muted-foreground" />
             </button>
