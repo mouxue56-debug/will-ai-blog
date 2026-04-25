@@ -243,11 +243,6 @@ export const timelineEvents: TimelineEvent[] = [
   }
 ];
 
-export function getEventsByCategory(category: TimelineEvent['category'] | 'all'): TimelineEvent[] {
-  if (category === 'all') return timelineEvents;
-  return timelineEvents.filter(e => e.category === category);
-}
-
 export function getEventsByYear(year: number): TimelineEvent[] {
   return timelineEvents.filter(e => e.date.startsWith(String(year)));
 }
