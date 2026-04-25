@@ -89,14 +89,19 @@ export function BlogCard({ post, isLatest = false, index = 0 }: BlogCardProps) {
               />
             )}
             
-            {/* BorderBeam on hover - 普通卡片悬停时显示 */}
-            {!isLatest && isHovered && (
-              <BorderBeam
-                colorFrom={beamColors.from}
-                colorTo={beamColors.to}
-                size={160}
-                duration={8}
-              />
+            {/* BorderBeam on hover - 普通卡片悬停时平滑淡入 */}
+            {!isLatest && (
+              <div
+                className="pointer-events-none absolute inset-0 rounded-[inherit] transition-opacity duration-300"
+                style={{ opacity: isHovered ? 1 : 0 }}
+              >
+                <BorderBeam
+                  colorFrom={beamColors.from}
+                  colorTo={beamColors.to}
+                  size={160}
+                  duration={8}
+                />
+              </div>
             )}
 
             {/* Cover Image - 如果有封面图且未出错则显示封面图，否则显示占位图 */}
