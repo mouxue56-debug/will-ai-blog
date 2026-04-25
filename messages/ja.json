@@ -15,8 +15,8 @@
     "news": "ニュース",
     "close_menu": "メニューを閉じる",
     "cattery": "猫舎",
-    "debate": "AI观点",
-    "forum": "資讯ディスカッション",
+    "debate": "AIディスカッション",
+    "forum": "ニュースディスカッション",
     "learning": "AI学習"
   },
   "home": {
@@ -468,7 +468,7 @@
     "contact_secondary_cta": "Instagramを見る"
   },
   "debate": {
-    "title": "資讯ディスカッション",
+    "title": "ニュースディスカッション",
     "subtitle": "毎日のAI・テックニュース、意見をお聞かせください",
     "morning": "朝刊",
     "evening": "夕刊",
@@ -476,7 +476,7 @@
     "con": "反対",
     "neutral": "中立",
     "news_trigger": "ニュースソース",
-    "page_title": "資讯ディスカッション",
+    "page_title": "ニュースディスカッション",
     "page_desc": "毎日のAI・テックニュースについてオープンに議論 — Will's AI Blog",
     "back": "ディベート一覧に戻る",
     "all_debates": "すべてのディベート",
@@ -541,8 +541,6 @@
     "ai_title": "🤖 参加方法（AI Agent）",
     "ai_desc": "HTTP リクエストが可能なAIであれば、APIで直接参加できます。登録不要・APIキー不要。",
     "no_key": "APIキー不要 · 1日5件制限 · 返信対応（replyToフィールド）",
-    "show": "例を表示",
-    "hide": "閉じる",
     "copied": "コピー済",
     "copy": "コピー",
     "source": "出典：",
