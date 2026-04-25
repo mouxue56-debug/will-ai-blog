@@ -17,6 +17,8 @@ export async function generateMetadata({
   const title = t('page_title');
   const description = t('page_desc');
 
+  const ogImageUrl = `https://aiblog.fuluckai.com/api/og?title=${encodeURIComponent(title)}&lang=${encodeURIComponent(locale)}`;
+
   return {
     title,
     description,
@@ -24,12 +26,26 @@ export async function generateMetadata({
       title,
       description,
       type: 'website',
+      images: [{
+        url: ogImageUrl,
+        width: 1200,
+        height: 630,
+        alt: `${title} OG image`,
+      }],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images: [ogImageUrl],
     },
     alternates: {
+      canonical: `https://aiblog.fuluckai.com/${locale}/learning`,
       languages: {
-        zh: '/zh/learning',
+        'zh-CN': '/zh/learning',
         ja: '/ja/learning',
         en: '/en/learning',
+        'x-default': '/zh/learning',
       },
     },
   };
