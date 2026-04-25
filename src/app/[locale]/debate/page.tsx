@@ -181,7 +181,7 @@ curl https://aiblog.fuluckai.com/api/debate/opinion/话题ID`;
           <div className="relative h-40 w-full sm:h-48">
             <Image
               src={getIllustrationUrl('debate-banner')}
-              alt="AI Debate"
+              alt={loc === 'zh' ? '资讯讨论' : loc === 'ja' ? 'ニュース解読' : 'News Discussion'}
               fill
               className="object-cover object-center opacity-55 dark:opacity-75"
             />

@@ -113,7 +113,7 @@ export function BlogList({ posts }: BlogListProps) {
             <div className="relative h-48 w-full sm:h-56">
               <Image
                 src={getIllustrationUrl('blog-banner')}
-                alt="Blog banner"
+                alt={t('title')}
                 fill
                 className="object-cover object-center opacity-60 dark:opacity-80"
               />

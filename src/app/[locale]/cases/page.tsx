@@ -22,7 +22,7 @@ export default function CasesPage() {
             <div className="relative h-48 w-full sm:h-56">
               <Image
                 src={getIllustrationUrl('cases-banner')}
-                alt="Cases banner"
+                alt={t('title')}
                 fill
                 className="object-cover object-center opacity-55 dark:opacity-80"
               />
