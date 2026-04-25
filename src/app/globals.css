@@ -286,6 +286,8 @@ body::before {
 
 /* ── Liquid Glass card utility (dark: 深邃玻璃 / light: 冰面白雾) ── */
 .glass-card {
+  position: relative;
+  overflow: hidden;
   background: rgba(255, 255, 255, 0.04);
   backdrop-filter: blur(22px) saturate(160%);
   -webkit-backdrop-filter: blur(22px) saturate(160%);
@@ -310,12 +312,38 @@ body::before {
     0 0 24px -4px rgba(0, 212, 255, 0.15);
 }
 
-/* Respect motion preferences — no lift if the user asked for less motion */
+/* Hover light-sweep — diagonal reflection that slides across on hover */
+.glass-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(
+    105deg,
+    transparent 38%,
+    rgba(255, 255, 255, 0.06) 44%,
+    rgba(255, 255, 255, 0.12) 50%,
+    rgba(255, 255, 255, 0.06) 56%,
+    transparent 62%
+  );
+  transform: translateX(-120%);
+  transition: transform 0.55s ease;
+  z-index: 1;
+}
+.glass-card:hover::before {
+  transform: translateX(120%);
+}
+
+/* Respect motion preferences — no lift or sweep if the user asked for less motion */
 @media (prefers-reduced-motion: reduce) {
   .glass-card,
   .glass-card:hover {
     transition: none;
     transform: none;
+  }
+  .glass-card::before {
+    display: none;
   }
 }
 
@@ -343,6 +371,18 @@ body::before {
     0 2px 6px rgba(180, 100, 150, 0.12),
     0 6px 16px rgba(180, 142, 224, 0.18),
     0 20px 48px rgba(255, 123, 156, 0.24);
+}
+
+/* Light-mode sweep: warmer pink-mint highlight */
+:root:not(.dark) .glass-card::before {
+  background: linear-gradient(
+    105deg,
+    transparent 36%,
+    rgba(255, 200, 215, 0.14) 44%,
+    rgba(255, 255, 255, 0.28) 50%,
+    rgba(200, 235, 220, 0.14) 56%,
+    transparent 64%
+  );
 }
 
 /* ── Debate masonry chip header (tinted strip with theme-aware fg) ─ */
