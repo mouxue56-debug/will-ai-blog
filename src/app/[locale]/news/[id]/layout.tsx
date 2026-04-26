@@ -2,10 +2,10 @@ import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string; id: string }> }): Promise<Metadata> {
-  const { locale } = await params;
+  const { locale, id } = await params;
   const t = await getTranslations({ locale, namespace: 'news' });
-  const title = 'News Detail';
-  const description = t('subtitle');
+  const title = t('detail_title', { defaultValue: t('page_title') });
+  const description = t('page_desc');
   const ogImageUrl = `https://aiblog.fuluckai.com/api/og?title=${encodeURIComponent(title)}&lang=${encodeURIComponent(locale)}`;
 
   return {
@@ -29,10 +29,12 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
       images: [ogImageUrl],
     },
     alternates: {
+      canonical: `https://aiblog.fuluckai.com/${locale}/news/${id}`,
       languages: {
-        zh: `/zh/news/{id}`,
-        ja: `/ja/news/{id}`,
-        en: `/en/news/{id}`,
+        'zh-CN': `/zh/news/${id}`,
+        ja: `/ja/news/${id}`,
+        en: `/en/news/${id}`,
+        'x-default': `/zh/news/${id}`,
       },
     },
   };
