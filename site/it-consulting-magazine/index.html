@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="华睿信息科技 - 专业的IT咨询与技术服务商，提供企业数字化转型、云计算解决方案、系统集成、技术培训等全方位服务">
+<title>华睿信息科技 - 智驭未来・技术赋能</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&family=Noto+Serif+SC:wght@400;600;700;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+--primary:#0a1628;--secondary:#1a3a5c;--accent:#e8a020;--accent2:#c0392b;
+--text:#1a1a2e;--text-light:#4a4a6a;--text-muted:#8a8aa3;
+--bg:#f8f6f1;--bg-alt:#edeae3;--white:#ffffff;--border:#d4cfc6;
+--font-sans:'Noto Sans SC',-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif;
+--font-serif:'Noto Serif SC','Songti SC',Georgia,serif;
+--shadow:0 4px 24px rgba(10,22,40,0.08);--shadow-lg:0 12px 48px rgba(10,22,40,0.14);
+--transition:all 0.3s cubic-bezier(0.4,0,0.2,1);
+}
+html{font-size:16px;scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
+body{font-family:var(--font-sans);background:var(--bg);color:var(--text);line-height:1.8;overflow-x:hidden}
+::selection{background:var(--accent);color:var(--primary)}
+img{max-width:100%;display:block}
+a{text-decoration:none;color:inherit}
+button{font-family:inherit;cursor:pointer;border:none;outline:none}
+
+/* === UTILITY === */
+.container{max-width:1320px;margin:0 auto;padding:0 2rem}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0}
+.text-accent{color:var(--accent)}.text-muted{color:var(--text-muted)}
+.font-serif{font-family:var(--font-serif)}
+
+/* === HEADER / NAV === */
+.site-header{position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(10,22,40,0.95);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,0.08);transition:var(--transition)}
+.header-inner{display:flex;align-items:center;justify-content:space-between;padding:0.75rem 2rem;max-width:1320px;margin:0 auto}
+.logo{display:flex;align-items:center;gap:0.75rem}
+.logo-icon{width:42px;height:42px;background:linear-gradient(135deg,var(--accent),#f0c040);border-radius:10px;display:flex;align-items:center;justify-content:center;font-family:var(--font-serif);font-weight:900;font-size:1.4rem;color:var(--primary)}
+.logo-text{font-family:var(--font-serif);font-weight:700;font-size:1.25rem;color:var(--white);letter-spacing:0.04em;line-height:1.2}
+.logo-sub{font-size:0.65rem;color:var(--text-muted);font-weight:400;letter-spacing:0.12em;text-transform:uppercase}
+.nav{display:flex;align-items:center;gap:0.25rem}
+.nav a{padding:0.5rem 1.1rem;font-size:0.9rem;color:rgba(255,255,255,0.78);font-weight:400;letter-spacing:0.03em;border-radius:6px;transition:var(--transition);position:relative}
+.nav a::after{content:'';position:absolute;bottom:2px;left:50%;transform:translateX(-50%);width:0;height:2px;background:var(--accent);transition:var(--transition);border-radius:2px}
+.nav a:hover{color:var(--white)}
+.nav a:hover::after{width:calc(100% - 2.2rem)}
+.nav a.active{color:var(--white);font-weight:500}
+.nav a.active::after{width:calc(100% - 2.2rem)}
+.nav-cta{padding:0.5rem 1.4rem !important;background:var(--accent) !important;color:var(--primary) !important;font-weight:600 !important;border-radius:8px !important;margin-left:0.5rem}
+.nav-cta::after{display:none !important}
+.nav-cta:hover{background:#f5b830 !important;transform:translateY(-1px);box-shadow:0 4px 12px rgba(232,160,32,0.35)}
+.mobile-toggle{display:none;background:none;border:none;padding:0.5rem;cursor:pointer}
+.mobile-toggle span{display:block;width:24px;height:2px;background:var(--white);margin:6px 0;border-radius:2px;transition:var(--transition)}
+
+/* === HERO === */
+.hero{min-height:100vh;background:var(--primary);position:relative;display:flex;align-items:center;overflow:hidden;padding-top:80px}
+.hero-bg{position:absolute;inset:0;background:url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 900"><defs><linearGradient id="g1" x1="0%25" y1="0%25" x2="100%25" y2="100%25"><stop offset="0%25" stop-color="%230a1628"/><stop offset="50%25" stop-color="%231a3a5c"/><stop offset="100%25" stop-color="%230a1628"/></linearGradient></defs><rect fill="url(%23g1)" width="1440" height="900"/><g opacity="0.06"><circle cx="200" cy="300" r="300" fill="none" stroke="%23e8a020" stroke-width="1"/><circle cx="200" cy="300" r="500" fill="none" stroke="%23e8a020" stroke-width="0.5"/><circle cx="1240" cy="600" r="400" fill="none" stroke="%23e8a020" stroke-width="1"/><circle cx="1240" cy="600" r="650" fill="none" stroke="%23e8a020" stroke-width="0.5"/><line x1="0" y1="450" x2="1440" y2="450" stroke="%23e8a020" stroke-width="0.5" stroke-dasharray="8,12"/><line x1="720" y1="0" x2="720" y2="900" stroke="%23e8a020" stroke-width="0.5" stroke-dasharray="8,12"/></g></svg>') center/cover no-repeat;opacity:0.7}
+.hero-overlay{position:absolute;inset:0;background:linear-gradient(135deg,rgba(10,22,40,0.85) 0%,rgba(26,58,92,0.6) 100%)}
+.hero-grid-overlay{position:absolute;inset:0;background-image:linear-gradient(rgba(232,160,32,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(232,160,32,0.04) 1px,transparent 1px);background-size:80px 80px}
+.hero-content{position:relative;z-index:2;max-width:1320px;margin:0 auto;padding:0 2rem;display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;width:100%}
+.hero-left{animation:fadeInUp 0.9s ease-out}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:0.6rem;padding:0.4rem 1rem;background:rgba(232,160,32,0.12);border:1px solid rgba(232,160,32,0.25);border-radius:50px;font-size:0.78rem;color:var(--accent);letter-spacing:0.15em;font-weight:500;margin-bottom:1.8rem}
+.hero-eyebrow-dot{width:6px;height:6px;background:var(--accent);border-radius:50%;animation:pulse-dot 2s infinite}
+@keyframes pulse-dot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.5;transform:scale(0.7)}}
+.hero-title{font-family:var(--font-serif);font-size:clamp(2.8rem,5.5vw,4.8rem);font-weight:900;color:var(--white);line-height:1.08;letter-spacing:-0.02em;margin-bottom:1.5rem}
+.hero-title em{font-style:normal;color:var(--accent)}
+.hero-subtitle{font-size:1.15rem;color:rgba(255,255,255,0.68);line-height:1.9;font-weight:300;max-width:520px;margin-bottom:2.5rem}
+.hero-badges{display:flex;flex-wrap:wrap;gap:0.8rem;margin-bottom:2.5rem}
+.hero-badge{padding:0.35rem 0.9rem;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:6px;font-size:0.78rem;color:rgba(255,255,255,0.7);letter-spacing:0.04em}
+.hero-actions{display:flex;gap:1rem;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:0.6rem;padding:0.85rem 2rem;font-size:0.95rem;font-weight:600;border-radius:10px;transition:var(--transition);letter-spacing:0.03em}
+.btn-primary{background:linear-gradient(135deg,var(--accent),#f0b820);color:var(--primary);box-shadow:0 4px 20px rgba(232,160,32,0.3)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(232,160,32,0.45)}
+.btn-secondary{background:rgba(255,255,255,0.08);color:var(--white);border:1px solid rgba(255,255,255,0.2)}
+.btn-secondary:hover{background:rgba(255,255,255,0.14);border-color:rgba(255,255,255,0.35);transform:translateY(-2px)}
+.hero-right{position:relative;animation:fadeInRight 1s ease-out 0.3s both}
+.hero-visual{position:relative;background:linear-gradient(145deg,rgba(232,160,32,0.08),rgba(26,58,92,0.2));border:1px solid rgba(232,160,32,0.15);border-radius:24px;padding:2.5rem;overflow:hidden}
+.hero-visual::before{content:'';position:absolute;top:-50%;right:-50%;width:100%;height:100%;background:radial-gradient(circle,rgba(232,160,32,0.06) 0%,transparent 70%);pointer-events:none}
+.hero-stats{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem}
+.hero-stat{text-align:center;padding:1.5rem 1rem;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:16px}
+.hero-stat-num{font-family:var(--font-serif);font-size:2.8rem;font-weight:900;color:var(--accent);line-height:1;margin-bottom:0.4rem}
+.hero-stat-num span{font-size:1.4rem}
+.hero-stat-label{font-size:0.78rem;color:rgba(255,255,255,0.5);letter-spacing:0.08em}
+.hero-stat-divider{grid-column:1/-1;height:1px;background:rgba(255,255,255,0.06);margin:-0.5rem 0}
+.hero-services-list{margin-top:1.5rem;display:flex;flex-direction:column;gap:0.6rem}
+.hero-service-item{display:flex;align-items:center;gap:0.75rem;padding:0.5rem 0;font-size:0.85rem;color:rgba(255,255,255,0.7)}
+.hero-service-dot{width:8px;height:8px;background:var(--accent);border-radius:50%;flex-shrink:0}
+.floating-card{position:absolute;background:var(--white);border-radius:14px;padding:1rem 1.2rem;box-shadow:var(--shadow-lg);animation:float 6s ease-in-out infinite}
+.floating-card-1{top:-20px;right:-30px;animation-delay:0s}
+.floating-card-2{bottom:30px;left:-40px;animation-delay:2s}
+.floating-card-3{top:50%;right:-50px;animation-delay:4s}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+.fc-icon{font-size:1.5rem;margin-bottom:0.3rem}
+.fc-num{font-family:var(--font-serif);font-weight:700;font-size:1.3rem;color:var(--primary)}
+.fc-label{font-size:0.7rem;color:var(--text-muted)}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeInRight{from{opacity:0;transform:translateX(40px)}to{opacity:1;transform:translateX(0)}}
+
+/* === SECTION COMMON === */
+.section{padding:6rem 0}
+.section-alt{background:var(--white)}
+.section-dark{background:var(--primary);color:var(--white)}
+.section-header{text-align:center;max-width:700px;margin:0 auto 4rem}
+.section-eyebrow{display:inline-flex;align-items:center;gap:0.5rem;font-size:0.78rem;letter-spacing:0.2em;color:var(--accent);font-weight:500;text-transform:uppercase;margin-bottom:1rem}
+.section-eyebrow-line{width:32px;height:1px;background:var(--accent)}
+.section-title{font-family:var(--font-serif);font-size:clamp(2rem,4vw,3.2rem);font-weight:700;line-height:1.15;margin-bottom:1.2rem}
+.section-subtitle{font-size:1.05rem;color:var(--text-light);line-height:1.8}
+
+/* === INTRO SECTION (Magazine 3-col) === */
+.intro-grid{display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:2rem;align-items:start}
+.intro-main{background:var(--white);border-radius:20px;overflow:hidden;box-shadow:var(--shadow);transition:var(--transition)}
+.intro-main:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg)}
+.intro-main-img{height:280px;background:linear-gradient(135deg,var(--secondary),var(--primary));position:relative;overflow:hidden}
+.intro-main-img::after{content:'前沿';position:absolute;bottom:1rem;left:1rem;padding:0.3rem 0.8rem;background:rgba(232,160,32,0.9);border-radius:6px;font-size:0.72rem;font-weight:600;color:var(--primary);letter-spacing:0.1em}
+.intro-main-body{padding:2rem}
+.intro-tag{display:inline-block;padding:0.2rem 0.7rem;background:rgba(232,160,32,0.1);color:var(--accent);border-radius:4px;font-size:0.72rem;font-weight:600;letter-spacing:0.08em;margin-bottom:0.8rem}
+.intro-main h3{font-family:var(--font-serif);font-size:1.5rem;font-weight:700;margin-bottom:0.8rem;line-height:1.3}
+.intro-main p{font-size:0.9rem;color:var(--text-light);line-height:1.85}
+.intro-col{display:flex;flex-direction:column;gap:1.5rem}
+.intro-card{background:var(--white);border-radius:16px;padding:1.8rem;box-shadow:var(--shadow);border-left:4px solid var(--accent);transition:var(--transition)}
+.intro-card:hover{transform:translateX(4px);box-shadow:var(--shadow-lg)}
+.intro-card-icon{font-size:2rem;margin-bottom:0.8rem}
+.intro-card h4{font-family:var(--font-serif);font-size:1.15rem;font-weight:700;margin-bottom:0.5rem}
+.intro-card p{font-size:0.85rem;color:var(--text-light);line-height:1.8}
+.intro-card-2{border-left-color:var(--secondary)}
+.intro-card-3{border-left-color:var(--accent2)}
+
+/* === SERVICES MAGAZINE LAYOUT === */
+.services-magazine{display:grid;grid-template-columns:2fr 1fr;gap:2.5rem}
+.services-main-col{display:flex;flex-direction:column;gap:2rem}
+.services-feature{background:var(--white);border-radius:20px;padding:2.5rem;box-shadow:var(--shadow);display:grid;grid-template-columns:auto 1fr;gap:2rem;align-items:center;transition:var(--transition)}
+.services-feature:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg)}
+.services-feature-icon{width:80px;height:80px;background:linear-gradient(135deg,var(--accent),#f0b820);border-radius:18px;display:flex;align-items:center;justify-content:center;font-size:2.2rem;flex-shrink:0}
+.services-feature h3{font-family:var(--font-serif);font-size:1.4rem;font-weight:700;margin-bottom:0.5rem}
+.services-feature p{font-size:0.9rem;color:var(--text-light);line-height:1.8}
+.services-feature-tags{display:flex;gap:0.5rem;flex-wrap:wrap;margin-top:0.8rem}
+.services-tag{padding:0.25rem 0.7rem;background:var(--bg);border-radius:4px;font-size:0.72rem;color:var(--text-muted)}
+.services-list-col{display:flex;flex-direction:column;gap:1rem}
+.services-side-card{background:var(--white);border-radius:16px;padding:1.5rem;box-shadow:var(--shadow);transition:var(--transition)}
+.services-side-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-lg)}
+.services-side-card h4{font-family:var(--font-serif);font-size:1.05rem;font-weight:600;margin-bottom:0.4rem}
+.services-side-card p{font-size:0.82rem;color:var(--text-light);line-height:1.7}
+.services-side-icon{font-size:1.6rem;margin-bottom:0.6rem}
+
+/* === ABOUT / STORY SECTION === */
+.about-magazine{display:grid;grid-template-columns:1fr 1.5fr;gap:3.5rem;align-items:center}
+.about-quote{background:var(--primary);border-radius:20px;padding:3rem;position:relative;overflow:hidden}
+.about-quote::before{content:'"';position:absolute;top:-20px;left:20px;font-family:var(--font-serif);font-size:12rem;color:rgba(232,160,32,0.08);line-height:1;font-weight:900}
+.about-quote blockquote{font-family:var(--font-serif);font-size:1.4rem;color:var(--white);line-height:1.7;font-weight:400;position:relative;z-index:1;margin-bottom:1.5rem}
+.about-quote cite{display:block;font-size:0.85rem;color:var(--accent);font-style:normal;font-weight:500;letter-spacing:0.08em}
+.about-text h2{font-family:var(--font-serif);font-size:clamp(1.8rem,3.5vw,2.8rem);font-weight:700;line-height:1.2;margin-bottom:1.5rem}
+.about-text p{font-size:0.95rem;color:var(--text-light);line-height:2;margin-bottom:1.2rem}
+.about-highlights{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:2rem}
+.about-highlight{background:var(--bg);border-radius:12px;padding:1.2rem;text-align:center;transition:var(--transition)}
+.about-highlight:hover{background:var(--accent);color:var(--primary);transform:scale(1.03)}
+.about-highlight-num{font-family:var(--font-serif);font-size:2rem;font-weight:900;margin-bottom:0.2rem}
+.about-highlight-label{font-size:0.78rem;color:inherit;opacity:0.7}
+
+/* === WHY CHOOSE US === */
+.why-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2rem}
+.why-card{background:var(--white);border-radius:20px;padding:2.5rem;text-align:center;box-shadow:var(--shadow);transition:var(--transition);position:relative;overflow:hidden}
+.why-card::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--accent),#f0b820);transform:scaleX(0);transition:var(--transition);transform-origin:left}
+.why-card:hover::before{transform:scaleX(1)}
+.why-card:hover{transform:translateY(-6px);box-shadow:var(--shadow-lg)}
+.why-icon{width:70px;height:70px;background:linear-gradient(135deg,var(--accent),#f0b820);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.8rem;margin:0 auto 1.5rem}
+.why-card h3{font-family:var(--font-serif);font-size:1.2rem;font-weight:700;margin-bottom:0.7rem}
+.why-card p{font-size:0.88rem;color:var(--text-light);line-height:1.85}
+
+/* === CLIENTS LOGO BAR === */
+.clients-bar{background:var(--primary);padding:3rem 0;overflow:hidden}
+.clients-label{text-align:center;font-size:0.78rem;letter-spacing:0.2em;color:rgba(255,255,255,0.4);margin-bottom:2rem;text-transform:uppercase}
+.clients-track{display:flex;gap:4rem;align-items:center;animation:scroll-track 25s linear infinite}
+.clients-track:hover{animation-play-state:paused}
+@keyframes scroll-track{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.client-logo{font-family:var(--font-serif);font-size:1.2rem;font-weight:700;color:rgba(255,255,255,0.35);white-space:nowrap;letter-spacing:0.05em;transition:var(--transition)}
+.client-logo:hover{color:rgba(255,255,255,0.7)}
+
+/* === CTA SECTION === */
+.cta-section{background:linear-gradient(135deg,var(--primary) 0%,var(--secondary) 100%);padding:7rem 0;text-align:center;position:relative;overflow:hidden}
+.cta-section::before{content:'';position:absolute;inset:0;background:url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="1" fill="%23e8a020" opacity="0.3"/><circle cx="80" cy="60" r="1.5" fill="%23e8a020" opacity="0.2"/><circle cx="50" cy="80" r="0.8" fill="%23e8a020" opacity="0.25"/></svg>');background-size:100px 100px}
+.cta-content{position:relative;z-index:1}
+.cta-section h2{font-family:var(--font-serif);font-size:clamp(2.2rem,4.5vw,3.8rem);font-weight:900;color:var(--white);margin-bottom:1.2rem;line-height:1.15}
+.cta-section p{font-size:1.1rem;color:rgba(255,255,255,0.65);margin-bottom:2.5rem;max-width:550px;margin-left:auto;margin-right:auto}
+.cta-actions{display:flex;justify-content:center;gap:1rem;flex-wrap:wrap}
+.cta-section .btn-primary{font-size:1.05rem;padding:1rem 2.5rem}
+.cta-section .btn-secondary{font-size:1.05rem;padding:1rem 2.5rem}
+
+/* === FOOTER === */
+.site-footer{background:var(--primary);color:rgba(255,255,255,0.65);padding:4rem 0 2rem}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:3rem;padding-bottom:3rem;border-bottom:1px solid rgba(255,255,255,0.08)}
+.footer-brand .logo{margin-bottom:1.2rem}
+.footer-brand p{font-size:0.88rem;line-height:1.8;color:rgba(255,255,255,0.5);max-width:300px}
+.footer-col h4{color:var(--white);font-size:0.9rem;font-weight:600;letter-spacing:0.1em;margin-bottom:1.2rem;text-transform:uppercase}
+.footer-col ul{list-style:none;display:flex;flex-direction:column;gap:0.6rem}
+.footer-col ul li a{font-size:0.85rem;color:rgba(255,255,255,0.5);transition:var(--transition)}
+.footer-col ul li a:hover{color:var(--accent)}
+.footer-bottom{display:flex;justify-content:space-between;align-items:center;padding-top:2rem;font-size:0.8rem;color:rgba(255,255,255,0.35)}
+.footer-bottom a{color:rgba(255,255,255,0.45);transition:var(--transition)}
+.footer-bottom a:hover{color:var(--accent)}
+
+/* === RESPONSIVE === */
+@media(max-width:1024px){
+.hero-content{grid-template-columns:1fr;gap:3rem;text-align:center}
+.hero-subtitle{margin:0 auto 2.5rem}
+.hero-badges,.hero-actions,.hero-services-list{justify-content:center}
+.hero-right{order:-1}
+.hero-visual{max-width:500px;margin:0 auto}
+.hero-stats{grid-template-columns:repeat(2,1fr)}
+.intro-grid{grid-template-columns:1fr 1fr}
+.intro-main{grid-column:1/-1}
+.about-magazine{grid-template-columns:1fr}
+.why-grid{grid-template-columns:1fr 1fr}
+.services-magazine{grid-template-columns:1fr}
+.footer-grid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:768px){
+.nav{display:none;position:fixed;top:60px;left:0;right:0;background:var(--primary);flex-direction:column;padding:1rem;gap:0.25rem;box-shadow:0 8px 24px rgba(0,0,0,0.3)}
+.nav.open{display:flex}
+.nav a{padding:0.75rem 1rem;width:100%;text-align:center}
+.mobile-toggle{display:block}
+.hero{padding-top:70px;min-height:auto;padding-bottom:4rem}
+.hero-title{font-size:2.2rem}
+.hero-right{display:none}
+.intro-grid{grid-template-columns:1fr}
+.services-feature{grid-template-columns:1fr;text-align:center}
+.services-feature-icon{margin:0 auto}
+.about-highlights{grid-template-columns:1fr 1fr}
+.why-grid{grid-template-columns:1fr}
+.footer-grid{grid-template-columns:1fr}
+.footer-bottom{flex-direction:column;gap:0.8rem;text-align:center}
+.section{padding:4rem 0}
+}
+@media(max-width:480px){
+.hero-actions{flex-direction:column;align-items:center}
+.hero-actions .btn{width:100%;justify-content:center}
+.hero-badges{justify-content:center}
+.about-highlights{grid-template-columns:1fr}
+}
+
+/* === EXTRA DECORATIONS === */
+.section-divider{width:60px;height:3px;background:linear-gradient(90deg,var(--accent),transparent);margin:0 auto 1rem;border-radius:3px}
+.scroll-indicator{position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:0.4rem;color:rgba(255,255,255,0.4);font-size:0.7rem;letter-spacing:0.1em;animation:bounce 2s infinite}
+@keyframes bounce{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(8px)}}
+.scroll-indicator-line{width:1px;height:30px;background:linear-gradient(to bottom,rgba(255,255,255,0.4),transparent)}
+
+/* === COUNTER ANIMATION === */
+.count-up{font-variant-numeric:tabular-nums}
+
+/* === PRINT FEEL OVERLAYS === */
+.hero::after{content:'华睿信息科技';position:absolute;bottom:2rem;right:2rem;font-family:var(--font-serif);font-size:0.7rem;color:rgba(255,255,255,0.12);letter-spacing:0.3em;writing-mode:vertical-rl;text-orientation:mixed}
+</style>
+</head>
+<body>
+
+<!-- ========== HEADER ========== -->
+<header class="site-header" id="site-header">
+<div class="header-inner">
+<a href="#" class="logo">
+<div class="logo-icon">华</div>
+<div>
+<div class="logo-text">华睿信息科技</div>
+<div class="logo-sub">Huarui InfoTech</div>
+</div>
+</a>
+<nav class="nav" id="main-nav" role="navigation" aria-label="主导航">
+<a href="#home" class="active">首页</a>
+<a href="#services">服务项目</a>
+<a href="#about">关于我们</a>
+<a href="#cases">成功案例</a>
+<a href="#insights">行业洞察</a>
+<a href="#contact">联系我们</a>
+<a href="#contact" class="nav-cta">立即咨询</a>
+</nav>
+<button class="mobile-toggle" id="mobile-toggle" aria-label="打开菜单" aria-expanded="false">
+<span></span><span></span><span></span>
+</button>
+</div>
+</header>
+
+<!-- ========== HERO ========== -->
+<section class="hero" id="home">
+<div class="hero-bg"></div>
+<div class="hero-overlay"></div>
+<div class="hero-grid-overlay"></div>
+<div class="hero-content">
+<div class="hero-left">
+<div class="hero-eyebrow">
+<span class="hero-eyebrow-dot"></span>
+值得信赖的数字化合作伙伴
+</div>
+<h1 class="hero-title">智驭未来<br><em>技术赋能</em><br>数字化转型</h1>
+<p class="hero-subtitle">华睿信息科技深耕企业级IT咨询与技术服务业逾十八年，汇聚三百余名资深架构师与工程师，为金融、制造、医疗、零售等关键行业提供端到端的数字化转型解决方案，助您在竞争中赢得先机。</p>
+<div class="hero-badges">
+<span class="hero-badge">ISO 27001 认证</span>
+<span class="hero-badge">CMMI 5 级</span>
+<span class="hero-badge">国家级高新技术企业</span>
+<span class="hero-badge">信创生态合作伙伴</span>
+</div>
+<div class="hero-actions">
+<a href="#contact" class="btn btn-primary">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+预约免费咨询
+</a>
+<a href="#cases" class="btn btn-secondary">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+查看成功案例
+</a>
+</div>
+</div>
+<div class="hero-right">
+<div class="hero-visual">
+<div class="hero-stats">
+<div class="hero-stat">
+<div class="hero-stat-num count-up" data-target="18">0<span>+</span></div>
+<div class="hero-stat-label">年行业深耕</div>
+</div>
+<div class="hero-stat">
+<div class="hero-stat-num count-up" data-target="380">0<span>+</span></div>
+<div class="hero-stat-label">企业客户</div>
+</div>
+<div class="hero-stat">
+<div class="hero-stat-num count-up" data-target="1200">0<span>+</span></div>
+<div class="hero-stat-label">成功项目</div>
+</div>
+<div class="hero-stat">
+<div class="hero-stat-num count-up" data-target="98">0<span>%</span></div>
+<div class="hero-stat-label">客户满意度</div>
+</div>
+</div>
+<div class="hero-stat-divider"></div>
+<div class="hero-services-list">
+<div class="hero-service-item"><span class="hero-service-dot"></span>企业数字化转型规划与落地</div>
+<div class="hero-service-item"><span class="hero-service-dot"></span>云计算架构设计与迁移服务</div>
+<div class="hero-service-item"><span class="hero-service-dot"></span>网络安全与合规解决方案</div>
+<div class="hero-service-item"><span class="hero-service-dot"></span>大数据与人工智能应用</div>
+<div class="hero-service-item"><span class="hero-service-dot"></span>IT运维与智能化管理平台</div>
+<div class="hero-service-item"><span class="hero-service-dot"></span>行业定制软件开发与集成</div>
+</div>
+</div>
+<div class="floating-card floating-card-1">
+<div class="fc-icon">🏆</div>
+<div class="fc-num">TOP 50</div>
+<div class="fc-label">中国IT服务商排行榜</div>
+</div>
+<div class="floating-card floating-card-2">
+<div class="fc-icon">🛡️</div>
+<div class="fc-num">零事故</div>
+<div class="fc-label">2023年度安全运维</div>
+</div>
+</div>
+</div>
+<div class="scroll-indicator">
+<div>向下滚动</div>
+<div class="scroll-indicator-line"></div>
+</div>
+</section>
+
+<!-- ========== INTRO / EDITORIAL SECTION ========== -->
+<section class="section section-alt" id="intro">
+<div class="container">
+<div class="section-header">
+<div class="section-eyebrow"><span class="section-eyebrow-line"></span>关于我们<span class="section-eyebrow-line"></span></div>
+<h2 class="section-title">以技术为基，以价值为先</h2>
+<p class="section-subtitle">自二零零六年成立以来，华睿信息科技始终坚持以客户业务价值为导向，将前沿技术与行业实践深度融合，为企业构建可持续竞争优势。</p>
+</div>
+<div class="intro-grid">
+<article class="intro-main">
+<div class="intro-main-img"></div>
+<div class="intro-main-body">
+<span class="intro-tag">深度解读</span>
+<h3>数字化转型进入深水区，企业需要怎样的技术伙伴？</h3>
+<p>在数字经济蓬勃发展的今天，越来越多的企业意识到，数字化转型并非简单的技术堆砌，而是涉及组织、文化、流程的系统性变革。华睿信息科技凭借十八年的行业积淀，构建了一套完整的数字化转型方法论，帮助三百八十余家企业在新一轮产业变革中抢占先机。从战略规划到落地实施，从技术选型到团队赋能，我们提供全周期陪伴式服务，让转型真正产生业务价值。</p>
+</div>
+</article>
+<div class="intro-col">
+<article class="intro-card">
+<div class="intro-card-icon">💡</div>
+<h4>战略咨询先行</h4>
+<p>深入调研企业现状，制定切实可行的数字化路线图，确保每一分投入都产生可见回报。</p>
+</article>
+<article class="intro-card intro-card-2">
+<div class="intro-card-icon">⚙️</div>
+<h4>技术落地为本</h4>
+<p>拥有业界领先的工程交付能力，覆盖云原生、微服务、数据智能、安全合规全技术栈。</p>
+</article>
+<article class="intro-card intro-card-3">
+<div class="intro-card-icon">🤝</div>
+<h4>长期陪伴成长</h4>
+<p>不只是项目交付，更是长期技术伙伴。从运维支持到持续优化，伴您穿越数字化每一个阶段。</p>
+</article>
+</div>
+</div>
+</div>
+</section>
+
+<!-- ========== SERVICES ========== -->
+<section class="section" id="services">
+<div class="container">
+<div class="section-header">
+<div class="section-eyebrow"><span class="section-eyebrow-line"></span>核心服务<span class="section-eyebrow-line"></span></div>
+<h2 class="section-title">全方位技术服务体系</h2>
+<p class="section-subtitle">从战略咨询到技术落地，从建设到运维，华睿提供覆盖企业数字化全生命周期的专业服务。</p>
+</div>
+<div class="services-magazine">
+<div class="services-main-col">
+<article class="services-feature">
+<div class="services-feature-icon">☁️</div>
+<div>
+<h3>云计算与架构转型</h3>
+<p>基于云原生理念，为企业设计高可用、弹性伸缩的IT架构。提供公有云、私有云、混合云多场景解决方案，涵盖云迁移、云原生改造、容器化部署、多云管理等核心服务。累计完成云迁移项目超过二百余个，平均为客户降低30%基础设施成本。</p>
+<div class="services-feature-tags">
+<span class="services-tag">云原生改造</span>
+<span class="services-tag">微服务架构</span>
+<span class="services-tag">DevOps体系</span>
+<span class="services-tag">多云管理</span>
+<span class="services-tag">容器编排</span>
+</div>
+</div>
+</article>
+<article class="services-feature">
+<div class="services-feature-icon">🔒</div>
+<div>
+<h3>网络安全与合规</h3>
+<p>构建全方位网络安全防护体系，覆盖边界安全、主机安全、应用安全、数据安全全层级。同时提供等级保护合规咨询、数据安全治理、安全运营中心建设等合规相关服务，已帮助数十家金融机构通过等保三级认证。</p>
+<div class="services-feature-tags">
+<span class="services-tag">等保合规</span>
+<span class="services-tag">渗透测试</span>
+<span class="services-tag">安全运营</span>
+<span class="services-tag">数据加密</span>
+</div>
+</div>
+</article>
+<article class="services-feature">
+<div class="services-feature-icon">📊</div>
+<div>
+<h3>大数据与人工智能</h3>
+<p>帮助企业盘活数据资产，构建智能化数据平台。提供数据采集与治理、数据仓库与湖仓一体建设、高级分析与机器学习平台搭建、AI模型定制开发与部署等端到端数据智能服务。已为制造、医疗、金融领域客户落地数十个数据智能项目。</p>
+<div class="services-feature-tags">
+<span class="services-tag">数据中台</span>
+<span class="services-tag">机器学习</span>
+<span class="services-tag">知识图谱</span>
+<span class="services-tag">智能决策</span>
+</div>
+</div>
+</article>
+</div>
+<div class="services-list-col">
+<article class="services-side-card">
+<div class="services-side-icon">🏗️</div>
+<h4>企业应用开发与集成</h4>
+<p>基于低代码平台与敏捷开发方法，快速交付高质量企业应用。SAP、Oracle等主流ERP系统集成，专业接口开发，前后端分离架构设计。</p>
+</article>
+<article class="services-side-card">
+<div class="services-side-icon">📱</div>
+<h4>移动应用开发</h4>
+<p>原生开发与跨平台框架并举，为企业打造安全、稳定、易用的移动办公与业务应用。iOS、Android、鸿蒙多端覆盖。</p>
+</article>
+<article class="services-side-card">
+<div class="services-side-icon">🖥️</div>
+<h4>IT运维与智能监控</h4>
+<p>7×24小时专业运维服务，搭配自研智能运维平台，实现故障预警、自动处理、业务连续性保障。平均故障响应时间小于5分钟。</p>
+</article>
+<article class="services-side-card">
+<div class="services-side-icon">🎓</div>
+<h4>技术培训与人才服务</h4>
+<p>覆盖云计算、大数据、安全、开发等方向的实战型技术培训。同时提供IT岗位外包与人才派遣服务。</p>
+</article>
+<article class="services-side-card">
+<div class="services-side-icon">🌐</div>
+<h4>网络与基础设施</h4>
+<p>企业级网络架构设计、数据中心建设、广域网优化、SD-WAN部署等基础设施全栈服务。</p>
+</article>
+</div>
+</div>
+</div>
+</section>
+
+<!-- ========== ABOUT / STORY ========== -->
+<section class="section section-alt" id="about">
+<div class="container">
+<div class="about-magazine">
+<div class="about-quote">
+<blockquote>技术真正的价值，不在于它本身有多先进，而在于它能为客户的业务创造多少真实的增长。</blockquote>
+<cite>—— 华睿信息科技创始人兼首席执行官</cite>
+</div>
+<div class="about-text">
+<h2>十八年专注，<br>与企业共成长</h2>
+<p>华睿信息科技成立于二零零六年，总部位于北京，在上海、深圳、广州、成都、武汉、西安设有七个区域交付中心，业务覆盖全国三十余个省市自治区。公司汇聚了三百余名具备国际认证的专业技术人才，其中包括二十余名PMP认证项目经理、十五名云计算架构师以及十余名数据安全专家。</p>
+<p>我们深知每个行业都有其独特的业务逻辑和技术需求。因此，华睿坚持"行业深耕、技术领先"的发展战略，在金融科技、智能制造、智慧医疗、智慧零售等核心领域构建了深厚的行业知识积累和最佳实践沉淀。通过持续的技术创新与服务优化，我们已帮助三百八十余家国内外企业完成数字化转型，赢得了业界的广泛认可。</p>
+<p>作为国家高新技术企业，华睿持续加大研发投入，目前已拥有四十余项自主软件著作权和多项技术专利，并积极参与多项国家信息技术标准的制定工作。公司与华为、阿里云、腾讯云、AWS、微软Azure等主流厂商建立了深度战略合作关系，是国内领先的综合性IT服务提供商。</p>
+<div class="about-highlights">
+<div class="about-highlight">
+<div class="about-highlight-num count-up" data-target="7">0</div>
+<div class="about-highlight-label">区域交付中心</div>
+</div>
+<div class="about-highlight">
+<div class="about-highlight-num count-up" data-target="40">0<span>+</span></div>
+<div class="about-highlight-label">自主软件著作权</div>
+</div>
+<div class="about-highlight">
+<div class="about-highlight-num count-up" data-target="30">0<span>+</span></div>
+<div class="about-highlight-label">业务覆盖省市</div>
+</div>
+<div class="about-highlight">
+<div class="about-highlight-num count-up" data-target="15">0</div>
+<div class="about-highlight-label">头部厂商合作</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- ========== WHY CHOOSE US ========== -->
+<section class="section" id="why">
+<div class="container">
+<div class="section-header">
+<div class="section-eyebrow"><span class="section-eyebrow-line"></span>核心优势<span class="section-eyebrow-line"></span></div>
+<h2 class="section-title">为什么选择华睿</h2>
+<p class="section-subtitle">专业能力、行业积淀与服务质量三重保障，让您的数字化转型无后顾之忧。</p>
+</div>
+<div class="why-grid">
+<article class="why-card">
+<div class="why-icon">🎯</div>
+<h3>行业深度积累</h3>
+<p>深耕金融、制造、医疗、零售等重点行业十余年，深刻理解各行业业务场景与合规要求，能够提供真正切合业务实际的解决方案，而非通用模板的简单套用。</p>
+</article>
+<article class="why-card">
+<div class="why-icon">🏆</div>
+<h3>顶级资质认证</h3>
+<p>持有ISO 27001信息安全管理体系、ISO 9001质量管理体认、CMMI 5级软件成熟度等多项国际权威认证，是国家高新技术企业、信息系统集成及服务一级资质企业。</p>
+</article>
+<article class="why-card">
+<div class="why-icon">👥</div>
+<h3>专业人才团队</h3>
+<p>三百余名各领域资深专家，包括云计算架构师、大数据工程师、安全顾问、PMP项目经理等核心人才。核心团队成员平均行业经验超过十年，技术视野开阔，实战经验丰富。</p>
+</article>
+<article class="why-card">
+<div class="why-icon">🤝</div>
+<h3>生态合作网络</h3>
+<p>与华为、阿里、腾讯、AWS、Azure等主流厂商建立深度合作关系，能够根据客户需求灵活选择最优技术路径，而非受限于单一厂商的产品体系。</p>
+</article>
+<article class="why-card">
+<div class="why-icon">🛡️</div>
+<h3>安全合规保障</h3>
+<p>自建安全运营中心，提供7×24小时安全监控与应急响应。已帮助数十家金融机构通过等保三级认证，具备完善的数据安全和隐私保护体系。</p>
+</article>
+<article class="why-card">
+<div class="why-icon">📈</div>
+<h3>持续价值创造</h3>
+<p>不止步于项目交付，更关注长期运营价值。通过定期技术回顾、持续优化建议和专属客户成功团队，确保每一分技术投资持续产生业务回报。</p>
+</article>
+</div>
+</div>
+</section>
+
+<!-- ========== CLIENTS MARQUEE ========== -->
+<section class="clients-bar">
+<div class="clients-label">受惠企业・战略伙伴</div>
+<div style="overflow:hidden;max-width:1320px;margin:0 auto;padding:0 2rem">
+<div class="clients-track">
+<span class="client-logo">中国工商银行</span>
+<span class="client-logo">中国石油</span>
+<span class="client-logo">国家电网</span>
+<span class="client-logo">中国建筑</span>
+<span class="client-logo">招商银行</span>
+<span class="client-logo">平安集团</span>
+<span class="client-logo">华润集团</span>
+<span class="client-logo">中国中车</span>
+<span class="client-logo">海尔集团</span>
+<span class="client-logo">美的集团</span>
+<span class="client-logo">京东科技</span>
+<span class="client-logo">拼多多</span>
+<span class="client-logo">中国工商银行</span>
+<span class="client-logo">中国石油</span>
+<span class="client-logo">国家电网</span>
+<span class="client-logo">中国建筑</span>
+<span class="client-logo">招商银行</span>
+<span class="client-logo">平安集团</span>
+<span class="client-logo">华润集团</span>
+<span class="client-logo">中国中车</span>
+<span class="client-logo">海尔集团</span>
+<span class="client-logo">美的集团</span>
+<span class="client-logo">京东科技</span>
+<span class="client-logo">拼多多</span>
+</div>
+</div>
+</section>
+
+<!-- ========== CTA ========== -->
+<section class="cta-section" id="contact">
+<div class="container">
+<div class="cta-content">
+<h2>开启您的数字化增长之旅</h2>
+<p>无论您处于数字化转型的哪个阶段，华睿信息科技都能为您提供专业支持。立即预约免费业务咨询，获取专属转型方案。</p>
+<div class="cta-actions">
+<a href="tel:4008886688" class="btn btn-primary">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg>
+致电我们：400-888-6688
+</a>
+<a href="mailto:contact@huaruitech.com" class="btn btn-secondary">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+发送邮件
+</a>
+</div>
+</div>
+</div>
+</section>
+
+<!-- ========== FOOTER ========== -->
+<footer class="site-footer">
+<div class="container">
+<div class="footer-grid">
+<div class="footer-brand">
+<div class="logo">
+<div class="logo-icon">华</div>
+<div>
+<div class="logo-text">华睿信息科技</div>
+<div class="logo-sub">Huarui InfoTech Co., Ltd.</div>
+</div>
+</div>
+<p>华睿信息科技是国内领先的IT咨询与技术服务商，专注于企业数字化转型、云计算、大数据、网络安全等领域，为客户提供全栈式技术解决方案与服务支持。</p>
+</div>
+<div class="footer-col">
+<h4>核心服务</h4>
+<ul>
+<li><a href="#">数字化转型咨询</a></li>
+<li><a href="#">云计算解决方案</a></li>
+<li><a href="#">网络安全服务</a></li>
+<li><a href="#">大数据与AI</a></li>
+<li><a href="#">系统集成服务</a></li>
+<li><a href="#">IT运维管理</a></li>
+<li><a href="#">技术培训服务</a></li>
+</ul>
+</div>
+<div class="footer-col">
+<h4>行业方案</h4>
+<ul>
+<li><a href="#">金融科技</a></li>
+<li><a href="#">智能制造</a></li>
+<li><a href="#">智慧医疗</a></li>
+<li><a href="#">智慧零售</a></li>
+<li><a href="#">智慧城市</a></li>
+<li><a href="#">能源电力</a></li>
+</ul>
+</div>
+<div class="footer-col">
+<h4>联系我们</h4>
+<ul>
+<li><a href="#">北京市海淀区中关村大街1号</a></li>
+<li><a href="tel:4008886688">电话：400-888-6688</a></li>
+<li><a href="mailto:contact@huaruitech.com">邮箱：contact@huaruitech.com</a></li>
+<li><a href="#">商务合作</a></li>
+<li><a href="#">加入我们</a></li>
+<li><a href="#">隐私政策</a></li>
+</ul>
+</div>
+</div>
+<div class="footer-bottom">
+<span>© 2026 华睿信息科技有限公司 版权所有 | 京ICP备XXXXXXXX号</span>
+<span>技术与支持：华睿信息科技技术部</span>
+</div>
+</div>
+</footer>
+
+<!-- ========== SCRIPTS ========== -->
+<script>
+// Mobile nav toggle
+document.getElementById('mobile-toggle').addEventListener('click',function(){
+document.getElementById('main-nav').classList.toggle('open');
+this.setAttribute('aria-expanded',document.getElementById('main-nav').classList.contains('open'));
+});
+// Close mobile nav on link click
+document.querySelectorAll('.nav a').forEach(function(link){
+link.addEventListener('click',function(){
+document.getElementById('main-nav').classList.remove('open');
+});
+});
+// Header scroll effect
+window.addEventListener('scroll',function(){
+var header=document.getElementById('site-header');
+if(window.scrollY>60){
+header.style.background='rgba(10,22,40,0.98)';
+header.style.boxShadow='0 2px 20px rgba(0,0,0,0.25)';
+}else{
+header.style.background='rgba(10,22,40,0.95)';
+header.style.boxShadow='none';
+}
+});
+// Count-up animation
+function animateCountUp(el){
+var target=parseInt(el.getAttribute('data-target'));
+if(!target)return;
+var suffix=el.querySelector('span')?el.querySelector('span').textContent:'';
+var duration=2000;
+var start=0;
+var step=target/(duration/16);
+function update(){
+start+=step;
+if(start>=target){
+el.innerHTML=target+suffix;
+return;
+}
+el.innerHTML=Math.floor(start)+suffix;
+requestAnimationFrame(update);
+}
+update();
+}
+var observer=new IntersectionObserver(function(entries){
+entries.forEach(function(entry){
+if(entry.isIntersecting){
+var num=entry.target.querySelector('.count-up');
+if(num&&!num.classList.contains('counted')){
+num.classList.add('counted');
+animateCountUp(num);
+}
+var statNums=entry.target.querySelectorAll('.hero-stat .count-up');
+statNums.forEach(function(n){
+if(!n.classList.contains('counted')){
+n.classList.add('counted');
+animateCountUp(n);
+}
+});
+}
+});
+},{threshold:0.3});
+document.querySelectorAll('.about-highlight').forEach(function(el){observer.observe(el);});
+document.querySelectorAll('.hero-stats').forEach(function(el){observer.observe(el);});
+// Smooth scroll for anchor links
+document.querySelectorAll('a[href^="#"]').forEach(function(anchor){
+anchor.addEventListener('click',function(e){
+e.preventDefault();
+var target=document.querySelector(this.getAttribute('href'));
+if(target){
+target.scrollIntoView({behavior:'smooth',block:'start'});
+}
+});
+});
+</script>
+</body>
+</html>

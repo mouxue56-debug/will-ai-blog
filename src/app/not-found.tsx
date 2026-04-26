@@ -1,12 +1,12 @@
-import { getLocale, getTranslations } from 'next-intl/server';
-import { Link } from '@/i18n/navigation';
+import Link from 'next/link';
 
-export default async function NotFound() {
-  const locale = await getLocale();
-  const t = await getTranslations({ locale, namespace: 'notFound' });
+export const metadata = {
+  title: '404 | Page Not Found',
+};
 
+export default function NotFound() {
   return (
-    <html lang={locale}>
+    <html lang="zh">
       <body className="min-h-screen flex items-center justify-center bg-background text-foreground">
         <div className="text-center px-6 py-20 max-w-md mx-auto relative">
           <div className="absolute inset-0 -z-10 pointer-events-none">
@@ -24,22 +24,22 @@ export default async function NotFound() {
           <h1 className="text-6xl sm:text-7xl font-bold bg-gradient-to-r from-brand-mint via-brand-cyan to-brand-taro bg-clip-text text-transparent mb-4">
             404
           </h1>
-          <h2 className="text-xl sm:text-2xl font-bold mb-2">{t('title')}</h2>
-          <p className="text-muted-foreground mb-2">{t('subtitle')}</p>
-          <p className="text-sm text-muted-foreground/70 mb-8">{t('description')}</p>
+          <h2 className="text-xl sm:text-2xl font-bold mb-2">页面未找到</h2>
+          <p className="text-muted-foreground mb-2">这个页面好像被猫咪藏起来了</p>
+          <p className="text-sm text-muted-foreground/70 mb-8">试试回到首页或者浏览博客文章</p>
 
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Link
               href="/"
               className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-brand-mint/15 text-brand-mint font-medium text-sm hover:bg-brand-mint/25 transition-colors border border-brand-mint/20 shadow-[0_0_20px_rgba(94,234,212,0.15)]"
             >
-              🏠 {t('home')}
+              🏠 回到首页
             </Link>
             <Link
               href="/blog"
               className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full border border-border text-muted-foreground font-medium text-sm hover:bg-muted transition-colors"
             >
-              📝 {t('blog')}
+              📝 浏览博客
             </Link>
           </div>
 
