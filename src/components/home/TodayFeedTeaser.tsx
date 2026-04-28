@@ -30,12 +30,16 @@ function title(row: Row, loc: Locale): string {
 }
 
 export async function TodayFeedTeaser({ locale }: { locale: Locale }) {
-  const { data } = await supabaseAdmin
+  const { data, error } = await supabaseAdmin
     .from('daily_reports')
     .select('id, title, title_zh, title_ja, title_en, topic_type, published_at')
     .in('topic_type', ['ai', 'economy', 'github', 'social', 'japan_cn', 'politics'])
     .order('published_at', { ascending: false })
     .limit(4);
+
+  if (error) {
+    console.error('[TodayFeedTeaser] Supabase query failed:', error.message);
+  }
 
   const rows = (data ?? []) as Row[];
   if (rows.length === 0) return null;

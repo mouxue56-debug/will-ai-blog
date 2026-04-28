@@ -50,6 +50,7 @@ export async function fetchNews(locale: string, limit = 20): Promise<SupabaseNew
     .limit(limit);
   
   if (error) {
+    console.error('[fetchNews] Supabase query failed:', error.message);
     return [];
   }
   return data || [];
@@ -63,7 +64,10 @@ export async function fetchNewsById(id: string, _locale: string): Promise<Supaba
     .select('*')
     .eq('id', id)
     .single();
-  
+
+  if (error && error.code !== 'PGRST116') {
+    console.error('[fetchNewsById] Supabase query failed:', error.message);
+  }
   if (error || !data) return null;
   return data;
 }
