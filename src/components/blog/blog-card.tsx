@@ -47,6 +47,15 @@ const BORDER_BEAM_COLORS: Record<BlogCategory, { from: string; to: string }> = {
   learning: { from: '#00d4ff', to: '#5ef0c8' },
 };
 
+const CATEGORY_GLOW: Record<BlogCategory, string> = {
+  ai: 'rgba(56,189,248,0.12)',
+  tech: 'rgba(94,234,212,0.12)',
+  life: 'rgba(251,191,36,0.12)',
+  cats: 'rgba(252,211,77,0.12)',
+  business: 'rgba(192,132,252,0.12)',
+  learning: 'rgba(0,212,255,0.12)',
+};
+
 interface BlogCardProps {
   post: BlogPost;
   isLatest?: boolean;
@@ -76,9 +85,11 @@ export function BlogCard({ post, isLatest = false, index = 0 }: BlogCardProps) {
       whileHover={{ y: -6, scale: 1.01, transition: { duration: 0.2, ease: [0.16, 1, 0.3, 1] } }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
+      className="transition-shadow duration-300"
+      style={{ boxShadow: isHovered ? `0 8px 30px ${CATEGORY_GLOW[post.category]}` : undefined }}
     >
       <Link href={`/blog/${post.slug}`}>
-        <SpotlightCard className="p-0 glass-card border-white/[0.06] bg-card/80 dark:bg-white/[0.03] transition-shadow duration-300 hover:shadow-[0_8px_30px_rgba(0,212,255,0.07)]">
+        <SpotlightCard className="p-0 glass-card border-white/[0.06] bg-card/80 dark:bg-white/[0.03]">
           <article className="group relative flex flex-col overflow-hidden">
             {/* BorderBeam for latest post - 始终显示 */}
             {isLatest && (
