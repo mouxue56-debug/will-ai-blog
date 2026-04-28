@@ -1,5 +1,6 @@
 'use client';
 
+import { ExternalLink } from 'lucide-react';
 import { Link } from '@/i18n/navigation';
 import { useTranslations } from 'next-intl';
 
@@ -39,7 +40,7 @@ export function Footer() {
   const t = useTranslations('footer');
 
   return (
-    <footer className="pb-20 md:pb-0" aria-label={t('sites_title')}>
+    <footer className="pb-20 md:pb-0">
       <div className="mx-auto max-w-5xl px-4 sm:px-6">
         <div className="h-px bg-gradient-to-r from-transparent via-brand-mint/60 to-brand-cyan/60 opacity-50" />
       </div>
@@ -64,10 +65,11 @@ export function Footer() {
                   <Tag
                     key={link.href}
                     href={link.href}
-                    className="hover:text-brand-mint transition-colors"
+                    className="inline-flex items-center gap-1 hover:text-brand-mint transition-colors"
                     {...externalProps}
                   >
                     {link.labelKey ? t(link.labelKey) : link.label}
+                    {!isInternal && <ExternalLink className="h-3 w-3 opacity-50" aria-hidden="true" />}
                   </Tag>
                 );
               })}
