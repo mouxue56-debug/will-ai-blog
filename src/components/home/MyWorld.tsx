@@ -71,10 +71,10 @@ export function MyWorld() {
                   <motion.div
                     whileHover={{ scale: 1.04, y: -2 }}
                     transition={{ type: 'spring', stiffness: 400, damping: 25 }}
-                    className={`glass-card flex flex-col items-center justify-center gap-2 p-4 sm:gap-3 sm:p-8 cursor-pointer bg-card/60 hover:bg-card/80 border border-white/[0.08] hover:border-brand-cyan/30 transition-all duration-300`}
+                    className={`group glass-card flex flex-col items-center justify-center gap-2 p-4 sm:gap-3 sm:p-8 cursor-pointer bg-card/60 hover:bg-card/80 border border-white/[0.08] hover:border-brand-cyan/30 transition-all duration-300`}
                   >
                     <div
-                      className={`w-10 h-10 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center ${card.color} hover:scale-110 transition-transform duration-300`}
+                      className={`w-10 h-10 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center ${card.color} group-hover:scale-110 transition-transform duration-300`}
                       style={{ background: card.glowColor }}
                     >
                       <Icon className="h-5 w-5 sm:h-6 sm:w-6" />
