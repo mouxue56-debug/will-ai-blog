@@ -37,6 +37,7 @@ function ProfileHero() {
           alt="Will"
           width={128}
           height={128}
+          sizes="(max-width: 640px) 112px, 128px"
           className="w-full h-full object-cover object-top"
         />
       </div>
