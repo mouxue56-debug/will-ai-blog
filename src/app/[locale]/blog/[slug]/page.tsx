@@ -30,20 +30,22 @@ function slugifyHeading(text: string) {
 }
 
 function extractHeadings(content: string) {
-  const headingRegex = /^(#{2,3})\s+(.+)$/gm;
   const headings: Array<{ id: string; text: string; level: 2 | 3 }> = [];
-  let match: RegExpExecArray | null;
+  let inCodeBlock = false;
 
-  while ((match = headingRegex.exec(content)) !== null) {
-    const level = match[1].length;
-    const text = match[2].trim();
+  for (const line of content.split('\n')) {
+    // Toggle fenced code block state (``` or ~~~)
+    if (/^(`{3,}|~{3,})/.test(line)) {
+      inCodeBlock = !inCodeBlock;
+      continue;
+    }
+    if (inCodeBlock) continue;
 
-    if (level === 2 || level === 3) {
-      headings.push({
-        id: slugifyHeading(text),
-        text,
-        level,
-      });
+    const match = /^(#{2,3})\s+(.+)$/.exec(line);
+    if (match) {
+      const level = match[1].length as 2 | 3;
+      const text = match[2].trim();
+      headings.push({ id: slugifyHeading(text), text, level });
     }
   }
 
