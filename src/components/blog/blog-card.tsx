@@ -109,7 +109,7 @@ export function BlogCard({ post, isLatest = false, index = 0 }: BlogCardProps) {
             {(post.coverImage && !imageError) ? (
               <motion.div
                 className="relative w-full aspect-video overflow-hidden"
-                whileHover={{ scale: 1.04 }}
+                animate={{ scale: isHovered ? 1.04 : 1 }}
                 transition={{ duration: 0.3 }}
               >
                 <Image
@@ -138,7 +138,7 @@ export function BlogCard({ post, isLatest = false, index = 0 }: BlogCardProps) {
                   'relative flex h-40 items-center justify-center bg-gradient-to-br overflow-hidden',
                   COVER_GRADIENTS[post.category]
                 )}
-                whileHover={{ scale: 1.04 }}
+                animate={{ scale: isHovered ? 1.04 : 1 }}
                 transition={{ duration: 0.3 }}
               >
                 <motion.span 
