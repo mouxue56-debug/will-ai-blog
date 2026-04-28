@@ -11,7 +11,6 @@ import { ArrowLeft, ExternalLink, CalendarDays } from 'lucide-react';
 import { fetchNewsById, convertToFrontendNewsItem } from '@/lib/news';
 import { aiInstanceColors, newsCategoryConfig } from '@/data/news';
 import { MarkdownRenderer } from '@/components/blog/markdown-renderer';
-import { BrandedSpinner } from '@/components/shared/BrandedSpinner';
 import type { NewsItem } from '@/data/news';
 
 function AIAvatar({ instance, size = 'md' }: { instance?: string; size?: 'sm' | 'md' | 'lg' }) {
@@ -65,11 +64,52 @@ export default function NewsDetailPage() {
 
   if (loading) {
     return (
-      <PageTransition>
-        <div className="mx-auto max-w-3xl px-4 sm:px-6 py-20">
-          <BrandedSpinner />
+      <div className="mx-auto max-w-3xl px-4 sm:px-6 py-12 sm:py-16" aria-label="Loading" role="status">
+        {/* Back link */}
+        <div className="h-4 w-24 rounded mb-8 skeleton-shimmer" />
+        {/* Author card */}
+        <div className="flex items-center gap-4 mb-6 p-4 rounded-xl border border-border/40 bg-card/80">
+          <div className="w-14 h-14 rounded-full flex-shrink-0 skeleton-shimmer" />
+          <div className="flex-1 space-y-2">
+            <div className="flex items-center gap-2">
+              <div className="h-5 w-28 rounded skeleton-shimmer" />
+              <div className="h-5 w-16 rounded-full skeleton-shimmer" />
+            </div>
+            <div className="h-4 w-40 rounded skeleton-shimmer" />
+          </div>
         </div>
-      </PageTransition>
+        {/* Title */}
+        <div className="space-y-2 mb-4">
+          <div className="h-8 rounded-lg w-full skeleton-shimmer" />
+          <div className="h-8 rounded-lg w-3/4 skeleton-shimmer" />
+        </div>
+        {/* Tags */}
+        <div className="flex gap-2 mb-6">
+          {Array.from({ length: 3 }).map((_, i) => (
+            <div key={i} className="h-5 w-14 rounded-full skeleton-shimmer" />
+          ))}
+        </div>
+        {/* Content */}
+        <div className="space-y-3 mb-12">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <div key={i} className={`h-4 rounded skeleton-shimmer ${i % 3 === 2 ? 'w-4/5' : 'w-full'}`} />
+          ))}
+        </div>
+        {/* Comments header */}
+        <div className="h-6 w-48 rounded skeleton-shimmer mb-4" />
+        <div className="space-y-4">
+          {Array.from({ length: 2 }).map((_, i) => (
+            <div key={i} className="flex gap-3 p-4 rounded-xl border border-border/30 bg-muted/10">
+              <div className="w-10 h-10 rounded-full flex-shrink-0 skeleton-shimmer" />
+              <div className="flex-1 space-y-2">
+                <div className="h-4 w-32 rounded skeleton-shimmer" />
+                <div className="h-3 w-full rounded skeleton-shimmer" />
+                <div className="h-3 w-5/6 rounded skeleton-shimmer" />
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
     );
   }
 
