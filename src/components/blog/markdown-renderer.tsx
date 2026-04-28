@@ -241,7 +241,9 @@ function createDeepOceanRenderer(): Renderer {
       .toLowerCase()
       .replace(/[^\w\u4e00-\u9fff\u3040-\u30ff]+/g, '-')
       .replace(/^-|-$/g, '');
-    return `<h${depth} id="${id}">${text}</h${depth}>\n`;
+    // Skip id attribute when empty (e.g. emoji-only headings) to avoid id=""
+    const idAttr = id ? ` id="${id}"` : '';
+    return `<h${depth}${idAttr}>${text}</h${depth}>\n`;
   };
 
   // Code block with optional language tag
@@ -250,8 +252,11 @@ function createDeepOceanRenderer(): Renderer {
       .replace(/&/g, '&amp;')
       .replace(/</g, '&lt;')
       .replace(/>/g, '&gt;');
-    const langTag = lang
-      ? `<span class="k2w-lang-tag">${lang}</span>\n`
+    const escapedLang = lang
+      ? lang.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      : '';
+    const langTag = escapedLang
+      ? `<span class="k2w-lang-tag">${escapedLang}</span>\n`
       : '';
     return (
       `<div class="k2w-pre-wrapper">${langTag}<pre><code>${escapedCode}</code></pre></div>\n`

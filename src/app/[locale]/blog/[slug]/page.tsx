@@ -45,7 +45,9 @@ function extractHeadings(content: string) {
     if (match) {
       const level = match[1].length as 2 | 3;
       const text = match[2].trim();
-      headings.push({ id: slugifyHeading(text), text, level });
+      const id = slugifyHeading(text);
+      // Skip headings that produce an empty id (e.g. emoji-only) — they have no DOM anchor
+      if (id) headings.push({ id, text, level });
     }
   }
 
