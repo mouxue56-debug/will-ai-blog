@@ -35,6 +35,7 @@ export function CategoryFilter({ selected, onSelect }: CategoryFilterProps) {
     <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
       <button
         onClick={() => onSelect(null)}
+        aria-pressed={selected === null}
         className={cn(
           'shrink-0 rounded-full px-4 py-1.5 text-sm font-semibold border transition-all duration-200',
           selected === null
@@ -48,6 +49,7 @@ export function CategoryFilter({ selected, onSelect }: CategoryFilterProps) {
         <button
           key={cat}
           onClick={() => onSelect(cat === selected ? null : cat)}
+          aria-pressed={selected === cat}
           className={cn(
             'shrink-0 rounded-full px-4 py-1.5 text-sm font-semibold border transition-all duration-200',
             selected === cat ? CATEGORY_ACTIVE[cat] : CATEGORY_BG[cat]

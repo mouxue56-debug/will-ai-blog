@@ -240,6 +240,7 @@ export function DailyTopicsAccordion({ topics }: DailyTopicsAccordionProps) {
               {/* Card header - always visible */}
               <button
                 onClick={() => handleToggle(index)}
+                aria-expanded={isOpen}
                 className="w-full px-4 py-3 hover:bg-gray-100 dark:hover:bg-white/5 transition-colors text-left"
               >
                 {/* Top row: icon + category + date + comment count + arrow */}
