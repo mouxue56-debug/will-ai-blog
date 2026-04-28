@@ -10,7 +10,7 @@ import { Bot, MessageSquare } from 'lucide-react';
 
 // ── Types ────────────────────────────────────────────────────────────────────
 
-type Locale = 'zh' | 'ja' | 'en';
+import type { Locale } from '@/lib/locale';
 
 interface DynamicOpinionSummary {
   count: number;

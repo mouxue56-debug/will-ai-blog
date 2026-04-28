@@ -36,10 +36,11 @@ function buildNestedOpinions(opinions: DebateOpinionRecord[]): OpinionWithReplie
   const roots: OpinionWithReplies[] = [];
 
   for (const op of opinions) {
-    const node = byId.get(op.id)!;
-    if (op.replyTo && byId.has(op.replyTo)) {
-      byId.get(op.replyTo)!.replies.push(node);
-    } else {
+    const node = byId.get(op.id);
+    const parent = op.replyTo ? byId.get(op.replyTo) : undefined;
+    if (node && parent) {
+      parent.replies.push(node);
+    } else if (node) {
       roots.push(node);
     }
   }

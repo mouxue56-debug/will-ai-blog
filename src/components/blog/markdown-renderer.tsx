@@ -14,6 +14,14 @@ const DEEP_OCEAN_CSS = `
 }
 
 /* Headings */
+.k2w-prose h1,
+.k2w-prose h2,
+.k2w-prose h3,
+.k2w-prose h4,
+.k2w-prose h5,
+.k2w-prose h6 {
+  scroll-margin-top: 6rem;
+}
 .k2w-prose h1 {
   font-size: 2rem;
   font-weight: 700;
@@ -175,10 +183,16 @@ const DEEP_OCEAN_CSS = `
 }
 
 /* Tables */
+.k2w-table-wrapper {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin: 1.5rem 0;
+  border-radius: 12px;
+}
 .k2w-prose table {
   width: 100%;
   border-collapse: collapse;
-  margin: 1.5rem 0;
+  margin: 0;
   font-size: 0.95rem;
 }
 .k2w-prose thead {
@@ -225,9 +239,17 @@ const DEEP_OCEAN_CSS = `
 function createDeepOceanRenderer(): Renderer {
   const renderer = new Renderer();
 
-  // h1-h6 handled by CSS, renderer just adds no extra wrapper
+  // h1-h6 with auto-generated id for StickyNav anchor links
   renderer.heading = ({ text, depth }: { text: string; depth: number }) => {
-    return `<h${depth}>${text}</h${depth}>\n`;
+    // Strip HTML tags to get plain text for the id
+    const plain = text.replace(/<[^>]+>/g, '').trim();
+    const id = plain
+      .toLowerCase()
+      .replace(/[^\w\u4e00-\u9fff\u3040-\u30ff]+/g, '-')
+      .replace(/^-|-$/g, '');
+    // Skip id attribute when empty (e.g. emoji-only headings) to avoid id=""
+    const idAttr = id ? ` id="${id}"` : '';
+    return `<h${depth}${idAttr}>${text}</h${depth}>\n`;
   };
 
   // Code block with optional language tag
@@ -236,8 +258,11 @@ function createDeepOceanRenderer(): Renderer {
       .replace(/&/g, '&amp;')
       .replace(/</g, '&lt;')
       .replace(/>/g, '&gt;');
-    const langTag = lang
-      ? `<span class="k2w-lang-tag">${lang}</span>\n`
+    const escapedLang = lang
+      ? lang.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      : '';
+    const langTag = escapedLang
+      ? `<span class="k2w-lang-tag">${escapedLang}</span>\n`
       : '';
     return (
       `<div class="k2w-pre-wrapper">${langTag}<pre><code>${escapedCode}</code></pre></div>\n`
@@ -281,7 +306,9 @@ interface MarkdownRendererProps {
 export function MarkdownRenderer({ content }: MarkdownRendererProps) {
   const html = useMemo(() => {
     if (!content) return '';
-    const parsed = deepOceanMarked.parse(content) as string;
+    const parsed = (deepOceanMarked.parse(content) as string)
+      .replace(/<table>/g, '<div class="k2w-table-wrapper"><table>')
+      .replace(/<\/table>/g, '</table></div>');
     return `<style>${DEEP_OCEAN_CSS}</style>${parsed}`;
   }, [content]);
 

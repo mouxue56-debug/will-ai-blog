@@ -13,7 +13,7 @@ export function SpotlightCard({
   children,
   className,
   as: Component = "div",
-}: SpotlightCardProps & Record<string, unknown>) {
+}: SpotlightCardProps) {
   const divRef = useRef<HTMLDivElement>(null);
   const spotlightRef = useRef<HTMLDivElement>(null);
   const borderRef = useRef<HTMLDivElement>(null);

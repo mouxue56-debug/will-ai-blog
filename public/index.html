@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BRIGHTMIND Learning Center — Ignite Your Potential</title>
+    <meta name="description" content="BRIGHTMIND Learning Center offers world-class education and professional training. Upskill with expert-led courses in technology, business, and creative arts.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* ========== CSS RESET ========== */
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        html {
+            scroll-behavior: smooth;
+            -webkit-text-size-adjust: 100%;
+        }
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background-color: var(--bg);
+            color: var(--black);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        img, picture, video, canvas, svg {
+            display: block;
+            max-width: 100%;
+        }
+        input, button, textarea, select {
+            font: inherit;
+        }
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+        ul, ol {
+            list-style: none;
+        }
+
+        /* ========== CSS VARIABLES ========== */
+        :root {
+            --bg: #F5F0E8;
+            --bg-alt: #EDE7D9;
+            --black: #1A1A1A;
+            --white: #FFFFFF;
+            --primary: #FF3D00;
+            --primary-dark: #CC3100;
+            --secondary: #0047FF;
+            --accent: #FFD600;
+            --accent-alt: #00E676;
+            --border: #1A1A1A;
+            --border-thick: 4px;
+            --border-heavy: 6px;
+            --border-brutal: 8px;
+            --shadow-brutal: 6px 6px 0px var(--black);
+            --shadow-brutal-lg: 10px 10px 0px var(--black);
+            --shadow-brutal-primary: 6px 6px 0px var(--primary-dark);
+            --font-main: 'Space Grotesk', sans-serif;
+            --font-mono: 'Space Mono', monospace;
+            --container: 1280px;
+            --nav-height: 80px;
+        }
+
+        /* ========== UTILITY ========== */
+        .container {
+            max-width: var(--container);
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+        .mono {
+            font-family: var(--font-mono);
+        }
+        .text-primary { color: var(--primary); }
+        .text-secondary { color: var(--secondary); }
+        .text-accent { color: var(--accent); }
+
+        /* ========== NAVIGATION ========== */
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: var(--nav-height);
+            background: var(--bg);
+            border-bottom: var(--border-heavy) solid var(--black);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+        }
+        .nav .container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+        }
+        .nav__logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            letter-spacing: -1px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .nav__logo-box {
+            background: var(--primary);
+            color: var(--white);
+            padding: 4px 10px;
+            border: var(--border-thick) solid var(--black);
+            font-family: var(--font-mono);
+            font-size: 1rem;
+            line-height: 1;
+        }
+        .nav__links {
+            display: flex;
+            align-items: center;
+            gap: 0;
+        }
+        .nav__link {
+            font-size: 1rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 10px 20px;
+            border-left: var(--border-thick) solid var(--black);
+            transition: background 0.15s, color 0.15s;
+            cursor: pointer;
+        }
+        .nav__link:last-child {
+            border-right: var(--border-thick) solid var(--black);
+        }
+        .nav__link:hover {
+            background: var(--black);
+            color: var(--white);
+        }
+        .nav__cta {
+            background: var(--primary);
+            color: var(--white);
+            font-weight: 700;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 12px 28px;
+            border: var(--border-thick) solid var(--black);
+            box-shadow: var(--shadow-brutal);
+            cursor: pointer;
+            transition: transform 0.1s, box-shadow 0.1s;
+            margin-left: 20px;
+        }
+        .nav__cta:hover {
+            transform: translate(3px, 3px);
+            box-shadow: 3px 3px 0px var(--black);
+        }
+        .nav__cta:active {
+            transform: translate(6px, 6px);
+            box-shadow: none;
+        }
+        .nav__hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            padding: 8px;
+            border: var(--border-thick) solid var(--black);
+            background: var(--white);
+        }
+        .nav__hamburger span {
+            display: block;
+            width: 28px;
+            height: 4px;
+            background: var(--black);
+        }
+
+        /* ========== HERO SECTION ========== */
+        .hero {
+            margin-top: var(--nav-height);
+            min-height: calc(100vh - var(--nav-height));
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            border-bottom: var(--border-heavy) solid var(--black);
+            position: relative;
+        }
+        .hero__left {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 60px 40px 60px 48px;
+            border-right: var(--border-heavy) solid var(--black);
+            position: relative;
+        }
+        .hero__tag {
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            background: var(--accent);
+            color: var(--black);
+            padding: 8px 16px;
+            border: var(--border-thick) solid var(--black);
+            display: inline-block;
+            margin-bottom: 28px;
+            box-shadow: var(--shadow-brutal);
+            font-weight: 700;
+        }
+        .hero__headline {
+            font-size: clamp(2.8rem, 5vw, 4.5rem);
+            font-weight: 700;
+            line-height: 1.05;
+            letter-spacing: -2px;
+            margin-bottom: 24px;
+        }
+        .hero__headline span {
+            background: var(--primary);
+            color: var(--white);
+            padding: 4px 12px;
+            display: inline-block;
+            border: var(--border-thick) solid var(--black);
+            transform: rotate(-1deg);
+        }
+        .hero__sub {
+            font-size: 1.25rem;
+            line-height: 1.6;
+            color: #444;
+            margin-bottom: 40px;
+            max-width: 520px;
+        }
+        .hero__actions {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+        .btn-primary {
+            background: var(--primary);
+            color: var(--white);
+            font-size: 1.15rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 18px 40px;
+            border: var(--border-thick) solid var(--black);
+            box-shadow: var(--shadow-brutal-primary);
+            cursor: pointer;
+            transition: transform 0.1s, box-shadow 0.1s;
+            font-family: var(--font-main);
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .btn-primary:hover {
+            transform: translate(3px, 3px);
+            box-shadow: 3px 3px 0px var(--primary-dark);
+        }
+        .btn-primary:active {
+            transform: translate(6px, 6px);
+            box-shadow: none;
+        }
+        .btn-secondary {
+            background: var(--white);
+            color: var(--black);
+            font-size: 1.15rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 18px 40px;
+            border: var(--border-thick) solid var(--black);
+            box-shadow: var(--shadow-brutal);
+            cursor: pointer;
+            transition: transform 0.1s, box-shadow 0.1s;
+            font-family: var(--font-main);
+        }
+        .btn-secondary:hover {
+            transform: translate(3px, 3px);
+            box-shadow: 3px 3px 0px var(--black);
+        }
+        .btn-secondary:active {
+            transform: translate(6px, 6px);
+            box-shadow: none;
+        }
+        .hero__right {
+            background: var(--primary);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 60px 40px;
+            position: relative;
+            overflow: hidden;
+        }
+        .hero__stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            width: 100%;
+            max-width: 440px;
+        }
+        .hero__stat {
+            background: var(--white);
+            border: var(--border-thick) solid var(--black);
+            padding: 24px 20px;
+            text-align: center;
+            box-shadow: var(--shadow-brutal);
+        }
+        .hero__stat:nth-child(2) { transform: rotate(1deg); }
+        .hero__stat:nth-child(3) { transform: rotate(-1deg); }
+        .hero__stat-number {
+            font-size: 2.8rem;
+            font-weight: 700;
+            line-height: 1;
+            margin-bottom: 6px;
+            font-family: var(--font-mono);
+        }
+        .hero__stat-label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 600;
+            color: #555;
+        }
+        .hero__marquee {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--black);
+            color: var(--white);
+            padding: 14px 0;
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+        .hero__marquee-inner {
+            display: inline-block;
+            animation: marquee 20s linear infinite;
+        }
+        .hero__marquee-inner span {
+            margin: 0 40px;
+        }
+        @keyframes marquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+        .hero__corner-block {
+            position: absolute;
+            top: -20px;
+            right: -20px;
+            width: 120px;
+            height: 120px;
+            background: var(--accent);
+            border: var(--border-thick) solid var(--black);
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-mono);
+            font-weight: 700;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-align: center;
+            padding: 10px;
+            line-height: 1.3;
+        }
+
+        /* ========== MOBILE RESPONSIVE ========== */
+        @media (max-width: 900px) {
+            .hero {
+                grid-template-columns: 1fr;
+            }
+            .hero__left {
+                border-right: none;
+                border-bottom: var(--border-heavy) solid var(--black);
+                padding: 40px 24px;
+            }
+            .hero__right {
+                padding: 40px 24px;
+            }
+            .hero__stats {
+                max-width: 100%;
+            }
+            .nav__links {
+                display: none;
+                position: absolute;
+                top: var(--nav-height);
+                left: 0;
+                right: 0;
+                background: var(--bg);
+                border-bottom: var(--border-heavy) solid var(--black);
+                flex-direction: column;
+                padding: 0;
+            }
+            .nav__links.active {
+                display: flex;
+            }
+            .nav__link {
+                border-left: none;
+                border-bottom: var(--border-thick) solid var(--black);
+                width: 100%;
+                text-align: center;
+                padding: 16px 20px;
+            }
+            .nav__link:last-child {
+                border-right: none;
+            }
+            .nav__cta {
+                margin: 16px 20px;
+                text-align: center;
+                display: block;
+            }
+            .nav__hamburger {
+                display: flex;
+            }
+            .hero__corner-block {
+                top: -10px;
+                right: -10px;
+                width: 80px;
+                height: 80px;
+                font-size: 0.6rem;
+            }
+        }
+        @media (max-width: 480px) {
+            .hero__headline {
+                font-size: 2.2rem;
+            }
+            .hero__actions {
+                flex-direction: column;
+            }
+            .btn-primary, .btn-secondary {
+                width: 100%;
+                text-align: center;
+                justify-content: center;
+            }
+            .hero__stats {
+                grid-template-columns: 1fr;
+            }
+            .nav__logo {
+                font-size: 1.3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== NAVIGATION ===== -->
+    <nav class="nav">
+        <div class="container">
+            <a href="/" class="nav__logo">
+                <span class="nav__logo-box">BM</span>
+                BRIGHTMIND
+            </a>
+            <div class="nav__links" id="navLinks">
+                <a href="#home" class="nav__link">Home</a>
+                <a href="#services" class="nav__link">Services</a>
+                <a href="#about" class="nav__link">About</a>
+                <a href="#contact" class="nav__link">Contact</a>
+                <a href="#enroll" class="nav__cta">Enroll Now</a>
+            </div>
+            <div class="nav__hamburger" id="navHamburger" onclick="document.getElementById('navLinks').classList.toggle('active')">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ===== HERO SECTION ===== -->
+    <section class="hero" id="home">
+        <div class="hero__left">
+            <div class="hero__tag">Est. 2019 — Learning Reimagined</div>
+            <h1 class="hero__headline">
+                Unlock Your<br>
+                <span>Full Potential</span><br>
+                With Us
+            </h1>
+            <p class="hero__sub">
+                BRIGHTMIND Learning Center delivers expert-led programs in technology, business strategy, and creative disciplines. Join 12,000+ professionals who transformed their careers through our hands-on, project-based curriculum.
+            </p>
+            <div class="hero__actions">
+                <a href="#enroll" class="btn-primary">
+                    Start Learning Today &#8594;
+                </a>
+                <a href="#courses" class="btn-secondary">
+                    Browse Courses
+                </a>
+            </div>
+        </div>
+        <div class="hero__right">
+            <div class="hero__corner-block">New Cohort Starts May 2026</div>
+            <div class="hero__stats">
+                <div class="hero__stat">
+                    <div class="hero__stat-number text-primary">12K+</div>
+                    <div class="hero__stat-label">Students Enrolled</div>
+                </div>
+                <div class="hero__stat">
+                    <div class="hero__stat-number text-secondary">94%</div>
+                    <div class="hero__stat-label">Completion Rate</div>
+                </div>
+                <div class="hero__stat">
+                    <div class="hero__stat-number">150+</div>
+                    <div class="hero__stat-label">Expert Instructors</div>
+                </div>
+                <div class="hero__stat">
+                    <div class="hero__stat-number text-primary">4.9</div>
+                    <div class="hero__stat-label">Average Rating</div>
+                </div>
+            </div>
+        </div>
+        <div class="hero__marquee">
+            <div class="hero__marquee-inner">
+                <span>&#9733; Web Development</span>
+                <span>&#9733; Data Science</span>
+                <span>&#9733; UX/UI Design</span>
+                <span>&#9733; Digital Marketing</span>
+                <span>&#9733; Project Management</span>
+                <span>&#9733; Cloud Computing</span>
+                <span>&#9733; AI & Machine Learning</span>
+                <span>&#9733; Business Analytics</span>
+                <span>&#9733; Web Development</span>
+                <span>&#9733; Data Science</span>
+                <span>&#9733; UX/UI Design</span>
+                <span>&#9733; Digital Marketing</span>
+                <span>&#9733; Project Management</span>
+                <span>&#9733; Cloud Computing</span>
+                <span>&#9733; AI & Machine Learning</span>
+                <span>&#9733; Business Analytics</span>
+            </div>
+        </div>
+    </section>
+
+</body>
+</html>

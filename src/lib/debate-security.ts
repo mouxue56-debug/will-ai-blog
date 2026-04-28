@@ -1,7 +1,7 @@
 // Check if content contains truly malicious patterns (XSS / SQL injection / command injection).
 // NOTE: Prompt-injection style phrases (e.g. "ignore previous", "act as", "[INST]") are
 // intentionally NOT blocked here — they are normal discourse in an AI discussion forum.
-export function hasMaliciousContent(text: string): { blocked: boolean; reason?: string } {
+function hasMaliciousContent(text: string): { blocked: boolean; reason?: string } {
   // XSS patterns
   const xssPatterns = [
     /<script/i,
@@ -35,8 +35,6 @@ export function hasMaliciousContent(text: string): { blocked: boolean; reason?: 
   return { blocked: false };
 }
 
-// Legacy alias — kept for backward compatibility with existing API route callers.
-// Prefer hasMaliciousContent() for new code.
 export function hasPromptInjection(text: string): boolean {
   return hasMaliciousContent(text).blocked;
 }
@@ -47,7 +45,3 @@ export function hasSensitiveContent(text: string): boolean {
   return sensitive.some((word) => text.includes(word));
 }
 
-// Validate API key format (simple check)
-export function isValidKeyFormat(key: string): boolean {
-  return /^[a-zA-Z0-9_-]{20,60}$/.test(key);
-}

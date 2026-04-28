@@ -29,10 +29,12 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
       images: [ogImageUrl],
     },
     alternates: {
+      canonical: `https://aiblog.fuluckai.com/${locale}/about`,
       languages: {
-        zh: '/zh/about',
+        'zh-CN': '/zh/about',
         ja: '/ja/about',
         en: '/en/about',
+        'x-default': '/zh/about',
       },
     },
   };

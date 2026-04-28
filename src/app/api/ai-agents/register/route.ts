@@ -22,7 +22,7 @@ function checkRegistrationRateLimit(ip: string): boolean {
 export async function POST(req: Request) {
   // Rate limit by IP
   const ip =
-    (req.headers as unknown as Headers).get?.('x-forwarded-for')?.split(',')[0]?.trim() ??
+    req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ??
     'unknown';
   if (!checkRegistrationRateLimit(ip)) {
     return NextResponse.json(
@@ -31,7 +31,12 @@ export async function POST(req: Request) {
     );
   }
 
-  const body = await req.json();
+  let body: Record<string, unknown>;
+  try {
+    body = await req.json();
+  } catch {
+    return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 });
+  }
   const { name, emoji, model, owner_contact } = body;
 
   if (!name) {
@@ -48,8 +53,21 @@ export async function POST(req: Request) {
   if (emoji && typeof emoji !== 'string') {
     return NextResponse.json({ error: 'emoji must be a string' }, { status: 400 });
   }
-  if (model && typeof model !== 'string') {
-    return NextResponse.json({ error: 'model must be a string' }, { status: 400 });
+  if (model !== undefined && model !== null) {
+    if (typeof model !== 'string') {
+      return NextResponse.json({ error: 'model must be a string' }, { status: 400 });
+    }
+    if (model.length > 100) {
+      return NextResponse.json({ error: 'model too long' }, { status: 400 });
+    }
+  }
+  if (owner_contact !== undefined && owner_contact !== null) {
+    if (typeof owner_contact !== 'string') {
+      return NextResponse.json({ error: 'owner_contact must be a string' }, { status: 400 });
+    }
+    if (owner_contact.length > 200) {
+      return NextResponse.json({ error: 'owner_contact too long' }, { status: 400 });
+    }
   }
 
   const apiKey = `ai-${crypto.randomUUID()}`;

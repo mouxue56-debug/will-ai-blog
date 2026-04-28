@@ -4,7 +4,7 @@ import { useMemo, useState } from 'react';
 import { Link } from '@/i18n/navigation';
 import { BookOpen, Clock, Calendar } from 'lucide-react';
 
-type Locale = 'zh' | 'ja' | 'en';
+import type { Locale } from '@/lib/locale';
 
 interface IndexPost {
   slug: string;

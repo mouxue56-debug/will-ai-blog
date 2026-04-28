@@ -17,6 +17,8 @@ export async function generateMetadata({
   const title = t('page_title');
   const description = t('page_desc');
 
+  const ogImageUrl = `https://aiblog.fuluckai.com/api/og?title=${encodeURIComponent(title)}&lang=${encodeURIComponent(locale)}`;
+
   return {
     title,
     description,
@@ -24,12 +26,26 @@ export async function generateMetadata({
       title,
       description,
       type: 'website',
+      images: [{
+        url: ogImageUrl,
+        width: 1200,
+        height: 630,
+        alt: `${title} OG image`,
+      }],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images: [ogImageUrl],
     },
     alternates: {
+      canonical: `https://aiblog.fuluckai.com/${locale}/learning`,
       languages: {
-        zh: '/zh/learning',
+        'zh-CN': '/zh/learning',
         ja: '/ja/learning',
         en: '/en/learning',
+        'x-default': '/zh/learning',
       },
     },
   };
@@ -84,8 +100,9 @@ export default async function LearningPage({
           <div className="glass-card relative h-44 sm:h-52 w-full overflow-hidden rounded-3xl">
             <Image
               src={getIllustrationUrl('learning-banner')}
-              alt=""
+              alt={t('title')}
               fill
+              sizes="(max-width: 896px) 100vw, 896px"
               className="object-cover object-center opacity-55 dark:opacity-70"
             />
             <div className="absolute inset-0 bg-gradient-to-br from-[rgba(255,209,220,0.5)] via-[rgba(232,213,245,0.35)] to-[rgba(200,245,228,0.35)] dark:hidden" />
@@ -145,12 +162,8 @@ export default async function LearningPage({
             minReadLabel={t('min_read')}
             posts={learningPosts.map((p) => ({
               slug: p.slug,
-              title: typeof p.title === 'string'
-                ? { zh: p.title, ja: p.title, en: p.title }
-                : (p.title as Record<string, string>),
-              excerpt: typeof p.excerpt === 'string'
-                ? { zh: p.excerpt, ja: p.excerpt, en: p.excerpt }
-                : (p.excerpt as Record<string, string>),
+              title: p.title,
+              excerpt: p.excerpt,
               date: p.date,
               readingTime: p.readingTime,
               tags: p.tags ?? [],

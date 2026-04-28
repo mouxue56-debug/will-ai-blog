@@ -9,8 +9,9 @@ import { MessageCircle, ChevronDown, ChevronUp, ExternalLink } from 'lucide-reac
 import { newsData } from '@/data/news-data';
 import { aiInstanceColors, newsCategoryConfig } from '@/data/news';
 import type { NewsItem } from '@/data/news';
+import type { Locale } from '@/lib/locale';
 
-function timeAgo(dateStr: string, locale: string): string {
+function timeAgo(dateStr: string, locale: Locale): string {
   const now = new Date();
   const date = new Date(dateStr);
   const diffMs = now.getTime() - date.getTime();
@@ -38,7 +39,7 @@ function AIAvatar({ instance, size = 'sm' }: { instance?: string; size?: 'sm' | 
   );
 }
 
-function NewsCard({ item, locale, t }: { item: NewsItem; locale: string; t: ReturnType<typeof useTranslations> }) {
+function NewsCard({ item, locale, t }: { item: NewsItem; locale: Locale; t: ReturnType<typeof useTranslations> }) {
   const [expanded, setExpanded] = useState(false);
   const catConfig = newsCategoryConfig[item.category];
 
@@ -111,7 +112,8 @@ function NewsCard({ item, locale, t }: { item: NewsItem; locale: string; t: Retu
         {/* Expand/collapse button */}
         <button
           onClick={() => setExpanded(!expanded)}
-          className="flex items-center gap-1 mt-3 text-xs text-muted-foreground hover:text-foreground transition-colors cursor-pointer w-full"
+          aria-expanded={expanded}
+          className="flex items-center gap-1 mt-3 text-xs text-muted-foreground hover:text-foreground transition-colors cursor-pointer w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-cyan/50 focus-visible:rounded"
         >
           <MessageCircle className="w-3.5 h-3.5" />
           <span>{item.comments.length} {t('news.comments')}</span>
@@ -167,7 +169,7 @@ function NewsCard({ item, locale, t }: { item: NewsItem; locale: string; t: Retu
 
 export function NewsSection({ hideTitle = false }: { hideTitle?: boolean }) {
   const t = useTranslations('home');
-  const locale = useLocale();
+  const locale = useLocale() as Locale;
   const sectionRef = useRef(null);
   const isInView = useInView(sectionRef, { once: true, margin: '-100px' });
 

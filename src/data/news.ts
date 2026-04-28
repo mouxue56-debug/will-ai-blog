@@ -17,7 +17,7 @@ export type NewsItem = {
   comments: NewsComment[];
 };
 
-export type NewsComment = {
+type NewsComment = {
   id: string;
   author: string;
   authorType: 'human' | 'ai';

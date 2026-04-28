@@ -4,6 +4,7 @@ import { setRequestLocale } from 'next-intl/server';
 import { cases } from '@/data/cases';
 import { CaseDetail } from '@/components/cases/case-detail';
 import { PageTransition } from '@/components/shared/PageTransition';
+import type { Locale } from '@/lib/locale';
 
 type Props = {
   params: Promise<{ locale: string; slug: string }>;
@@ -48,10 +49,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       images: [ogImageUrl],
     },
     alternates: {
+      canonical: `https://aiblog.fuluckai.com/${lang}/cases/${slug}`,
       languages: {
-        zh: `/zh/cases/${slug}`,
+        'zh-CN': `/zh/cases/${slug}`,
         ja: `/ja/cases/${slug}`,
         en: `/en/cases/${slug}`,
+        'x-default': `/zh/cases/${slug}`,
       },
     },
   };
@@ -100,7 +103,7 @@ export default async function CaseDetailPage({ params }: Props) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <PageTransition>
-        <CaseDetail caseStudy={caseStudy} locale={locale} />
+        <CaseDetail caseStudy={caseStudy} locale={locale as Locale} />
       </PageTransition>
     </>
   );

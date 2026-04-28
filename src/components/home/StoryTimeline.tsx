@@ -5,6 +5,7 @@ import { motion, useScroll, useTransform } from 'motion/react';
 import { Cat, Bot, Users, Newspaper, Zap } from 'lucide-react';
 import { LampEffect } from '@/components/ui/aceternity';
 import { useTranslations } from 'next-intl';
+import { SectionAccentLine } from '@/components/shared/SectionAccentLine';
 
 interface StoryNode {
   year: string;
@@ -118,7 +119,7 @@ export function StoryTimeline() {
       className="py-16 sm:py-24"
     >
       <div className="mx-auto max-w-5xl px-4 sm:px-6">
-        <div className="w-16 h-0.5 bg-gradient-to-r from-[#00D4FF] to-transparent mb-6 mx-auto" />
+        <SectionAccentLine className="mx-auto" />
         {/* Section title with Lamp */}
         <LampEffect color="green" className="min-h-[160px] mb-4">
           <motion.div
@@ -127,7 +128,7 @@ export function StoryTimeline() {
             transition={{ duration: 0.5 }}
             className="text-center"
           >
-            <h2 className="text-2xl sm:text-3xl font-bold">
+            <h2 className="text-2xl sm:text-3xl font-bold text-dior-gradient text-dior-gradient-breathing">
               📖 {t('story_section_title')}
             </h2>
             <p className="mt-2 text-muted-foreground">
@@ -143,9 +144,10 @@ export function StoryTimeline() {
 
           {/* Center line — animated progress overlay */}
           <motion.div
-            className="absolute left-[19px] md:left-1/2 md:-translate-x-px top-0 w-0.5 bg-gradient-to-b from-brand-cyan to-brand-mint"
+            className="timeline-spine absolute left-[19px] md:left-1/2 md:-translate-x-px top-0 w-0.5 bg-gradient-to-b from-brand-cyan via-brand-cyan/80 to-brand-mint"
             style={{
               height: lineHeight,
+              boxShadow: '0 0 12px rgba(0, 212, 255, 0.35)',
             }}
           />
 

@@ -26,13 +26,33 @@ export async function GET(req: Request) {
 
 // POST: 发评论（AI 用 Bearer token，人类直接发）
 export async function POST(req: Request) {
-  const body = await req.json();
+  let body: unknown;
+  try {
+    body = await req.json();
+  } catch {
+    return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 });
+  }
+
+  if (typeof body !== 'object' || body === null) {
+    return NextResponse.json({ error: 'Request body must be an object' }, { status: 400 });
+  }
+
   const authHeader = req.headers.get('Authorization');
 
-  let authorName = body.author_name;
-  let authorEmoji = body.author_emoji || '💬';
+  let authorName: string | null = null;
+  let authorEmoji: string = '💬';
   let isAI = false;
   let authorId: string | null = null;
+
+  // Type-validate post_slug early (used in both AI and human paths)
+  const rawSlug = (body as Record<string, unknown>).post_slug || (body as Record<string, unknown>).postSlug;
+  if (!rawSlug || typeof rawSlug !== 'string') {
+    return NextResponse.json({ error: 'post_slug must be a non-empty string' }, { status: 400 });
+  }
+  const postSlug = rawSlug.trim();
+  if (postSlug.length > 200) {
+    return NextResponse.json({ error: 'post_slug too long' }, { status: 400 });
+  }
 
   // Bearer token → AI 身份验证
   if (authHeader?.startsWith('Bearer ')) {
@@ -48,11 +68,10 @@ export async function POST(req: Request) {
     }
 
     // 每篇文章每个 AI 最多 2 条
-    const postSlugVal = body.post_slug || body.postSlug;
     const { count } = await supabaseAdmin
       .from('comments')
       .select('*', { count: 'exact', head: true })
-      .eq('post_slug', postSlugVal)
+      .eq('post_slug', postSlug)
       .eq('author_id', agent.id);
 
     if ((count || 0) >= 2) {
@@ -63,20 +82,29 @@ export async function POST(req: Request) {
     authorEmoji = agent.emoji;
     isAI = true;
     authorId = agent.id;
+  } else {
+    // Human path — validate author_name type and length
+    const rawName = (body as Record<string, unknown>).author_name;
+    if (!rawName || typeof rawName !== 'string') {
+      return NextResponse.json({ error: 'author_name must be a non-empty string' }, { status: 400 });
+    }
+    authorName = rawName.trim().slice(0, 50);
+    if (!authorName) {
+      return NextResponse.json({ error: 'author_name required' }, { status: 400 });
+    }
+
+    const rawEmoji = (body as Record<string, unknown>).author_emoji;
+    if (rawEmoji !== undefined && typeof rawEmoji !== 'string') {
+      return NextResponse.json({ error: 'author_emoji must be a string' }, { status: 400 });
+    }
+    if (typeof rawEmoji === 'string') authorEmoji = rawEmoji;
   }
 
-  const postSlug = body.post_slug || body.postSlug;
-  if (!postSlug) {
-    return NextResponse.json({ error: 'post_slug required' }, { status: 400 });
+  const rawContent = (body as Record<string, unknown>).content;
+  if (typeof rawContent !== 'string' || !rawContent.trim()) {
+    return NextResponse.json({ error: 'content must be a non-empty string' }, { status: 400 });
   }
-  if (!authorName) {
-    return NextResponse.json({ error: 'author_name required' }, { status: 400 });
-  }
-
-  const content: string = body.content || '';
-  if (!content.trim()) {
-    return NextResponse.json({ error: 'content required' }, { status: 400 });
-  }
+  const content = rawContent;
   const filter = filterContent(content);
   if (!filter.ok) {
     return NextResponse.json({ error: filter.reason }, { status: 400 });

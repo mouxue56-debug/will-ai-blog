@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { MessageCircle } from 'lucide-react';
+import type { Locale } from '@/lib/locale';
 
 interface NewsItem {
   title?: string;
@@ -106,7 +107,7 @@ function parseNewsFromContent(content: string): NewsItem[] {
   return out;
 }
 
-function localizeTitle(item: NewsItem, locale: string): string {
+function localizeTitle(item: NewsItem, locale: Locale): string {
   if (locale === 'ja' && item.title_ja) return item.title_ja;
   if (locale === 'en' && item.title_en) return item.title_en;
   if (locale === 'zh' && item.title_zh) return item.title_zh;
@@ -118,14 +119,14 @@ function stripDatePrefix(title: string): string {
   return title.replace(/^\d{4}-\d{2}-\d{2}\s*/, '').replace(/^\d{4}-\d{2}-\d{2}/, '');
 }
 
-function localizeTopicTitle(topic: DailyTopic, locale: string): string {
+function localizeTopicTitle(topic: DailyTopic, locale: Locale): string {
   const raw = locale === 'ja' ? topic.display_title_ja || topic.title_ja || topic.title
     : locale === 'en' ? topic.display_title_en || topic.title_en || topic.title
     : topic.display_title_zh || topic.title_zh || topic.title;
   return stripDatePrefix(raw);
 }
 
-function formatDate(iso: string, locale: string): string {
+function formatDate(iso: string, locale: Locale): string {
   if (!iso) return '';
   const d = new Date(iso);
   if (Number.isNaN(d.getTime())) return iso.slice(0, 10);
@@ -147,7 +148,7 @@ function toJstDate(iso: string): string {
 
 export function DailyFeedMasonry({ topics }: DailyFeedMasonryProps) {
   const params = useParams();
-  const locale = (params?.locale as string) || 'zh';
+  const locale = ((params?.locale as string) || 'zh') as Locale;
   const [opinionCounts, setOpinionCounts] = useState<Record<string, number>>({});
 
   useEffect(() => {
@@ -216,7 +217,7 @@ export function DailyFeedMasonry({ topics }: DailyFeedMasonryProps) {
                 topic.newsItems && topic.newsItems.length > 0
                   ? topic.newsItems
                   : parseNewsFromContent(topic.content || '');
-              const title = localizeTopicTitle(topic, locale);
+              const _title = localizeTopicTitle(topic, locale);
               const count = opinionCounts[topic.id] ?? 0;
 
               return (
@@ -238,7 +239,7 @@ export function DailyFeedMasonry({ topics }: DailyFeedMasonryProps) {
                   >
                     <span className="text-lg drop-shadow-sm">{meta.emoji}</span>
                     <span className="chip-fg text-[11.5px] font-bold tracking-wider uppercase">
-                      {(topic.report_type === 'morning' ? (locale === 'zh' ? '早报·' : locale === 'ja' ? '朝刊·' : 'AM·') : '') + (topic.report_type === 'evening' ? (locale === 'zh' ? '晚报·' : locale === 'ja' ? '夕刊·' : 'PM·') : '') + (meta.label[locale as 'zh' | 'ja' | 'en'] ?? meta.label.zh)}
+                      {(topic.report_type === 'morning' ? (locale === 'zh' ? '早报·' : locale === 'ja' ? '朝刊·' : 'AM·') : '') + (topic.report_type === 'evening' ? (locale === 'zh' ? '晚报·' : locale === 'ja' ? '夕刊·' : 'PM·') : '') + (meta.label[locale] ?? meta.label.zh)}
                     </span>
                   </div>
 

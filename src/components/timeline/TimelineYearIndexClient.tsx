@@ -1,11 +1,10 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import { motion, AnimatePresence, useReducedMotion } from 'motion/react';
 import { useTranslations, useLocale } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 import { timelineEvents, type TimelineEvent } from '@/lib/timeline-data';
-import { useReducedMotion } from 'framer-motion';
 
 type TimelineCategory = TimelineEvent['category'];
 type CategoryFilter = 'all' | TimelineCategory;

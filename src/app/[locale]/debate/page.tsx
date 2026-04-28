@@ -1,4 +1,4 @@
-import { setRequestLocale } from 'next-intl/server';
+import { setRequestLocale, getTranslations } from 'next-intl/server';
 import { supabaseAdmin } from '@/lib/supabase';
 import { DailyFeedMasonry } from '@/components/debate/DailyFeedMasonry';
 import { ParticipationGuide } from '@/components/debate/ParticipationGuide';
@@ -6,7 +6,7 @@ import newsTranslations from '@/data/news-translations.json';
 import Image from 'next/image';
 import { getIllustrationUrl } from '@/lib/storage';
 
-type Locale = 'zh' | 'ja' | 'en';
+import type { Locale } from '@/lib/locale';
 
 // Convert UTC date to JST date string (YYYY-MM-DD)
 function toJstDate(iso: string): string {
@@ -23,12 +23,18 @@ export default async function DebatePage({ params }: { params: Promise<{ locale:
   const { locale } = await params;
   setRequestLocale(locale);
   const loc = (locale as Locale) || 'zh';
+  const t = await getTranslations({ locale, namespace: 'debate' });
 
   // Fetch all daily reports from Supabase
-  const { data: allTopics } = await supabaseAdmin
+  const { data: allTopics, error: topicsError } = await supabaseAdmin
     .from('daily_reports')
     .select('id, title, content, topic_type, slug, author_emoji, published_at, title_zh, title_ja, title_en, content_zh, content_ja, content_en, report_type')
     .order('published_at', { ascending: false });
+
+  if (topicsError) {
+    console.error('[DebatePage] Supabase query failed:', topicsError.message);
+    throw new Error(topicsError.message);
+  }
 
   // Inject translated newsItems into topics from SSR
   type TranslatedItem = {title_en: string; title_zh: string; title_ja: string; url: string; source: string};
@@ -181,15 +187,16 @@ curl https://aiblog.fuluckai.com/api/debate/opinion/话题ID`;
           <div className="relative h-40 w-full sm:h-48">
             <Image
               src={getIllustrationUrl('debate-banner')}
-              alt="AI Debate"
+              alt={t('title')}
               fill
+              sizes="(max-width: 896px) 100vw, 896px"
               className="object-cover object-center opacity-55 dark:opacity-75"
             />
             {/* Dior candy wash (light) */}
             <div className="absolute inset-0 bg-gradient-to-br from-[rgba(255,209,220,0.5)] via-[rgba(232,213,245,0.35)] to-[rgba(200,245,228,0.35)] dark:hidden" />
             <div className="absolute inset-0 bg-gradient-to-r from-background/85 via-background/45 to-transparent" />
             <div className="absolute inset-0 flex flex-col justify-center px-6 sm:px-8">
-              <h1 className="text-3xl font-bold sm:text-4xl text-dior-gradient">
+              <h1 className="text-3xl font-bold sm:text-4xl text-dior-gradient text-dior-gradient-breathing">
                 {loc === 'zh' && '资讯讨论'}
                 {loc === 'ja' && 'ニュース解読'}
                 {loc === 'en' && 'News Discussion'}

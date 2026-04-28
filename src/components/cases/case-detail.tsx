@@ -1,13 +1,14 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import Image from 'next/image';
 import { motion, AnimatePresence, useReducedMotion } from 'motion/react';
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 import type { CaseStudy } from '@/data/cases';
 import { CaseMarkdown } from './case-markdown';
 
-type Locale = 'zh' | 'ja' | 'en';
+import type { Locale } from '@/lib/locale';
 
 /**
  * CountUp — extracts a number from a value string and animates from 0.
@@ -77,7 +78,8 @@ function ExpandableSection({
     <div className="space-y-3">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-secondary/80 hover:bg-secondary text-sm font-medium transition-colors"
+        aria-expanded={isOpen}
+        className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-secondary/80 hover:bg-secondary text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-cyan/50"
       >
         <motion.svg
           animate={{ rotate: isOpen ? 90 : 0 }}
@@ -168,11 +170,12 @@ export function CaseDetail({
   locale,
 }: {
   caseStudy: CaseStudy;
-  locale: string;
+  locale: Locale;
 }) {
   const t = useTranslations('cases');
-  const loc = locale as Locale;
+  const loc = locale;
   const prefersReducedMotion = useReducedMotion();
+  const [heroError, setHeroError] = useState(false);
 
   return (
     <div className="mx-auto max-w-4xl px-4 sm:px-6 pb-16">
@@ -181,12 +184,17 @@ export function CaseDetail({
         className={`relative -mx-4 sm:-mx-6 mb-10 overflow-hidden rounded-b-3xl bg-gradient-to-br ${caseStudy.gradient}`}
       >
         {/* Hero image (falls back to gradient if missing) */}
-        <img
-          src={`/covers/cases/${caseStudy.slug}.jpg`}
-          alt=""
-          className="absolute inset-0 h-full w-full object-cover opacity-80 dark:opacity-65"
-          onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }}
-        />
+        {!heroError && (
+          <Image
+            src={`/covers/cases/${caseStudy.slug}.jpg`}
+            alt={caseStudy.title[loc] || caseStudy.title.zh || 'Case study cover'}
+            fill
+            sizes="(max-width: 1024px) 100vw, 1024px"
+            priority
+            className="object-cover opacity-80 dark:opacity-65"
+            onError={() => setHeroError(true)}
+          />
+        )}
         <div className="absolute inset-0 bg-gradient-to-br from-black/20 via-black/10 to-black/30" />
         {/* Grid overlay */}
         <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,.04)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,.04)_1px,transparent_1px)] bg-[size:32px_32px]" />

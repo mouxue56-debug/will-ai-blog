@@ -2,6 +2,7 @@
 
 import { useTranslations } from 'next-intl';
 import { motion } from 'motion/react';
+import { SectionAccentLine } from '@/components/shared/SectionAccentLine';
 
 
 interface AIInstance {
@@ -11,6 +12,7 @@ interface AIInstance {
   tasks: number;
   color: string;
   dotColor: string;
+  bgGradient: string;
 }
 
 const instances: AIInstance[] = [
@@ -21,6 +23,7 @@ const instances: AIInstance[] = [
     tasks: 12,
     color: 'text-brand-cyan',
     dotColor: 'bg-brand-cyan',
+    bgGradient: 'from-brand-cyan/20 to-brand-mint/20',
   },
   {
     key: 'natsu',
@@ -29,6 +32,7 @@ const instances: AIInstance[] = [
     tasks: 8,
     color: 'text-brand-coral',
     dotColor: 'bg-brand-coral',
+    bgGradient: 'from-brand-coral/20 to-brand-mango/20',
   },
   {
     key: 'haru',
@@ -36,6 +40,7 @@ const instances: AIInstance[] = [
     tasks: 5,
     color: 'text-brand-mint',
     dotColor: 'bg-brand-mint',
+    bgGradient: 'from-brand-mint/20 to-brand-taro/20',
   },
   {
     key: 'aki',
@@ -43,6 +48,7 @@ const instances: AIInstance[] = [
     tasks: 2,
     color: 'text-brand-mango',
     dotColor: 'bg-brand-mango',
+    bgGradient: 'from-brand-mango/20 to-brand-coral/20',
   },
 ];
 
@@ -63,7 +69,7 @@ export function AIDashboard() {
   return (
     <section className="py-16 sm:py-20">
       <div className="mx-auto max-w-5xl px-4 sm:px-6">
-        <div className="w-16 h-0.5 bg-gradient-to-r from-[#00D4FF] to-transparent mb-6" />
+        <SectionAccentLine />
         <motion.h2
           className="text-2xl sm:text-3xl font-bold mb-8"
           initial={{ opacity: 0, y: 20 }}
@@ -83,7 +89,9 @@ export function AIDashboard() {
         >
 
           <div className="relative z-10 grid grid-cols-2 sm:grid-cols-4 gap-4">
-            {instances.map((inst, i) => (
+            {instances.map((inst, i) => {
+              const instanceName = t(`ai_instances.${inst.key}.name`);
+              return (
               <motion.div
                 key={inst.key}
                 className="rounded-lg p-[1px] bg-gradient-to-r from-brand-cyan/30 via-brand-taro/20 to-brand-mint/30"
@@ -97,14 +105,14 @@ export function AIDashboard() {
 
                   <div className="text-center">
                     <div
-                      className={`w-10 h-10 rounded-full flex items-center justify-center mx-auto mb-1 bg-gradient-to-br ${inst.color === 'text-brand-cyan' ? 'from-brand-cyan/20 to-brand-mint/20' : inst.color === 'text-brand-coral' ? 'from-brand-coral/20 to-brand-mango/20' : inst.color === 'text-brand-mint' ? 'from-brand-mint/20 to-brand-taro/20' : 'from-brand-mango/20 to-brand-coral/20'}`}
+                      className={`w-10 h-10 rounded-full flex items-center justify-center mx-auto mb-1 bg-gradient-to-br ${inst.bgGradient}`}
                     >
                       <span className={`text-sm font-bold ${inst.color}`}>
-                        {t(`ai_instances.${inst.key}.name`).charAt(0)}
+                        {instanceName.charAt(0)}
                       </span>
                     </div>
                     <div className={`text-lg font-bold ${inst.color}`}>
-                      {t(`ai_instances.${inst.key}.name`)}
+                      {instanceName}
                     </div>
                     {inst.nicknameKey ? (
                       <div className="text-xs text-muted-foreground">{t(inst.nicknameKey)}</div>
@@ -119,7 +127,8 @@ export function AIDashboard() {
                   </div>
                 </div>
               </motion.div>
-            ))}
+              );
+            })}
           </div>
         </motion.div>
       </div>

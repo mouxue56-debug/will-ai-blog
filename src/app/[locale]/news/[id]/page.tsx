@@ -46,6 +46,7 @@ export default function NewsDetailPage() {
 
   const [newsItem, setNewsItem] = useState<NewsItem | null>(null);
   const [loading, setLoading] = useState(true);
+  const [fetchError, setFetchError] = useState(false);
 
   useEffect(() => {
     fetchNewsById(newsId, locale)
@@ -54,7 +55,7 @@ export default function NewsDetailPage() {
           setNewsItem(convertToFrontendNewsItem(data));
         }
       })
-      .catch(err => console.error('Failed to fetch news item:', err))
+      .catch(() => setFetchError(true))
       .finally(() => setLoading(false));
   }, [newsId, locale]);
 
@@ -63,11 +64,52 @@ export default function NewsDetailPage() {
 
   if (loading) {
     return (
-      <PageTransition>
-        <div className="mx-auto max-w-3xl px-4 sm:px-6 py-20 text-center">
-          <p className="text-muted-foreground">Loading...</p>
+      <div className="mx-auto max-w-3xl px-4 sm:px-6 py-12 sm:py-16" aria-label="Loading" role="status">
+        {/* Back link */}
+        <div className="h-4 w-24 rounded mb-8 skeleton-shimmer" />
+        {/* Author card */}
+        <div className="flex items-center gap-4 mb-6 p-4 rounded-xl border border-border/40 bg-card/80">
+          <div className="w-14 h-14 rounded-full flex-shrink-0 skeleton-shimmer" />
+          <div className="flex-1 space-y-2">
+            <div className="flex items-center gap-2">
+              <div className="h-5 w-28 rounded skeleton-shimmer" />
+              <div className="h-5 w-16 rounded-full skeleton-shimmer" />
+            </div>
+            <div className="h-4 w-40 rounded skeleton-shimmer" />
+          </div>
         </div>
-      </PageTransition>
+        {/* Title */}
+        <div className="space-y-2 mb-4">
+          <div className="h-8 rounded-lg w-full skeleton-shimmer" />
+          <div className="h-8 rounded-lg w-3/4 skeleton-shimmer" />
+        </div>
+        {/* Tags */}
+        <div className="flex gap-2 mb-6">
+          {Array.from({ length: 3 }).map((_, i) => (
+            <div key={i} className="h-5 w-14 rounded-full skeleton-shimmer" />
+          ))}
+        </div>
+        {/* Content */}
+        <div className="space-y-3 mb-12">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <div key={i} className={`h-4 rounded skeleton-shimmer ${i % 3 === 2 ? 'w-4/5' : 'w-full'}`} />
+          ))}
+        </div>
+        {/* Comments header */}
+        <div className="h-6 w-48 rounded skeleton-shimmer mb-4" />
+        <div className="space-y-4">
+          {Array.from({ length: 2 }).map((_, i) => (
+            <div key={i} className="flex gap-3 p-4 rounded-xl border border-border/30 bg-muted/10">
+              <div className="w-10 h-10 rounded-full flex-shrink-0 skeleton-shimmer" />
+              <div className="flex-1 space-y-2">
+                <div className="h-4 w-32 rounded skeleton-shimmer" />
+                <div className="h-3 w-full rounded skeleton-shimmer" />
+                <div className="h-3 w-5/6 rounded skeleton-shimmer" />
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
     );
   }
 
@@ -75,10 +117,24 @@ export default function NewsDetailPage() {
     return (
       <PageTransition>
         <div className="mx-auto max-w-3xl px-4 sm:px-6 py-20 text-center">
-          <h1 className="text-2xl font-bold mb-4">{t('news.not_found')}</h1>
-          <Link href="/news" className="text-brand-mint hover:underline">
-            ← {t('news.back_to_list')}
-          </Link>
+          {fetchError ? (
+            <>
+              <p className="text-muted-foreground mb-4">{t('error.description')}</p>
+              <button
+                onClick={() => { setFetchError(false); setLoading(true); }}
+                className="px-4 py-2 rounded-full bg-brand-cyan/15 text-brand-cyan text-sm hover:bg-brand-cyan/25 transition-colors border border-brand-cyan/20"
+              >
+                {t('error.retry')}
+              </button>
+            </>
+          ) : (
+            <>
+              <h1 className="text-2xl font-bold mb-4">{t('news.not_found')}</h1>
+              <Link href="/news" className="text-brand-mint hover:underline">
+                ← {t('news.back_to_list')}
+              </Link>
+            </>
+          )}
         </div>
       </PageTransition>
     );

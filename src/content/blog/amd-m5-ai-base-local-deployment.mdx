@@ -1,0 +1,433 @@
+---
+slug: amd-m5-ai-base-local-deployment
+layout: enhanced
+title:
+  zh: "AMD Ryzen AI Max+ 395 × Apple M5 Max 双机本地 AI 基地完整方案"
+  ja: "AMD Ryzen AI Max+ 395 × Apple M5 Max デュアルマシン ローカル AI ベース完全ガイド"
+  en: "AMD Ryzen AI Max+ 395 × Apple M5 Max Dual-Machine Local AI Base Complete Guide"
+category: tech
+date: 2026-04-26
+updated: 2026-04-26
+author: Will
+locale: zh
+coverImage: /covers/minimax/amd-m5-ai-base.jpg
+excerpt:
+  zh: 256GB 统一内存级别的本地多模态 AI 生产基地。重点解决中日文 PPT 推广图、表格 OCR、客服/医院/咨询场景、实时语音对话、远程 API 调用、模型微调等。
+  ja: 256GB 統合メモリクラスのローカルマルチモーダル AI 生産基地。中日文 PPT、表 OCR、カスタマーサービス/病院/コンサルティング、リアルタイム音声対話、リモート API 呼び出し、モデル微調整などに対応。
+  en: A local multimodal AI production base with 256GB unified memory. Covers Chinese/Japanese PPT, table OCR, customer service/hospital/consulting scenarios, real-time voice dialogue, remote API calls, model fine-tuning.
+tags: ["AMD", "Apple", "M5 Max", "本地 AI", "LLM", "OCR", "多模态"]
+sections:
+  - id: tldr
+    title: "TL;DR"
+  - id: part-1-hardware
+    title: "Part 1: 硬件最终定位"
+  - id: part-2-models
+    title: "Part 2: 模型矩阵"
+  - id: part-3-deploy
+    title: "Part 3: 部署栈"
+  - id: part-4-disagreements
+    title: "Part 4: 关键意见分歧"
+  - id: part-5-timeline
+    title: "Part 5: 立即行动时间线"
+  - id: part-6-cross-domain
+    title: "Part 6: 跨域思考"
+  - id: appendix
+    title: "附录"
+---
+
+> 2026 年 4 月 26 日终版 · 福楽 AI / aiblog.fuluckai.com
+>
+> 适用：256GB 统一内存级别的本地多模态 AI 生产基地。重点解决中日文 PPT 推广图、表格 OCR、客服/医院/咨询场景、实时语音对话、远程 API 调用、模型微调等。
+
+## TL;DR（30 秒摘要）
+
+- **AMD 395 = 24/7 本地 AI 工厂**（OCR、知识库、批量任务、API 服务器）
+- **M5 Max = 高速前台 + 移动展示棚**（实时语音、客户演示、视频拍摄）
+- **DGX Spark 暂不买**（涨价到 $4699，对你当前场景边际收益低）
+- **本地首选**：文本 Qwen3.6-35B-A3B / GLM-4.7-Flash；图像 Qwen-Image-2512；OCR MinerU 2.5-Pro；TTS Kokoro（商用安全）+ Fish S2 Pro（演示）
+- **Fedora 44**（4 月 28 日发布）+ **llama.cpp Vulkan 自编**（不要 Ollama vendored，性能差 56%）
+- **BIOS UMA 设 512MB**（不是 96GB），让 GTT 动态分配
+
+---
+
+## Part 1：硬件最终定位（确定结论）
+
+### 三台 128GB 统一内存机器对照（实测带宽）
+
+| 设备 | 标称带宽 | **实测带宽** | LLM 优势场景 | 价格 |
+|------|---------|------------|-------------|------|
+| AMD Ryzen AI Max+ 395 | 256 GB/s | **~212 GB/s**（读模式实际 122 GB/s） | 24/7 服务器、OCR、批量 | $2499–3500 |
+| Apple M5 Max 128GB | **614 GB/s** | 614 GB/s | 实时体验、MoE 高速、演示 | $5099 |
+| NVIDIA DGX Spark | 273 GB/s | 273 GB/s | CUDA 微调、企业并发 | $4699（涨 18%） |
+
+### 关键事实
+
+- AMD 395 物理上限可分配给 GPU 的是 **96GB**（不是 120GB）；剩余 32GB 给 CPU，但 GPU 仍可读取全部 128GB
+- AMD 395 实测有 IMC 硬件限制：读模式仅 128-bit，**真实带宽约 212 GB/s**（不是标称 256）
+- M5 Max **比 AMD 395 在内存带宽上快近 3 倍**——这是 ChatGPT 把 M5 Max 定位为"辅助"的最大盲点
+- DGX Spark 在 2026-02-23 因内存短缺涨价 18%，从 $3999 涨到 $4699
+
+### 双机分工（最终版）
+
+```
+┌─────────────────────────────┐        ┌─────────────────────────────┐
+│  AMD 395 桌面（工厂）          │  ←→   │  M5 Max 笔记本（前台 + 摄影棚）│
+│  24/7 开机                   │  WiFi  │  按需开机                    │
+│  Open WebUI / API 服务器      │        │  oMLX / Cline / 实时演示     │
+│  OCR 批量、知识库、文案生产    │        │  视频拍摄、客户现场、移动开发 │
+│  Qwen3.6-35B-A3B 常驻         │        │  Qwen3.6-35B-A3B 134 t/s    │
+│  Qwen3.6-27B 热切换           │        │  Qwen3-Coder-Next 68 t/s    │
+│  ~70 t/s（MoE）              │        │  Qwen-Image 极速生成        │
+└─────────────────────────────┘        └─────────────────────────────┘
+                              远程 API 调用
+                              （局域网延迟 < 5ms）
+```
+
+---
+
+## Part 2：模型矩阵（April 2026 终版，按用途选）
+
+### 2.1 文本主力
+
+| 角色 | 主选 | 备选 | 实测速度参考 | 许可 |
+|------|------|------|------------|------|
+| **快聊 / 语音 / agent** | Qwen3.6-35B-A3B | GLM-4.7-Flash 30B-A3B（本周新选项） | AMD ~70 t/s · M5 Max 134 t/s | Apache 2.0 |
+| **深度文案 / 代码** | Qwen3.6-27B Dense | Gemma 4 31B Dense（多模态含视频） | AMD 12–18 t/s · M5 Max ~30 t/s | Apache 2.0 |
+| **本地编码 agent** | Qwen3-Coder-Next 80B-A3B | — | M5 Max 68.6 t/s + 1887 t/s prefill | Apache 2.0 |
+| **客服日语敬语** | Qwen3.6-27B + RAG | 暂不微调 | 先 few-shot 验证 | Apache 2.0 |
+| **远程顶级旗舰** | Kimi K2.6 API（本周开源） | GLM-5.1 API | 256K context, SWE-Pro 58.6 | Modified MIT |
+
+**Qwen3.6-27B 基准（Apr 2026 官方）**：SWE-bench Verified 77.2%、Terminal-Bench 2.0 59.3%（与 Claude 4.5 Opus 持平）、SWE-Pro 53.5%、AIME26 94.1%。
+
+**Qwen3.6-35B-A3B**：MoE（仅激活 3B），同硬件比稠密 27B 快 3-5 倍，质量接近 Qwen3.6-27B；新特性 Thinking Preservation 适合 OpenClaw 多轮 agent。
+
+### 2.2 图像生成（PPT / 推广图 / 中日文混排）
+
+| 用途 | 模型 | 状态 | 参数 |
+|------|------|------|------|
+| **本地核心：复杂排版/中日文字渲染** | **Qwen-Image-2512** | ✅ 开源 Apache 2.0（2025-12-31） | 20B MMDiT |
+| **本地图像编辑** | Qwen-Image-Edit-2511 + LightX2V LoRA | ✅ 开源 + 42x 加速 | 20B |
+| **复杂版式 / 印章 / 文字密集** | GLM-Image | ✅ 开源（9B AR + 7B Diffusion + Glyph Encoder） | 16B 总 |
+| **顶级线上对照** | Qwen-Image 2.0 / Nano Banana 2 / GPT-Image-2 | ❌ API only（2.0 权重未开放） | — |
+
+**重要更正**：原方案把 Qwen-Image **2.0 写为本地核心是错的——2.0 自 2026-02-10 发布以来权重至今未开源。Qwen 团队的策略已经从"开源旗舰"转向"开源中端 + 闭源旗舰"，2.0 可能永远不会开放权重。**本地老老实实用 2512**。
+
+### 2.3 OCR / 表格 / 医院文档
+
+| 用途 | 模型 | OmniDocBench | 大小 | M5 Max MLX 加速 |
+|------|------|-------------|------|----------------|
+| **超难 PDF/跨页表格/医院** | **MinerU 2.5-Pro** | **95.69（v1.6 SOTA）** | 1.2B | ✅ 提速 100-200% |
+| **中文/印章/复杂版式** | GLM-OCR | 94.62（v1.5 SOTA） | 0.9B | — |
+| **日文表格/发票/扫描件** | PaddleOCR-VL-1.5 | 94.50（v1.5） | 0.9B | — |
+| **辅助：Office/PDF 转 Markdown** | Microsoft markitdown | — | 工具 | ✅ 跨平台 |
+
+**关键决策**：M5 Max 上 MinerU 2.5-Pro + vlm-mlx-engine 后端是**最快路径**，比 PaddleOCR 全套强且更快。AMD 395 上 GLM-OCR 0.9B 做常驻 OCR 服务（4GB 显存），按需切到 MinerU。
+
+### 2.4 语音
+
+| 用途 | 模型 | 注意 |
+|------|------|------|
+| **STT** | faster-whisper large-v3-turbo | 成熟，可与 WhisperLive/Streaming 集成 |
+| **轻量 TTS（商用安全）** | **Kokoro-82M** Apache 2.0 | 82M、低延迟、纯纯安全 |
+| **高质量 TTS（演示用）** | Fish Audio S2 / S2 Pro | ⚠️ 非商用许可，自托管商用要单独授权 |
+| **成希克隆 / Will 克隆** | 你已有的方案 | 维持现状 |
+
+**重要法务提醒**：你的猫舍是商业实体。Fish Speech S2 当前权重是 non-commercial 许可（和 XTTS-v2 一样），自托管商用需要联系 Fish Audio 拿企业 license。日常客服建议先用 Kokoro，演示场景用 Fish。
+
+---
+
+## Part 3：部署栈（具体命令级）
+
+### 3.1 AMD 395 安装栈（4/28 起步）
+
+#### 第一层：基础系统
+
+```bash
+# 系统：等周二（4/28）装 Fedora 44 正式版（或现在装 RC-1.7）
+# 不要装 F43，会需要从 rawhide 拉 ROCm 包
+
+# BIOS 设置：UMA GFX → 512MB（最小值）
+# 不要设 96GB，更不可能设 120GB
+
+# 内核启动参数（critical）：
+# 编辑 /etc/default/grub，GRUB_CMDLINE_LINUX 加入：
+iommu=pt amdgpu.gttsize=126976 ttm.pages_limit=32505856
+
+# 内核版本要求：6.18.4 或更新
+# 避免 linux-firmware-20251125（破坏 ROCm）
+```
+
+#### 第二层：推理后端（用 kyuz0 容器，不要从零编译）
+
+```bash
+# LLM 推理容器
+toolbox create llama-rocm-7.2.1 \
+  --image docker.io/kyuz0/amd-strix-halo-toolboxes:rocm-7.2.1 \
+  -- --device /dev/dri --device /dev/kfd \
+  --group-add video --group-add render --group-add sudo \
+  --security-opt seccomp=unconfined
+
+# 图像/视频生成容器
+toolbox create strix-halo-comfyui \
+  --image docker.io/kyuz0/amd-strix-halo-comfyui:latest \
+  -- --device /dev/dri --device /dev/kfd \
+  --group-add video --group-add render
+
+# 重要：用 llama.cpp Vulkan 自编 + llama-swap，不要用 Ollama vendored
+# Ollama vendored llama.cpp 还停在 b7437（2025-12-16），缺少两个 Vulkan PR
+# 实测同模型 Ollama 34 t/s vs 自编 52+ t/s，56% 性能损失
+```
+
+#### 第三层：服务编排
+
+```bash
+# Open WebUI（手机/iPad/员工友好）
+docker run -d -p 3000:8080 \
+  -v open-webui:/app/backend/data \
+  ghcr.io/open-webui/open-webui:main
+
+# llama-swap 做端口路由（drop-in 替代 Ollama）
+# 监听 :11434，OpenAI 兼容 API
+# 多模型热切换：/v1/models 切到 35B-A3B 或 27B Dense
+
+# OCR 单独一个容器
+# PaddleOCR-VL-1.5 + GLM-OCR + MinerU 2.5-Pro 各开一个端口
+# 业务侧路由：日文表格→Paddle, 中文复杂→GLM, PDF重难→MinerU
+```
+
+### 3.2 M5 Max 安装栈
+
+```bash
+# oMLX：针对 agent 场景优化的 MLX 推理服务器
+brew install omlx
+brew services start omlx
+# 监听 localhost:8000, OpenAI 兼容
+# 自动从 ~/models 加载
+
+# 模型：用 unsloth 优化版
+# unsloth/Qwen3.6-35B-A3B-UD-MLX-4bit
+# unsloth/Qwen3-Coder-Next-8bit
+# unsloth/Qwen-Image-2512（如果有 MLX 移植）
+
+# Ollama 0.19+（已自动用 MLX）
+# 可以并行用：oMLX 给 agent，Ollama 给日常聊天
+brew install ollama
+ollama pull qwen3.6:35b-a3b
+
+# 量化方法选择：
+# - JANG（adaptive per-layer）：质量最好，编码任务首选
+# - oQ4：oMLX 原生量化，配合 SSD KV 缓存做 agent 重复 prefix 极快
+```
+
+### 3.3 双机互联
+
+```bash
+# AMD 暴露 API：
+# llama-swap 监听 0.0.0.0:11434
+# Open WebUI 监听 0.0.0.0:3000
+
+# M5 Max 调用 AMD：
+export OLLAMA_HOST=http://[AMD_IP]:11434
+# 或在 Cline / Cursor / OpenClaw 配置中写 base_url
+
+# 局域网延迟实测 < 5ms，几乎无感
+# 大模型本地化 + 移动端调用 = 真正的"私有 ChatGPT"
+```
+
+---
+
+## Part 4：我和 ChatGPT 的关键意见分歧
+
+> 这部分让你自己判断。我把分歧明确列出来，每条都附理由，你结合实际场景定夺。
+
+### 分歧 1：M5 Max 的定位等级 ⭐⭐⭐ 最重要
+
+| | ChatGPT 观点 | 我的观点 |
+|---|-------------|---------|
+| 定位 | "高速移动展示棚 / 移动辅助" | **桌面级实时引擎，速度是 AMD 的 2 倍** |
+| 引用速度 | 69.2 t/s, 3724 tok/s prefill（来源不明） | **134 t/s decode + 1851 t/s prefill**（Ollama 0.19 + MLX 官方） |
+| 实战意义 | 拍视频、演示用 | M5 Max 完全能当主力，AMD 退到批量后台 |
+
+**判断依据**：Ollama 0.19 + MLX 官方博客（2026-03-29）实测 Qwen3.5-35B-A3B int4 在 M5 Max 上 134 t/s 解码 + 1851 t/s 预填充。其他独立测试（hardware-corner.net, latent.space）也支持 130+ t/s 区间。ChatGPT 的 69.2 数字可能引用了较老或不同后端的数据。
+
+**实战建议**：你拍视频/做客户演示时**优先用 M5 Max**，体感比 AMD 流畅很多。AMD 留作"训练数据收集 + 24/7 知识库"角色更合适。
+
+### 分歧 2：Fedora 版本选择 ⭐⭐ 时效性强
+
+| | ChatGPT 观点 | 我的观点 |
+|---|-------------|---------|
+| 推荐 | "Fedora 43/44 都可以" | **专门等 Fedora 44**（4/28 发布） |
+| 理由 | 含糊 | F44 正式预装了适配 Strix Halo 的 ROCm 包，免去从 rawhide 拉的麻烦 |
+
+**判断依据**：F44 RC-1.7 已通过 GO 评审，4/28 周二正式发布，距今 2 天。Strix Halo 社区主力测试者都在 F44 上做的最新基准。装 F43 等于自找麻烦——你装完正好得升级。
+
+**实战建议**：等 2 天，直接装 F44。或者今天装 RC-1.7（和正式版 ISO 一致）。
+
+### 分歧 3：BIOS UMA 设置 ⭐⭐⭐ 直接影响性能
+
+| | ChatGPT 观点 | 我的观点 |
+|---|-------------|---------|
+| 推荐 | "Linux 优先 512MB + TTM/GTT，按 BIOS 能力调整" | **Linux 必须 512MB（最小），不要分区** |
+| 理由 | 软性建议 | 强制建议——分区会强制内存拷贝、损害性能 |
+
+**判断依据**：AMD 官方 4 节点集群教程、Strix Halo 主流社区指南、kyuz0 工具箱文档都明确说 Linux 下要把 UMA 设最小，让 GTT 动态分配。统一内存架构本来就是无缝共享，分区是 Windows 时代的过时做法。
+
+**实战建议**：进 BIOS 直接选最小 UMA（一般是 512MB），别犹豫。
+
+### 分歧 4：30B 类最强模型的选择 ⭐⭐ 本周新增
+
+| | ChatGPT 观点 | 我的观点 |
+|---|-------------|---------|
+| 主选 | Qwen3.6-35B-A3B 一统天下 | 增加 GLM-4.7-Flash 30B-A3B 作为 A/B 测试对象 |
+| 原因 | ChatGPT 截稿时 GLM-4.7-Flash 影响力还没起来 | Z.ai 官方称"30B 类最强"，benchmark 在 SWE-bench、Terminal-Bench 上不弱于 Qwen |
+
+**判断依据**：GLM-4.7 系列在 SWE-bench 73.8%（+5.8%）、Terminal Bench 2.0 41%（+16.5%）、HLE 42.8%（+12.4%）相对前代提升明显。GLM-4.7-Flash 是这个系列的 30B-A3B MoE 浓缩版。
+
+**实战建议**：先以 Qwen3.6-35B-A3B 为主力跑 1 周，再用同样的 prompts 跑 GLM-4.7-Flash，对比中日文表现。如果 GLM 在你客服/医院场景上更好，切过去。两个都是开源免费的，没切换成本。
+
+### 分歧 5：OpenClaw 长期路线 ⭐⭐ 战略
+
+| | ChatGPT 观点 | 我的观点 |
+|---|-------------|---------|
+| Kimi K2.6 | 没提（截稿时未开源） | **本周（4/20-21）刚开源**，HF 上 Modified MIT 许可可下 |
+| 实战意义 | — | 你 OpenClaw 现在是 Kimi K2.6 API 主力——理论上长期可自托管 |
+
+**判断依据**：Moonshot AI 在 4 月 20-21 日开源了 Kimi K2.6 完整权重（1T MoE / 32B 激活），SWE-Pro 58.6 全场最高，HLE-with-tools 54.0 全场最高。
+
+**实战建议**：
+
+- 短期：API 继续用 Kimi K2.6（你 user prompt 已经是这个配置）
+- 中期：把 OpenClaw 输入输出全部记日志，未来当微调数据集
+- 长期：硬件迭代到能跑 1T MoE 时，OpenClaw 可以零成本跑顶级模型
+
+### 分歧 6：MinerU 2.5-Pro 的优先级 ⭐ 渐进式
+
+| | ChatGPT 观点 | 我的观点 |
+|---|-------------|---------|
+| 排序 | PaddleOCR 日常 → GLM-OCR 中文 → MinerU 高难 PDF | **MinerU 2.5-Pro 在 M5 Max 上是首选**（有 MLX 加速） |
+| 理由 | OCR 三件套并列 | M5 Max 上 MinerU + vlm-mlx-engine 比其他快 100-200% |
+
+**判断依据**：MinerU 2.5-Pro 在 OmniDocBench v1.6 上 95.69 SOTA，全面超过 GLM-OCR (v1.5 94.62) 和 PaddleOCR-VL-1.5 (94.50)。MinerU 官方在 2026-04 加了 MLX 引擎，专门给 Apple Silicon 加速。
+
+**实战建议**：M5 Max 上日常 OCR 直接用 MinerU 2.5-Pro。AMD 395 上保留三件套，按场景路由。
+
+---
+
+## Part 5：立即行动时间线
+
+### 本周（4/26–5/3）
+
+| 时点 | 行动 | 关键参数 |
+|------|------|---------|
+| 今天 | BIOS UMA 改 512MB；准备 F44 RC-1.7 ISO | — |
+| 4/28（周二） | 装 Fedora 44 正式版 | 内核 ≥ 6.18.4 |
+| 4/29-4/30 | kyuz0 容器 + llama.cpp Vulkan 自编 + llama-swap | b8460+ |
+| 5/1-5/3 | 下载 Qwen3.6-35B-A3B Q4 + Qwen3.6-27B Q4 | Unsloth GGUF |
+
+### 第二周（5/4–5/10）
+
+| 时点 | 行动 |
+|------|------|
+| 5/4 | M5 Max 装 oMLX + 验证 134 t/s（Qwen3.6-35B-A3B-UD-MLX-4bit） |
+| 5/5-5/7 | ComfyUI 容器 + Qwen-Image-2512 + Lightning 4 步 LoRA（FP8） |
+| 5/8-5/10 | OCR 三件套部署：MinerU 2.5-Pro 优先 + GLM-OCR + PaddleOCR-VL |
+
+### 第三周（5/11–5/17）
+
+| 时点 | 行动 |
+|------|------|
+| 5/11-5/13 | A/B 测试：Qwen3.6-35B-A3B vs GLM-4.7-Flash 在你的客服/医院 prompts 上 |
+| 5/14-5/17 | OpenClaw 双机联动配置：M5 Max 当前台、AMD 当 subagent 池 |
+
+### 5 月底之前
+
+- [ ] 拍"双机本地 AI 工厂"视频（F44 + Strix Halo 首发话题窗口期）
+- [ ] 业务流水线：客户对话 / 医院文书 / 日语敬语数据收集（先不微调，做 RAG）
+- [ ] Fish S2 Pro 商用授权咨询（如果决定上线给猫舍 LINE Bot 用）
+
+### 6 月以后（条件触发）
+
+- 客服样本积累到 300+ 条 → 开始 QLoRA 微调日语商业敬语
+- 医院行政文书 100+ 条 → 微调专用模型
+- 视频流量起来 → 考虑做付费咨询课程"日本中小企业本地 AI 落地"
+
+---
+
+## Part 6：跨域思考（你 user prompt 让我做的事）
+
+### 6.1 内存涨价潮的隐藏机会
+
+DGX Spark 涨价 18%、Mac Studio 128GB+ 缺货、Strix Halo Mini PC 全线涨价——内存短缺是结构性的，会持续到 2027。意味着：
+
+- 你已购的 AMD + M5 Max 都是**保值资产**
+- 现在不要补硬件，要把现有硬件用透
+- AI 咨询业务可以把"我有本地 256GB 统一内存可以替你跑模型"做成差异化卖点
+
+### 6.2 OpenClaw 长期路线的转折点
+
+Kimi K2.6 本周开源意味着：
+
+- 现阶段你租 API 是对的（1T MoE 你硬件跑不动）
+- 但要把 OpenClaw 输入输出全部记日志当数据集
+- 2026 H2 / 2027 消费级硬件涨到能跑 1T MoE 时，零成本切自托管
+- **战略含义**：你的 OpenClaw 路线和闭源 SaaS 不绑定，长期主权在自己手上
+
+### 6.3 商业策略：本地化是日本市场的合规护城河
+
+日本《个人信息保护法》+ 医疗个人信息严格管理 + 你的医院客户场景 = **本地推理是合规护城河**。
+
+- 给医院做的 OCR/客服 AI，凭"数据不出院"就能要更高溢价
+- 给中文客户做 AI 咨询，凭"日本本地推理"避开中美数据合规风险
+- 这比单纯"省 API 费用"故事高一个层级
+
+### 6.4 视频内容差异化
+
+你做 Claude Code / OpenClaw / AI agent 视频。现在大家都在讲云端模型，**只有你能讲"双机本地多模态生产线"**：
+
+- 实操稀缺（大部分博主只有一台 MacBook）
+- AMD vs Apple 对比是观众关心但很少人做的
+- 4 月底 F44 + Strix Halo 实战首发刚好是话题窗口期
+
+建议拍一期"我的 256GB 双机本地 AI 工厂从零搭建"——可能比纯讲 OpenClaw 流量更好。
+
+---
+
+## 附录：本周（4/19–4/26）改变格局的新动态
+
+| 日期 | 事件 | 影响 |
+|------|------|------|
+| 4/20 | Kimi K2.6 开源（Modified MIT，1T MoE） | OpenClaw 长期可自托管路径出现 |
+| 4/20 | Qwen3.6-Max-Preview 发布（**闭源 API only**） | Qwen 战略转向"开源中端 + 闭源旗舰" |
+| 4/22 | Qwen3.6-27B + 35B-A3B 发布（Apache 2.0） | 你的本地主力候选 |
+| 4/23 | GPT-5.5 发布（OpenAI 闭源） | API 标杆又上一层 |
+| 4/23 | Qwen-Image 又一次更新（top-10 Text-to-Image Arena） | 但 2.0 权重仍未开放 |
+| 4/28 | **Fedora 44 正式发布** | 你的安装目标版本 |
+
+## 附录：核心数据来源
+
+- **AMD 395 实测带宽**：llm-tracker.info Strix Halo 报告（212 GB/s 实测 vs 256 GB/s 标称）
+- **M5 Max 性能**：Apple Newsroom 2026-03-03、Ollama Blog 2026-03-29、hardware-corner.net、latent.space AINews
+- **Ollama vs llama.cpp 性能差**：GitHub ollama/ollama#15601（2 周前实证）
+- **Qwen3.6 基准**：HuggingFace Qwen/Qwen3.6-27B 模型卡、MarkTechPost 2026-04-22
+- **MinerU 2.5-Pro**：HuggingFace opendatalab/MinerU2.5-Pro-2604-1.2B、arXiv 2604.04771
+- **Kimi K2.6**：MarkTechPost 2026-04-20、HF moonshotai/Kimi-K2.6
+- **GLM-4.7-Flash**：HuggingFace zai-org/GLM-4.7-Flash
+- **Strix Halo 实战**：kyuz0/amd-strix-halo-toolboxes、hogeheer499/strix-halo-guide
+
+---
+
+## 后记：写给我自己
+
+这份方案做了三轮迭代——原版 → ChatGPT 修正版 → 我的最终核实版。
+
+每一版都有明确的进步：
+
+- 原版定方向
+- ChatGPT 修正了关键错误（Qwen-Image 2.0 不可本地、Ollama 性能问题、BIOS UMA、OCR 排序）
+- 我又用过去一周的实测数据修正了 ChatGPT 的几个数字（M5 Max 速度低估、F44 时点）和增补了本周新发布（Kimi K2.6、Qwen3.6 系列、GLM-4.7-Flash）
+
+真正的本地 AI 不是关起门跑模型——而是把最新社区共识、官方 benchmark、硬件实测、商业合规、长期主权全部串起来的系统工程。
+
+我会持续追踪这条线，欢迎在 [aiblog.fuluckai.com](https://aiblog.fuluckai.com) 留言讨论你的实战经验。
+
+—— Will / 福楽 AI · 2026 年 4 月 26 日 · 大阪

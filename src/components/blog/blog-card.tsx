@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Image from 'next/image';
 import { motion } from 'motion/react';
 import { useLocale, useTranslations } from 'next-intl';
 import { Clock, Calendar } from 'lucide-react';
@@ -46,6 +47,15 @@ const BORDER_BEAM_COLORS: Record<BlogCategory, { from: string; to: string }> = {
   learning: { from: '#00d4ff', to: '#5ef0c8' },
 };
 
+const CATEGORY_GLOW: Record<BlogCategory, string> = {
+  ai: 'rgba(56,189,248,0.12)',
+  tech: 'rgba(94,234,212,0.12)',
+  life: 'rgba(251,191,36,0.12)',
+  cats: 'rgba(252,211,77,0.12)',
+  business: 'rgba(192,132,252,0.12)',
+  learning: 'rgba(0,212,255,0.12)',
+};
+
 interface BlogCardProps {
   post: BlogPost;
   isLatest?: boolean;
@@ -72,12 +82,14 @@ export function BlogCard({ post, isLatest = false, index = 0 }: BlogCardProps) {
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.07, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-      whileHover={{ y: -4 }}
+      whileHover={{ y: -6, scale: 1.01, transition: { duration: 0.2, ease: [0.16, 1, 0.3, 1] } }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
+      className="transition-shadow duration-300"
+      style={{ boxShadow: isHovered ? `0 8px 30px ${CATEGORY_GLOW[post.category]}` : undefined }}
     >
       <Link href={`/blog/${post.slug}`}>
-        <SpotlightCard className="p-0 glass-card border-white/[0.06] bg-card/80 dark:bg-white/[0.03] transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-foreground/5">
+        <SpotlightCard className="p-0 glass-card border-white/[0.06] bg-card/80 dark:bg-white/[0.03]">
           <article className="group relative flex flex-col overflow-hidden">
             {/* BorderBeam for latest post - 始终显示 */}
             {isLatest && (
@@ -89,27 +101,35 @@ export function BlogCard({ post, isLatest = false, index = 0 }: BlogCardProps) {
               />
             )}
             
-            {/* BorderBeam on hover - 普通卡片悬停时显示 */}
-            {!isLatest && isHovered && (
-              <BorderBeam
-                colorFrom={beamColors.from}
-                colorTo={beamColors.to}
-                size={160}
-                duration={8}
-              />
+            {/* BorderBeam on hover - 普通卡片悬停时平滑淡入 */}
+            {!isLatest && (
+              <div
+                className="pointer-events-none absolute inset-0 rounded-[inherit] transition-opacity duration-300"
+                style={{ opacity: isHovered ? 1 : 0 }}
+              >
+                <BorderBeam
+                  colorFrom={beamColors.from}
+                  colorTo={beamColors.to}
+                  size={160}
+                  duration={8}
+                />
+              </div>
             )}
 
             {/* Cover Image - 如果有封面图且未出错则显示封面图，否则显示占位图 */}
             {(post.coverImage && !imageError) ? (
               <motion.div
                 className="relative w-full aspect-video overflow-hidden"
-                whileHover={{ scale: 1.04 }}
+                animate={{ scale: isHovered ? 1.04 : 1 }}
                 transition={{ duration: 0.3 }}
               >
-                <img
+                <Image
                   src={post.coverImage}
                   alt={title}
-                  className="w-full h-full object-cover"
+                  fill
+                  sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
+                  unoptimized={!post.coverImage.startsWith('/')}
+                  className="object-cover"
                   onError={() => setImageError(true)}
                 />
                 {/* 悬停时的微光效果 */}
@@ -129,7 +149,7 @@ export function BlogCard({ post, isLatest = false, index = 0 }: BlogCardProps) {
                   'relative flex h-40 items-center justify-center bg-gradient-to-br overflow-hidden',
                   COVER_GRADIENTS[post.category]
                 )}
-                whileHover={{ scale: 1.04 }}
+                animate={{ scale: isHovered ? 1.04 : 1 }}
                 transition={{ duration: 0.3 }}
               >
                 <motion.span 
@@ -193,7 +213,7 @@ export function BlogCard({ post, isLatest = false, index = 0 }: BlogCardProps) {
               </motion.h2>
 
               {/* Excerpt */}
-              <p className="text-sm text-muted-foreground line-clamp-2">
+              <p className="text-sm text-muted-foreground line-clamp-2 transition-colors duration-300 group-hover:text-foreground/70">
                 {excerpt}
               </p>
 

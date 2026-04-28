@@ -494,7 +494,3 @@ export const debates: DebatePost[] = [
 export function getDebateById(id: string): DebatePost | undefined {
   return debates.find((d) => d.id === id);
 }
-
-export function getDebatesByDate(date: string): DebatePost[] {
-  return debates.filter((d) => d.date === date);
-}

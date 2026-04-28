@@ -27,6 +27,41 @@ function validateOpinionLength(text: string | undefined): boolean {
   return length >= 10 && length <= 2000;
 }
 
+type OpinionBody = {
+  topicId?: string;
+  model?: string;
+  stance?: DebateStance;
+  opinion?: {
+    zh?: string;
+    ja?: string;
+    en?: string;
+  };
+  replyTo?: string;
+  instanceName?: string;
+};
+
+function isString(value: unknown): value is string {
+  return typeof value === 'string';
+}
+
+function isOpinionBody(value: unknown): value is OpinionBody {
+  if (typeof value !== 'object' || value === null) return false;
+  const v = value as Record<string, unknown>;
+  if (v.topicId !== undefined && !isString(v.topicId)) return false;
+  if (v.model !== undefined && !isString(v.model)) return false;
+  if (v.stance !== undefined && !isString(v.stance)) return false;
+  if (v.replyTo !== undefined && !isString(v.replyTo)) return false;
+  if (v.instanceName !== undefined && !isString(v.instanceName)) return false;
+  if (v.opinion !== undefined) {
+    if (typeof v.opinion !== 'object' || v.opinion === null) return false;
+    const op = v.opinion as Record<string, unknown>;
+    if (op.zh !== undefined && !isString(op.zh)) return false;
+    if (op.ja !== undefined && !isString(op.ja)) return false;
+    if (op.en !== undefined && !isString(op.en)) return false;
+  }
+  return true;
+}
+
 function hashIP(ip: string): string {
   return createHash('sha256').update(ip).digest('hex');
 }
@@ -69,18 +104,11 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    const body = (await request.json()) as {
-      topicId?: string;
-      model?: string;
-      stance?: DebateStance;
-      opinion?: {
-        zh?: string;
-        ja?: string;
-        en?: string;
-      };
-      replyTo?: string;
-      instanceName?: string;
-    };
+    const raw = await request.json();
+    if (!isOpinionBody(raw)) {
+      return NextResponse.json({ error: 'Invalid request body' }, { status: 400 });
+    }
+    const body: OpinionBody = raw;
 
     // ── Required field validation ─────────────────────────────────────────
     if (!body.topicId || !body.model || !body.stance || !body.opinion?.zh) {

@@ -1,11 +1,13 @@
 'use client';
 
+import Image from 'next/image';
 import { useLocale, useTranslations } from 'next-intl';
 import { motion } from 'motion/react';
 import { Calendar, Clock, User, ChevronLeft, ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { BlogPost, Comment, BlogCategory } from '@/lib/blog-types';
 import { CATEGORY_KEYS } from '@/lib/blog-types';
+import type { Locale } from '@/lib/locale';
 import { Link } from '@/i18n/navigation';
 import { PageTransition } from '@/components/shared/PageTransition';
 import { MarkdownRenderer } from './markdown-renderer';
@@ -15,6 +17,8 @@ import { CommentSection } from './CommentSection';
 import { AudioPlayer } from '@/components/shared/AudioPlayer';
 import { getAudioUrl } from '@/lib/storage';
 import { EnhancedLayout } from './enhanced/EnhancedLayout';
+import { ScrollProgressBar } from './enhanced/ScrollProgressBar';
+import { BackToTop } from './enhanced/BackToTop';
 
 const CATEGORY_TAG_COLORS: Record<BlogCategory, string> = {
   ai: 'bg-brand-cyan/15 text-brand-cyan',
@@ -39,7 +43,7 @@ interface BlogDetailProps {
   headings: TocHeading[];
 }
 
-function formatReadingTime(minutes: number, locale: string): string {
+function formatReadingTime(minutes: number, locale: Locale): string {
   if (locale === 'zh') {
     return `约 ${minutes} 分钟阅读`;
   }
@@ -51,7 +55,7 @@ function formatReadingTime(minutes: number, locale: string): string {
   return `About ${minutes} min read`;
 }
 
-function getContentSourceLabel(contentSource: BlogPost['contentSource'], locale: string): string {
+function getContentSourceLabel(contentSource: BlogPost['contentSource'], locale: Locale): string {
   if (locale === 'zh') {
     return contentSource === 'original' ? '原创' : 'AI整理';
   }
@@ -63,8 +67,8 @@ function getContentSourceLabel(contentSource: BlogPost['contentSource'], locale:
   return contentSource === 'original' ? 'Original' : 'AI Organized';
 }
 
-export function BlogDetail({ post, prevPost, nextPost, comments, postSlug, headings }: BlogDetailProps) {
-  const locale = useLocale();
+export function BlogDetail({ post, prevPost, nextPost, comments: _comments, postSlug, headings }: BlogDetailProps) {
+  const locale = useLocale() as Locale;
   const t = useTranslations('blog');
   const title = post.title[locale] || post.title.zh || post.title.en || '';
   const prevTitle = prevPost ? (prevPost.title[locale] || prevPost.title.zh || prevPost.title.en || '') : '';
@@ -106,12 +110,20 @@ export function BlogDetail({ post, prevPost, nextPost, comments, postSlug, headi
 
             <article className="enhanced-article-content">
               {post.coverImage && (
-                <div className="relative w-full aspect-video overflow-hidden rounded-xl mb-8 max-w-3xl mx-auto">
-                  <img
+                <div className="enhanced-cover-frame relative w-full aspect-video overflow-hidden rounded-2xl mb-10 max-w-3xl mx-auto">
+                  <Image
                     src={post.coverImage}
                     alt={post.title[locale] || post.title.zh}
-                    className="w-full h-full object-cover"
+                    fill
+                    sizes="(max-width: 1024px) 100vw, 768px"
+                    priority
+                    unoptimized={!post.coverImage.startsWith('/')}
+                    className="enhanced-cover-img object-cover"
                   />
+                  {/* Cyan-edged vignette for depth */}
+                  <div className="enhanced-cover-vignette" aria-hidden />
+                  {/* Fine ring that catches ambient light */}
+                  <div className="enhanced-cover-ring" aria-hidden />
                 </div>
               )}
 
@@ -166,37 +178,48 @@ export function BlogDetail({ post, prevPost, nextPost, comments, postSlug, headi
 
               <hr className="my-10 border-border" />
 
-              <nav className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                {prevPost ? (
+              <nav className="space-y-4">
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                  {prevPost ? (
+                    <Link
+                      href={`/blog/${prevPost.slug}`}
+                      className="group flex flex-col gap-1 rounded-lg border p-4 transition-all hover:bg-muted/50"
+                    >
+                      <span className="flex items-center gap-1 text-xs text-muted-foreground">
+                        <ChevronLeft className="h-3 w-3" />
+                        {t('prev_post')}
+                      </span>
+                      <span className="text-sm font-medium line-clamp-1 group-hover:text-brand-cyan">
+                        {prevTitle}
+                      </span>
+                    </Link>
+                  ) : (
+                    <div />
+                  )}
+                  {nextPost && (
+                    <Link
+                      href={`/blog/${nextPost.slug}`}
+                      className="group flex flex-col items-end gap-1 rounded-lg border p-4 transition-all hover:bg-muted/50"
+                    >
+                      <span className="flex items-center gap-1 text-xs text-muted-foreground">
+                        {t('next_post')}
+                        <ChevronRight className="h-3 w-3" />
+                      </span>
+                      <span className="text-sm font-medium line-clamp-1 group-hover:text-brand-cyan">
+                        {nextTitle}
+                      </span>
+                    </Link>
+                  )}
+                </div>
+                <div className="flex justify-center">
                   <Link
-                    href={`/blog/${prevPost.slug}`}
-                    className="group flex flex-col gap-1 rounded-lg border p-4 transition-all hover:bg-muted/50"
+                    href="/blog"
+                    className="inline-flex items-center gap-1 text-sm text-muted-foreground transition-colors hover:text-foreground"
                   >
-                    <span className="flex items-center gap-1 text-xs text-muted-foreground">
-                      <ChevronLeft className="h-3 w-3" />
-                      {t('prev_post')}
-                    </span>
-                    <span className="text-sm font-medium line-clamp-1 group-hover:text-brand-cyan">
-                      {prevTitle}
-                    </span>
+                    <ChevronLeft className="h-4 w-4" />
+                    {t('title')}
                   </Link>
-                ) : (
-                  <div />
-                )}
-                {nextPost && (
-                  <Link
-                    href={`/blog/${nextPost.slug}`}
-                    className="group flex flex-col items-end gap-1 rounded-lg border p-4 transition-all hover:bg-muted/50"
-                  >
-                    <span className="flex items-center gap-1 text-xs text-muted-foreground">
-                      {t('next_post')}
-                      <ChevronRight className="h-3 w-3" />
-                    </span>
-                    <span className="text-sm font-medium line-clamp-1 group-hover:text-brand-cyan">
-                      {nextTitle}
-                    </span>
-                  </Link>
-                )}
+                </div>
               </nav>
 
               <div className="mt-12">
@@ -215,6 +238,8 @@ export function BlogDetail({ post, prevPost, nextPost, comments, postSlug, headi
   // Standard layout - original rendering for non-enhanced posts
   return (
     <PageTransition>
+      <ScrollProgressBar />
+      <BackToTop />
       <div className="mx-auto max-w-[1400px] px-4 py-12 sm:px-6">
         <Link
           href="/blog"
@@ -228,10 +253,14 @@ export function BlogDetail({ post, prevPost, nextPost, comments, postSlug, headi
           <article className="min-w-0 max-w-4xl">
             {post.coverImage && (
               <div className="relative w-full aspect-video overflow-hidden rounded-xl mb-8 max-w-3xl mx-auto">
-                <img
+                <Image
                   src={post.coverImage}
                   alt={post.title[locale] || post.title.zh}
-                  className="w-full h-full object-cover"
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 768px"
+                  priority
+                  unoptimized={!post.coverImage.startsWith('/')}
+                  className="object-cover"
                 />
               </div>
             )}
@@ -336,37 +365,48 @@ export function BlogDetail({ post, prevPost, nextPost, comments, postSlug, headi
 
             <hr className="my-10 border-border" />
 
-            <nav className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-              {prevPost ? (
+            <nav className="space-y-4">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                {prevPost ? (
+                  <Link
+                    href={`/blog/${prevPost.slug}`}
+                    className="group flex flex-col gap-1 rounded-lg border p-4 transition-all hover:bg-muted/50"
+                  >
+                    <span className="flex items-center gap-1 text-xs text-muted-foreground">
+                      <ChevronLeft className="h-3 w-3" />
+                      {t('prev_post')}
+                    </span>
+                    <span className="text-sm font-medium line-clamp-1 group-hover:text-brand-cyan">
+                      {prevTitle}
+                    </span>
+                  </Link>
+                ) : (
+                  <div />
+                )}
+                {nextPost && (
+                  <Link
+                    href={`/blog/${nextPost.slug}`}
+                    className="group flex flex-col items-end gap-1 rounded-lg border p-4 transition-all hover:bg-muted/50"
+                  >
+                    <span className="flex items-center gap-1 text-xs text-muted-foreground">
+                      {t('next_post')}
+                      <ChevronRight className="h-3 w-3" />
+                    </span>
+                    <span className="text-sm font-medium line-clamp-1 group-hover:text-brand-cyan">
+                      {nextTitle}
+                    </span>
+                  </Link>
+                )}
+              </div>
+              <div className="flex justify-center">
                 <Link
-                  href={`/blog/${prevPost.slug}`}
-                  className="group flex flex-col gap-1 rounded-lg border p-4 transition-all hover:bg-muted/50"
+                  href="/blog"
+                  className="inline-flex items-center gap-1 text-sm text-muted-foreground transition-colors hover:text-foreground"
                 >
-                  <span className="flex items-center gap-1 text-xs text-muted-foreground">
-                    <ChevronLeft className="h-3 w-3" />
-                    {t('prev_post')}
-                  </span>
-                  <span className="text-sm font-medium line-clamp-1 group-hover:text-brand-cyan">
-                    {prevTitle}
-                  </span>
+                  <ChevronLeft className="h-4 w-4" />
+                  {t('title')}
                 </Link>
-              ) : (
-                <div />
-              )}
-              {nextPost && (
-                <Link
-                  href={`/blog/${nextPost.slug}`}
-                  className="group flex flex-col items-end gap-1 rounded-lg border p-4 transition-all hover:bg-muted/50"
-                >
-                  <span className="flex items-center gap-1 text-xs text-muted-foreground">
-                    {t('next_post')}
-                    <ChevronRight className="h-3 w-3" />
-                  </span>
-                  <span className="text-sm font-medium line-clamp-1 group-hover:text-brand-cyan">
-                    {nextTitle}
-                  </span>
-                </Link>
-              )}
+              </div>
             </nav>
 
             <div className="mt-12">
