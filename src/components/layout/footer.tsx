@@ -26,7 +26,7 @@ const socialLinks: FooterLink[] = [
   {
     href: 'https://github.com/konayuki56',
     label: 'GitHub',
-    value: 'konayuki56',
+    value: '@konayuki56',
   },
   {
     href: 'https://www.xiaohongshu.com/user/profile/65b8e6a4000000000d008d37',
@@ -39,7 +39,7 @@ export function Footer() {
   const t = useTranslations('footer');
 
   return (
-    <footer className="pb-20 md:pb-0" role="contentinfo" aria-label={t('sites_title')}>
+    <footer className="pb-20 md:pb-0" aria-label={t('sites_title')}>
       <div className="mx-auto max-w-5xl px-4 sm:px-6">
         <div className="h-px bg-gradient-to-r from-transparent via-brand-mint/60 to-brand-cyan/60 opacity-50" />
       </div>
