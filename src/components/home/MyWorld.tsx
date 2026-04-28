@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import type { ReactNode } from 'react';
 import { useTranslations } from 'next-intl';
 import { motion } from 'motion/react';
 import { Link } from '@/i18n/navigation';
@@ -38,7 +38,7 @@ const snsCards = [
   },
 ];
 
-function LinkCard({ href, emoji, title, desc }: { href: string; emoji: string; title: React.ReactNode; desc: React.ReactNode }) {
+function LinkCard({ href, emoji, title, desc }: { href: string; emoji: string; title: ReactNode; desc: ReactNode }) {
   return (
     <a
       href={href}
