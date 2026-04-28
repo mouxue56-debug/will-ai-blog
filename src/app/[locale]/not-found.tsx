@@ -1,7 +1,8 @@
 'use client';
 
-import { Search, ArrowLeft, Home } from 'lucide-react';
+import { Search, ArrowLeft, Home, User } from 'lucide-react';
 import { useLocale } from 'next-intl';
+import { useRouter } from 'next/navigation';
 import { Link } from '@/i18n/navigation';
 
 const copy = {
@@ -40,6 +41,7 @@ const copy = {
 export default function LocaleNotFound() {
   const locale = useLocale() as keyof typeof copy;
   const text = copy[locale] ?? copy.zh;
+  const router = useRouter();
 
   return (
     <div className="relative overflow-hidden px-4 py-20 sm:px-6 min-h-[70vh] flex items-center justify-center">
@@ -95,18 +97,19 @@ export default function LocaleNotFound() {
               href="/about"
               className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-5 py-2.5 text-sm font-medium text-foreground transition-colors hover:bg-white/[0.06]"
             >
+              <User className="h-4 w-4" />
               {text.about}
             </Link>
           </div>
 
           <div className="mt-8 border-t border-white/8 pt-5 opacity-0 animate-[fadeUp_0.6s_ease-out_0.6s_forwards]">
-            <Link
-              href="/"
+            <button
+              onClick={() => router.back()}
               className="inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
             >
               <ArrowLeft className="h-4 w-4" />
               {text.back}
-            </Link>
+            </button>
           </div>
         </div>
       </div>
