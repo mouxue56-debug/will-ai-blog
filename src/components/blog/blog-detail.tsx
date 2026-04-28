@@ -7,6 +7,7 @@ import { Calendar, Clock, User, ChevronLeft, ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { BlogPost, Comment, BlogCategory } from '@/lib/blog-types';
 import { CATEGORY_KEYS } from '@/lib/blog-types';
+import type { Locale } from '@/lib/locale';
 import { Link } from '@/i18n/navigation';
 import { PageTransition } from '@/components/shared/PageTransition';
 import { MarkdownRenderer } from './markdown-renderer';
@@ -42,7 +43,7 @@ interface BlogDetailProps {
   headings: TocHeading[];
 }
 
-function formatReadingTime(minutes: number, locale: string): string {
+function formatReadingTime(minutes: number, locale: Locale): string {
   if (locale === 'zh') {
     return `约 ${minutes} 分钟阅读`;
   }
@@ -54,7 +55,7 @@ function formatReadingTime(minutes: number, locale: string): string {
   return `About ${minutes} min read`;
 }
 
-function getContentSourceLabel(contentSource: BlogPost['contentSource'], locale: string): string {
+function getContentSourceLabel(contentSource: BlogPost['contentSource'], locale: Locale): string {
   if (locale === 'zh') {
     return contentSource === 'original' ? '原创' : 'AI整理';
   }
@@ -67,7 +68,7 @@ function getContentSourceLabel(contentSource: BlogPost['contentSource'], locale:
 }
 
 export function BlogDetail({ post, prevPost, nextPost, comments: _comments, postSlug, headings }: BlogDetailProps) {
-  const locale = useLocale();
+  const locale = useLocale() as Locale;
   const t = useTranslations('blog');
   const title = post.title[locale] || post.title.zh || post.title.en || '';
   const prevTitle = prevPost ? (prevPost.title[locale] || prevPost.title.zh || prevPost.title.en || '') : '';
