@@ -115,6 +115,7 @@ export function BlogList({ posts }: BlogListProps) {
                 src={getIllustrationUrl('blog-banner')}
                 alt={t('title')}
                 fill
+                sizes="(max-width: 1024px) 100vw, 1024px"
                 className="object-cover object-center opacity-60 dark:opacity-80"
               />
               {/* Dior candy wash (light) — hidden in dark */}
