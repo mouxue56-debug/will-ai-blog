@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import Image from 'next/image';
 import { motion, AnimatePresence, useReducedMotion } from 'motion/react';
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
@@ -173,6 +174,7 @@ export function CaseDetail({
   const t = useTranslations('cases');
   const loc = locale;
   const prefersReducedMotion = useReducedMotion();
+  const [heroError, setHeroError] = useState(false);
 
   return (
     <div className="mx-auto max-w-4xl px-4 sm:px-6 pb-16">
@@ -181,12 +183,17 @@ export function CaseDetail({
         className={`relative -mx-4 sm:-mx-6 mb-10 overflow-hidden rounded-b-3xl bg-gradient-to-br ${caseStudy.gradient}`}
       >
         {/* Hero image (falls back to gradient if missing) */}
-        <img
-          src={`/covers/cases/${caseStudy.slug}.jpg`}
-          alt={caseStudy.title[loc] || caseStudy.title.zh || 'Case study cover'}
-          className="absolute inset-0 h-full w-full object-cover opacity-80 dark:opacity-65"
-          onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }}
-        />
+        {!heroError && (
+          <Image
+            src={`/covers/cases/${caseStudy.slug}.jpg`}
+            alt={caseStudy.title[loc] || caseStudy.title.zh || 'Case study cover'}
+            fill
+            sizes="(max-width: 1024px) 100vw, 1024px"
+            priority
+            className="object-cover opacity-80 dark:opacity-65"
+            onError={() => setHeroError(true)}
+          />
+        )}
         <div className="absolute inset-0 bg-gradient-to-br from-black/20 via-black/10 to-black/30" />
         {/* Grid overlay */}
         <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,.04)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,.04)_1px,transparent_1px)] bg-[size:32px_32px]" />

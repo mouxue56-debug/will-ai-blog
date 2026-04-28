@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { useLocale, useTranslations } from 'next-intl';
 import { motion } from 'motion/react';
 import { Calendar, Clock, User, ChevronLeft, ChevronRight } from 'lucide-react';
@@ -109,10 +110,14 @@ export function BlogDetail({ post, prevPost, nextPost, comments: _comments, post
             <article className="enhanced-article-content">
               {post.coverImage && (
                 <div className="enhanced-cover-frame relative w-full aspect-video overflow-hidden rounded-2xl mb-10 max-w-3xl mx-auto">
-                  <img
+                  <Image
                     src={post.coverImage}
                     alt={post.title[locale] || post.title.zh}
-                    className="enhanced-cover-img w-full h-full object-cover"
+                    fill
+                    sizes="(max-width: 1024px) 100vw, 768px"
+                    priority
+                    unoptimized={!post.coverImage.startsWith('/')}
+                    className="enhanced-cover-img object-cover"
                   />
                   {/* Cyan-edged vignette for depth */}
                   <div className="enhanced-cover-vignette" aria-hidden />
@@ -247,10 +252,14 @@ export function BlogDetail({ post, prevPost, nextPost, comments: _comments, post
           <article className="min-w-0 max-w-4xl">
             {post.coverImage && (
               <div className="relative w-full aspect-video overflow-hidden rounded-xl mb-8 max-w-3xl mx-auto">
-                <img
+                <Image
                   src={post.coverImage}
                   alt={post.title[locale] || post.title.zh}
-                  className="w-full h-full object-cover"
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 768px"
+                  priority
+                  unoptimized={!post.coverImage.startsWith('/')}
+                  className="object-cover"
                 />
               </div>
             )}

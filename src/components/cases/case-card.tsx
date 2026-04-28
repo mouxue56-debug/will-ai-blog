@@ -1,6 +1,7 @@
 'use client';
 
 import { useRef, useState } from 'react';
+import Image from 'next/image';
 import { motion, useReducedMotion } from 'motion/react';
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
@@ -31,12 +32,13 @@ export function CaseCard({ c, locale }: { c: CaseStudy; locale: Locale }) {
               className={`relative flex h-48 items-center justify-center overflow-hidden sm:h-56 ${heroError ? `bg-gradient-to-br ${c.gradient} opacity-90` : ''}`}
             >
               {!heroError && (
-                <img
+                <Image
                   src={heroSrc}
                   alt={c.title[loc]}
-                  loading="lazy"
+                  fill
+                  sizes="(max-width: 768px) 100vw, 50vw"
                   onError={() => setHeroError(true)}
-                  className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.04]"
+                  className="object-cover transition-transform duration-500 group-hover:scale-[1.04]"
                 />
               )}
               {heroError && (

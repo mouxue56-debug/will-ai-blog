@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Image from 'next/image';
 import { motion } from 'motion/react';
 import { useLocale, useTranslations } from 'next-intl';
 import { Clock, Calendar } from 'lucide-react';
@@ -111,10 +112,13 @@ export function BlogCard({ post, isLatest = false, index = 0 }: BlogCardProps) {
                 whileHover={{ scale: 1.04 }}
                 transition={{ duration: 0.3 }}
               >
-                <img
+                <Image
                   src={post.coverImage}
                   alt={title}
-                  className="w-full h-full object-cover"
+                  fill
+                  sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
+                  unoptimized={!post.coverImage.startsWith('/')}
+                  className="object-cover"
                   onError={() => setImageError(true)}
                 />
                 {/* 悬停时的微光效果 */}

@@ -14,6 +14,9 @@ const withMDX = createMDX({
 });
 
 const nextConfig: NextConfig = {
+  // Pin workspace root so Next.js does not pick up a stale lockfile
+  // from $HOME/package-lock.json (which silently changes file tracing)
+  outputFileTracingRoot: path.resolve('.'),
   pageExtensions: ['js', 'jsx', 'md', 'mdx', 'ts', 'tsx'],
   images: {
     remotePatterns: [
