@@ -60,6 +60,9 @@ export function BorderBeam({
               0% { offset-distance: 0%; }
               100% { offset-distance: 100%; }
             }
+            @media (prefers-reduced-motion: reduce) {
+              .animate-border-beam { animation: none !important; opacity: 0; }
+            }
           `,
         }}
       />

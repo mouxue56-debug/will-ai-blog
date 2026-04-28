@@ -113,6 +113,9 @@ export function InteractiveDiagram() {
         .animate-fadeIn {
           animation: fadeIn 0.3s ease-out;
         }
+        @media (prefers-reduced-motion: reduce) {
+          .animate-fadeIn { animation: none; }
+        }
       `}</style>
     </div>
   );
