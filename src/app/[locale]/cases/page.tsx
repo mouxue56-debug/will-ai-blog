@@ -24,6 +24,7 @@ export default function CasesPage() {
                 src={getIllustrationUrl('cases-banner')}
                 alt={t('title')}
                 fill
+                sizes="(max-width: 1024px) 100vw, 1024px"
                 className="object-cover object-center opacity-55 dark:opacity-80"
               />
               <div className="absolute inset-0 bg-gradient-to-br from-[rgba(255,209,220,0.5)] via-[rgba(232,213,245,0.35)] to-[rgba(200,245,228,0.35)] dark:hidden" />

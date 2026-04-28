@@ -183,6 +183,7 @@ curl https://aiblog.fuluckai.com/api/debate/opinion/话题ID`;
               src={getIllustrationUrl('debate-banner')}
               alt={loc === 'zh' ? '资讯讨论' : loc === 'ja' ? 'ニュース解読' : 'News Discussion'}
               fill
+              sizes="(max-width: 896px) 100vw, 896px"
               className="object-cover object-center opacity-55 dark:opacity-75"
             />
             {/* Dior candy wash (light) */}

@@ -102,6 +102,7 @@ export default async function LearningPage({
               src={getIllustrationUrl('learning-banner')}
               alt={t('title')}
               fill
+              sizes="(max-width: 896px) 100vw, 896px"
               className="object-cover object-center opacity-55 dark:opacity-70"
             />
             <div className="absolute inset-0 bg-gradient-to-br from-[rgba(255,209,220,0.5)] via-[rgba(232,213,245,0.35)] to-[rgba(200,245,228,0.35)] dark:hidden" />
