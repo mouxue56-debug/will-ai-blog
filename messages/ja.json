@@ -178,7 +178,8 @@
     "page_title": "ブログ",
     "page_subtitle": "のブログ記事一覧",
     "page_desc": "気づき、技術メモ、日常の記録",
-    "page_intro": "AIツールの実践、マルチインスタンス設計、プロンプト工学——リアルな試行錯誤の記録"
+    "page_intro": "AIツールの実践、マルチインスタンス設計、プロンプト工学——リアルな試行錯誤の記録",
+    "back": "ブログに戻る"
   },
   "footer": {
     "copyright": "© 2026 Will AI Lab. All rights reserved.",

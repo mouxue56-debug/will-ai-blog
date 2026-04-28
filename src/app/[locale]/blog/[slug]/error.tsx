@@ -13,6 +13,7 @@ export default function BlogDetailError({
   reset: () => void;
 }) {
   const t = useTranslations('error');
+  const tBlog = useTranslations('blog');
   const { locale } = useParams<{ locale: string }>();
 
   useEffect(() => {
@@ -42,7 +43,7 @@ export default function BlogDetailError({
             href={`/${locale}/blog`}
             className="inline-flex items-center justify-center px-6 py-3 rounded-full bg-brand-pink/10 text-brand-pink font-medium text-sm hover:bg-brand-pink/20 transition-colors border border-brand-pink/15"
           >
-            ← {locale === 'zh' ? '返回博客' : locale === 'ja' ? 'ブログに戻る' : 'Back to Blog'}
+            ← {tBlog('back')}
           </Link>
         </div>
       </div>

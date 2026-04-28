@@ -178,7 +178,8 @@
     "page_title": "博客",
     "page_subtitle": "的博客文章合集",
     "page_desc": "心得、技术笔记、生活日常",
-    "page_intro": "记录 AI 工具实践、多实例架构、提示词工程——真实踩坑，不是教程"
+    "page_intro": "记录 AI 工具实践、多实例架构、提示词工程——真实踩坑，不是教程",
+    "back": "返回博客"
   },
   "footer": {
     "copyright": "© 2026 Will AI Lab. All rights reserved.",

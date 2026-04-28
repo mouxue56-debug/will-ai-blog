@@ -178,7 +178,8 @@
     "page_title": "Blog",
     "page_subtitle": "Blog Posts",
     "page_desc": "Insights, tech notes, and daily life",
-    "page_intro": "Notes on AI tools, multi-instance architecture, prompt engineering — real experiments, not tutorials"
+    "page_intro": "Notes on AI tools, multi-instance architecture, prompt engineering — real experiments, not tutorials",
+    "back": "Back to Blog"
   },
   "footer": {
     "copyright": "© 2026 Will AI Lab. All rights reserved.",
