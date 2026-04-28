@@ -183,10 +183,16 @@ const DEEP_OCEAN_CSS = `
 }
 
 /* Tables */
+.k2w-table-wrapper {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin: 1.5rem 0;
+  border-radius: 12px;
+}
 .k2w-prose table {
   width: 100%;
   border-collapse: collapse;
-  margin: 1.5rem 0;
+  margin: 0;
   font-size: 0.95rem;
 }
 .k2w-prose thead {
@@ -300,7 +306,9 @@ interface MarkdownRendererProps {
 export function MarkdownRenderer({ content }: MarkdownRendererProps) {
   const html = useMemo(() => {
     if (!content) return '';
-    const parsed = deepOceanMarked.parse(content) as string;
+    const parsed = (deepOceanMarked.parse(content) as string)
+      .replace(/<table>/g, '<div class="k2w-table-wrapper"><table>')
+      .replace(/<\/table>/g, '</table></div>');
     return `<style>${DEEP_OCEAN_CSS}</style>${parsed}`;
   }, [content]);
 
