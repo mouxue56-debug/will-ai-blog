@@ -37,7 +37,7 @@ function truncate(text: string, maxLength: number): string {
   return `${text.slice(0, maxLength).trim()}...`;
 }
 
-export function buildLocalePath(locale: string, pathname: string): string {
+function buildLocalePath(locale: string, pathname: string): string {
   return getPathname({
     locale: locale as (typeof routing.locales)[number],
     href: pathname as `/${string}`,
@@ -69,7 +69,7 @@ function safePubDate(value?: string): string {
   return Number.isNaN(parsed.getTime()) ? new Date().toUTCString() : parsed.toUTCString();
 }
 
-export function getSortedPosts() {
+function getSortedPosts() {
   return [...getAllPosts()].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 }
 

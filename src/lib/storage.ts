@@ -1,10 +1,4 @@
-// Vercel部署URL（静态文件用）
-export const VERCEL_URL = 'https://aiblog.fuluckai.com';
-export const STORAGE_BASE = 'https://tafbypudxuksfwrkfbxv.supabase.co/storage/v1/object/public';
-
-export function getCoverUrl(slug: string): string {
-  return `${VERCEL_URL}/covers/${slug}.jpg`;
-}
+const VERCEL_URL = 'https://aiblog.fuluckai.com';
 
 export function getAudioUrl(filename: string): string {
   return `${VERCEL_URL}/audio/${filename}`;
