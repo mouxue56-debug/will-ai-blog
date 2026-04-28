@@ -13,6 +13,7 @@ export default function DebateError({
   reset: () => void;
 }) {
   const t = useTranslations('error');
+  const tDebate = useTranslations('debate');
   const { locale } = useParams<{ locale: string }>();
 
   useEffect(() => {
@@ -42,7 +43,7 @@ export default function DebateError({
             href={`/${locale}/debate`}
             className="inline-flex items-center justify-center px-6 py-3 rounded-full bg-brand-pink/10 text-brand-pink font-medium text-sm hover:bg-brand-pink/20 transition-colors border border-brand-pink/15"
           >
-            ← {locale === 'zh' ? '返回讨论' : locale === 'ja' ? '議論に戻る' : 'Back to Debate'}
+            ← {tDebate('back')}
           </Link>
         </div>
       </div>
