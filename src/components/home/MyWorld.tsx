@@ -1,5 +1,6 @@
 'use client';
 
+import React from 'react';
 import { useTranslations } from 'next-intl';
 import { motion } from 'motion/react';
 import { Link } from '@/i18n/navigation';
@@ -36,6 +37,32 @@ const snsCards = [
     borderColor: 'border-border/40',
   },
 ];
+
+function LinkCard({ href, emoji, title, desc }: { href: string; emoji: string; title: React.ReactNode; desc: React.ReactNode }) {
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="group glass-card p-5 flex items-center gap-4 hover:shadow-md border border-white/[0.08] hover:border-brand-cyan/30 bg-card/60 hover:bg-card/80 transition-all duration-300"
+    >
+      <div className="w-12 h-12 rounded-xl bg-brand-mint/10 flex items-center justify-center text-2xl flex-shrink-0 hover:scale-110 transition-transform duration-300">
+        {emoji}
+      </div>
+      <div className="flex-1 min-w-0">
+        <h3 className="font-semibold group-hover:text-brand-mint transition-colors truncate">
+          {title}
+        </h3>
+        <p className="text-xs sm:text-sm text-muted-foreground line-clamp-1">
+          {desc}
+        </p>
+      </div>
+      <span className="text-muted-foreground group-hover:text-brand-mint group-hover:translate-x-1 transition-all duration-200 flex-shrink-0">
+        →
+      </span>
+    </a>
+  );
+}
 
 export function MyWorld() {
   const t = useTranslations('home');
@@ -93,49 +120,18 @@ export function MyWorld() {
             transition={{ delay: 0.2, duration: 0.5 }}
             className="flex flex-col gap-3 justify-center"
           >
-            <a
+            <LinkCard
               href="https://fuluck-cattery.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group glass-card p-5 flex items-center gap-4 hover:shadow-md border border-white/[0.08] hover:border-brand-cyan/30 bg-card/60 hover:bg-card/80 transition-all duration-300"
-            >
-              <div className="w-12 h-12 rounded-xl bg-brand-mint/10 flex items-center justify-center text-2xl flex-shrink-0 hover:scale-110 transition-transform duration-300">
-                🐱
-              </div>
-              <div className="flex-1 min-w-0">
-                <h3 className="font-semibold group-hover:text-brand-mint transition-colors truncate">
-                  {t('cattery_title')}
-                </h3>
-                <p className="text-xs sm:text-sm text-muted-foreground line-clamp-1">
-                  {t('cattery_desc')}
-                </p>
-              </div>
-              <span className="text-muted-foreground group-hover:text-brand-mint group-hover:translate-x-1 transition-all duration-200 flex-shrink-0">
-                →
-              </span>
-            </a>
-
-            <a
+              emoji="🐱"
+              title={t('cattery_title')}
+              desc={t('cattery_desc')}
+            />
+            <LinkCard
               href="https://fuluckai.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group glass-card p-5 flex items-center gap-4 hover:shadow-md border border-white/[0.08] hover:border-brand-cyan/30 bg-card/60 hover:bg-card/80 transition-all duration-300"
-            >
-              <div className="w-12 h-12 rounded-xl bg-brand-mint/10 flex items-center justify-center text-2xl flex-shrink-0 hover:scale-110 transition-transform duration-300">
-                🤖
-              </div>
-              <div className="flex-1 min-w-0">
-                <h3 className="font-semibold group-hover:text-brand-mint transition-colors truncate">
-                  Fuluck AI
-                </h3>
-                <p className="text-xs sm:text-sm text-muted-foreground line-clamp-1">
-                  AI × {t('cattery_title')}
-                </p>
-              </div>
-              <span className="text-muted-foreground group-hover:text-brand-mint group-hover:translate-x-1 transition-all duration-200 flex-shrink-0">
-                →
-              </span>
-            </a>
+              emoji="🤖"
+              title="Fuluck AI"
+              desc={`AI × ${t('cattery_title')}`}
+            />
           </motion.div>
         </div>
       </div>
