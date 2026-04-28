@@ -249,7 +249,7 @@ export function DailyTopicsAccordion({ topics }: DailyTopicsAccordionProps) {
                   <span className="text-xs font-medium text-cyan-600 dark:text-cyan-600 dark:text-[#00D4FF]">
                     {getTopicDisplayName(topic.topic_type, t)}
                   </span>
-                  <span className="text-xs text-gray-400 dark:text-gray-500">
+                  <span className="text-xs text-gray-400 dark:text-gray-300">
                     {topic.published_at ? topic.published_at.slice(0, 10) : ''}
                   </span>
                   <div
@@ -262,7 +262,7 @@ export function DailyTopicsAccordion({ topics }: DailyTopicsAccordionProps) {
                     transition={{ duration: 0.25 }}
                     className="flex-shrink-0"
                   >
-                    <ChevronDown className="w-4 h-4 text-gray-500 dark:text-gray-500 dark:text-gray-400" />
+                    <ChevronDown className="w-4 h-4 text-gray-500 dark:text-gray-400" />
                   </motion.span>
                 </div>
                 
