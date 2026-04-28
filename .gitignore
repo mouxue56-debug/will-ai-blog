@@ -53,10 +53,13 @@ __pycache__/
 src/data/*.bak
 scripts/__pycache__/
 
-# GLM autonomous loop artifacts (per-developer tooling, not for repo)
+# Autonomous loop artifacts (per-developer tooling, not for repo)
 .glm-autonomous-loop.sh
 .glm-autonomous.log
 .glm-autonomous.status
+.sonnet-autonomous-loop.sh
+.sonnet-autonomous.log
+.sonnet-autonomous.status
 
 # Personal/temporary HTML files (not part of website)
 public/grid-trade-*.html
