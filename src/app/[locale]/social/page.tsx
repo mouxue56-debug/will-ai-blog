@@ -1,11 +1,10 @@
-'use client';
-
-import { useTranslations } from 'next-intl';
+import { getTranslations } from 'next-intl/server';
 import { PageTransition } from '@/components/shared/PageTransition';
 import { SocialSections } from '@/components/social/social-sections';
 
-export default function SocialPage() {
-  const t = useTranslations('social');
+export default async function SocialPage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'social' });
 
   return (
     <PageTransition>

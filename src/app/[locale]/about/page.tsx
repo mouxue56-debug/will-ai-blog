@@ -1,5 +1,3 @@
-'use client';
-
 import { PageTransition } from '@/components/shared/PageTransition';
 import { AboutSections } from '@/components/about/about-sections';
 
