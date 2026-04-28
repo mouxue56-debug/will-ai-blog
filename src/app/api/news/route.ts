@@ -6,8 +6,10 @@ import type { NewsCategory } from '@/data/news';
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const category = searchParams.get('category') as NewsCategory | null;
-  const limit = parseInt(searchParams.get('limit') || '10', 10);
-  const offset = parseInt(searchParams.get('offset') || '0', 10);
+  const rawLimit = parseInt(searchParams.get('limit') || '10', 10);
+  const rawOffset = parseInt(searchParams.get('offset') || '0', 10);
+  const limit = Number.isNaN(rawLimit) || rawLimit < 1 ? 10 : Math.min(rawLimit, 100);
+  const offset = Number.isNaN(rawOffset) || rawOffset < 0 ? 0 : rawOffset;
 
   let filtered = [...newsData];
 
