@@ -92,7 +92,7 @@ export function MobileNav() {
                           : 'text-muted-foreground hover:text-foreground hover:bg-white/[0.05]'
                       }`}
                     >
-                      <Icon className={`h-5 w-5 ${active ? 'drop-shadow-[0_0_6px_rgba(94,234,212,0.6)]' : ''}`} />
+                      <Icon className={`h-5 w-5 transition-all duration-300 ${active ? 'drop-shadow-[0_0_6px_rgba(94,234,212,0.6)]' : 'drop-shadow-[0_0_0px_rgba(94,234,212,0)]'}`} />
                       <span className="text-xs">{t(tab.key)}</span>
                     </Link>
                   );
@@ -168,7 +168,7 @@ export function MobileNav() {
                     : 'text-muted-foreground hover:text-foreground'
                 }`}
               >
-                <Icon className={`h-5 w-5 transition-all duration-300 ${active ? 'drop-shadow-[0_0_8px_rgba(94,234,212,0.6)]' : ''}`} />
+                <Icon className={`h-5 w-5 transition-all duration-300 ${active ? 'drop-shadow-[0_0_8px_rgba(94,234,212,0.6)]' : 'drop-shadow-[0_0_0px_rgba(94,234,212,0)]'}`} />
                 <span className="text-[10px] leading-tight">{t(tab.key)}</span>
               </Link>
             );
@@ -184,7 +184,7 @@ export function MobileNav() {
                 : 'text-muted-foreground hover:text-foreground'
             }`}
           >
-            <MoreHorizontal className={`h-5 w-5 transition-all duration-300 ${moreIsActive || moreOpen ? 'drop-shadow-[0_0_8px_rgba(94,234,212,0.6)]' : ''}`} />
+            <MoreHorizontal className={`h-5 w-5 transition-all duration-300 ${moreIsActive || moreOpen ? 'drop-shadow-[0_0_8px_rgba(94,234,212,0.6)]' : 'drop-shadow-[0_0_0px_rgba(94,234,212,0)]'}`} />
             <span className="text-[10px] leading-tight">{t('more')}</span>
           </button>
         </div>
