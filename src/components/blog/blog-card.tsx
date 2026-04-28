@@ -73,7 +73,7 @@ export function BlogCard({ post, isLatest = false, index = 0 }: BlogCardProps) {
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.07, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-      whileHover={{ y: -6, scale: 1.01 }}
+      whileHover={{ y: -6, scale: 1.01, transition: { duration: 0.2, ease: [0.16, 1, 0.3, 1] } }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
