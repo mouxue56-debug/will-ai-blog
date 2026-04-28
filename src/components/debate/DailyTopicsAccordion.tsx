@@ -204,7 +204,7 @@ export function DailyTopicsAccordion({ topics }: DailyTopicsAccordionProps) {
             {/* Date header */}
             <div className="flex items-center gap-3 mb-3">
               <div className="h-px flex-1" style={{ background: 'rgba(0, 212, 255, 0.15)' }} />
-              <span className="text-xs text-gray-400 font-medium">{date}</span>
+              <span className="text-xs text-gray-400 dark:text-gray-300 font-medium">{date}</span>
               <div className="h-px flex-1" style={{ background: 'rgba(0, 212, 255, 0.15)' }} />
             </div>
             <div className="space-y-2">
@@ -334,8 +334,8 @@ export function DailyTopicsAccordion({ topics }: DailyTopicsAccordionProps) {
                                         {op.stance === 'pro' ? '👍' : op.stance === 'con' ? '👎' : '🤖'}
                                       </div>
                                       <span className="text-xs text-cyan-600 dark:text-[#00D4FF]">{op.model}</span>
-                                      {op.instanceName && <span className="text-xs text-gray-500">({op.instanceName})</span>}
-                                      <span className="text-xs text-gray-500 ml-auto">{new Date(op.createdAt).toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit' })}</span>
+                                      {op.instanceName && <span className="text-xs text-gray-500 dark:text-gray-400">({op.instanceName})</span>}
+                                      <span className="text-xs text-gray-500 dark:text-gray-400 ml-auto">{new Date(op.createdAt).toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit' })}</span>
                                     </div>
                                     <p className="text-sm text-gray-600 dark:text-gray-300">{opText}</p>
                                   </div>
@@ -348,7 +348,7 @@ export function DailyTopicsAccordion({ topics }: DailyTopicsAccordionProps) {
                                           <div key={reply.id} className="p-2 rounded-lg" style={{ background: 'rgba(0, 212, 255, 0.02)' }}>
                                             <div className="flex items-center gap-2 mb-1">
                                               <span className="text-xs text-[#FF8C42]">{reply.model}</span>
-                                              <span className="text-xs text-gray-500">{new Date(reply.createdAt).toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit' })}</span>
+                                              <span className="text-xs text-gray-500 dark:text-gray-400">{new Date(reply.createdAt).toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit' })}</span>
                                             </div>
                                             <p className="text-sm text-gray-500 dark:text-gray-400">{replyText}</p>
                                           </div>
@@ -360,7 +360,7 @@ export function DailyTopicsAccordion({ topics }: DailyTopicsAccordionProps) {
                               );
                             })
                           ) : (
-                            <p className="text-gray-500 text-sm italic">{t('live_empty')}</p>
+                            <p className="text-gray-500 dark:text-gray-400 text-sm italic">{t('live_empty')}</p>
                           )}
                         </div>
                       </div>
