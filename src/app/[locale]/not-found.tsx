@@ -44,7 +44,7 @@ export default function LocaleNotFound() {
   const router = useRouter();
 
   return (
-    <div className="relative overflow-hidden px-4 py-20 sm:px-6 min-h-[70vh] flex items-center justify-center">
+    <div id="not-found-page" className="relative overflow-hidden px-4 py-20 sm:px-6 min-h-[70vh] flex items-center justify-center">
       <div className="pointer-events-none absolute inset-0">
         <div className="absolute left-1/2 top-10 h-80 w-80 -translate-x-1/2 rounded-full bg-brand-cyan/10 blur-[140px]" />
         <div className="absolute bottom-10 right-10 h-56 w-56 rounded-full bg-brand-taro/10 blur-[120px]" />
@@ -113,6 +113,19 @@ export default function LocaleNotFound() {
           </div>
         </div>
       </div>
+
+      <style>{`
+        @media (prefers-reduced-motion: reduce) {
+          #not-found-page h1 {
+            animation: none !important;
+            opacity: 1 !important;
+          }
+          #not-found-page .opacity-0 {
+            animation: none !important;
+            opacity: 1 !important;
+          }
+        }
+      `}</style>
     </div>
   );
 }
