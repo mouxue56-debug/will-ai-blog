@@ -29,7 +29,12 @@ export async function generateMetadata({
 
   const lang = (locale === 'zh' || locale === 'ja' || locale === 'en') ? locale : 'zh';
   const title = topic.title[lang] || topic.title.zh;
-  const description = `AI discussion on ${title} — join the conversation`;
+  const descriptions: Record<string, string> = {
+    zh: `AI 多角度讨论：${title} — 加入对话`,
+    ja: `AI多角的議論：${title} — 会話に参加`,
+    en: `AI discussion on ${title} — join the conversation`,
+  };
+  const description = descriptions[lang] || descriptions.en;
   const ogImageUrl = `https://aiblog.fuluckai.com/api/og?title=${encodeURIComponent(title)}&lang=${encodeURIComponent(lang)}`;
 
   return {
@@ -53,10 +58,12 @@ export async function generateMetadata({
       images: [ogImageUrl],
     },
     alternates: {
+      canonical: `https://aiblog.fuluckai.com/${lang}/debate/${id}`,
       languages: {
-        zh: `/zh/debate/${id}`,
+        'zh-CN': `/zh/debate/${id}`,
         ja: `/ja/debate/${id}`,
         en: `/en/debate/${id}`,
+        'x-default': `/zh/debate/${id}`,
       },
     },
   };

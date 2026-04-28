@@ -49,10 +49,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       images: [ogImageUrl],
     },
     alternates: {
+      canonical: `https://aiblog.fuluckai.com/${lang}/cases/${slug}`,
       languages: {
-        zh: `/zh/cases/${slug}`,
+        'zh-CN': `/zh/cases/${slug}`,
         ja: `/ja/cases/${slug}`,
         en: `/en/cases/${slug}`,
+        'x-default': `/zh/cases/${slug}`,
       },
     },
   };
