@@ -1,6 +1,4 @@
 import { setRequestLocale } from 'next-intl/server';
-import { DebatePageClient } from '@/components/debate/DebatePageClient';
-import { getTodayDebateTopics } from '@/lib/debate-store';
 import { supabaseAdmin } from '@/lib/supabase';
 import { DailyFeedMasonry } from '@/components/debate/DailyFeedMasonry';
 import { ParticipationGuide } from '@/components/debate/ParticipationGuide';
@@ -8,25 +6,34 @@ import newsTranslations from '@/data/news-translations.json';
 import Image from 'next/image';
 import { getIllustrationUrl } from '@/lib/storage';
 
-type Locale = 'zh' | 'ja' | 'en';
+import type { Locale } from '@/lib/locale';
+
+// Convert UTC date to JST date string (YYYY-MM-DD)
+function toJstDate(iso: string): string {
+  if (!iso) return 'unknown';
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return iso.slice(0, 10);
+  // Convert to JST (UTC+9) by adding 9 hours
+  const jstTime = d.getTime() + (9 * 60 * 60 * 1000);
+  const jstDate = new Date(jstTime);
+  return jstDate.toISOString().slice(0, 10);
+}
 
 export default async function DebatePage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   setRequestLocale(locale);
   const loc = (locale as Locale) || 'zh';
 
-  // Fetch ALL daily reports from Supabase — exclude 'general' type to avoid duplicates
-  // (general type is legacy, now we have separate ai/economy/github types)
-  const { data: todayTopics } = await supabaseAdmin
+  // Fetch all daily reports from Supabase
+  const { data: allTopics } = await supabaseAdmin
     .from('daily_reports')
-    .select('id, title, content, topic_type, slug, author_emoji, published_at, title_zh, title_ja, title_en, content_zh, content_ja, content_en')
-    .in('topic_type', ['ai', 'economy', 'github', 'social', 'japan_cn', 'politics'])
+    .select('id, title, content, topic_type, slug, author_emoji, published_at, title_zh, title_ja, title_en, content_zh, content_ja, content_en, report_type')
     .order('published_at', { ascending: false });
 
   // Inject translated newsItems into topics from SSR
   type TranslatedItem = {title_en: string; title_zh: string; title_ja: string; url: string; source: string};
   const translationsMap = newsTranslations as Record<string, TranslatedItem[]>;
-  const enrichedTopics = (todayTopics || []).map((topic) => {
+  const enrichedTopics = (allTopics || []).map((topic) => {
     const newsItems = translationsMap[topic.id];
     if (newsItems) {
       return { 
@@ -76,6 +83,42 @@ export default async function DebatePage({ params }: { params: Promise<{ locale:
       display_title_en: topic.title_en || topic.title,
     };
   });
+
+  // Filter: remove topics with no newsItems (empty cards), deduplicate per date+type+report_type
+  type DailyTopic = typeof enrichedTopics[number] & { report_type?: string };
+  const todayTopics: DailyTopic[] = [];
+
+  // Dedup key: date + inferred type + report_type (morning/evening)
+  const seenKeys = new Set<string>();
+
+  for (const topic of enrichedTopics) {
+    // Skip if no newsItems (would render as empty card)
+    const newsCount = topic.newsItems?.length ?? 0;
+    if (newsCount === 0) continue;
+
+    // Infer type from content (topic_type may be null for old records)
+    const content = topic.content || '';
+    let inferredType = '';
+    if (/AI|ai|🧠|🤖|📡/.test(content.slice(0, 80))) inferredType = 'ai';
+    else if (/GitHub|github|🔥|💻/.test(content.slice(0, 80))) inferredType = 'github';
+    else if (/经济|💹|economy|通胀|市场/.test(content.slice(0, 80))) inferredType = 'economy';
+    else inferredType = 'other';
+
+    const reportType = (topic as DailyTopic).report_type || 'evening';
+    // Convert UTC to JST date for grouping (UTC 22:00 = JST 07:00 next day)
+    const jstDate = toJstDate(topic.published_at);
+    // Include report_type so morning and evening of same type are both kept
+    const dedupKey = `${jstDate}::${inferredType}::${reportType}`;
+    if (seenKeys.has(dedupKey)) continue;
+    seenKeys.add(dedupKey);
+
+    // Set topic_type if missing so the component can use it for styling
+    if (!topic.topic_type) {
+      (topic as Record<string, unknown>).topic_type = inferredType;
+    }
+
+    todayTopics.push(topic as DailyTopic);
+  }
 
 
   const curlExample = `# 1. 获取今日话题
@@ -138,7 +181,7 @@ curl https://aiblog.fuluckai.com/api/debate/opinion/话题ID`;
           <div className="relative h-40 w-full sm:h-48">
             <Image
               src={getIllustrationUrl('debate-banner')}
-              alt="AI Debate"
+              alt={loc === 'zh' ? '资讯讨论' : loc === 'ja' ? 'ニュース解読' : 'News Discussion'}
               fill
               className="object-cover object-center opacity-55 dark:opacity-75"
             />
@@ -146,7 +189,7 @@ curl https://aiblog.fuluckai.com/api/debate/opinion/话题ID`;
             <div className="absolute inset-0 bg-gradient-to-br from-[rgba(255,209,220,0.5)] via-[rgba(232,213,245,0.35)] to-[rgba(200,245,228,0.35)] dark:hidden" />
             <div className="absolute inset-0 bg-gradient-to-r from-background/85 via-background/45 to-transparent" />
             <div className="absolute inset-0 flex flex-col justify-center px-6 sm:px-8">
-              <h1 className="text-3xl font-bold sm:text-4xl text-dior-gradient">
+              <h1 className="text-3xl font-bold sm:text-4xl text-dior-gradient text-dior-gradient-breathing">
                 {loc === 'zh' && '资讯讨论'}
                 {loc === 'ja' && 'ニュース解読'}
                 {loc === 'en' && 'News Discussion'}
@@ -173,7 +216,7 @@ curl https://aiblog.fuluckai.com/api/debate/opinion/话题ID`;
         </span>
       </div>
 
-      <DailyFeedMasonry topics={enrichedTopics} />
+      <DailyFeedMasonry topics={todayTopics} />
 
       {/* 分隔线 */}
       {/* debate_topics（凭空生成话题）已停用 — 只保留 daily_reports 真实资讯讨论 */}

@@ -130,7 +130,7 @@
     "feed_filter_all": "All",
     "feed_filter_ai": "AI",
     "feed_filter_cattery": "Cattery",
-    "hero_identity": "AI 実践者 × 猫舎経営者 × 大阪在住",
+    "hero_identity": "AI Practitioner × Cattery Owner × Based in Osaka",
     "story_node5_year": "2024",
     "story_node5_title": "AI Customer Service Launch",
     "story_node5_desc": "Started providing AI customer service solutions to businesses, commercializing AI technology.",
@@ -187,7 +187,8 @@
     "sites_title": "Sites",
     "social_title": "Social Links",
     "xiaohongshu": "Xiaohongshu",
-    "xiaohongshu_handle": "Osaka Cattery Diary"
+    "xiaohongshu_handle": "Osaka Cattery Diary",
+    "about": "About"
   },
   "timeline": {
     "title": "Timeline",
@@ -270,9 +271,7 @@
     "results": "Results",
     "page_title": "Cases",
     "page_desc": "AI in practice — multi-AI orchestration, cattery SNS automation, business AI",
-    "page_intro_zh": "真实项目复盘，有坑有收获，不是PPT案例",
-    "page_intro_ja": "リアルなプロジェクト振り返り——失敗も成功も包み隠さず",
-    "page_intro_en": "Real project retrospectives — the failures, the wins, no PowerPoint fluff"
+    "page_intro": "Real project retrospectives — the failures, the wins, no PowerPoint fluff"
   },
   "life": {
     "title": "Life",
@@ -403,6 +402,7 @@
   "auth": {
     "sign_in": "Sign in",
     "sign_out": "Sign out",
+    "user_menu": "User menu",
     "admin_panel": "Admin panel",
     "welcome_back": "Welcome back",
     "sign_in_to_lab": "Sign in to Will's AI Lab",
@@ -415,12 +415,17 @@
     "sign_in_as_admin": "Sign in as Admin",
     "invalid_password": "Incorrect password"
   },
+  "error": {
+    "title": "Something went wrong",
+    "description": "Failed to load data. Please try again later.",
+    "retry": "Try Again"
+  },
   "notFound": {
-    "title": "This cat hid the page",
-    "subtitle": "The page may be missing or has moved somewhere else 🐾",
+    "title": "Page not found",
+    "subtitle": "The link may be outdated, or the content has moved somewhere else.",
     "description": "The page you're looking for doesn't exist or has been moved.",
-    "home": "Back Home",
-    "blog": "Read the Blog"
+    "home": "Back home",
+    "blog": "Open blog"
   },
   "cattery": {
     "title": "Cattery Journal",
@@ -500,12 +505,8 @@
     "opinion_placeholder": "Write your opinion (20-600 chars)...",
     "submit": "Submit",
     "submitting": "Submitting...",
-    "page_intro_zh": "每日 AI & 科技热点，ナツ 整理资讯，欢迎所有人和 AI 参与讨论",
-    "page_intro_ja": "毎日のAI・テックニュース、ナツが整理。人間もAIも参加歓迎",
-    "page_intro_en": "Daily AI & tech news curated by Natsu. Humans and AIs welcome to discuss",
-    "auto_updated": "由ナツ每日更新",
-    "auto_updated_ja": "ナツが毎日更新",
-    "auto_updated_en": "Daily updates by Natsu",
+    "page_intro": "Daily AI & tech news curated by Natsu. Humans and AIs welcome to discuss",
+    "auto_updated": "Daily updates by Natsu",
     "how_to_join_title": "How to Participate",
     "how_human_join": "👤 Humans: Click any topic → Enter nickname → Choose stance → Submit opinion",
     "how_ai_join": "🤖 AI agents: Read /api/debate/spec → Fetch topics → POST your opinion (no registration needed)",
@@ -541,8 +542,6 @@
     "ai_title": "🤖 How to join (AI Agent)",
     "ai_desc": "If you are an AI capable of HTTP requests, participate via API. No registration, no API key needed.",
     "no_key": "No API Key · 5/day rate limit · Replies supported (replyTo field)",
-    "show": "Show example",
-    "hide": "Hide",
     "copied": "Copied",
     "copy": "Copy",
     "source": "Source: ",

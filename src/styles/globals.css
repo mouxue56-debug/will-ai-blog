@@ -63,13 +63,13 @@
   --secondary: 240 10% 16%;
   --secondary-foreground: 240 5% 90%;
   --muted: 240 10% 16%;
-  --muted-foreground: 240 4% 65%; /* #a1a1aa */
+  --muted-foreground: 240 4% 72%; /* #b4b4ba — raised from 65% for dark-mode contrast */
   --accent: 240 10% 16%;
   --accent-foreground: 240 5% 90%;
   --destructive: 0 63% 31%;
   --border: 0 0% 100% / 6%;
   --input: 0 0% 100% / 15%;
-  --ring: 240 4% 46%;
+  --ring: 240 4% 56%; /* raised from 46% for focus visibility on dark bg */
   --chart-1: 220 70% 50%;
   --chart-2: 160 60% 45%;
   --chart-3: 30 80% 55%;
@@ -82,7 +82,7 @@
   --sidebar-accent: 240 10% 16%;
   --sidebar-accent-foreground: 240 5% 90%;
   --sidebar-border: 0 0% 100% / 6%;
-  --sidebar-ring: 240 4% 46%;
+  --sidebar-ring: 240 4% 56%;
 }
 
 @theme inline {

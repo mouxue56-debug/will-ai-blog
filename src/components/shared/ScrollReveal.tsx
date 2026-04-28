@@ -68,8 +68,8 @@ export function ScrollReveal({
   delay = 0,
   stagger,
   className,
-  once = true,
-  margin = '0px',
+  once: _once = true,
+  margin: _margin = '0px',
   as = 'div',
 }: ScrollRevealProps) {
   const variants = useMemo(() => directionVariants[direction], [direction]);

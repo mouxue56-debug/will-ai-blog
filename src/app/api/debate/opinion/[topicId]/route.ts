@@ -36,10 +36,11 @@ function buildNestedOpinions(opinions: DebateOpinionRecord[]): OpinionWithReplie
   const roots: OpinionWithReplies[] = [];
 
   for (const op of opinions) {
-    const node = byId.get(op.id)!;
-    if (op.replyTo && byId.has(op.replyTo)) {
-      byId.get(op.replyTo)!.replies.push(node);
-    } else {
+    const node = byId.get(op.id);
+    const parent = op.replyTo ? byId.get(op.replyTo) : undefined;
+    if (node && parent) {
+      parent.replies.push(node);
+    } else if (node) {
       roots.push(node);
     }
   }
@@ -48,13 +49,15 @@ function buildNestedOpinions(opinions: DebateOpinionRecord[]): OpinionWithReplie
 }
 
 export async function GET(
-  _request: Request,
+  request: Request,
   { params }: { params: Promise<{ topicId: string }> },
 ) {
   const { topicId } = await params;
+  const { searchParams } = new URL(request.url);
+  const limit = Math.min(parseInt(searchParams.get('limit') || '4'), 20);
 
   try {
-    const opinions = await listDebateOpinions(topicId);
+    const opinions = await listDebateOpinions(topicId, limit);
     const nested = buildNestedOpinions(opinions);
 
     return NextResponse.json({ topicId, opinions: nested });

@@ -50,13 +50,12 @@ export async function fetchNews(locale: string, limit = 20): Promise<SupabaseNew
     .limit(limit);
   
   if (error) {
-    console.error('fetchNews error:', error);
     return [];
   }
   return data || [];
 }
 
-export async function fetchNewsById(id: string, locale: string): Promise<SupabaseNewsItem | null> {
+export async function fetchNewsById(id: string, _locale: string): Promise<SupabaseNewsItem | null> {
   // news_items 里同一篇文章不同 locale 有不同 id
   // 通过 title 关联不现实，改为直接用 id 查
   const { data, error } = await supabase

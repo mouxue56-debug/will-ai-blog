@@ -42,7 +42,7 @@ function ProfileHero() {
       </div>
 
       <div className="text-center sm:text-left">
-        <h1 className="text-3xl sm:text-4xl font-bold">Will<span className="text-muted-foreground font-normal text-lg sm:text-xl ml-2">{t('display_name_native')}</span></h1>
+        <h1 className="text-3xl sm:text-4xl font-bold"><span className="text-dior-gradient text-dior-gradient-breathing">Will</span><span className="text-muted-foreground font-normal text-lg sm:text-xl ml-2">{t('display_name_native')}</span></h1>
         <p className="mt-2 text-lg text-muted-foreground">{t('tagline')}</p>
         <p className="mt-4 text-sm sm:text-base text-muted-foreground leading-relaxed max-w-3xl whitespace-pre-line">
           {t('bio')}
@@ -82,7 +82,7 @@ function AITeamSection() {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.1 }}
     >
-      <h2 className="text-2xl font-bold mb-6">{t('ai_team_title')}</h2>
+      <h2 className="text-2xl font-bold mb-6 text-dior-gradient text-dior-gradient-breathing">{t('ai_team_title')}</h2>
 
       <div className="relative">
         <svg className="absolute inset-0 w-full h-full pointer-events-none opacity-20 dark:opacity-15 hidden sm:block" preserveAspectRatio="none">
@@ -121,7 +121,7 @@ function AITeamSection() {
                 <div className="w-16 h-20 rounded-xl overflow-hidden ring-1 ring-white/10">
                   <Image
                     src={getAvatarUrl(agent.avatarFile)}
-                    alt={agent.key}
+                    alt={t(`agent_names.${agent.key}`)}
                     width={64}
                     height={80}
                     className="w-full h-full object-cover object-top"
@@ -203,7 +203,7 @@ function ToolStackSection() {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.12 }}
     >
-      <h2 className="text-2xl font-bold mb-2">{t('stack_title')}</h2>
+      <h2 className="text-2xl font-bold mb-2 text-dior-gradient text-dior-gradient-breathing">{t('stack_title')}</h2>
       <p className="text-sm text-muted-foreground mb-6 max-w-3xl leading-relaxed">{t('stack_intro')}</p>
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
@@ -303,7 +303,7 @@ function BusinessLinks() {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.15 }}
     >
-      <h2 className="text-2xl font-bold mb-6">{t('business_title')}</h2>
+      <h2 className="text-2xl font-bold mb-6 text-dior-gradient text-dior-gradient-breathing">{t('business_title')}</h2>
       <div className="grid gap-4 sm:grid-cols-3">
         {links.map((link, i) => (
           <BusinessLinkCard
@@ -370,7 +370,7 @@ function ContactSection() {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.2 }}
     >
-      <h2 className="text-2xl font-bold mb-6">{t('contact_title')}</h2>
+      <h2 className="text-2xl font-bold mb-6 text-dior-gradient text-dior-gradient-breathing">{t('contact_title')}</h2>
 
       <div className="grid gap-4 lg:grid-cols-[1.1fr_0.9fr]">
         <motion.div
@@ -448,7 +448,7 @@ function CalendarSection() {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.15 }}
     >
-      <h2 className="text-2xl font-bold mb-2">{t('calendar_title')}</h2>
+      <h2 className="text-2xl font-bold mb-2 text-dior-gradient text-dior-gradient-breathing">{t('calendar_title')}</h2>
       <p className="text-sm text-muted-foreground mb-6">{t('calendar_desc')}</p>
       <PublicCalendar />
     </motion.section>

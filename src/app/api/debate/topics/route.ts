@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import {
   createDebateTopic,
-  getTodayDebateTopics,
   getTodayInTokyo,
   type DebateSession,
 } from '@/lib/debate-store';
@@ -14,7 +13,7 @@ function isDebateSession(value: string): value is DebateSession {
   return value === 'morning' || value === 'evening';
 }
 
-export async function GET(request: NextRequest) {
+export async function GET(_request: NextRequest) {
   try {
     // days param kept for backward compat but no longer enforces a cutoff
     

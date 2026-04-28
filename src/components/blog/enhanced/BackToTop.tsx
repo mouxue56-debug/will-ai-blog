@@ -1,6 +1,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { ArrowUp } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 export function BackToTop() {
   const [visible, setVisible] = useState(false);
@@ -15,30 +17,23 @@ export function BackToTop() {
   }, []);
 
   return (
-    <div
+    <button
       onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-      style={{
-        position: 'fixed',
-        bottom: '30px',
-        right: '30px',
-        width: '44px',
-        height: '44px',
-        borderRadius: '50%',
-        background: 'rgba(0,212,255,0.1)',
-        border: '1px solid rgba(0,212,255,0.3)',
-        color: '#00D4FF',
-        display: visible ? 'flex' : 'none',
-        alignItems: 'center',
-        justifyContent: 'center',
-        cursor: 'pointer',
-        opacity: visible ? 1 : 0,
-        transition: 'opacity 0.3s',
-        zIndex: 9999,
-      }}
+      aria-label="Back to top"
+      className={cn(
+        'fixed z-50 flex h-11 w-11 items-center justify-center rounded-full',
+        'bg-brand-cyan/10 border border-brand-cyan/30 text-brand-cyan',
+        'cursor-pointer transition-all duration-300',
+        'hover:bg-brand-cyan/20 hover:border-brand-cyan/50 hover:scale-110',
+        'bottom-8 right-6 xl:bottom-8 xl:right-8',
+        // On screens below xl, lift above the mobile TOC button
+        'max-xl:bottom-28 max-xl:right-4',
+        visible
+          ? 'translate-y-0 opacity-100 pointer-events-auto'
+          : 'translate-y-4 opacity-0 pointer-events-none'
+      )}
     >
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-        <path d="M18 15l-6-6-6 6" />
-      </svg>
-    </div>
+      <ArrowUp className="h-5 w-5" />
+    </button>
   );
 }

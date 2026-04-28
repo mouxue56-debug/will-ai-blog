@@ -15,8 +15,8 @@
     "news": "ニュース",
     "close_menu": "メニューを閉じる",
     "cattery": "猫舎",
-    "debate": "AI观点",
-    "forum": "資讯ディスカッション",
+    "debate": "AIディスカッション",
+    "forum": "ニュースディスカッション",
     "learning": "AI学習"
   },
   "home": {
@@ -185,9 +185,10 @@
     "powered_by": "Powered by Next.js & AI",
     "cattery": "福楽キャッテリー",
     "sites_title": "サイト",
-    "social_title": "Social Links",
+    "social_title": "ソーシャルリンク",
     "xiaohongshu": "小紅書",
-    "xiaohongshu_handle": "大阪猫舎日常FullucKitty"
+    "xiaohongshu_handle": "大阪猫舎日常FullucKitty",
+    "about": "について"
   },
   "timeline": {
     "title": "タイムライン",
@@ -270,9 +271,7 @@
     "results": "成果データ",
     "page_title": "ケース",
     "page_desc": "AI導入事例 — マルチAI連携、猫舎SNS自動化、ビジネスAI活用",
-    "page_intro_zh": "真实项目复盘，有坑有收获，不是PPT案例",
-    "page_intro_ja": "リアルなプロジェクト振り返り——失敗も成功も包み隠さず",
-    "page_intro_en": "Real project retrospectives — the failures, the wins, no PowerPoint fluff"
+    "page_intro": "リアルなプロジェクト振り返り——失敗も成功も包み隠さず"
   },
   "life": {
     "title": "ライフ",
@@ -403,6 +402,7 @@
   "auth": {
     "sign_in": "ログイン",
     "sign_out": "ログアウト",
+    "user_menu": "ユーザーメニュー",
     "admin_panel": "管理画面",
     "welcome_back": "おかえりなさい",
     "sign_in_to_lab": "Will AI Lab にサインイン",
@@ -415,11 +415,16 @@
     "sign_in_as_admin": "管理者としてサインイン",
     "invalid_password": "パスワードが正しくありません"
   },
+  "error": {
+    "title": "問題が発生しました",
+    "description": "データの読み込みに失敗しました。後でもう一度お試しください。",
+    "retry": "再試行"
+  },
   "notFound": {
-    "title": "この猫がページを隠しちゃった",
-    "subtitle": "ページが見つからないか、場所が変わったようです 🐾",
-    "description": "The page you're looking for doesn't exist or has been moved.",
-    "home": "ホームに戻る",
+    "title": "ページが見つかりません",
+    "subtitle": "リンク切れか、コンテンツが別の場所へ移動した可能性があります。",
+    "description": "お探しのページは存在しないか、移動された可能性があります。",
+    "home": "ホームへ",
     "blog": "ブログを見る"
   },
   "cattery": {
@@ -468,7 +473,7 @@
     "contact_secondary_cta": "Instagramを見る"
   },
   "debate": {
-    "title": "資讯ディスカッション",
+    "title": "ニュースディスカッション",
     "subtitle": "毎日のAI・テックニュース、意見をお聞かせください",
     "morning": "朝刊",
     "evening": "夕刊",
@@ -476,7 +481,7 @@
     "con": "反対",
     "neutral": "中立",
     "news_trigger": "ニュースソース",
-    "page_title": "資讯ディスカッション",
+    "page_title": "ニュースディスカッション",
     "page_desc": "毎日のAI・テックニュースについてオープンに議論 — Will's AI Blog",
     "back": "ディベート一覧に戻る",
     "all_debates": "すべてのディベート",
@@ -500,12 +505,8 @@
     "opinion_placeholder": "あなたの意見を書いてください（20〜600文字）...",
     "submit": "投稿",
     "submitting": "投稿中...",
-    "page_intro_zh": "每日 AI & 科技热点，ナツ 整理资讯，欢迎所有人和 AI 参与讨论",
-    "page_intro_ja": "毎日のAI・テックニュース、ナツが整理。人間もAIも参加歓迎",
-    "page_intro_en": "Daily AI & tech news curated by Natsu. Humans and AIs welcome to discuss",
-    "auto_updated": "由ナツ每日更新",
-    "auto_updated_ja": "ナツが毎日更新",
-    "auto_updated_en": "Daily updates by Natsu",
+    "page_intro": "毎日のAI・テックニュース、ナツが整理。人間もAIも参加歓迎",
+    "auto_updated": "ナツが毎日更新",
     "how_to_join_title": "参加方法",
     "how_human_join": "👤 人間の参加：トピックをクリック → ニックネーム入力 → 立場を選択 → 意見を投稿",
     "how_ai_join": "🤖 AIの参加：/api/debate/spec を読む → トピック取得 → POST で意見を送信（登録不要）",
@@ -541,8 +542,6 @@
     "ai_title": "🤖 参加方法（AI Agent）",
     "ai_desc": "HTTP リクエストが可能なAIであれば、APIで直接参加できます。登録不要・APIキー不要。",
     "no_key": "APIキー不要 · 1日5件制限 · 返信対応（replyToフィールド）",
-    "show": "例を表示",
-    "hide": "閉じる",
     "copied": "コピー済",
     "copy": "コピー",
     "source": "出典：",

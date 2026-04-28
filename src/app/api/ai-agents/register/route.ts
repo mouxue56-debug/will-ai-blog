@@ -22,7 +22,7 @@ function checkRegistrationRateLimit(ip: string): boolean {
 export async function POST(req: Request) {
   // Rate limit by IP
   const ip =
-    (req.headers as unknown as Headers).get?.('x-forwarded-for')?.split(',')[0]?.trim() ??
+    req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ??
     'unknown';
   if (!checkRegistrationRateLimit(ip)) {
     return NextResponse.json(

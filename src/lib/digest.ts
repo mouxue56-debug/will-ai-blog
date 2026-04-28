@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 
-type Locale = 'zh' | 'ja' | 'en';
+import type { Locale } from './locale';
 
 export interface DigestEntry {
   date: string;

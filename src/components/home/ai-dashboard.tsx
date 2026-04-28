@@ -2,6 +2,7 @@
 
 import { useTranslations } from 'next-intl';
 import { motion } from 'motion/react';
+import { SectionAccentLine } from '@/components/shared/SectionAccentLine';
 
 
 interface AIInstance {
@@ -63,7 +64,7 @@ export function AIDashboard() {
   return (
     <section className="py-16 sm:py-20">
       <div className="mx-auto max-w-5xl px-4 sm:px-6">
-        <div className="w-16 h-0.5 bg-gradient-to-r from-[#00D4FF] to-transparent mb-6" />
+        <SectionAccentLine />
         <motion.h2
           className="text-2xl sm:text-3xl font-bold mb-8"
           initial={{ opacity: 0, y: 20 }}

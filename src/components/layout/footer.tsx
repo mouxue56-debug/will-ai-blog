@@ -1,16 +1,18 @@
 'use client';
 
+import { Link } from '@/i18n/navigation';
 import { useTranslations } from 'next-intl';
 
 type FooterLink = {
   href: string;
   label?: string;
-  labelKey?: 'cattery' | 'xiaohongshu';
+  labelKey?: 'cattery' | 'xiaohongshu' | 'about';
   value?: string;
   valueKey?: 'xiaohongshu_handle';
 };
 
 const siteLinks: FooterLink[] = [
+  { href: '/about', labelKey: 'about' },
   { href: 'https://fuluckai.com', label: 'fuluckai.com' },
   { href: 'https://fuluck-cattery.com', labelKey: 'cattery' },
 ];
@@ -22,9 +24,9 @@ const socialLinks: FooterLink[] = [
     value: '@fuluck_cattery',
   },
   {
-    href: 'https://github.com/mouxue56-debug/will-ai-blog',
+    href: 'https://github.com/konayuki56',
     label: 'GitHub',
-    value: 'mouxue56-debug/will-ai-blog',
+    value: 'konayuki56',
   },
   {
     href: 'https://www.xiaohongshu.com/user/profile/65b8e6a4000000000d008d37',
@@ -37,7 +39,7 @@ export function Footer() {
   const t = useTranslations('footer');
 
   return (
-    <footer className="pb-20 md:pb-0">
+    <footer className="pb-20 md:pb-0" role="contentinfo" aria-label={t('sites_title')}>
       <div className="mx-auto max-w-5xl px-4 sm:px-6">
         <div className="h-px bg-gradient-to-r from-transparent via-brand-mint/60 to-brand-cyan/60 opacity-50" />
       </div>
@@ -54,17 +56,21 @@ export function Footer() {
               {t('sites_title')}
             </p>
             <div className="flex flex-col gap-2 text-sm text-muted-foreground">
-              {siteLinks.map((link) => (
-                <a
-                  key={link.href}
-                  href={link.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="hover:text-brand-mint transition-colors"
-                >
-                  {link.labelKey ? t(link.labelKey) : link.label}
-                </a>
-              ))}
+              {siteLinks.map((link) => {
+                const isInternal = link.href.startsWith('/');
+                const Tag = isInternal ? Link : 'a';
+                const externalProps = isInternal ? {} : { target: '_blank' as const, rel: 'noopener noreferrer' };
+                return (
+                  <Tag
+                    key={link.href}
+                    href={link.href}
+                    className="hover:text-brand-mint transition-colors"
+                    {...externalProps}
+                  >
+                    {link.labelKey ? t(link.labelKey) : link.label}
+                  </Tag>
+                );
+              })}
             </div>
           </div>
 

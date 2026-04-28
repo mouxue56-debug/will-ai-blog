@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { setRequestLocale } from 'next-intl/server';
-import { getAllPosts, getPostBySlug, getAdjacentPosts, getSampleComments } from '@/lib/blog';
+import { getPostBySlug, getAdjacentPosts, getSampleComments } from '@/lib/blog';
 import { BlogDetail } from '@/components/blog/blog-detail';
 
 const SITE_URL = 'https://aiblog.fuluckai.com';

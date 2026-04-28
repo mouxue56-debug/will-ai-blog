@@ -50,6 +50,7 @@ export function BlogSearch({ posts }: { posts: BlogPost[] }) {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="搜索文章..."
+          aria-label="Search articles"
           className={cn(
             'w-full rounded-full border border-border/60 bg-card/60 pl-11 pr-10 py-2.5',
             'text-sm placeholder:text-muted-foreground',
@@ -61,6 +62,7 @@ export function BlogSearch({ posts }: { posts: BlogPost[] }) {
           <button
             onClick={() => setQuery('')}
             className="absolute right-3 top-1/2 -translate-y-1/2 p-1 rounded-full hover:bg-muted/60 transition-colors"
+            aria-label="Clear search"
           >
             <X className="h-3.5 w-3.5 text-muted-foreground" />
           </button>

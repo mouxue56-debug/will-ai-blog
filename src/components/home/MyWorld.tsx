@@ -5,6 +5,7 @@ import { motion } from 'motion/react';
 import { Link } from '@/i18n/navigation';
 import { Play, Camera, Music } from 'lucide-react';
 import { LampEffect } from '@/components/ui/aceternity';
+import { SectionAccentLine } from '@/components/shared/SectionAccentLine';
 
 const snsCards = [
   {
@@ -42,10 +43,10 @@ export function MyWorld() {
   return (
     <section className="py-16 sm:py-20">
       <div className="mx-auto max-w-5xl px-4 sm:px-6">
-        <div className="w-16 h-0.5 bg-gradient-to-r from-[#00D4FF] to-transparent mb-6" />
+        <SectionAccentLine />
         <LampEffect color="purple" className="min-h-[140px] -mb-4">
           <motion.h2
-            className="text-2xl sm:text-3xl font-bold"
+            className="text-2xl sm:text-3xl font-bold text-dior-gradient text-dior-gradient-breathing"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.1 }}
@@ -61,7 +62,7 @@ export function MyWorld() {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, amount: 0.1 }}
             transition={{ delay: 0.1, duration: 0.5 }}
-            className="grid grid-cols-3 gap-3"
+            className="grid grid-cols-3 gap-2 sm:gap-3"
           >
             {snsCards.map((card) => {
               const Icon = card.icon;
@@ -70,15 +71,15 @@ export function MyWorld() {
                   <motion.div
                     whileHover={{ scale: 1.04, y: -2 }}
                     transition={{ type: 'spring', stiffness: 400, damping: 25 }}
-                    className={`glass-card flex flex-col items-center justify-center gap-3 p-6 sm:p-8 cursor-pointer bg-card/60 hover:bg-card/80 border border-white/[0.08] hover:border-brand-cyan/30 transition-all duration-300`}
+                    className={`glass-card flex flex-col items-center justify-center gap-2 p-4 sm:gap-3 sm:p-8 cursor-pointer bg-card/60 hover:bg-card/80 border border-white/[0.08] hover:border-brand-cyan/30 transition-all duration-300`}
                   >
                     <div
-                      className={`w-12 h-12 rounded-xl flex items-center justify-center ${card.color} hover:scale-110 transition-transform duration-300`}
+                      className={`w-10 h-10 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center ${card.color} hover:scale-110 transition-transform duration-300`}
                       style={{ background: card.glowColor }}
                     >
-                      <Icon className="h-6 w-6" />
+                      <Icon className="h-5 w-5 sm:h-6 sm:w-6" />
                     </div>
-                    <span className="text-sm font-medium">{card.label}</span>
+                    <span className="text-xs sm:text-sm font-medium">{card.label}</span>
                   </motion.div>
                 </Link>
               );

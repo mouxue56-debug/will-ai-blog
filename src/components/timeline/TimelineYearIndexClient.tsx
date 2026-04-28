@@ -1,11 +1,10 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import { motion, AnimatePresence, useReducedMotion } from 'motion/react';
 import { useTranslations, useLocale } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 import { timelineEvents, type TimelineEvent } from '@/lib/timeline-data';
-import { useReducedMotion } from 'framer-motion';
 
 type TimelineCategory = TimelineEvent['category'];
 type CategoryFilter = 'all' | TimelineCategory;
@@ -96,7 +95,7 @@ function YearCard({
   year,
   entries,
   index,
-  totalYears,
+  totalYears: _totalYears,
 }: {
   year: string;
   entries: TimelineEvent[];
@@ -192,7 +191,7 @@ function YearCard({
 
             {/* Event previews */}
             <div className="space-y-3">
-              {topEvents.map((event, i) => (
+              {topEvents.map((event) => (
                 <motion.div
                   key={event.date}
                   className="flex items-start gap-3 p-3 rounded-xl bg-muted/30 border border-border/40 group-hover:border-border/60 transition-colors duration-300"

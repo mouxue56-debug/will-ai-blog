@@ -9,6 +9,7 @@ import { ScrollReveal } from '@/components/shared/ScrollReveal';
 import { Badge } from '@/components/ui/badge';
 import { MessageCircle, ChevronDown, ChevronUp, ExternalLink } from 'lucide-react';
 import { fetchNews, convertToFrontendNewsItem } from '@/lib/news';
+import { BrandedSpinner } from '@/components/shared/BrandedSpinner';
 import { aiInstanceColors, newsCategoryConfig } from '@/data/news';
 import type { NewsItem as OriginalNewsItem, NewsCategory } from '@/data/news';
 
@@ -192,11 +193,12 @@ export default function NewsPage() {
   const [filter, setFilter] = useState<FilterType>('all');
   const [newsItems, setNewsItems] = useState<OriginalNewsItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const [fetchError, setFetchError] = useState(false);
 
   useEffect(() => {
     fetchNews(locale)
       .then(data => setNewsItems(data.map(convertToFrontendNewsItem)))
-      .catch(err => console.error('Failed to fetch news:', err))
+      .catch(() => setFetchError(true))
       .finally(() => setLoading(false));
   }, [locale]);
 
@@ -221,8 +223,24 @@ export default function NewsPage() {
   if (loading) {
     return (
       <PageTransition>
+        <div className="mx-auto max-w-3xl px-4 sm:px-6 py-12 sm:py-16">
+          <BrandedSpinner />
+        </div>
+      </PageTransition>
+    );
+  }
+
+  if (fetchError) {
+    return (
+      <PageTransition>
         <div className="mx-auto max-w-3xl px-4 sm:px-6 py-12 sm:py-16 text-center">
-          <p className="text-muted-foreground">Loading news...</p>
+          <p className="text-muted-foreground mb-4">{t('error.description')}</p>
+          <button
+            onClick={() => { setFetchError(false); setLoading(true); }}
+            className="px-4 py-2 rounded-full bg-brand-cyan/15 text-brand-cyan text-sm hover:bg-brand-cyan/25 transition-colors border border-brand-cyan/20"
+          >
+            {t('error.retry')}
+          </button>
         </div>
       </PageTransition>
     );
@@ -233,7 +251,7 @@ export default function NewsPage() {
       <div className="mx-auto max-w-3xl px-4 sm:px-6 py-12 sm:py-16">
         {/* Header */}
         <ScrollReveal direction="fadeUp" className="text-center mb-10">
-          <h1 className="text-3xl sm:text-4xl font-bold mb-3">
+          <h1 className="text-3xl sm:text-4xl font-bold mb-3 text-dior-gradient text-dior-gradient-breathing">
             {t('news.title')}
           </h1>
           <p className="text-muted-foreground max-w-2xl mx-auto">

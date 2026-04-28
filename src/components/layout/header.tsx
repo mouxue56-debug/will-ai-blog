@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { Link, usePathname } from '@/i18n/navigation';
 import { motion } from 'motion/react';
@@ -19,6 +20,14 @@ const navItems = [
 export function Header() {
   const t = useTranslations('nav');
   const pathname = usePathname();
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 20);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
 
   function isActive(href: string) {
     if (href === '/') return pathname === '/';
@@ -26,8 +35,12 @@ export function Header() {
   }
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-white/[0.06] dark:border-white/[0.06] border-[rgba(230,200,215,0.6)] bg-[rgba(255,248,240,0.82)] dark:bg-[rgba(10,10,15,0.7)] backdrop-blur-2xl backdrop-saturate-180 [box-shadow:inset_0_-1px_0_rgba(255,255,255,0.6)] dark:[box-shadow:none]">
-      <div className="mx-auto flex h-16 max-w-5xl items-center justify-between px-4 sm:px-6">
+    <header className={`sticky top-0 z-50 w-full border-b border-white/[0.06] dark:border-white/[0.06] border-[rgba(230,200,215,0.6)] transition-[background-color,backdrop-filter,height,border-color] duration-500 will-change-transform ${
+      scrolled
+        ? 'bg-[rgba(255,248,240,0.95)] dark:bg-[rgba(10,10,15,0.88)] backdrop-blur-2xl backdrop-saturate-200 border-white/[0.1] dark:border-white/[0.1] border-[rgba(230,200,215,0.8)]'
+        : 'bg-[rgba(255,248,240,0.82)] dark:bg-[rgba(10,10,15,0.7)] backdrop-blur-2xl backdrop-saturate-180'
+    } [box-shadow:inset_0_-1px_0_rgba(255,255,255,0.6)] dark:[box-shadow:none]`}>
+      <div className={`mx-auto flex max-w-5xl items-center justify-between px-4 sm:px-6 transition-[height] duration-500 ease-out ${scrolled ? 'h-12' : 'h-16'}`}>
         <Link href="/" className="flex items-center gap-2 group">
           <span className="text-lg font-bold bg-gradient-to-r from-brand-mint via-brand-cyan to-brand-taro bg-clip-text text-transparent transition-all duration-300 group-hover:drop-shadow-[0_0_12px_rgba(94,234,212,0.4)]">
             Will&apos;s AI Lab
@@ -41,7 +54,7 @@ export function Header() {
               <Link
                 key={item.key}
                 href={item.href}
-                className={`relative px-3 py-2 text-sm transition-colors rounded-md ${
+                className={`group relative px-3 py-2 text-sm transition-colors rounded-md ${
                   active
                     ? 'text-brand-mint font-medium'
                     : 'text-muted-foreground hover:text-foreground'
@@ -60,10 +73,7 @@ export function Header() {
                 )}
                 {!active && (
                   <span
-                    className="absolute bottom-0 left-2 right-2 h-[2px] rounded-full bg-brand-mint scale-x-0 group-hover:scale-x-100 hover:scale-x-100 transition-transform duration-200 origin-left"
-                    style={{
-                      boxShadow: '0 0 6px rgba(94,234,212,0.4)',
-                    }}
+                    className="absolute bottom-0 left-2 right-2 h-[2px] rounded-full bg-brand-mint/60 scale-x-0 group-hover:scale-x-100 transition-transform duration-200 origin-left"
                   />
                 )}
               </Link>

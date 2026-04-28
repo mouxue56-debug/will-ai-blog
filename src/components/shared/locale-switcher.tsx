@@ -29,6 +29,8 @@ export function LocaleSwitcher({ compact = false }: { compact?: boolean }) {
             href={normalizedPathname}
             locale={l}
             prefetch={false}
+            aria-label={t(l)}
+            aria-current={isActive ? 'page' : undefined}
             className={`rounded-md font-medium no-underline cursor-pointer ${
               compact ? 'px-2 py-1 text-xs' : 'px-3 py-1.5 text-sm'
             } ${

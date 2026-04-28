@@ -34,6 +34,7 @@ interface DailyTopic {
   display_title_zh?: string;
   display_title_ja?: string;
   display_title_en?: string;
+  report_type?: string;
 }
 
 interface DailyFeedMasonryProps {
@@ -133,6 +134,17 @@ function formatDate(iso: string, locale: string): string {
   return d.toLocaleDateString(loc, opts);
 }
 
+// Convert UTC date to JST date string (YYYY-MM-DD)
+function toJstDate(iso: string): string {
+  if (!iso) return 'unknown';
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return iso.slice(0, 10);
+  // Convert to JST (UTC+9) by adding 9 hours
+  const jstTime = d.getTime() + (9 * 60 * 60 * 1000);
+  const jstDate = new Date(jstTime);
+  return jstDate.toISOString().slice(0, 10);
+}
+
 export function DailyFeedMasonry({ topics }: DailyFeedMasonryProps) {
   const params = useParams();
   const locale = (params?.locale as string) || 'zh';
@@ -160,7 +172,8 @@ export function DailyFeedMasonry({ topics }: DailyFeedMasonryProps) {
   const grouped = useMemo(() => {
     const byDate = new Map<string, DailyTopic[]>();
     for (const t of topics) {
-      const key = t.published_at ? t.published_at.slice(0, 10) : 'unknown';
+      // Convert UTC to JST before grouping
+      const key = toJstDate(t.published_at);
       const list = byDate.get(key) ?? [];
       list.push(t);
       byDate.set(key, list);
@@ -203,7 +216,7 @@ export function DailyFeedMasonry({ topics }: DailyFeedMasonryProps) {
                 topic.newsItems && topic.newsItems.length > 0
                   ? topic.newsItems
                   : parseNewsFromContent(topic.content || '');
-              const title = localizeTopicTitle(topic, locale);
+              const _title = localizeTopicTitle(topic, locale);
               const count = opinionCounts[topic.id] ?? 0;
 
               return (
@@ -225,17 +238,13 @@ export function DailyFeedMasonry({ topics }: DailyFeedMasonryProps) {
                   >
                     <span className="text-lg drop-shadow-sm">{meta.emoji}</span>
                     <span className="chip-fg text-[11.5px] font-bold tracking-wider uppercase">
-                      {meta.label[locale as 'zh' | 'ja' | 'en'] ?? meta.label.zh}
+                      {(topic.report_type === 'morning' ? (locale === 'zh' ? '早报·' : locale === 'ja' ? '朝刊·' : 'AM·') : '') + (topic.report_type === 'evening' ? (locale === 'zh' ? '晚报·' : locale === 'ja' ? '夕刊·' : 'PM·') : '') + (meta.label[locale as 'zh' | 'ja' | 'en'] ?? meta.label.zh)}
                     </span>
                   </div>
 
                   <div className="px-5 pt-4 pb-5">
-                    <h3 className="text-base font-semibold leading-snug text-foreground line-clamp-3 group-hover:text-foreground">
-                      {title}
-                    </h3>
-
                     {news.length > 0 && (
-                      <ul className="mt-3 space-y-2 text-sm leading-snug text-foreground/70">
+                      <ul className="mt-1 space-y-2 text-sm leading-snug text-foreground font-medium">
                         {news.slice(0, 5).map((it, idx) => (
                           <li key={idx} className="line-clamp-2">
                             · {localizeTitle(it, locale)}

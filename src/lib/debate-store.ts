@@ -306,13 +306,14 @@ export async function saveDebateOpinion(opinion: DebateOpinionRecord): Promise<b
   }
 }
 
-export async function listDebateOpinions(topicId: string): Promise<DebateOpinionRecord[]> {
+export async function listDebateOpinions(topicId: string, limit = 4): Promise<DebateOpinionRecord[]> {
   try {
     const { data, error } = await supabaseAdmin
       .from('debate_opinions')
       .select('*')
       .eq('topic_id', topicId)
-      .order('created_at', { ascending: true });
+      .order('created_at', { ascending: true })
+      .limit(limit);
 
     if (error || !data) {
       return [];
@@ -392,7 +393,6 @@ export async function checkAndIncrementRateLimit(
 }
 
 /** @deprecated Use checkAndIncrementRateLimit with IP hash instead */
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function incrementOpinionRateLimit(_apiKey: string): Promise<number | null> {
   return null;
 }

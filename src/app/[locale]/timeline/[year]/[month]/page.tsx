@@ -3,6 +3,7 @@ import { setRequestLocale, getTranslations } from 'next-intl/server';
 import { PageTransition } from '@/components/shared/PageTransition';
 import { ScrollReveal } from '@/components/shared/ScrollReveal';
 import { TimelinePageClient } from '@/components/timeline/TimelinePageClient';
+import type { Locale } from '@/lib/locale';
 import { Link } from '@/i18n/navigation';
 import { ChevronRight } from 'lucide-react';
 import { timelineEvents } from '@/lib/timeline-data';
@@ -68,7 +69,7 @@ export default async function TimelineMonthPage({ params }: { params: Promise<Pa
           <p className="text-muted-foreground">{events.length} {t('events_count')}</p>
         </ScrollReveal>
 
-        <TimelinePageClient events={events} locale={locale as 'zh' | 'ja' | 'en'} />
+        <TimelinePageClient events={events} locale={locale as Locale} />
       </div>
     </PageTransition>
   );

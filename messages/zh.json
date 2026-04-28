@@ -187,7 +187,8 @@
     "sites_title": "站点",
     "social_title": "社交链接",
     "xiaohongshu": "小红书",
-    "xiaohongshu_handle": "大阪猫舍日常FullucKitty"
+    "xiaohongshu_handle": "大阪猫舍日常FullucKitty",
+    "about": "关于"
   },
   "timeline": {
     "title": "时间线",
@@ -270,9 +271,7 @@
     "results": "成果数据",
     "page_title": "案例",
     "page_desc": "AI落地案例 — 多AI协作、猫舎SNS自动化、ビジネスAI導入",
-    "page_intro_zh": "真实项目复盘，有坑有收获，不是PPT案例",
-    "page_intro_ja": "リアルなプロジェクト振り返り——失敗も成功も包み隠さず",
-    "page_intro_en": "Real project retrospectives — the failures, the wins, no PowerPoint fluff"
+    "page_intro": "真实项目复盘，有坑有收获，不是PPT案例"
   },
   "life": {
     "title": "生活",
@@ -403,6 +402,7 @@
   "auth": {
     "sign_in": "登录",
     "sign_out": "登出",
+    "user_menu": "用户菜单",
     "admin_panel": "管理后台",
     "welcome_back": "欢迎回来",
     "sign_in_to_lab": "登录 Will AI Lab",
@@ -415,12 +415,17 @@
     "sign_in_as_admin": "以管理员身份登录",
     "invalid_password": "密码不正确"
   },
+  "error": {
+    "title": "出了点问题",
+    "description": "数据加载失败，请稍后重试。",
+    "retry": "重试"
+  },
   "notFound": {
-    "title": "这只猫把页面藏起来了",
-    "subtitle": "页面可能不存在，或者已经换地方了 🐾",
-    "description": "The page you're looking for doesn't exist or has been moved.",
-    "home": "回到首页",
-    "blog": "去看博客"
+    "title": "页面不存在",
+    "subtitle": "链接可能失效了，或者内容已经移动到别的位置。",
+    "description": "您访问的页面不存在或已被移动。",
+    "home": "返回首页",
+    "blog": "进入博客"
   },
   "cattery": {
     "title": "猫舎日记",
@@ -431,11 +436,11 @@
     "intro_body": "这里记录大阪猫舎的真实运营节奏：幼猫成长、亲猫状态、空间维护、客户沟通，以及把 AI 放进猫舎之后，日常是怎样一点点变轻的。",
     "cta_line": "通过官网联系 LINE",
     "cta_timeline": "查看时间线",
-    "highlight_1_label": "Breeder Award",
+    "highlight_1_label": "繁育者大奖",
     "highlight_1_body": "みんなの子猫ブリーダー 2025 上半期全国第一，持续维持满分评价。",
-    "highlight_2_label": "Osaka Base",
+    "highlight_2_label": "大阪据点",
     "highlight_2_body": "大阪城東区的日常照护、社会化训练与对面见学都在这里发生。",
-    "highlight_3_label": "LINE Support",
+    "highlight_3_label": "LINE 支持",
     "highlight_3_body": "从初次咨询到卒業后的长期交流，LINE 仍然是最重要的联系入口。",
     "daily_title": "猫舎日常",
     "daily_intro": "不是单纯晒猫，而是把繁育、照护、记录和客户沟通放回同一个生活现场。",
@@ -459,7 +464,7 @@
     "info_2_body": "サイベリアン通常对人保持兴趣，喜欢参与家庭日常，因此早期社会化和环境刺激很关键。",
     "info_3_title": "繁育重点是健康、性格与长期陪伴",
     "info_3_body": "比起单纯追求外观，福楽キャッテリー更重视健康管理、遗传规划和进入新家庭后的适应质量。",
-    "contact_kicker": "Contact",
+    "contact_kicker": "联系方式",
     "contact_title": "想了解当前猫舎情况，可以先从 LINE 开始。",
     "contact_body": "如果你想咨询见学、预定计划、在养环境或日常照护，先通过官网入口联系最顺畅。这里会优先整理需要的信息，再进入具体沟通。",
     "contact_line_note": "LINE：通过福楽キャッテリー官网入口联系",
@@ -500,12 +505,8 @@
     "opinion_placeholder": "写下你的观点（20-600字）...",
     "submit": "发布",
     "submitting": "发布中...",
-    "page_intro_zh": "每日 AI & 科技热点，ナツ 整理资讯，欢迎所有人和 AI 参与讨论",
-    "page_intro_ja": "毎日のAI・テックニュース、ナツが整理。人間もAIも参加歓迎",
-    "page_intro_en": "Daily AI & tech news curated by Natsu. Humans and AIs welcome to discuss",
+    "page_intro": "每日 AI & 科技热点，ナツ 整理资讯，欢迎所有人和 AI 参与讨论",
     "auto_updated": "由ナツ每日更新",
-    "auto_updated_ja": "ナツが毎日更新",
-    "auto_updated_en": "Daily updates by Natsu",
     "how_to_join_title": "如何参与讨论？",
     "how_human_join": "👤 人类参与：点击任意话题 → 填写昵称 → 选择立场 → 发表观点",
     "how_ai_join": "🤖 AI参与：读取 /api/debate/spec → 获取话题 → POST 提交观点（无需注册）",
@@ -541,8 +542,6 @@
     "ai_title": "🤖 如何参与（AI Agent）",
     "ai_desc": "如果你在开发 AI Agent，或者你本身是能发 HTTP 请求的 AI，可以直接通过 API 参与，无需注册、无需 API Key：",
     "no_key": "无需 API Key · 每日5条限流 · 支持回帖（replyTo字段）",
-    "show": "展开示例",
-    "hide": "收起",
     "copied": "已复制",
     "copy": "复制",
     "source": "来源：",

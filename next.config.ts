@@ -1,8 +1,9 @@
 import type { NextConfig } from 'next';
 import createNextIntlPlugin from 'next-intl/plugin';
 import createMDX from '@next/mdx';
+import path from 'path';
 
-const withNextIntl = createNextIntlPlugin('./src/i18n/request.ts');
+const withNextIntl = createNextIntlPlugin(path.resolve('./src/i18n/request.ts'));
 
 const withMDX = createMDX({
   extension: /\.mdx?$/,

@@ -11,6 +11,7 @@ import { ArrowLeft, ExternalLink, CalendarDays } from 'lucide-react';
 import { fetchNewsById, convertToFrontendNewsItem } from '@/lib/news';
 import { aiInstanceColors, newsCategoryConfig } from '@/data/news';
 import { MarkdownRenderer } from '@/components/blog/markdown-renderer';
+import { BrandedSpinner } from '@/components/shared/BrandedSpinner';
 import type { NewsItem } from '@/data/news';
 
 function AIAvatar({ instance, size = 'md' }: { instance?: string; size?: 'sm' | 'md' | 'lg' }) {
@@ -46,6 +47,7 @@ export default function NewsDetailPage() {
 
   const [newsItem, setNewsItem] = useState<NewsItem | null>(null);
   const [loading, setLoading] = useState(true);
+  const [fetchError, setFetchError] = useState(false);
 
   useEffect(() => {
     fetchNewsById(newsId, locale)
@@ -54,7 +56,7 @@ export default function NewsDetailPage() {
           setNewsItem(convertToFrontendNewsItem(data));
         }
       })
-      .catch(err => console.error('Failed to fetch news item:', err))
+      .catch(() => setFetchError(true))
       .finally(() => setLoading(false));
   }, [newsId, locale]);
 
@@ -64,8 +66,8 @@ export default function NewsDetailPage() {
   if (loading) {
     return (
       <PageTransition>
-        <div className="mx-auto max-w-3xl px-4 sm:px-6 py-20 text-center">
-          <p className="text-muted-foreground">Loading...</p>
+        <div className="mx-auto max-w-3xl px-4 sm:px-6 py-20">
+          <BrandedSpinner />
         </div>
       </PageTransition>
     );
@@ -75,10 +77,24 @@ export default function NewsDetailPage() {
     return (
       <PageTransition>
         <div className="mx-auto max-w-3xl px-4 sm:px-6 py-20 text-center">
-          <h1 className="text-2xl font-bold mb-4">{t('news.not_found')}</h1>
-          <Link href="/news" className="text-brand-mint hover:underline">
-            ← {t('news.back_to_list')}
-          </Link>
+          {fetchError ? (
+            <>
+              <p className="text-muted-foreground mb-4">{t('error.description')}</p>
+              <button
+                onClick={() => { setFetchError(false); setLoading(true); }}
+                className="px-4 py-2 rounded-full bg-brand-cyan/15 text-brand-cyan text-sm hover:bg-brand-cyan/25 transition-colors border border-brand-cyan/20"
+              >
+                {t('error.retry')}
+              </button>
+            </>
+          ) : (
+            <>
+              <h1 className="text-2xl font-bold mb-4">{t('news.not_found')}</h1>
+              <Link href="/news" className="text-brand-mint hover:underline">
+                ← {t('news.back_to_list')}
+              </Link>
+            </>
+          )}
         </div>
       </PageTransition>
     );

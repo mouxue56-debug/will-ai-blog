@@ -26,11 +26,12 @@ function stripMarkdown(content: string): string {
 
 // Strip ES6 import/export statements from MDX content
 // MDX files may have import statements at the top that should not be rendered as markdown
+// Note: Custom MDX components are NOT supported - use HTML class names instead
 function stripMdxImports(content: string): string {
   return content
-    .replace(/^import\s+.*?;/gm, '')  // Single-line imports: import { X } from 'Y';
+    .replace(/^import\s+.*?;\s*$/gm, '')  // Single-line imports
     .replace(/^export\s+.*?(?:;|$)/gm, '')  // Export statements
-    .replace(/^\n+/, '')  // Remove leading newlines from removed imports
+    .replace(/^\n+/, '')  // Remove leading newlines
     .trim();
 }
 

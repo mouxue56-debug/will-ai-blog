@@ -47,7 +47,3 @@ export function hasSensitiveContent(text: string): boolean {
   return sensitive.some((word) => text.includes(word));
 }
 
-// Validate API key format (simple check)
-export function isValidKeyFormat(key: string): boolean {
-  return /^[a-zA-Z0-9_-]{20,60}$/.test(key);
-}

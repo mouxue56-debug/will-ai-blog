@@ -225,9 +225,15 @@ const DEEP_OCEAN_CSS = `
 function createDeepOceanRenderer(): Renderer {
   const renderer = new Renderer();
 
-  // h1-h6 handled by CSS, renderer just adds no extra wrapper
+  // h1-h6 with auto-generated id for StickyNav anchor links
   renderer.heading = ({ text, depth }: { text: string; depth: number }) => {
-    return `<h${depth}>${text}</h${depth}>\n`;
+    // Strip HTML tags to get plain text for the id
+    const plain = text.replace(/<[^>]+>/g, '').trim();
+    const id = plain
+      .toLowerCase()
+      .replace(/[^\w\u4e00-\u9fff\u3040-\u30ff]+/g, '-')
+      .replace(/^-|-$/g, '');
+    return `<h${depth} id="${id}">${text}</h${depth}>\n`;
   };
 
   // Code block with optional language tag

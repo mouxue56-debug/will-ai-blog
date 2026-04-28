@@ -7,7 +7,7 @@ import { Link } from '@/i18n/navigation';
 import type { CaseStudy } from '@/data/cases';
 import { CaseMarkdown } from './case-markdown';
 
-type Locale = 'zh' | 'ja' | 'en';
+import type { Locale } from '@/lib/locale';
 
 /**
  * CountUp — extracts a number from a value string and animates from 0.
@@ -168,10 +168,10 @@ export function CaseDetail({
   locale,
 }: {
   caseStudy: CaseStudy;
-  locale: string;
+  locale: Locale;
 }) {
   const t = useTranslations('cases');
-  const loc = locale as Locale;
+  const loc = locale;
   const prefersReducedMotion = useReducedMotion();
 
   return (
@@ -183,7 +183,7 @@ export function CaseDetail({
         {/* Hero image (falls back to gradient if missing) */}
         <img
           src={`/covers/cases/${caseStudy.slug}.jpg`}
-          alt=""
+          alt={caseStudy.title[loc] || caseStudy.title.zh || 'Case study cover'}
           className="absolute inset-0 h-full w-full object-cover opacity-80 dark:opacity-65"
           onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }}
         />

@@ -38,13 +38,16 @@ export function UserMenu() {
   }
 
   const user = session.user
-  const isAdmin = (user as Record<string, unknown>).role === 'admin'
+  const isAdmin = user.role === 'admin'
   const initials = (user.name || 'U').slice(0, 2).toUpperCase()
 
   return (
     <div className="relative" ref={menuRef}>
       <button
         onClick={() => setOpen(!open)}
+        aria-label={t('user_menu')}
+        aria-haspopup="true"
+        aria-expanded={open}
         className="flex items-center gap-2 rounded-full hover:opacity-80 transition-opacity"
       >
         {user.image ? (

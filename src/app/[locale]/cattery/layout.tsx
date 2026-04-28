@@ -33,10 +33,12 @@ export async function generateMetadata({
       images: [ogImageUrl],
     },
     alternates: {
+      canonical: `https://aiblog.fuluckai.com/${locale}/cattery`,
       languages: {
-        zh: '/zh/cattery',
+        'zh-CN': '/zh/cattery',
         ja: '/ja/cattery',
         en: '/en/cattery',
+        'x-default': '/zh/cattery',
       },
     },
   };

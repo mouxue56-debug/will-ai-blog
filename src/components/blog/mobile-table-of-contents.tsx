@@ -92,6 +92,7 @@ export function MobileTableOfContents({ headings }: MobileTableOfContentsProps) 
                 <button
                   onClick={() => setIsOpen(false)}
                   className="p-1 rounded-md hover:bg-muted transition-colors"
+                  aria-label="Close table of contents"
                 >
                   <X className="h-4 w-4" />
                 </button>

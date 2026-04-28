@@ -96,7 +96,7 @@ export default async function TimelineYearPage({ params }: { params: Promise<Par
                     </p>
                   </>
                 ) : (
-                  <p className="text-xs text-muted-foreground/40">{t('noEvents')}</p>
+                  <p className="text-xs text-muted-foreground/60">{t('noEvents')}</p>
                 )}
               </div>
             );
