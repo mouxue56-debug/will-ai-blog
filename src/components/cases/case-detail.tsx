@@ -78,7 +78,8 @@ function ExpandableSection({
     <div className="space-y-3">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-secondary/80 hover:bg-secondary text-sm font-medium transition-colors"
+        aria-expanded={isOpen}
+        className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-secondary/80 hover:bg-secondary text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-cyan/50"
       >
         <motion.svg
           animate={{ rotate: isOpen ? 90 : 0 }}

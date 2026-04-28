@@ -112,7 +112,8 @@ function NewsCard({ item, locale, t }: { item: NewsItem; locale: Locale; t: Retu
         {/* Expand/collapse button */}
         <button
           onClick={() => setExpanded(!expanded)}
-          className="flex items-center gap-1 mt-3 text-xs text-muted-foreground hover:text-foreground transition-colors cursor-pointer w-full"
+          aria-expanded={expanded}
+          className="flex items-center gap-1 mt-3 text-xs text-muted-foreground hover:text-foreground transition-colors cursor-pointer w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-cyan/50 focus-visible:rounded"
         >
           <MessageCircle className="w-3.5 h-3.5" />
           <span>{item.comments.length} {t('news.comments')}</span>
