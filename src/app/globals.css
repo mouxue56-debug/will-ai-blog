@@ -1635,6 +1635,7 @@ body::before {
   .enhanced-hero-date { animation: none; }
   .enhanced-hero-tag { animation: none; opacity: 1; }
   .enhanced-stat-num { animation: none; }
+  .enhanced-stats-bar { animation: none; }
 
   /* Hover lift transforms */
   .btn-icecream-primary:hover { transform: none; }
@@ -1644,6 +1645,8 @@ body::before {
   .before-after-col.before:hover,
   .before-after-col.after:hover { transform: none; }
   .decision-card:hover { transform: none; }
+  .workflow-step:hover { transform: none; }
+  .workflow-step:hover .step-num { transform: none; box-shadow: none; }
 
   /* Scroll-driven reveal animations */
   @supports (animation-timeline: view()) {
