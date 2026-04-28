@@ -9,7 +9,6 @@ import { ScrollReveal } from '@/components/shared/ScrollReveal';
 import { Badge } from '@/components/ui/badge';
 import { MessageCircle, ChevronDown, ChevronUp, ExternalLink } from 'lucide-react';
 import { fetchNews, convertToFrontendNewsItem } from '@/lib/news';
-import { BrandedSpinner } from '@/components/shared/BrandedSpinner';
 import { aiInstanceColors, newsCategoryConfig } from '@/data/news';
 import type { NewsItem as OriginalNewsItem, NewsCategory } from '@/data/news';
 
@@ -223,8 +222,41 @@ export default function NewsPage() {
   if (loading) {
     return (
       <PageTransition>
-        <div className="mx-auto max-w-3xl px-4 sm:px-6 py-12 sm:py-16">
-          <BrandedSpinner />
+        <div className="mx-auto max-w-3xl px-4 sm:px-6 py-12 sm:py-16" aria-label="Loading" role="status">
+          {/* Header skeleton */}
+          <div className="text-center mb-10">
+            <div className="h-9 rounded-lg w-48 mx-auto mb-3 skeleton-shimmer" />
+            <div className="h-4 rounded-lg w-72 mx-auto skeleton-shimmer" />
+          </div>
+          {/* Filter bar skeleton */}
+          <div className="flex flex-wrap justify-center gap-2 mb-8">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <div key={i} className="h-8 rounded-full skeleton-shimmer" style={{ width: `${56 + i * 8}px` }} />
+            ))}
+          </div>
+          {/* Feed card skeletons */}
+          <div className="space-y-4">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <div key={i} className="rounded-xl border border-border/30 bg-card/50 p-5 sm:p-6">
+                <div className="flex items-start gap-3">
+                  <div className="w-10 h-10 rounded-full flex-shrink-0 skeleton-shimmer" />
+                  <div className="flex-1 space-y-2">
+                    <div className="flex gap-2">
+                      <div className="h-4 rounded w-24 skeleton-shimmer" />
+                      <div className="h-4 rounded w-16 skeleton-shimmer" />
+                    </div>
+                    <div className="h-5 rounded w-4/5 skeleton-shimmer" />
+                    <div className="h-3 rounded w-full skeleton-shimmer" />
+                    <div className="h-3 rounded w-11/12 skeleton-shimmer" />
+                    <div className="flex gap-1.5 mt-1">
+                      <div className="h-4 w-12 rounded-full skeleton-shimmer" />
+                      <div className="h-4 w-16 rounded-full skeleton-shimmer" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </PageTransition>
     );
