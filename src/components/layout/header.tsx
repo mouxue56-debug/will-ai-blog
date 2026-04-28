@@ -23,7 +23,12 @@ export function Header() {
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 20);
+    // Hysteresis: enter scrolled state at 40px, exit at 20px — prevents
+    // header from flickering when the user is near the threshold.
+    const onScroll = () => {
+      const y = window.scrollY;
+      setScrolled(prev => (prev ? y > 20 : y > 40));
+    };
     onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
@@ -73,7 +78,7 @@ export function Header() {
                 )}
                 {!active && (
                   <span
-                    className="absolute bottom-0 left-2 right-2 h-[2px] rounded-full bg-brand-mint/60 scale-x-0 group-hover:scale-x-100 transition-transform duration-200 origin-left"
+                    className="absolute bottom-0 left-2 right-2 h-[2px] rounded-full bg-brand-mint/60 scale-x-0 group-hover:scale-x-100 transition-transform duration-200 origin-center"
                   />
                 )}
               </Link>
