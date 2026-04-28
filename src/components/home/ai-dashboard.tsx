@@ -89,7 +89,9 @@ export function AIDashboard() {
         >
 
           <div className="relative z-10 grid grid-cols-2 sm:grid-cols-4 gap-4">
-            {instances.map((inst, i) => (
+            {instances.map((inst, i) => {
+              const instanceName = t(`ai_instances.${inst.key}.name`);
+              return (
               <motion.div
                 key={inst.key}
                 className="rounded-lg p-[1px] bg-gradient-to-r from-brand-cyan/30 via-brand-taro/20 to-brand-mint/30"
@@ -106,11 +108,11 @@ export function AIDashboard() {
                       className={`w-10 h-10 rounded-full flex items-center justify-center mx-auto mb-1 bg-gradient-to-br ${inst.bgGradient}`}
                     >
                       <span className={`text-sm font-bold ${inst.color}`}>
-                        {t(`ai_instances.${inst.key}.name`).charAt(0)}
+                        {instanceName.charAt(0)}
                       </span>
                     </div>
                     <div className={`text-lg font-bold ${inst.color}`}>
-                      {t(`ai_instances.${inst.key}.name`)}
+                      {instanceName}
                     </div>
                     {inst.nicknameKey ? (
                       <div className="text-xs text-muted-foreground">{t(inst.nicknameKey)}</div>
@@ -125,7 +127,8 @@ export function AIDashboard() {
                   </div>
                 </div>
               </motion.div>
-            ))}
+              );
+            })}
           </div>
         </motion.div>
       </div>
