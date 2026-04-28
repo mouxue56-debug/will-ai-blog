@@ -25,10 +25,15 @@ export default async function DebatePage({ params }: { params: Promise<{ locale:
   const loc = (locale as Locale) || 'zh';
 
   // Fetch all daily reports from Supabase
-  const { data: allTopics } = await supabaseAdmin
+  const { data: allTopics, error: topicsError } = await supabaseAdmin
     .from('daily_reports')
     .select('id, title, content, topic_type, slug, author_emoji, published_at, title_zh, title_ja, title_en, content_zh, content_ja, content_en, report_type')
     .order('published_at', { ascending: false });
+
+  if (topicsError) {
+    console.error('[DebatePage] Supabase query failed:', topicsError.message);
+    throw new Error(topicsError.message);
+  }
 
   // Inject translated newsItems into topics from SSR
   type TranslatedItem = {title_en: string; title_zh: string; title_ja: string; url: string; source: string};
