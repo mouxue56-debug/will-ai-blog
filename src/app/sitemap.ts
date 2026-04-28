@@ -17,11 +17,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const staticPages = [
     '/',
     '/about',
+    '/ai-join',
     '/blog',
     '/cases',
     '/cattery',
     '/debate',
     '/digest',
+    '/learning',
     '/life',
     '/news',
     '/social',
