@@ -14,6 +14,14 @@ const DEEP_OCEAN_CSS = `
 }
 
 /* Headings */
+.k2w-prose h1,
+.k2w-prose h2,
+.k2w-prose h3,
+.k2w-prose h4,
+.k2w-prose h5,
+.k2w-prose h6 {
+  scroll-margin-top: 6rem;
+}
 .k2w-prose h1 {
   font-size: 2rem;
   font-weight: 700;
