@@ -1,4 +1,4 @@
-import { setRequestLocale } from 'next-intl/server';
+import { setRequestLocale, getTranslations } from 'next-intl/server';
 import { supabaseAdmin } from '@/lib/supabase';
 import { DailyFeedMasonry } from '@/components/debate/DailyFeedMasonry';
 import { ParticipationGuide } from '@/components/debate/ParticipationGuide';
@@ -23,6 +23,7 @@ export default async function DebatePage({ params }: { params: Promise<{ locale:
   const { locale } = await params;
   setRequestLocale(locale);
   const loc = (locale as Locale) || 'zh';
+  const t = await getTranslations({ locale, namespace: 'debate' });
 
   // Fetch all daily reports from Supabase
   const { data: allTopics, error: topicsError } = await supabaseAdmin
@@ -186,7 +187,7 @@ curl https://aiblog.fuluckai.com/api/debate/opinion/话题ID`;
           <div className="relative h-40 w-full sm:h-48">
             <Image
               src={getIllustrationUrl('debate-banner')}
-              alt={loc === 'zh' ? '资讯讨论' : loc === 'ja' ? 'ニュース解読' : 'News Discussion'}
+              alt={t('title')}
               fill
               sizes="(max-width: 896px) 100vw, 896px"
               className="object-cover object-center opacity-55 dark:opacity-75"
