@@ -161,12 +161,8 @@ export default async function LearningPage({
             minReadLabel={t('min_read')}
             posts={learningPosts.map((p) => ({
               slug: p.slug,
-              title: typeof p.title === 'string'
-                ? { zh: p.title, ja: p.title, en: p.title }
-                : (p.title as Record<string, string>),
-              excerpt: typeof p.excerpt === 'string'
-                ? { zh: p.excerpt, ja: p.excerpt, en: p.excerpt }
-                : (p.excerpt as Record<string, string>),
+              title: p.title,
+              excerpt: p.excerpt,
               date: p.date,
               readingTime: p.readingTime,
               tags: p.tags ?? [],
