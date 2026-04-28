@@ -8,6 +8,9 @@ const TRASH_DIR = path.resolve(BLOG_DIR, '_trash');
 
 type RouteContext = { params: Promise<{ slug: string }> };
 
+const VALID_STATUSES = ['draft', 'published', 'archived'] as const;
+type PostStatus = (typeof VALID_STATUSES)[number];
+
 /**
  * Sanitize a slug to prevent path traversal attacks.
  * Only allows alphanumeric characters, hyphens, underscores, and CJK characters.
@@ -92,24 +95,42 @@ export async function PUT(request: NextRequest, context: RouteContext) {
       return NextResponse.json({ error: 'Post not found' }, { status: 404 });
     }
 
-    const body = await request.json();
+    let body: Record<string, unknown>;
+    try {
+      body = await request.json();
+    } catch {
+      return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 });
+    }
+    if (typeof body !== 'object' || body === null) {
+      return NextResponse.json({ error: 'Request body must be an object' }, { status: 400 });
+    }
+
     let fileContent = fs.readFileSync(filePath, 'utf-8');
 
-    // Update status if provided
-    if (body.status) {
+    // Update status if provided — must be an allowlisted value to prevent YAML injection
+    if (body.status !== undefined) {
+      if (typeof body.status !== 'string' || !(VALID_STATUSES as readonly string[]).includes(body.status)) {
+        return NextResponse.json(
+          { error: `status must be one of: ${VALID_STATUSES.join(', ')}` },
+          { status: 400 },
+        );
+      }
+      const safeStatus = body.status as PostStatus;
       if (fileContent.match(/^status:\s*.+$/m)) {
-        fileContent = fileContent.replace(/^status:\s*.+$/m, `status: ${body.status}`);
+        fileContent = fileContent.replace(/^status:\s*.+$/m, `status: ${safeStatus}`);
       } else {
-        // Insert status after date line
         fileContent = fileContent.replace(
           /^(date:\s*.+)$/m,
-          `$1\nstatus: ${body.status}`
+          `$1\nstatus: ${safeStatus}`
         );
       }
     }
 
     // Update content if provided
     if (body.content !== undefined) {
+      if (typeof body.content !== 'string') {
+        return NextResponse.json({ error: 'content must be a string' }, { status: 400 });
+      }
       const fmMatch = fileContent.match(/^(---\s*\n[\s\S]*?\n---\s*\n)([\s\S]*)$/);
       if (fmMatch) {
         fileContent = fmMatch[1] + body.content;
@@ -117,19 +138,22 @@ export async function PUT(request: NextRequest, context: RouteContext) {
     }
 
     // Update title if provided
-    if (body.title) {
-      if (typeof body.title === 'object') {
-        // Replace title block
+    if (body.title !== undefined) {
+      if (typeof body.title === 'object' && body.title !== null) {
+        const t = body.title as Record<string, unknown>;
+        const zh = typeof t.zh === 'string' ? t.zh : '';
+        const ja = typeof t.ja === 'string' ? t.ja : '';
+        const en = typeof t.en === 'string' ? t.en : '';
         fileContent = fileContent.replace(
           /^title:\n(\s+\w+:.*\n)*/m,
-          `title:\n  zh: "${body.title.zh || ''}"\n  ja: "${body.title.ja || ''}"\n  en: "${body.title.en || ''}"\n`
+          `title:\n  zh: "${zh}"\n  ja: "${ja}"\n  en: "${en}"\n`
         );
       }
     }
 
     fs.writeFileSync(filePath, fileContent, 'utf-8');
 
-    return NextResponse.json({ slug, status: body.status || 'updated', message: 'Post updated' });
+    return NextResponse.json({ slug, status: body.status ?? 'updated', message: 'Post updated' });
   } catch (error) {
     return NextResponse.json(
       { error: 'Failed to update post', detail: String(error) },
