@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
-import { motion } from 'motion/react';
+import { motion, useReducedMotion } from 'motion/react';
 import { lifePosts, type LifePost } from '@/data/life';
 import type { Locale } from '@/lib/locale';
 
@@ -17,20 +17,22 @@ const categoryConfig: { key: Category; emoji: string }[] = [
 ];
 
 function LifeCard({ post, index, locale }: { post: LifePost; index: number; locale: Locale }) {
+  const prefersReducedMotion = useReducedMotion();
   return (
     <motion.div
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
+      whileHover={prefersReducedMotion ? {} : { y: -4, transition: { type: 'spring', stiffness: 350, damping: 22 } }}
       transition={{ delay: index * 0.06, duration: 0.4, ease: 'easeOut' }}
       className="group break-inside-avoid mb-4"
     >
-      <div className="glass-card overflow-hidden transition-all duration-300 hover:scale-[1.02] hover:shadow-lg hover:shadow-black/5 dark:hover:shadow-black/20">
+      <div className="glass-card overflow-hidden">
         {/* Gradient image placeholder */}
         <div
           className={`relative bg-gradient-to-br ${post.imageGradient} flex items-center justify-center`}
           style={{ height: `${140 + (index % 3) * 40}px` }}
         >
-          <span className="text-4xl sm:text-5xl drop-shadow-md">{post.emoji}</span>
+          <span className="text-4xl sm:text-5xl drop-shadow-md transition-transform duration-300 motion-reduce:transition-none group-hover:scale-110 group-hover:rotate-6">{post.emoji}</span>
         </div>
 
         {/* Content */}
