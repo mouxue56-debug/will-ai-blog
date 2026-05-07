@@ -96,7 +96,9 @@ http://localhost:3000
 如果 GitHub raw 访问不稳定，可以尝试 Gitee 入口：
 
 ```bash
-bash -c "$(curl -fsSL https://gitee.com/luoxueai/opendeepseek/raw/main/install-cn.sh)"
+curl -fL --connect-timeout 10 --max-time 120 \
+  https://gitee.com/luoxueai/opendeepseek/raw/main/install-cn.sh \
+  -o /tmp/opendeepseek-install-cn.sh && bash /tmp/opendeepseek-install-cn.sh
 ```
 
 国内版入口目前主要解决三件事：
@@ -105,7 +107,9 @@ bash -c "$(curl -fsSL https://gitee.com/luoxueai/opendeepseek/raw/main/install-c
 - 提供 `docker-compose.cn.yml` 和 `.env.example.cn`。
 - 提供国内网络体检和更友好的中文错误提示。
 
-需要注意：国内容器镜像和完整离线包发布后，国内安装体验会更稳；在这之前，如果 Docker 镜像拉取失败，可以先换网络、配置镜像源，或等待离线包发布。
+不要使用 `bash -c "$(curl -fsSL ...)"` 这种静默命令。Gitee raw 慢的时候，它会先在后台下载完整脚本，终端没有进度，看起来就像什么都没发生。
+
+需要注意：国内版现在默认使用已公开可拉的上游镜像，保证先跑起来；国内容器镜像和完整离线包发布后，国内安装体验会更稳。如果 Docker 镜像拉取失败，可以先换网络、配置镜像源，或等待离线包发布。
 
 ## 手动安装
 
@@ -292,7 +296,9 @@ bash <(curl -fsSL https://raw.githubusercontent.com/mouxue56-debug/opendeepseek/
 - 国内安装：
 
 ```bash
-bash -c "$(curl -fsSL https://gitee.com/luoxueai/opendeepseek/raw/main/install-cn.sh)"
+curl -fL --connect-timeout 10 --max-time 120 \
+  https://gitee.com/luoxueai/opendeepseek/raw/main/install-cn.sh \
+  -o /tmp/opendeepseek-install-cn.sh && bash /tmp/opendeepseek-install-cn.sh
 ```
 
 如果你希望 DeepSeek 不只是陪你聊天，而是真的帮你生成文件、整理资料、做网页、跑任务，OpenDeepSeek 就是为这个场景准备的。
