@@ -53,6 +53,20 @@ const nextConfig: NextConfig = {
       { protocol: 'https', hostname: 'aiblog.fuluckai.com' },
     ],
   },
+  async redirects() {
+    return [
+      {
+        source: '/daoge',
+        destination: 'https://daoge-chat.vercel.app/daoge',
+        permanent: false,
+      },
+      {
+        source: '/daoge/:path*',
+        destination: 'https://daoge-chat.vercel.app/daoge/:path*',
+        permanent: false,
+      },
+    ];
+  },
   async headers() {
     return [
       {
