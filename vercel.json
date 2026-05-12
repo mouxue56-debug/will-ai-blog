@@ -17,6 +17,32 @@
       "permanent": false
     }
   ],
+  "rewrites": [
+    {
+      "source": "/daoge",
+      "destination": "https://daoge-chat.vercel.app/daoge"
+    },
+    {
+      "source": "/daoge/:path*",
+      "destination": "https://daoge-chat.vercel.app/daoge/:path*"
+    },
+    {
+      "source": "/daogeAI",
+      "destination": "https://daoge-chat.vercel.app/daogeAI"
+    },
+    {
+      "source": "/daogeAI/:path*",
+      "destination": "https://daoge-chat.vercel.app/daogeAI/:path*"
+    },
+    {
+      "source": "/audio/presets/:path*",
+      "destination": "https://daoge-chat.vercel.app/audio/presets/:path*"
+    },
+    {
+      "source": "/avatars/:path*",
+      "destination": "https://daoge-chat.vercel.app/avatars/:path*"
+    }
+  ],
   "headers": [
     {
       "source": "/(.*)",
