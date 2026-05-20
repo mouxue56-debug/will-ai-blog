@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>伊甸计划导演剪辑台</title>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div>
+      <p class="eyebrow">AI短剧半自动制片</p>
+      <h1>伊甸计划导演剪辑台</h1>
+    </div>
+    <div class="status">离线提示词库 · 不调用即梦</div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div>
+        <h2 id="subtitle"></h2>
+        <p id="style"></p>
+      </div>
+      <div class="rules" id="rules"></div>
+    </section>
+
+    <section class="toolbar">
+      <label>
+        搜索段落
+        <input id="search" type="search" placeholder="例如：落雪 / 系统 / 新闻 / 机房">
+      </label>
+      <label>
+        快速跳转
+        <select id="jump"></select>
+      </label>
+      <button id="copy-all" type="button">复制18段视频提示词</button>
+    </section>
+
+    <section id="segments" class="segments"></section>
+  </main>
+
+  <footer>
+    <p>生成策略：先用 Image2/Grok/Gemini 生成每段6格模板图，再把模板图和本段视频提示词交给 Seedance/Groove 等视频模型。全流程由人工确认，不自动消耗即梦积分。</p>
+  </footer>
+
+  <script src="./data.js"></script>
+  <script src="./app.js"></script>
+</body>
+</html>
