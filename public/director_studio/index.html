@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AI短剧导演工具台</title>
+  <link rel="stylesheet" href="/director_studio/styles.css">
+</head>
+<body>
+  <header class="app-header">
+    <div>
+      <p class="eyebrow">Prompt-driven Video Studio</p>
+      <h1>AI短剧导演工具台</h1>
+    </div>
+    <div class="header-actions">
+      <button id="save-project" type="button">保存到本机</button>
+      <button id="export-json" type="button">导出 JSON</button>
+      <button id="export-md" type="button">导出 Markdown</button>
+    </div>
+  </header>
+
+  <main class="workspace">
+    <aside class="rail">
+      <section class="panel">
+        <div class="panel-title">
+          <h2>项目</h2>
+          <span id="save-state">未保存</span>
+        </div>
+        <button id="new-project" type="button" class="full">新建空项目</button>
+        <button id="load-seed" type="button" class="full">载入伊甸计划示例</button>
+        <label class="file-button">
+          导入 JSON
+          <input id="import-json" type="file" accept="application/json,.json">
+        </label>
+      </section>
+
+      <section class="panel">
+        <div class="panel-title">
+          <h2>段落</h2>
+          <button id="add-segment" type="button">新增</button>
+        </div>
+        <div class="segment-list" id="segment-list"></div>
+      </section>
+    </aside>
+
+    <section class="editor">
+      <nav class="tabs" aria-label="工作区">
+        <button type="button" class="tab active" data-tab="story">故事主线</button>
+        <button type="button" class="tab" data-tab="segment">段落编辑</button>
+        <button type="button" class="tab" data-tab="batch">批量与 AI 交接</button>
+      </nav>
+
+      <section id="tab-story" class="tab-panel active"></section>
+      <section id="tab-segment" class="tab-panel"></section>
+      <section id="tab-batch" class="tab-panel"></section>
+    </section>
+  </main>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script src="/director_site/v2/data.js"></script>
+  <script src="/director_studio/app.js"></script>
+</body>
+</html>

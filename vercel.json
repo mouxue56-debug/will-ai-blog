@@ -42,6 +42,14 @@
       "destination": "/director_site/v2/index.html"
     },
     {
+      "source": "/director_studio",
+      "destination": "/director_studio/index.html"
+    },
+    {
+      "source": "/director_studio/",
+      "destination": "/director_studio/index.html"
+    },
+    {
       "source": "/daoge",
       "destination": "https://daoge-chat.vercel.app/daoge"
     },
