@@ -44,7 +44,7 @@ function renderSegments(filter = "") {
   segmentsEl.innerHTML = matches.map((seg) => {
     const panels = seg.panels.map((panel) => `<div class="panel">${escapeHtml(panel)}</div>`).join("");
     const dialogue = seg.dialogue.map((line) => `<p class="info">${escapeHtml(line)}</p>`).join("");
-    const imagePath = `../assets/templates/seg_${seg.id}_storyboard_image2_v1.png`;
+    const imagePath = seg.image || `/assets/templates_v2/seg_${seg.id}_storyboard_image2_v2.png`;
     return `
       <article class="segment" id="seg-${seg.id}">
         <div class="segment-header">

@@ -15,9 +15,32 @@
       "source": "/",
       "destination": "/zh/",
       "permanent": false
+    },
+    {
+      "source": "/director_site",
+      "destination": "/director_site/edenv1",
+      "permanent": false
+    },
+    {
+      "source": "/director_site/",
+      "destination": "/director_site/edenv1",
+      "permanent": false
+    },
+    {
+      "source": "/director_site/index.html",
+      "destination": "/director_site/edenv1",
+      "permanent": false
     }
   ],
   "rewrites": [
+    {
+      "source": "/director_site/edenv1",
+      "destination": "/director_site/edenv1/index.html"
+    },
+    {
+      "source": "/director_site/v2",
+      "destination": "/director_site/v2/index.html"
+    },
     {
       "source": "/daoge",
       "destination": "https://daoge-chat.vercel.app/daoge"
