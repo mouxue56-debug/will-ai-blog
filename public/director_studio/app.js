@@ -525,9 +525,9 @@ function referenceCard(type, ref) {
   const primaryField = type === "characters" ? "name" : "title";
   return `
     <article class="ref-card">
-      <div class="ref-preview">
-        ${ref.image.src ? `<img src="${esc(ref.image.src)}" alt="${esc(ref.name || ref.title)}">` : `<span>参考图</span>`}
-      </div>
+      <button type="button" class="ref-preview upload-surface" data-trigger-ref-upload="${type}" data-ref-id="${ref.id}" title="点击上传参考图">
+        ${ref.image.src ? `<img src="${esc(ref.image.src)}" alt="${esc(ref.name || ref.title)}">` : `<span>点击上传<br>参考图</span>`}
+      </button>
       <div class="ref-fields">
         <label>${def.primaryLabel}
           <input data-ref-type="${type}" data-ref-id="${ref.id}" data-ref-field="${primaryField}" value="${esc(ref[primaryField] || ref.name || ref.title)}">
@@ -548,7 +548,7 @@ function referenceCard(type, ref) {
         </label>
         <div class="button-row">
           <label class="file-button compact">
-            上传图片
+            选择文件
             <input type="file" accept="image/*" data-ref-upload="${type}" data-ref-id="${ref.id}">
           </label>
           <button type="button" class="danger" data-remove-ref="${type}" data-ref-id="${ref.id}">删除</button>
@@ -657,9 +657,9 @@ function renderSegmentEditor() {
         <span class="status-pill">${esc(seg.image.status)}</span>
       </div>
       <div class="image-area">
-        <div class="image-frame">
+        <button type="button" class="image-frame upload-surface" data-trigger-image-upload="${seg.uid}" title="点击上传本段模板图">
           ${seg.image.src ? `<img src="${esc(seg.image.src)}" alt="第${seg.id}段参考图">` : `<div class="placeholder">第${seg.id}段模板图<br>可粘贴URL或上传本地图片</div>`}
-        </div>
+        </button>
         <div class="field-stack">
           <label>图片 URL 或 data URL
             <input data-seg-field="image.src" value="${esc(seg.image.src)}" placeholder="/assets/... 或 https://...">
@@ -1525,6 +1525,22 @@ document.addEventListener("drop", (event) => {
 document.addEventListener("click", async (event) => {
   const target = event.target;
   if (!(target instanceof HTMLElement)) return;
+
+  const refUploadTrigger = target.closest("[data-trigger-ref-upload]");
+  if (refUploadTrigger) {
+    const input = [...document.querySelectorAll("input[data-ref-upload]")]
+      .find((item) => item.dataset.refUpload === refUploadTrigger.dataset.triggerRefUpload && item.dataset.refId === refUploadTrigger.dataset.refId);
+    input?.click();
+    return;
+  }
+
+  const imageUploadTrigger = target.closest("[data-trigger-image-upload]");
+  if (imageUploadTrigger) {
+    const input = [...document.querySelectorAll("input[data-image-upload]")]
+      .find((item) => item.dataset.imageUpload === imageUploadTrigger.dataset.triggerImageUpload);
+    input?.click();
+    return;
+  }
 
   const rowMove = target.closest("[data-row-move-id]");
   if (rowMove) {
