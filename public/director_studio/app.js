@@ -1,6 +1,41 @@
 const STORAGE_KEY = "director_studio_project_v2";
 const LEGACY_STORAGE_KEY = "director_studio_project_v1";
 const CONNECTOR_KEY = "director_studio_connector_v1";
+const HISTORY_KEY = "director_studio_history_v2";
+const MAX_HISTORY = 30;
+
+const STATUS_OPTIONS = [
+  ["draft", "草稿"],
+  ["needs-image", "待补图"],
+  ["needs-rewrite", "待润色"],
+  ["needs-review", "待审"],
+  ["approved", "已通过"],
+  ["ready", "可生成"],
+  ["rendered", "已生成"]
+];
+
+const PACKAGE_MODES = {
+  full: {
+    label: "完整交接包",
+    instruction: "完整检查故事、参考、图片提示词和视频提示词，返回必要的 JSON merge patch。"
+  },
+  rewrite: {
+    label: "给 Kimi 润色",
+    instruction: "只润色视频提示词和声音脚本，保持剧情因果、镜头顺序和参考图用途不变。"
+  },
+  image: {
+    label: "给员工制图",
+    instruction: "聚焦图片模板提示词，保证每段是6-9格连续分镜、场景简洁真实、图文一致。"
+  },
+  video: {
+    label: "给视频生成",
+    instruction: "聚焦手动视频生成。输出每段可直接复制给 Seedance/Gemini/Grok 的执行提示词。"
+  },
+  review: {
+    label: "给审稿",
+    instruction: "检查故事因果、情绪节奏、世界观表达、镜头承接和生成风险，返回审稿备注。"
+  }
+};
 
 const REF_DEFS = {
   characters: {
@@ -40,6 +75,8 @@ const state = {
   currentId: "",
   selectedIds: new Set(),
   activeTab: "story",
+  undoSnapshot: null,
+  dragUid: "",
   dirty: false
 };
 
@@ -61,6 +98,10 @@ const els = {
 
 function uid(prefix = "id") {
   return `${prefix}_${Math.random().toString(36).slice(2, 8)}`;
+}
+
+function stableUid(raw, index = 0) {
+  return String(raw?.uid || raw?.stableId || raw?._uid || `seg_${String(raw?.id || index + 1).padStart(2, "0")}`);
 }
 
 function esc(value) {
@@ -111,13 +152,21 @@ function emptyProject() {
 
 function normalizeImage(raw) {
   if (typeof raw === "string") {
-    return { src: raw, notes: "", status: raw ? "draft" : "empty" };
+    return { src: raw, notes: "", status: raw ? "draft" : "empty", mode: inferImageMode(raw) };
   }
   return {
     src: raw?.src || "",
     notes: raw?.notes || "",
-    status: raw?.status || (raw?.src ? "draft" : "empty")
+    status: raw?.status || (raw?.src ? "draft" : "empty"),
+    mode: raw?.mode || inferImageMode(raw?.src || "")
   };
+}
+
+function inferImageMode(src) {
+  if (!src) return "empty";
+  if (String(src).startsWith("data:")) return "dataurl";
+  if (/^https?:\/\//.test(String(src))) return "url";
+  return "asset";
 }
 
 function normalizeReference(raw, index, type, fallback = {}) {
@@ -125,6 +174,7 @@ function normalizeReference(raw, index, type, fallback = {}) {
   const id = String(raw?.id || fallback.id || `${def.prefix}_${String(index + 1).padStart(2, "0")}`);
   const primary = raw?.name || raw?.title || fallback.name || fallback.title || `${def.addLabel}${index + 1}`;
   return {
+    uid: stableUid(raw, index),
     id,
     name: raw?.name || primary,
     title: raw?.title || primary,
@@ -151,6 +201,7 @@ function audioScriptFromLegacy(raw) {
 function normalizeSegment(raw, index = 0) {
   const id = String(raw?.id || String(index + 1).padStart(2, "0"));
   return {
+    uid: stableUid(raw, index),
     id,
     title: raw?.title || `第${id}段`,
     duration: raw?.duration || "10s",
@@ -271,38 +322,68 @@ function markDirty() {
 
 function saveProject() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(state.project));
+  saveSnapshot("手动保存");
   state.dirty = false;
   els.saveState.textContent = "已保存";
   showToast("已保存到本机浏览器");
 }
 
+function historyList() {
+  try {
+    return JSON.parse(localStorage.getItem(HISTORY_KEY) || "[]");
+  } catch {
+    return [];
+  }
+}
+
+function saveHistoryList(list) {
+  localStorage.setItem(HISTORY_KEY, JSON.stringify(list.slice(0, MAX_HISTORY)));
+}
+
+function saveSnapshot(reason = "自动快照") {
+  if (!state.project) return;
+  const list = historyList();
+  list.unshift({
+    id: uid("snap"),
+    savedAt: new Date().toISOString(),
+    reason,
+    title: state.project.project?.title || "短剧项目",
+    segmentCount: state.project.segments?.length || 0,
+    project: state.project
+  });
+  saveHistoryList(list);
+}
+
+function restoreSnapshot(snapshotId) {
+  const item = historyList().find((snap) => snap.id === snapshotId);
+  if (!item) return showToast("没有找到这个版本");
+  state.undoSnapshot = JSON.stringify(state.project);
+  loadProject(item.project);
+  saveProject();
+  showToast("已恢复历史版本");
+}
+
 function loadProject(project) {
   state.project = normalizeProject(project);
-  state.currentId = state.project.segments[0]?.id || "";
-  state.selectedIds = new Set(state.project.segments.map((seg) => seg.id));
+  state.currentId = state.project.segments[0]?.uid || "";
+  state.selectedIds = new Set(state.project.segments.map((seg) => seg.uid));
   state.dirty = false;
   els.saveState.textContent = "已载入";
   render();
 }
 
 function getCurrentSegment() {
-  return state.project.segments.find((seg) => seg.id === state.currentId) || state.project.segments[0] || null;
+  return state.project.segments.find((seg) => seg.uid === state.currentId || seg.id === state.currentId) || state.project.segments[0] || null;
 }
 
 function renumberSegments() {
-  const selectedBefore = new Set(state.selectedIds);
-  const idMap = new Map();
   state.project.segments.forEach((seg, index) => {
-    const oldId = seg.id;
     seg.id = String(index + 1).padStart(2, "0");
-    idMap.set(oldId, seg.id);
-    if (state.currentId === oldId) state.currentId = seg.id;
   });
-  state.selectedIds = new Set([...selectedBefore].map((id) => idMap.get(id)).filter(Boolean));
 }
 
 function selectedSegments() {
-  const selected = state.project.segments.filter((seg) => state.selectedIds.has(seg.id));
+  const selected = state.project.segments.filter((seg) => state.selectedIds.has(seg.uid));
   return selected.length ? selected : state.project.segments;
 }
 
@@ -312,9 +393,13 @@ function updateProjectField(field, value) {
 }
 
 function updateSegmentField(id, field, value) {
-  const seg = state.project.segments.find((item) => item.id === id);
+  const seg = state.project.segments.find((item) => item.uid === id || item.id === id);
   if (!seg) return;
   setPath(seg, field, value);
+  if (field === "image.src") {
+    seg.image.status = value ? "draft" : "empty";
+    seg.image.mode = inferImageMode(value);
+  }
   markDirty();
 }
 
@@ -324,7 +409,10 @@ function updateReference(type, id, field, value) {
   setPath(ref, field, value);
   if (field === "name") ref.title = value;
   if (field === "title") ref.name = value;
-  if (field === "image.src") ref.image.status = value ? "draft" : "empty";
+  if (field === "image.src") {
+    ref.image.status = value ? "draft" : "empty";
+    ref.image.mode = inferImageMode(value);
+  }
   markDirty();
 }
 
@@ -347,17 +435,17 @@ function render() {
 
 function renderSegmentList() {
   const rows = state.project.segments.map((seg) => `
-    <div class="segment-row ${seg.id === state.currentId ? "active" : ""}">
-      <input type="checkbox" data-select-id="${seg.id}" ${state.selectedIds.has(seg.id) ? "checked" : ""} aria-label="选择第${seg.id}段">
-      <button type="button" class="segment-open" data-open-id="${seg.id}">
+    <div class="segment-row ${seg.uid === state.currentId ? "active" : ""}" draggable="true" data-drag-uid="${seg.uid}">
+      <input type="checkbox" data-select-id="${seg.uid}" ${state.selectedIds.has(seg.uid) ? "checked" : ""} aria-label="选择第${seg.id}段">
+      <button type="button" class="segment-open" data-open-id="${seg.uid}">
         <span class="seg-title">${seg.id} ${esc(seg.title)}</span>
         <span class="seg-meta">${esc(seg.duration)} · ${esc(seg.location || String(seg.scenePlan || "").split("\n")[0] || "未设场景")}</span>
       </button>
       <div class="row-sort" aria-label="排序">
-        <button type="button" data-row-move-id="${seg.id}" data-row-move="-1" title="上移">↑</button>
-        <button type="button" data-row-move-id="${seg.id}" data-row-move="1" title="下移">↓</button>
+        <button type="button" data-row-move-id="${seg.uid}" data-row-move="-1" title="上移">↑</button>
+        <button type="button" data-row-move-id="${seg.uid}" data-row-move="1" title="下移">↓</button>
       </div>
-      <span class="seg-status status-${esc(seg.status || "draft")}">${esc(seg.status || "draft")}</span>
+      <span class="seg-status status-${esc(seg.status || "draft")}">${esc(statusLabel(seg.status))}</span>
     </div>
   `).join("");
 
@@ -365,6 +453,10 @@ function renderSegmentList() {
     <p class="rail-note">勾选用于批量导出；↑↓ 直接调整段落顺序；点标题进入本段镜头包。</p>
     ${rows}
   `;
+}
+
+function statusLabel(value) {
+  return STATUS_OPTIONS.find(([key]) => key === value)?.[1] || value || "草稿";
 }
 
 function renderStory() {
@@ -449,6 +541,11 @@ function referenceCard(type, ref) {
         <label>参考图 URL / data URL
           <input data-ref-type="${type}" data-ref-id="${ref.id}" data-ref-field="image.src" value="${esc(ref.image.src)}">
         </label>
+        <label>图片模式
+          <select data-ref-type="${type}" data-ref-id="${ref.id}" data-ref-field="image.mode">
+            ${imageModeOptions(ref.image.mode)}
+          </select>
+        </label>
         <div class="button-row">
           <label class="file-button compact">
             上传图片
@@ -462,6 +559,15 @@ function referenceCard(type, ref) {
       </div>
     </article>
   `;
+}
+
+function imageModeOptions(value) {
+  return [
+    ["empty", "未设置"],
+    ["asset", "项目资产路径"],
+    ["url", "外链 URL"],
+    ["dataurl", "内嵌 dataURL"]
+  ].map(([key, label]) => `<option value="${key}" ${value === key ? "selected" : ""}>${label}</option>`).join("");
 }
 
 function renderSegmentEditor() {
@@ -501,7 +607,7 @@ function renderSegmentEditor() {
         </label>
         <label>状态
           <select data-seg-field="status">
-            ${["draft", "needs-review", "needs-image", "approved", "ready"].map((s) => `<option value="${s}" ${seg.status === s ? "selected" : ""}>${s}</option>`).join("")}
+            ${STATUS_OPTIONS.map(([value, label]) => `<option value="${value}" ${seg.status === value ? "selected" : ""}>${label}</option>`).join("")}
           </select>
         </label>
       </div>
@@ -558,9 +664,14 @@ function renderSegmentEditor() {
           <label>图片 URL 或 data URL
             <input data-seg-field="image.src" value="${esc(seg.image.src)}" placeholder="/assets/... 或 https://...">
           </label>
+          <label>图片模式
+            <select data-seg-field="image.mode">
+              ${imageModeOptions(seg.image.mode)}
+            </select>
+          </label>
           <label class="file-button">
             上传本地图片到当前项目 JSON
-            <input type="file" accept="image/*" data-image-upload="${seg.id}">
+            <input type="file" accept="image/*" data-image-upload="${seg.uid}">
           </label>
           <label>图片备注
             <textarea data-seg-field="image.notes">${escText(seg.image.notes)}</textarea>
@@ -591,6 +702,7 @@ function renderSegmentEditor() {
         </div>
         <div class="button-row">
           <button type="button" data-copy-package="${seg.id}">复制本段完整包</button>
+          <button type="button" data-compose-prompt="${seg.uid}">按参考重组视频提示词</button>
           <button type="button" data-copy-field="templatePrompt">复制图片提示词</button>
           <button type="button" data-copy-field="videoPrompt">复制视频提示词</button>
         </div>
@@ -658,7 +770,33 @@ function listEditor(field, items, label) {
 
 function renderBatch() {
   const connector = JSON.parse(localStorage.getItem(CONNECTOR_KEY) || "{}");
+  const history = historyList();
+  const dashboard = productionDashboard();
   els.batch.innerHTML = `
+    <section class="section">
+      <div class="section-header">
+        <div>
+          <h2>生产看板</h2>
+          <p class="section-kicker">先看项目是不是具备手动生成条件，再导出给员工或 AI。</p>
+        </div>
+        <span class="status-pill">${dashboard.ready} 段可生成</span>
+      </div>
+      <div class="metric-grid">
+        <div class="metric"><strong>${dashboard.total}</strong><span>总段落</span></div>
+        <div class="metric"><strong>${dashboard.missingImages}</strong><span>缺模板图</span></div>
+        <div class="metric"><strong>${dashboard.missingPrompts}</strong><span>缺提示词</span></div>
+        <div class="metric"><strong>${dashboard.invalidDuration}</strong><span>时长风险</span></div>
+        <div class="metric"><strong>${dashboard.noSceneRef}</strong><span>未选场景</span></div>
+      </div>
+      <div class="button-row">
+        <button type="button" data-run-audit="selected">检查选中段</button>
+        <button type="button" data-run-audit="all">检查全项目</button>
+      </div>
+      <label>检查结果
+        <textarea id="audit-output" class="batch-output small-output" placeholder="点击检查后显示 Seedance 执行风险和图文一致性问题。"></textarea>
+      </label>
+    </section>
+
     <section class="section">
       <div class="section-header">
         <div>
@@ -667,11 +805,23 @@ function renderBatch() {
         </div>
         <span class="status-pill">选中 ${selectedSegments().length} 段</span>
       </div>
+      <div class="grid-2">
+        <label>导出类型
+          <select id="package-mode">
+            ${Object.entries(PACKAGE_MODES).map(([key, item]) => `<option value="${key}">${item.label}</option>`).join("")}
+          </select>
+        </label>
+        <label>说明
+          <input value="任务包会带上人物/场景/风格参考和选中段落，不会自动调用模型。" readonly>
+        </label>
+      </div>
       <div class="button-row">
         <button type="button" data-select-all="1">全选</button>
         <button type="button" data-select-all="0">全不选</button>
         <button type="button" data-generate-package="selected">生成选中段任务包</button>
         <button type="button" data-generate-package="all">生成全项目任务包</button>
+        <button type="button" data-export-csv="selected">导出选中段 CSV</button>
+        <button type="button" data-export-sanitized>导出脱敏示例 JSON</button>
         <button type="button" data-copy-batch-output>复制输出框</button>
       </div>
       <label>任务包 / 导出内容
@@ -704,8 +854,12 @@ function renderBatch() {
         </label>
       </div>
       <div class="button-row">
+        <button type="button" data-preview-replace>预览命中</button>
         <button type="button" data-apply-replace>应用到选中段</button>
       </div>
+      <label>命中预览
+        <textarea id="replace-preview" class="batch-output small-output"></textarea>
+      </label>
     </section>
 
     <section class="section">
@@ -719,7 +873,37 @@ function renderBatch() {
         <textarea id="patch-input" class="batch-output" placeholder='{"project":{},"segments":[{"id":"01","videoPrompt":"..."}]}'></textarea>
       </label>
       <div class="button-row">
+        <button type="button" data-preview-patch>预览 Patch</button>
         <button type="button" data-apply-patch class="primary">应用 Patch</button>
+        <button type="button" data-undo-patch>撤销上一次应用</button>
+      </div>
+      <label>Patch 预览
+        <textarea id="patch-preview" class="batch-output small-output"></textarea>
+      </label>
+    </section>
+
+    <section class="section">
+      <div class="section-header">
+        <div>
+          <h2>本机版本历史</h2>
+          <p class="section-kicker">每次手动保存和应用 Patch 都会留下快照，可回滚。</p>
+        </div>
+        <span class="status-pill">${history.length} 个快照</span>
+      </div>
+      <div class="grid-2">
+        <label>历史版本
+          <select id="history-select">
+            ${history.map((snap) => `<option value="${snap.id}">${esc(new Date(snap.savedAt).toLocaleString())} · ${esc(snap.reason)} · ${snap.segmentCount}段</option>`).join("")}
+          </select>
+        </label>
+        <label>说明
+          <input value="恢复前会把当前项目放入撤销快照。" readonly>
+        </label>
+      </div>
+      <div class="button-row">
+        <button type="button" data-save-snapshot>保存当前快照</button>
+        <button type="button" data-restore-snapshot>恢复选中版本</button>
+        <button type="button" class="danger" data-clear-history>清空历史</button>
       </div>
     </section>
 
@@ -746,6 +930,102 @@ function renderBatch() {
   `;
 }
 
+function productionDashboard() {
+  const audits = state.project.segments.map((seg) => auditSegment(seg));
+  return {
+    total: state.project.segments.length,
+    ready: audits.filter((item) => item.errors.length === 0).length,
+    missingImages: state.project.segments.filter((seg) => !seg.image?.src).length,
+    missingPrompts: state.project.segments.filter((seg) => !seg.templatePrompt || !seg.videoPrompt).length,
+    invalidDuration: audits.filter((item) => item.errors.concat(item.warnings).some((line) => line.includes("时长"))).length,
+    noSceneRef: state.project.segments.filter((seg) => !(seg.sceneRefs || []).length).length
+  };
+}
+
+function auditSegments(segments) {
+  const lines = [
+    `# Seedance 执行检查`,
+    `检查时间：${new Date().toLocaleString()}`,
+    `范围：${segments.length} 段`,
+    ""
+  ];
+  segments.forEach((seg) => {
+    const audit = auditSegment(seg);
+    const level = audit.errors.length ? "阻塞" : audit.warnings.length ? "需注意" : "通过";
+    lines.push(`## ${seg.id} ${seg.title}：${level}`);
+    if (!audit.errors.length && !audit.warnings.length) lines.push("- 可以进入手动生成。");
+    audit.errors.forEach((item) => lines.push(`- [阻塞] ${item}`));
+    audit.warnings.forEach((item) => lines.push(`- [注意] ${item}`));
+    lines.push("");
+  });
+  return lines.join("\n");
+}
+
+function auditSegment(seg) {
+  const errors = [];
+  const warnings = [];
+  const seconds = durationSeconds(seg.duration);
+  const panels = seg.panels || [];
+  const refText = segmentReferenceText(seg);
+
+  if (!seconds || seconds < 4 || seconds > 15) errors.push(`时长 ${seg.duration || "未填"} 不适合直接生成，建议 4-15s。`);
+  if (panels.length < 6 || panels.length > 9) errors.push(`分镜格为 ${panels.length} 格，建议 6-9 格连续分镜。`);
+  if (!seg.image?.src) errors.push("缺少本段模板图。");
+  if (!seg.templatePrompt) errors.push("缺少图片模板提示词。");
+  if (!seg.videoPrompt) errors.push("缺少视频生成提示词。");
+  if (!seg.audioScript) warnings.push("缺少声音脚本，短剧会显得空。");
+  if (!seg.goal) warnings.push("缺少本段导演意图。");
+  if (!seg.scenePlan) warnings.push("缺少场景与承接。");
+  if (!(seg.sceneRefs || []).length) warnings.push("本段没有选择场景参考图，容易场景漂移。");
+  if (!(seg.characterRefs || []).length) warnings.push("本段没有选择人物参考，涉及人物时容易脸变。");
+  if (seg.videoPrompt && !/旁白|说|台词|系统音|声音/.test(seg.videoPrompt + seg.audioScript)) warnings.push("视频提示词没有明确声音/台词。");
+  if (seg.templatePrompt && seg.videoPrompt) {
+    const consistency = consistencyWarnings(seg);
+    warnings.push(...consistency);
+  }
+  if (refText.includes("默认遵循项目参考库") && (state.project.project.characters || []).length > 1) {
+    warnings.push("项目有多角色，但本段未指定角色，建议显式勾选。");
+  }
+  return { errors, warnings };
+}
+
+function consistencyWarnings(seg) {
+  const warnings = [];
+  const terms = importantTerms(seg);
+  const imageText = `${seg.templatePrompt} ${seg.panels.join(" ")}`;
+  const videoText = `${seg.videoPrompt} ${seg.audioScript}`;
+  const missingInImage = terms.filter((term) => !imageText.includes(term)).slice(0, 4);
+  const missingInVideo = terms.filter((term) => !videoText.includes(term)).slice(0, 4);
+  if (missingInImage.length) warnings.push(`图片提示词可能缺少关键元素：${missingInImage.join("、")}。`);
+  if (missingInVideo.length) warnings.push(`视频提示词可能缺少关键元素：${missingInVideo.join("、")}。`);
+  if (seg.panels[0] && seg.videoPrompt && !sharesAny(seg.panels[0], seg.videoPrompt)) warnings.push("视频提示词没有明显承接第一格画面。");
+  if (seg.panels.at(-1) && seg.videoPrompt && !sharesAny(seg.panels.at(-1), seg.videoPrompt)) warnings.push("视频提示词没有明显覆盖结尾格/下一段钩子。");
+  return warnings;
+}
+
+function importantTerms(seg) {
+  const raw = [
+    seg.title,
+    seg.location,
+    ...selectedRefObjects(seg, "characters").map((ref) => ref.name || ref.title),
+    ...selectedRefObjects(seg, "sceneRefs").map((ref) => ref.name || ref.title),
+    ...selectedRefObjects(seg, "styleRefs").map((ref) => ref.name || ref.title)
+  ].join(" ");
+  return [...new Set((raw.match(/[\u4e00-\u9fa5A-Za-z0-9#-]{2,}/g) || [])
+    .filter((term) => !["第一个", "现实", "生成", "参考", "镜头"].includes(term))
+    .slice(0, 10))];
+}
+
+function sharesAny(a, b) {
+  const terms = (String(a).match(/[\u4e00-\u9fa5A-Za-z0-9#-]{2,}/g) || []).filter((term) => term.length >= 2);
+  return terms.some((term) => String(b).includes(term));
+}
+
+function durationSeconds(value) {
+  const match = String(value || "").match(/\d+/);
+  return match ? Number(match[0]) : 0;
+}
+
 function totalDuration() {
   return state.project.segments.reduce((sum, seg) => {
     const match = String(seg.duration || "").match(/\d+/);
@@ -756,6 +1036,28 @@ function totalDuration() {
 function refName(type, id) {
   const ref = state.project.project[type]?.find((item) => item.id === id);
   return ref ? (ref.name || ref.title) : id;
+}
+
+function selectedRefObjects(seg, type) {
+  const ids = new Set(seg[SEG_REF_FIELDS[type]] || []);
+  return (state.project.project[type] || []).filter((ref) => ids.has(ref.id));
+}
+
+function refsBlock(seg) {
+  const blocks = [];
+  [
+    ["characters", "人物"],
+    ["sceneRefs", "场景"],
+    ["styleRefs", "风格"]
+  ].forEach(([type, label]) => {
+    const refs = selectedRefObjects(seg, type);
+    if (!refs.length) return;
+    blocks.push(`${label}参考：`);
+    refs.forEach((ref) => {
+      blocks.push(`- ${ref.name || ref.title}${ref.role ? `（${ref.role}）` : ""}：${ref.description || "无描述"}${ref.image?.src ? `；参考图：${ref.image.mode || inferImageMode(ref.image.src)}` : ""}`);
+    });
+  });
+  return blocks.length ? blocks.join("\n") : "本段未单独指定参考，默认遵循项目参考库。";
 }
 
 function segmentReferenceText(seg) {
@@ -770,13 +1072,14 @@ function segmentReferenceText(seg) {
 function segmentPackage(seg) {
   return [
     `# ${seg.id} ${seg.title}`,
+    `稳定ID：${seg.uid}`,
     "",
     `时长：${seg.duration}`,
     `导演意图：${seg.goal}`,
     `场景与承接：${seg.scenePlan || [seg.location, seg.startBridge ? `开头：${seg.startBridge}` : "", seg.endBridge ? `结尾：${seg.endBridge}` : ""].filter(Boolean).join(" / ")}`,
     "",
     "## 本段参考",
-    segmentReferenceText(seg),
+    refsBlock(seg),
     "",
     "## 分镜顺序",
     ...(seg.panels || []).map((panel, index) => `${index + 1}. ${panel}`),
@@ -834,6 +1137,7 @@ function compactProjectForAI() {
 
 function compactSegment(seg) {
   return {
+    uid: seg.uid,
     id: seg.id,
     title: seg.title,
     duration: seg.duration,
@@ -855,9 +1159,11 @@ function compactSegment(seg) {
   };
 }
 
-function generateAiPackage(segments) {
+function generateAiPackage(segments, mode = "full") {
+  const modeInfo = PACKAGE_MODES[mode] || PACKAGE_MODES.full;
   return [
-    "你是 AI 短剧导演与中文短剧编剧。请基于下面 JSON 修改项目。",
+    `你是 AI 短剧导演与中文短剧编剧。任务类型：${modeInfo.label}。`,
+    modeInfo.instruction,
     "",
     "硬规则：",
     "1. 保持故事因果清楚，人物动机连续。",
@@ -874,6 +1180,32 @@ function generateAiPackage(segments) {
   ].join("\n");
 }
 
+function composeExecutionPrompt(seg) {
+  return [
+    `参考图是第${seg.id}段的6-9格连续分镜模板，请按全能参考理解，不要拍摄故事板本身。`,
+    "",
+    `段落标题：${seg.title}`,
+    `时长：${seg.duration}，比例：9:16。`,
+    "",
+    "本段引用：",
+    refsBlock(seg),
+    "",
+    "导演意图：",
+    seg.goal || "本段只推进一个清楚的因果动作。",
+    "",
+    "场景与承接：",
+    seg.scenePlan || seg.location || "沿用项目设定。",
+    "",
+    "镜头顺序：",
+    ...(seg.panels || []).map((panel, index) => `${index + 1}. ${panel}`),
+    "",
+    "声音脚本：",
+    seg.audioScript || "旁白和人物短句要持续推进剧情，避免空镜。",
+    "",
+    "生成要求：真实短剧感，镜头连续，人物和场景保持一致；旁白、人物台词、系统音或环境音要服务剧情推进。"
+  ].filter(Boolean).join("\n");
+}
+
 function download(filename, content, type = "application/json") {
   const blob = new Blob([content], { type });
   const url = URL.createObjectURL(blob);
@@ -882,6 +1214,81 @@ function download(filename, content, type = "application/json") {
   a.download = filename;
   a.click();
   URL.revokeObjectURL(url);
+}
+
+function csvEscape(value) {
+  return `"${String(value ?? "").replaceAll('"', '""')}"`;
+}
+
+function exportCsv(segments) {
+  const rows = [
+    ["段号", "稳定ID", "标题", "时长", "状态", "场景", "人物参考", "场景参考", "模板图", "图片提示词", "视频提示词"]
+  ];
+  segments.forEach((seg) => {
+    rows.push([
+      seg.id,
+      seg.uid,
+      seg.title,
+      seg.duration,
+      statusLabel(seg.status),
+      seg.location,
+      (seg.characterRefs || []).map((id) => refName("characters", id)).join("、"),
+      (seg.sceneRefs || []).map((id) => refName("sceneRefs", id)).join("、"),
+      seg.image?.src || "",
+      seg.templatePrompt || "",
+      seg.videoPrompt || ""
+    ]);
+  });
+  return rows.map((row) => row.map(csvEscape).join(",")).join("\n");
+}
+
+function sanitizedProject() {
+  const clone = JSON.parse(JSON.stringify(state.project));
+  const scrubImage = (image) => {
+    if (!image) return image;
+    return { ...image, src: image.src ? "[已脱敏图片]" : "", notes: image.notes || "", mode: image.mode || "empty" };
+  };
+  ["characters", "sceneRefs", "styleRefs"].forEach((type) => {
+    clone.project[type] = (clone.project[type] || []).map((ref) => ({ ...ref, image: scrubImage(ref.image) }));
+  });
+  clone.segments = clone.segments.map((seg) => ({ ...seg, image: scrubImage(seg.image) }));
+  clone.updatedAt = new Date().toISOString();
+  clone.publicDemo = true;
+  return clone;
+}
+
+function previewReplace(field, from) {
+  if (!from) return "请先填写查找文字。";
+  const lines = [`# 替换预览：字段 ${field}，查找「${from}」`, ""];
+  selectedSegments().forEach((seg) => {
+    const value = seg[field];
+    const text = Array.isArray(value) ? value.join("\n") : String(value || "");
+    const count = text.split(from).length - 1;
+    if (count > 0) lines.push(`- ${seg.id} ${seg.title}：${count} 处`);
+  });
+  return lines.length > 2 ? lines.join("\n") : "没有命中。";
+}
+
+function describePatch(patch) {
+  const lines = ["# Patch 预览", ""];
+  if (patch.project) {
+    lines.push(`项目字段：${Object.keys(patch.project).join("、") || "无"}`);
+  }
+  if (Array.isArray(patch.segments)) {
+    patch.segments.forEach((incoming) => {
+      const target = findSegmentByIncoming(incoming);
+      const fields = Object.keys(incoming).filter((key) => key !== "id" && key !== "uid");
+      lines.push(`- ${incoming.id || incoming.uid || "新段落"} ${target ? target.title : "新增段落"}：${fields.join("、") || "无字段"}`);
+    });
+  }
+  return lines.join("\n");
+}
+
+function findSegmentByIncoming(incoming) {
+  return state.project.segments.find((seg) => {
+    if (incoming.uid && seg.uid === incoming.uid) return true;
+    return incoming.id && seg.id === String(incoming.id);
+  });
 }
 
 async function copy(text) {
@@ -899,8 +1306,8 @@ function addSegment() {
     panels: ["", "", "", "", "", ""]
   });
   state.project.segments.push(seg);
-  state.currentId = id;
-  state.selectedIds.add(id);
+  state.currentId = seg.uid;
+  state.selectedIds.add(seg.uid);
   markDirty();
   render();
 }
@@ -910,12 +1317,12 @@ function moveCurrent(delta) {
 }
 
 function moveSegmentById(id, delta) {
-  const index = state.project.segments.findIndex((seg) => seg.id === id);
+  const index = state.project.segments.findIndex((seg) => seg.uid === id || seg.id === id);
   const next = index + delta;
   if (index < 0 || next < 0 || next >= state.project.segments.length) return;
   const [seg] = state.project.segments.splice(index, 1);
   state.project.segments.splice(next, 0, seg);
-  state.currentId = seg.id;
+  state.currentId = seg.uid;
   renumberSegments();
   markDirty();
   render();
@@ -953,15 +1360,17 @@ function toggleSegmentRef(seg, type, id, checked) {
 }
 
 function applyMergePatch(patch) {
+  state.undoSnapshot = JSON.stringify(state.project);
+  saveSnapshot("应用 Patch 前");
   if (patch.project && typeof patch.project === "object") {
     Object.assign(state.project.project, patch.project);
   }
   if (Array.isArray(patch.segments)) {
     patch.segments.forEach((incoming) => {
-      const target = state.project.segments.find((seg) => seg.id === String(incoming.id));
+      const target = findSegmentByIncoming(incoming);
       if (target) {
         Object.entries(incoming).forEach(([key, value]) => {
-          if (key === "id") return;
+          if (key === "id" || key === "uid") return;
           if (key === "image" && typeof value === "object" && !Array.isArray(value)) {
             target.image = { ...target.image, ...value };
           } else if (key === "review" && typeof value === "object" && !Array.isArray(value)) {
@@ -977,8 +1386,8 @@ function applyMergePatch(patch) {
   }
   const current = state.currentId;
   state.project = normalizeProject(state.project);
-  if (state.project.segments.some((seg) => seg.id === current)) state.currentId = current;
-  else state.currentId = state.project.segments[0]?.id || "";
+  if (state.project.segments.some((seg) => seg.uid === current)) state.currentId = current;
+  else state.currentId = state.project.segments[0]?.uid || "";
   markDirty();
   render();
 }
@@ -1014,7 +1423,7 @@ document.addEventListener("input", (event) => {
 
   const segField = target.dataset.segField;
   if (segField) {
-    updateSegmentField(seg.id, segField, target.value);
+    updateSegmentField(seg.uid, segField, target.value);
     if (["title", "duration", "location", "scenePlan", "status", "image.src"].includes(segField)) {
       renderSegmentList();
     }
@@ -1054,13 +1463,14 @@ document.addEventListener("change", async (event) => {
   }
 
   if (target.dataset.imageUpload && target.files?.[0]) {
-    const seg = state.project.segments.find((item) => item.id === target.dataset.imageUpload);
+    const seg = state.project.segments.find((item) => item.uid === target.dataset.imageUpload || item.id === target.dataset.imageUpload);
     if (!seg) return;
     const file = target.files[0];
     const reader = new FileReader();
     reader.onload = () => {
       seg.image.src = String(reader.result);
       seg.image.status = "draft";
+      seg.image.mode = "dataurl";
       markDirty();
       render();
     };
@@ -1075,11 +1485,41 @@ document.addEventListener("change", async (event) => {
     reader.onload = () => {
       ref.image.src = String(reader.result);
       ref.image.status = "draft";
+      ref.image.mode = "dataurl";
       markDirty();
       render();
     };
     reader.readAsDataURL(file);
   }
+});
+
+document.addEventListener("dragstart", (event) => {
+  const row = event.target instanceof HTMLElement ? event.target.closest("[data-drag-uid]") : null;
+  if (!row) return;
+  state.dragUid = row.dataset.dragUid;
+  event.dataTransfer?.setData("text/plain", state.dragUid);
+  event.dataTransfer?.setDragImage(row, 20, 20);
+});
+
+document.addEventListener("dragover", (event) => {
+  if (event.target instanceof HTMLElement && event.target.closest("[data-drag-uid]")) {
+    event.preventDefault();
+  }
+});
+
+document.addEventListener("drop", (event) => {
+  const row = event.target instanceof HTMLElement ? event.target.closest("[data-drag-uid]") : null;
+  if (!row || !state.dragUid || row.dataset.dragUid === state.dragUid) return;
+  event.preventDefault();
+  const from = state.project.segments.findIndex((seg) => seg.uid === state.dragUid);
+  const to = state.project.segments.findIndex((seg) => seg.uid === row.dataset.dragUid);
+  if (from < 0 || to < 0) return;
+  const [seg] = state.project.segments.splice(from, 1);
+  state.project.segments.splice(to, 0, seg);
+  state.currentId = seg.uid;
+  renumberSegments();
+  markDirty();
+  render();
 });
 
 document.addEventListener("click", async (event) => {
@@ -1124,16 +1564,17 @@ document.addEventListener("click", async (event) => {
 
   if (target.dataset.duplicate) {
     const clone = JSON.parse(JSON.stringify(seg));
+    clone.uid = uid("seg");
     clone.title = `${clone.title} 副本`;
-    state.project.segments.splice(state.project.segments.findIndex((item) => item.id === seg.id) + 1, 0, clone);
+    state.project.segments.splice(state.project.segments.findIndex((item) => item.uid === seg.uid) + 1, 0, clone);
     renumberSegments();
     markDirty();
     render();
   }
 
   if (target.dataset.delete) {
-    state.project.segments = state.project.segments.filter((item) => item.id !== seg.id);
-    state.currentId = state.project.segments[0]?.id || "";
+    state.project.segments = state.project.segments.filter((item) => item.uid !== seg.uid);
+    state.currentId = state.project.segments[0]?.uid || "";
     renumberSegments();
     markDirty();
     render();
@@ -1154,21 +1595,49 @@ document.addEventListener("click", async (event) => {
 
   if (target.dataset.copyPackage) copy(segmentPackage(seg));
   if (target.dataset.copyField) copy(seg[target.dataset.copyField] || "");
+  if (target.dataset.composePrompt) {
+    seg.videoPrompt = composeExecutionPrompt(seg);
+    markDirty();
+    renderSegmentEditor();
+    renderBatch();
+    showToast("已按参考重组视频提示词");
+  }
+
+  if (target.dataset.runAudit) {
+    const segments = target.dataset.runAudit === "all" ? state.project.segments : selectedSegments();
+    document.querySelector("#audit-output").value = auditSegments(segments);
+  }
 
   if (target.dataset.selectAll !== undefined) {
     state.selectedIds = target.dataset.selectAll === "1"
-      ? new Set(state.project.segments.map((item) => item.id))
+      ? new Set(state.project.segments.map((item) => item.uid))
       : new Set();
     render();
   }
 
   if (target.dataset.generatePackage) {
     const segments = target.dataset.generatePackage === "all" ? state.project.segments : selectedSegments();
-    document.querySelector("#batch-output").value = generateAiPackage(segments);
+    const mode = document.querySelector("#package-mode")?.value || "full";
+    document.querySelector("#batch-output").value = generateAiPackage(segments, mode);
+  }
+
+  if (target.dataset.exportCsv) {
+    const segments = target.dataset.exportCsv === "all" ? state.project.segments : selectedSegments();
+    download(`${state.project.project.title || "director-project"}-segments.csv`, exportCsv(segments), "text/csv;charset=utf-8");
+  }
+
+  if (target.dataset.exportSanitized !== undefined) {
+    download(`${state.project.project.title || "director-project"}-public-demo.json`, JSON.stringify(sanitizedProject(), null, 2));
   }
 
   if (target.dataset.copyBatchOutput !== undefined) {
     copy(document.querySelector("#batch-output").value);
+  }
+
+  if (target.dataset.previewReplace !== undefined) {
+    const field = document.querySelector("#replace-field").value;
+    const from = document.querySelector("#replace-from").value;
+    document.querySelector("#replace-preview").value = previewReplace(field, from);
   }
 
   if (target.dataset.applyReplace !== undefined) {
@@ -1183,6 +1652,15 @@ document.addEventListener("click", async (event) => {
     render();
   }
 
+  if (target.dataset.previewPatch !== undefined) {
+    try {
+      const patch = JSON.parse(document.querySelector("#patch-input").value);
+      document.querySelector("#patch-preview").value = describePatch(patch);
+    } catch (error) {
+      document.querySelector("#patch-preview").value = `Patch 解析失败：${error.message}`;
+    }
+  }
+
   if (target.dataset.applyPatch !== undefined) {
     try {
       applyMergePatch(JSON.parse(document.querySelector("#patch-input").value));
@@ -1190,6 +1668,32 @@ document.addEventListener("click", async (event) => {
     } catch (error) {
       showToast(`Patch 解析失败：${error.message}`);
     }
+  }
+
+  if (target.dataset.undoPatch !== undefined) {
+    if (!state.undoSnapshot) return showToast("没有可撤销的上一次应用");
+    loadProject(JSON.parse(state.undoSnapshot));
+    state.undoSnapshot = null;
+    saveProject();
+    showToast("已撤销上一次应用");
+  }
+
+  if (target.dataset.saveSnapshot !== undefined) {
+    saveSnapshot("手动快照");
+    renderBatch();
+    showToast("快照已保存");
+  }
+
+  if (target.dataset.restoreSnapshot !== undefined) {
+    const id = document.querySelector("#history-select")?.value;
+    if (!id) return showToast("没有可恢复的历史版本");
+    restoreSnapshot(id);
+  }
+
+  if (target.dataset.clearHistory !== undefined) {
+    localStorage.removeItem(HISTORY_KEY);
+    renderBatch();
+    showToast("历史已清空");
   }
 
   if (target.dataset.saveConnector !== undefined) {
