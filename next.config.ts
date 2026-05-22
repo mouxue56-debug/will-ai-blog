@@ -41,6 +41,9 @@ const nextConfig: NextConfig = {
   // Pin workspace root so Next.js does not pick up a stale lockfile
   // from $HOME/package-lock.json (which silently changes file tracing)
   outputFileTracingRoot: path.resolve('.'),
+  // Drop `X-Powered-By: Next.js` header — leaks tech stack to attackers
+  // for free (one less reconnaissance signal). Functionality unaffected.
+  poweredByHeader: false,
   pageExtensions: ['js', 'jsx', 'md', 'mdx', 'ts', 'tsx'],
   images: {
     remotePatterns: [

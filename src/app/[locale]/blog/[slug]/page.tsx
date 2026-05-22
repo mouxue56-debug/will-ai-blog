@@ -1,22 +1,21 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { setRequestLocale } from 'next-intl/server';
-import { getPostBySlug, getAdjacentPosts, getSampleComments } from '@/lib/blog';
+import { getPostBySlug, getAdjacentPosts, getSampleComments, getAllPosts } from '@/lib/blog';
 import { BlogDetail } from '@/components/blog/blog-detail';
 
 const SITE_URL = 'https://aiblog.fuluckai.com';
 
-// Dynamic rendering - handles Chinese slugs properly at runtime
-// export function generateStaticParams() {
-//   const posts = getAllPosts();
-//   const locales = ['zh', 'ja', 'en'];
-//   return locales.flatMap((locale) => 
-//     posts.map((post) => ({ 
-//       locale, 
-//       slug: encodeURIComponent(post.slug) 
-//     }))
-//   );
-// }
+export function generateStaticParams() {
+  const posts = getAllPosts();
+  const locales = ['zh', 'ja', 'en'];
+  return locales.flatMap((locale) => 
+    posts.map((post) => ({ 
+      locale, 
+      slug: encodeURIComponent(post.slug) 
+    }))
+  );
+}
 
 type Props = {
   params: Promise<{ locale: string; slug: string }>;
