@@ -1,0 +1,758 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+ <meta charset="utf-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+ <meta name="theme-color" content="#123b35">
+ <meta name="description" content="慈惠健康行点滴套餐，适合手机浏览的套餐介绍与预约咨询页面。">
+ <title>慈惠健康行套餐｜点滴治疗项目</title>
+ <style>
+ :root {
+ --bg: #f7f3ea;
+ --ink: #1b2a26;
+ --muted: #6a756f;
+ --deep: #123b35;
+ --deep-2: #1d5b51;
+ --gold: #d7b56d;
+ --gold-2: #f5dfaa;
+ --card: rgba(255,255,255,.86);
+ --line: rgba(18,59,53,.14);
+ --shadow: 0 18px 50px rgba(18,59,53,.16);
+ --radius: 24px;
+ }
+ * { box-sizing: border-box; }
+ html { scroll-behavior: smooth; }
+ body {
+ margin: 0;
+ min-height: 100vh;
+ color: var(--ink);
+ font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "PingFang SC",
+ "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif;
+ line-height: 1.65;
+ background:
+ radial-gradient(circle at 12% 2%, rgba(215,181,109,.38), transparent 28rem),
+ radial-gradient(circle at 92% 8%, rgba(29,91,81,.22), transparent 22rem),
+ linear-gradient(180deg, #fbf7ee 0%, #f7f3ea 42%, #fffaf1 100%);
+ padding-bottom: calc(92px + env(safe-area-inset-bottom));
+ }
+ a { color: inherit; text-decoration: none; }
+ .page {
+ width: min(100%, 980px);
+ margin: 0 auto;
+ padding: 18px 16px 0;
+ }
+ .hero {
+ position: relative;
+ overflow: hidden;
+ border-radius: 32px;
+ color: #fff;
+ background:
+ linear-gradient(135deg, rgba(18,59,53,.97), rgba(18,59,53,.88) 55%, rgba(50,102,84,.92)),
+ radial-gradient(circle at 88% 10%, rgba(245,223,170,.35), transparent 18rem);
+ box-shadow: var(--shadow);
+ padding: 28px 22px 24px;
+ isolation: isolate;
+ }
+ .hero::before {
+ content: "";
+ position: absolute;
+ inset: -40% -20% auto auto;
+ width: 260px;
+ height: 260px;
+ border-radius: 50%;
+ background: rgba(245,223,170,.18);
+ filter: blur(2px);
+ z-index: -1;
+ }
+ .hero::after {
+ content: "";
+ position: absolute;
+ right: -48px;
+ bottom: -72px;
+ width: 230px;
+ height: 230px;
+ border: 1px solid rgba(245,223,170,.2);
+ border-radius: 50%;
+ z-index: -1;
+ }
+ .kicker {
+ display: inline-flex;
+ align-items: center;
+ gap: 8px;
+ padding: 7px 12px;
+ border-radius: 999px;
+ background: rgba(255,255,255,.12);
+ border: 1px solid rgba(255,255,255,.2);
+ font-size: 13px;
+ letter-spacing: .08em;
+ color: rgba(255,255,255,.86);
+ }
+ .hero h1 {
+ margin: 18px 0 8px;
+ font-size: clamp(30px, 9vw, 56px);
+ line-height: 1.06;
+ letter-spacing: -.05em;
+ font-weight: 850;
+ }
+ .hero .lead {
+ margin: 0;
+ max-width: 720px;
+ color: rgba(255,255,255,.82);
+ font-size: 16px;
+ }
+ .hero-actions {
+ display: grid;
+ grid-template-columns: 1fr;
+ gap: 10px;
+ margin-top: 22px;
+ }
+ .btn {
+ display: inline-flex;
+ align-items: center;
+ justify-content: center;
+ gap: 8px;
+ min-height: 48px;
+ padding: 12px 16px;
+ border-radius: 999px;
+ font-weight: 760;
+ border: 1px solid rgba(255,255,255,.2);
+ box-shadow: 0 12px 24px rgba(0,0,0,.12);
+ }
+ .btn.primary {
+ color: #1f312c;
+ background: linear-gradient(135deg, var(--gold-2), var(--gold));
+ }
+ .btn.ghost {
+ color: #fff;
+ background: rgba(255,255,255,.1);
+ backdrop-filter: blur(10px);
+ }
+ .stats {
+ display: grid;
+ grid-template-columns: repeat(3, 1fr);
+ gap: 10px;
+ margin-top: 22px;
+ }
+ .stat {
+ padding: 12px 10px;
+ border-radius: 18px;
+ background: rgba(255,255,255,.1);
+ border: 1px solid rgba(255,255,255,.15);
+ }
+ .stat strong {
+ display: block;
+ font-size: 19px;
+ line-height: 1.1;
+ }
+ .stat span {
+ display: block;
+ margin-top: 4px;
+ color: rgba(255,255,255,.72);
+ font-size: 12px;
+ }
+ .notice {
+ margin: 14px 0 0;
+ padding: 13px 14px;
+ border-radius: 18px;
+ color: #4b3a16;
+ background: linear-gradient(135deg, rgba(245,223,170,.76), rgba(255,255,255,.64));
+ border: 1px solid rgba(215,181,109,.38);
+ font-size: 13px;
+ }
+ .section-head {
+ margin: 28px 4px 14px;
+ }
+ .section-head h2 {
+ margin: 0;
+ font-size: 25px;
+ letter-spacing: -.04em;
+ }
+ .section-head p {
+ margin: 4px 0 0;
+ color: var(--muted);
+ font-size: 14px;
+ }
+ .search-wrap {
+ position: sticky;
+ top: 0;
+ z-index: 5;
+ padding: 10px 0;
+ background: linear-gradient(180deg, rgba(247,243,234,.96), rgba(247,243,234,.74));
+ backdrop-filter: blur(14px);
+ }
+ .search {
+ display: flex;
+ align-items: center;
+ gap: 10px;
+ padding: 12px 14px;
+ border-radius: 18px;
+ background: rgba(255,255,255,.78);
+ border: 1px solid var(--line);
+ box-shadow: 0 12px 34px rgba(18,59,53,.08);
+ }
+ .search input {
+ width: 100%;
+ border: 0;
+ outline: 0;
+ background: transparent;
+ color: var(--ink);
+ font: inherit;
+ font-size: 15px;
+ }
+ .search input::placeholder { color: #93a09a; }
+ .packages {
+ display: grid;
+ gap: 14px;
+ }
+ .package-card {
+ padding: 17px;
+ border-radius: var(--radius);
+ background: var(--card);
+ border: 1px solid rgba(18,59,53,.12);
+ box-shadow: 0 14px 34px rgba(18,59,53,.09);
+ backdrop-filter: blur(16px);
+ animation: rise .48s ease both;
+ animation-delay: var(--delay);
+ }
+ @keyframes rise {
+ from { opacity: 0; transform: translateY(10px); }
+ to { opacity: 1; transform: translateY(0); }
+ }
+ .card-top {
+ display: grid;
+ grid-template-columns: 48px 1fr;
+ align-items: center;
+ gap: 12px;
+ }
+ .icon {
+ width: 48px;
+ height: 48px;
+ display: grid;
+ place-items: center;
+ border-radius: 16px;
+ background: linear-gradient(135deg, rgba(245,223,170,.86), rgba(255,255,255,.8));
+ border: 1px solid rgba(215,181,109,.36);
+ font-size: 24px;
+ box-shadow: inset 0 1px 0 rgba(255,255,255,.65);
+ }
+ .title-group h3 {
+ margin: 0;
+ font-size: 18px;
+ line-height: 1.28;
+ letter-spacing: -.02em;
+ }
+ .jp {
+ margin-top: 3px;
+ color: var(--muted);
+ font-size: 12px;
+ }
+ .tags {
+ display: flex;
+ gap: 7px;
+ flex-wrap: wrap;
+ margin: 14px 0 13px;
+ }
+ .tags span {
+ padding: 5px 9px;
+ border-radius: 999px;
+ color: var(--deep);
+ background: rgba(29,91,81,.08);
+ border: 1px solid rgba(29,91,81,.1);
+ font-size: 12px;
+ font-weight: 700;
+ }
+ .price-row {
+ display: flex;
+ align-items: baseline;
+ gap: 8px;
+ padding: 12px 13px;
+ border-radius: 18px;
+ background: linear-gradient(135deg, rgba(18,59,53,.94), rgba(29,91,81,.9));
+ color: #fff;
+ }
+ .price-label {
+ color: rgba(255,255,255,.7);
+ font-size: 12px;
+ margin-right: auto;
+ }
+ .price-row strong {
+ color: #f8e6b7;
+ font-size: 24px;
+ letter-spacing: -.04em;
+ line-height: 1;
+ }
+ .currency {
+ color: rgba(255,255,255,.7);
+ font-size: 12px;
+ }
+ details {
+ margin-top: 12px;
+ border-top: 1px dashed rgba(18,59,53,.18);
+ }
+ summary {
+ list-style: none;
+ cursor: pointer;
+ padding-top: 12px;
+ color: var(--deep-2);
+ font-weight: 780;
+ font-size: 14px;
+ user-select: none;
+ }
+ summary::-webkit-details-marker { display: none; }
+ summary::after {
+ content: "＋";
+ float: right;
+ color: var(--gold);
+ font-weight: 900;
+ }
+ details[open] summary::after { content: "－"; }
+ details p {
+ margin: 10px 0 0;
+ color: #4b5752;
+ font-size: 14px;
+ text-align: justify;
+ }
+ .contact-card {
+ margin: 28px 0 20px;
+ padding: 20px;
+ border-radius: 28px;
+ background:
+ linear-gradient(135deg, rgba(255,255,255,.9), rgba(245,223,170,.46)),
+ radial-gradient(circle at 100% 0%, rgba(29,91,81,.18), transparent 16rem);
+ border: 1px solid rgba(215,181,109,.32);
+ box-shadow: var(--shadow);
+ }
+ .contact-card h2 {
+ margin: 0 0 8px;
+ font-size: 23px;
+ letter-spacing: -.03em;
+ }
+ .contact-card p {
+ margin: 0 0 14px;
+ color: var(--muted);
+ font-size: 14px;
+ }
+ .contact-list {
+ display: grid;
+ gap: 10px;
+ }
+ .contact-item {
+ display: flex;
+ align-items: center;
+ gap: 12px;
+ padding: 13px;
+ border-radius: 18px;
+ background: rgba(255,255,255,.72);
+ border: 1px solid rgba(18,59,53,.1);
+ }
+ .bubble {
+ width: 38px;
+ height: 38px;
+ display: grid;
+ place-items: center;
+ border-radius: 14px;
+ background: var(--deep);
+ color: var(--gold-2);
+ flex: 0 0 auto;
+ }
+ .contact-item small {
+ display: block;
+ color: var(--muted);
+ font-size: 12px;
+ }
+ .contact-item strong {
+ display: block;
+ font-size: 15px;
+ word-break: break-all;
+ }
+ .footer-note {
+ margin: 10px 4px 22px;
+ color: var(--muted);
+ font-size: 12px;
+ text-align: center;
+ }
+ .sticky-cta {
+ position: fixed;
+ left: 0;
+ right: 0;
+ bottom: 0;
+ z-index: 20;
+ padding: 10px 14px calc(10px + env(safe-area-inset-bottom));
+ background: rgba(255,250,241,.84);
+ border-top: 1px solid rgba(18,59,53,.12);
+ backdrop-filter: blur(18px);
+ box-shadow: 0 -8px 28px rgba(18,59,53,.12);
+ }
+ .sticky-inner {
+ width: min(100%, 760px);
+ margin: 0 auto;
+ display: grid;
+ grid-template-columns: 1fr 1fr;
+ gap: 10px;
+ }
+ .sticky-inner a {
+ min-height: 48px;
+ border-radius: 999px;
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ gap: 8px;
+ font-weight: 820;
+ font-size: 14px;
+ }
+ .sticky-inner a:first-child {
+ color: #fff;
+ background: linear-gradient(135deg, var(--deep), var(--deep-2));
+ box-shadow: 0 10px 20px rgba(18,59,53,.22);
+ }
+ .sticky-inner a:last-child {
+ color: var(--deep);
+ background: #fff;
+ border: 1px solid rgba(18,59,53,.14);
+ }
+ .empty {
+ display: none;
+ margin: 18px 0 0;
+ padding: 18px;
+ text-align: center;
+ border-radius: 20px;
+ color: var(--muted);
+ background: rgba(255,255,255,.7);
+ border: 1px dashed rgba(18,59,53,.18);
+ }
+ @media (min-width: 720px) {
+ body { padding-bottom: 0; }
+ .page { padding: 28px 22px; }
+ .hero {
+ padding: 42px 40px 36px;
+ }
+ .hero-actions {
+ grid-template-columns: repeat(2, minmax(0, 190px));
+ }
+ .packages {
+ grid-template-columns: repeat(2, minmax(0, 1fr));
+ }
+ .contact-list {
+ grid-template-columns: repeat(3, 1fr);
+ }
+ .sticky-cta {
+ display: none;
+ }
+ }
+ @media (prefers-reduced-motion: reduce) {
+ * { scroll-behavior: auto !important; animation: none !important; transition: none !important; }
+ }
+ </style>
+</head>
+<body>
+ <main class="page">
+ <section class="hero">
+ <span class="kicker">JIKEI HEALTH TRAVEL · MOBILE PAGE</span>
+ <h1>慈惠健康行套餐</h1>
+ <p class="lead">精选点滴治疗项目，覆盖抗衰老、美白护肤、护肝排毒、抗疲劳、过敏体质与男性健康等方向。页面已按手机浏览优化，适合直接分享给客户查看。</p>
+ <div class="hero-actions">
+ <a class="btn primary" href="#packages">查看套餐价格</a>
+ <a class="btn ghost" href="tel:07017723357">电话咨询</a>
+ </div>
+ <div class="stats" aria-label="套餐概览">
+ <div class="stat"><strong>11</strong><span>精选套餐</span></div>
+ <div class="stat"><strong>¥65,000</strong><span>起始价格</span></div>
+ <div class="stat"><strong>日元</strong><span>价格单位</span></div>
+ </div>
+ <div class="notice">温馨提示：套餐信息仅作健康管理服务展示，具体适用人群、成分、剂量、风险及禁忌，请以医生面诊评估和医疗机构说明为准。</div>
+ </section>
+
+ <section id="packages">
+ <div class="section-head">
+ <h2>点滴套餐项目</h2>
+ <p>可输入关键词快速查找，例如：美白、护肝、过敏、NMN、男性健康。</p>
+ </div>
+ <div class="search-wrap">
+ <label class="search" for="packageSearch">
+ <span aria-hidden="true">🔎</span>
+ <input id="packageSearch" type="search" placeholder="搜索套餐 / 功能关键词">
+ </label>
+ </div>
+ <div class="packages" id="packageList">
+
+ <article class="package-card" data-title="抗衰老年轻化套餐" data-tags="抗衰老 疲劳恢复 免疫支持" style="--delay:35ms">
+ <div class="card-top">
+ <div class="icon" aria-hidden="true">✨</div>
+ <div class="title-group">
+ <h3>抗衰老年轻化套餐</h3>
+ <div class="jp">エイジングケアセット</div>
+ </div>
+ </div>
+ <div class="tags"><span>抗衰老</span><span>疲劳恢复</span><span>免疫支持</span></div>
+ <div class="price-row">
+ <span class="price-label">套餐价格</span>
+ <strong>¥123,500</strong>
+ <span class="currency">日元</span>
+ </div>
+ <details>
+ <summary>查看套餐介绍</summary>
+ <p>由强效抗氧剂和多种酵素、辅酶组成，同时还配合了能促进代谢更新的营养剂，可帮助生成肌肤和胶原蛋白。可以提高新陈代谢，激活细胞，对抗组织老化，促进疲劳恢复、增强免疫力，对全面的健康有益。推荐对于容易疲劳、难以恢复精力的人，以及体弱的人。</p>
+ </details>
+ </article>
+
+
+ <article class="package-card" data-title="美白亮肤综合点滴套餐" data-tags="美白护肤 水润肌肤 皮肤代谢" style="--delay:70ms">
+ <div class="card-top">
+ <div class="icon" aria-hidden="true">🤍</div>
+ <div class="title-group">
+ <h3>美白亮肤综合点滴套餐</h3>
+ <div class="jp">プラチナ美白セット</div>
+ </div>
+ </div>
+ <div class="tags"><span>美白护肤</span><span>水润肌肤</span><span>皮肤代谢</span></div>
+ <div class="price-row">
+ <span class="price-label">套餐价格</span>
+ <strong>¥97,500</strong>
+ <span class="currency">日元</span>
+ </div>
+ <details>
+ <summary>查看套餐介绍</summary>
+ <p>套餐中含有对肌肤至关重要的辅酶、生物素，以及能加速皮肤更新的氨基酸。是为了打造更加水润健康的肌肤而设计的配方。可以使肌肤细胞保持活力，加快新鲜肌肤的代谢周期。由于点滴成分直接输入血液中，可以高浓度迅速传遍全身，因此具有高效作用的优点。</p>
+ </details>
+ </article>
+
+
+ <article class="package-card" data-title="防癌点滴套餐" data-tags="免疫支持 抗氧化 营养平衡" style="--delay:105ms">
+ <div class="card-top">
+ <div class="icon" aria-hidden="true">🛡️</div>
+ <div class="title-group">
+ <h3>防癌点滴套餐</h3>
+ <div class="jp">がんセット</div>
+ </div>
+ </div>
+ <div class="tags"><span>免疫支持</span><span>抗氧化</span><span>营养平衡</span></div>
+ <div class="price-row">
+ <span class="price-label">套餐价格</span>
+ <strong>¥127,400</strong>
+ <span class="currency">日元</span>
+ </div>
+ <details>
+ <summary>查看套餐介绍</summary>
+ <p>含有强力促进组织代谢、抗氧化、加强能量合成、提升免疫细胞活力的成分，促进免疫细胞监视功能，增加组织修复，改善体质，清除有害物质，改善营养平衡。</p>
+ </details>
+ </article>
+
+
+ <article class="package-card" data-title="过敏体质改善套餐" data-tags="花粉症 鼻炎 敏感肌" style="--delay:140ms">
+ <div class="card-top">
+ <div class="icon" aria-hidden="true">🌿</div>
+ <div class="title-group">
+ <h3>过敏体质改善套餐</h3>
+ <div class="jp">アレルギー体質治療</div>
+ </div>
+ </div>
+ <div class="tags"><span>花粉症</span><span>鼻炎</span><span>敏感肌</span></div>
+ <div class="price-row">
+ <span class="price-label">套餐价格</span>
+ <strong>¥78,000</strong>
+ <span class="currency">日元</span>
+ </div>
+ <details>
+ <summary>查看套餐介绍</summary>
+ <p>通过肝脏辅助营养引子来改善肝脏功能，配合有效的强力 Neominophagen C 来调节免疫功能，补充免疫活性因子，增加血管稳定性，抑制引发瘙痒和过敏症状的组胺等物质，改善过敏症状和敏感肌肤。特别适合花粉症和过敏症状、荨麻疹、鼻炎等等。</p>
+ </details>
+ </article>
+
+
+ <article class="package-card" data-title="护肝排毒点滴套餐" data-tags="护肝 排毒 疲劳感" style="--delay:175ms">
+ <div class="card-top">
+ <div class="icon" aria-hidden="true">🍃</div>
+ <div class="title-group">
+ <h3>护肝排毒点滴套餐</h3>
+ <div class="jp">デドックスセット</div>
+ </div>
+ </div>
+ <div class="tags"><span>护肝</span><span>排毒</span><span>疲劳感</span></div>
+ <div class="price-row">
+ <span class="price-label">套餐价格</span>
+ <strong>¥104,000</strong>
+ <span class="currency">日元</span>
+ </div>
+ <details>
+ <summary>查看套餐介绍</summary>
+ <p>可以保护肝脏功能，促进排出体内有害物质的点滴治疗。将易积累在体内的有害物质排出体外，抑制肝脏的炎症，同时补充肝脏代谢需要的辅酶，清除胆汁的淤滞，净化血液、降低肝脏负担，使器官功能正常化、代谢功能恢复、免疫功能提升、延缓衰老，同时激活与身体代谢功能相关的酵素，促进疲劳和倦怠感的缓解，恢复更好的工作状态。</p>
+ </details>
+ </article>
+
+
+ <article class="package-card" data-title="更年期套餐" data-tags="更年期 内分泌 美容支持" style="--delay:210ms">
+ <div class="card-top">
+ <div class="icon" aria-hidden="true">🌸</div>
+ <div class="title-group">
+ <h3>更年期套餐</h3>
+ <div class="jp">セット</div>
+ </div>
+ </div>
+ <div class="tags"><span>更年期</span><span>内分泌</span><span>美容支持</span></div>
+ <div class="price-row">
+ <span class="price-label">套餐价格</span>
+ <strong>¥104,000</strong>
+ <span class="currency">日元</span>
+ </div>
+ <details>
+ <summary>查看套餐介绍</summary>
+ <p>对于忽冷忽热、肩膀酸痛、不安、体弱、烦躁、头痛等各种症状困扰的人来说是值得推荐的。可以促进内分泌的平衡，改善淋巴和血液流动，促进胶原蛋白再生，增加皮肤弹性，以及促进新陈代谢和抗炎作用等效果。对更年期障碍、自律神经失调、肝功能障碍、胃肠不适的改善以及美容方面（美白、肌肤粗糙、色斑、皱纹、暗沉）都有很好的帮助。</p>
+ </details>
+ </article>
+
+
+ <article class="package-card" data-title="燃脂减肥套餐" data-tags="燃脂 代谢 体重管理" style="--delay:245ms">
+ <div class="card-top">
+ <div class="icon" aria-hidden="true">🔥</div>
+ <div class="title-group">
+ <h3>燃脂减肥套餐</h3>
+
+ </div>
+ </div>
+ <div class="tags"><span>燃脂</span><span>代谢</span><span>体重管理</span></div>
+ <div class="price-row">
+ <span class="price-label">套餐价格</span>
+ <strong>¥65,000</strong>
+ <span class="currency">日元</span>
+ </div>
+ <details>
+ <summary>查看套餐介绍</summary>
+ <p>通过配合包括加速代谢、促进脂肪燃烧、补充代谢缺乏的辅酶和氨基酸，改善营养平衡。可以有效地进行减肥并防止反弹。</p>
+ </details>
+ </article>
+
+
+ <article class="package-card" data-title="骨关节活力点滴套餐" data-tags="骨关节 肌肉康复 慢性不适" style="--delay:280ms">
+ <div class="card-top">
+ <div class="icon" aria-hidden="true">🦴</div>
+ <div class="title-group">
+ <h3>骨关节活力点滴套餐</h3>
+
+ </div>
+ </div>
+ <div class="tags"><span>骨关节</span><span>肌肉康复</span><span>慢性不适</span></div>
+ <div class="price-row">
+ <span class="price-label">套餐价格</span>
+ <strong>¥78,000</strong>
+ <span class="currency">日元</span>
+ </div>
+ <details>
+ <summary>查看套餐介绍</summary>
+ <p>通过配合包括骨骼代谢、神经营养、肌肉康复的有效成分，促进肌肉力量均衡，消除慢性炎症，特别适合慢性腰疼、肩周炎、坐骨神经痛、偏头痛的患者。</p>
+ </details>
+ </article>
+
+
+ <article class="package-card" data-title="神经营养套餐" data-tags="神经营养 眼疲劳 全身乏力" style="--delay:315ms">
+ <div class="card-top">
+ <div class="icon" aria-hidden="true">⚡</div>
+ <div class="title-group">
+ <h3>神经营养套餐</h3>
+
+ </div>
+ </div>
+ <div class="tags"><span>神经营养</span><span>眼疲劳</span><span>全身乏力</span></div>
+ <div class="price-row">
+ <span class="price-label">套餐价格</span>
+ <strong>¥78,000</strong>
+ <span class="currency">日元</span>
+ </div>
+ <details>
+ <summary>查看套餐介绍</summary>
+ <p>配方中包含对神经营养、代谢平衡、疲劳恢复最为重要的辅酶、甘草酸、氨基酸，可提高免疫力，预防疲劳，改善工作、压力、运动等造成的身体疲劳、眼睛疲劳、全身乏力、食欲不振、肩膀酸痛、腰痛等症状。</p>
+ </details>
+ </article>
+
+
+ <article class="package-card" data-title="NMN 复合点滴套餐" data-tags="NMN 抗衰支持 认知支持" style="--delay:350ms">
+ <div class="card-top">
+ <div class="icon" aria-hidden="true">💎</div>
+ <div class="title-group">
+ <h3>NMN 复合点滴套餐</h3>
+
+ </div>
+ </div>
+ <div class="tags"><span>NMN</span><span>抗衰支持</span><span>认知支持</span></div>
+ <div class="price-row">
+ <span class="price-label">套餐价格</span>
+ <strong>¥104,000</strong>
+ <span class="currency">日元</span>
+ </div>
+ <details>
+ <summary>查看套餐介绍</summary>
+ <p>NMN 被称为下一代的抗衰老制剂，是一种将人体随年龄减少的 NMN 以点滴疗法输入体内的治疗方法。NMN 是修复器官和组织所需的物质，在年龄增长的过程中，体内产生量逐渐减少，会影响身体功能，加速认知功能的衰老。通过补充缺乏的 NMN，激活与人体老化密切相关的 SIRTUIN 基因，可以改善身体功能和认知功能，减轻衰老等。尽管 NMN 存在于西兰花、毛豆和黄瓜中，但要想获得足够的 NMN，需要摄入大量食物，例如要通过西兰花摄入 NMN 相当于摄入 40 公斤的西兰花，这在现实中是不切实际的。而 NMN 滴剂可以高效、稳定地补充足够的数量，是一种有效的补充方式。</p>
+ </details>
+ </article>
+
+
+ <article class="package-card" data-title="男性健康套餐" data-tags="男性健康 能量代谢 疲劳恢复" style="--delay:385ms">
+ <div class="card-top">
+ <div class="icon" aria-hidden="true">👔</div>
+ <div class="title-group">
+ <h3>男性健康套餐</h3>
+ <div class="jp">EDセット</div>
+ </div>
+ </div>
+ <div class="tags"><span>男性健康</span><span>能量代谢</span><span>疲劳恢复</span></div>
+ <div class="price-row">
+ <span class="price-label">套餐价格</span>
+ <strong>¥78,000</strong>
+ <span class="currency">日元</span>
+ </div>
+ <details>
+ <summary>查看套餐介绍</summary>
+ <p>配方中包含改善能量代谢、促进血管调节、改善内分泌功能的成分，对男性疲劳恢复、功能改善有帮助。可以改善工作、压力、运动等造成的身体疲劳，体弱、乏力、功能下降、肩膀酸痛、腰痛等不适。</p>
+ </details>
+ </article>
+
+ </div>
+ <div class="empty" id="emptyState">没有找到对应套餐，换个关键词试试。</div>
+ </section>
+
+ <section class="contact-card" id="contact">
+ <h2>预约咨询</h2>
+ <p>如需确认行程、套餐适配或预约时间，请联系：</p>
+ <div class="contact-list">
+ <a class="contact-item" href="tel:07017723357">
+ <span class="bubble">👤</span>
+ <span><small>联系人</small><strong>卓文雅</strong></span>
+ </a>
+ <a class="contact-item" href="tel:07017723357">
+ <span class="bubble">☎️</span>
+ <span><small>电话号码</small><strong>07017723357</strong></span>
+ </a>
+ <a class="contact-item" href="mailto:WENYA19750723@GMAIL.com">
+ <span class="bubble">✉️</span>
+ <span><small>Google 邮箱</small><strong>WENYA19750723@GMAIL.com</strong></span>
+ </a>
+ </div>
+ </section>
+ <p class="footer-note">© 慈惠健康行套餐 · 预约前请提前告知过敏史、既往病史、用药情况及孕期/备孕情况。</p>
+ </main>
+
+ <nav class="sticky-cta" aria-label="快速联系">
+ <div class="sticky-inner">
+ <a href="tel:07017723357">☎️ 电话咨询</a>
+ <a href="mailto:WENYA19750723@GMAIL.com">✉️ 发邮件</a>
+ </div>
+ </nav>
+
+ <script>
+ const input = document.getElementById('packageSearch');
+ const cards = [...document.querySelectorAll('.package-card')];
+ const empty = document.getElementById('emptyState');
+
+ input.addEventListener('input', () => {
+ const q = input.value.trim().toLowerCase();
+ let visible = 0;
+ cards.forEach(card => {
+ const text = (card.innerText + ' ' + card.dataset.tags + ' ' + card.dataset.title).toLowerCase();
+ const match = !q || text.includes(q);
+ card.style.display = match ? '' : 'none';
+ if (match) visible += 1;
+ });
+ empty.style.display = visible ? 'none' : 'block';
+ });
+ </script>
+</body>
+</html>

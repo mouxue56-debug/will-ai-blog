@@ -1,8 +1,5 @@
 import { NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/supabase';
-import * as fs from 'fs';
-import * as path from 'path';
-import * as os from 'os';
 
 async function callKimi(kimiKey: string, prompt: string, maxTokens = 200): Promise<string | null> {
   try {
@@ -28,13 +25,20 @@ async function callKimi(kimiKey: string, prompt: string, maxTokens = 200): Promi
 }
 
 async function generateTrilingualTitles(title: string) {
-  const CFG_PATH = path.join(os.homedir(), '.openclaw/openclaw.json');
-  let kimiKey: string | undefined;
-  try {
-    const cfg = JSON.parse(fs.readFileSync(CFG_PATH, 'utf-8'));
-    kimiKey = cfg?.models?.providers?.kimi?.apiKey;
-  } catch {
-    // config 文件不存在或解析失败，静默降级
+  // 环境变量优先（Vercel serverless 中文件系统不可靠），回退到本地配置文件
+  let kimiKey: string | undefined = process.env.KIMI_API_KEY;
+  if (!kimiKey) {
+    try {
+      // dynamic import 避免顶层 fs import 在 Vercel 冷启动时触发
+      const fs = await import('fs');
+      const path = await import('path');
+      const os = await import('os');
+      const CFG_PATH = path.join(os.homedir(), '.openclaw/openclaw.json');
+      const cfg = JSON.parse(fs.readFileSync(CFG_PATH, 'utf-8'));
+      kimiKey = cfg?.models?.providers?.kimi?.apiKey;
+    } catch {
+      // config 文件不存在或解析失败，静默降级
+    }
   }
   
   if (!kimiKey) return { zh: title, ja: title, en: title };
@@ -61,13 +65,19 @@ async function generateTrilingualTitles(title: string) {
  * 返回 content_zh 和 content_ja（结构与 content 相同，只是标题换成对应语言）
  */
 async function translateContentNewsItems(content: string): Promise<{ content_zh: string; content_ja: string } | null> {
-  const CFG_PATH = path.join(os.homedir(), '.openclaw/openclaw.json');
-  let kimiKey: string | undefined;
-  try {
-    const cfg = JSON.parse(fs.readFileSync(CFG_PATH, 'utf-8'));
-    kimiKey = cfg?.models?.providers?.kimi?.apiKey;
-  } catch {
-    return null;
+  // 环境变量优先（Vercel serverless 安全）
+  let kimiKey: string | undefined = process.env.KIMI_API_KEY;
+  if (!kimiKey) {
+    try {
+      const fs = await import('fs');
+      const path = await import('path');
+      const os = await import('os');
+      const CFG_PATH = path.join(os.homedir(), '.openclaw/openclaw.json');
+      const cfg = JSON.parse(fs.readFileSync(CFG_PATH, 'utf-8'));
+      kimiKey = cfg?.models?.providers?.kimi?.apiKey;
+    } catch {
+      return null;
+    }
   }
   if (!kimiKey) return null;
 
