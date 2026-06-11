@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>个人多机 AI 知识库体系 v2 — 架构与实践（公开版）</title>
+<style>
+  :root {
+    --bg: #faf9f5; --card: #ffffff; --ink: #1a1a18; --muted: #6b6a64;
+    --line: #e4e2da; --accent: #7c6cd4; --accent-bg: #efecfa;
+    --good: #1d7a5f; --good-bg: #e3f3ec; --warn: #9a6b15; --warn-bg: #faf0da;
+    --code-bg: #f1efe8;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #16161a; --card: #1f1f24; --ink: #ececea; --muted: #9a9a94;
+      --line: #34343c; --accent: #a99cf0; --accent-bg: #2b2740;
+      --good: #5fd0a5; --good-bg: #1b3329; --warn: #e0b35f; --warn-bg: #3a2f17;
+      --code-bg: #2a2a30;
+    }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink);
+    font-family: -apple-system, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    line-height: 1.75; font-size: 16px; }
+  .wrap { max-width: 880px; margin: 0 auto; padding: 48px 24px 80px; }
+  header h1 { font-size: 30px; font-weight: 600; margin: 0 0 8px; }
+  header p.sub { color: var(--muted); margin: 0 0 4px; font-size: 16px; }
+  .badge { display: inline-block; background: var(--accent-bg); color: var(--accent);
+    border-radius: 999px; padding: 2px 14px; font-size: 13px; margin: 12px 6px 0 0; }
+  h2 { font-size: 21px; font-weight: 600; margin: 56px 0 16px; padding-top: 16px;
+    border-top: 1px solid var(--line); }
+  h2 .no { color: var(--accent); margin-right: 8px; font-variant-numeric: tabular-nums; }
+  h3 { font-size: 17px; font-weight: 600; margin: 28px 0 8px; }
+  p { margin: 10px 0; }
+  .lead { font-size: 17px; }
+  table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 14.5px; }
+  th, td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { color: var(--muted); font-weight: 500; font-size: 13px; }
+  code { background: var(--code-bg); border-radius: 5px; padding: 2px 7px; font-size: 13.5px;
+    font-family: "SF Mono", Menlo, Consolas, monospace; }
+  pre { background: var(--code-bg); border-radius: 10px; padding: 14px 18px; overflow-x: auto;
+    font-size: 13.5px; line-height: 1.6; }
+  pre code { background: none; padding: 0; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 14px;
+    padding: 20px 24px; margin: 16px 0; }
+  .principle { border-left: 3px solid var(--accent); border-radius: 0 14px 14px 0; }
+  .principle b { color: var(--accent); }
+  .pitfall { border-left: 3px solid var(--warn); border-radius: 0 14px 14px 0; }
+  .pitfall b:first-child { color: var(--warn); }
+  .ok { color: var(--good); }
+  .kpi-row { display: flex; gap: 14px; flex-wrap: wrap; margin: 20px 0; }
+  .kpi { flex: 1 1 180px; background: var(--card); border: 1px solid var(--line);
+    border-radius: 14px; padding: 16px 18px; }
+  .kpi .v { font-size: 22px; font-weight: 600; }
+  .kpi .v .old { color: var(--muted); text-decoration: line-through; font-size: 16px; font-weight: 400; }
+  .kpi .k { color: var(--muted); font-size: 13px; margin-top: 2px; }
+  .muted { color: var(--muted); }
+  .small { font-size: 13.5px; }
+  footer { margin-top: 64px; padding-top: 16px; border-top: 1px solid var(--line);
+    color: var(--muted); font-size: 13px; }
+  svg text { font-family: inherit; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>个人多机 AI 知识库体系 v2</h1>
+  <p class="sub">一个人 + 一群 AI agent + 多台电脑，如何共用同一个大脑 —— 架构、使用与维护实录</p>
+  <span class="badge">本地优先 · 不上云</span>
+  <span class="badge">git 同步</span>
+  <span class="badge">6 个常驻组件</span>
+  <span class="badge">每周维护 30 分钟</span>
+</header>
+
+<h2><span class="no">00</span>这套体系解决什么问题</h2>
+<p class="lead">多台设备、多个 AI agent（Claude、Codex、自托管 bot 网关）协同工作时，最大的痛点不是模型不够聪明，而是<b>组织</b>：agent 之间没有共享记忆，每次都要重新理解你；改动无法传递；维护体系本身的成本吞掉了它带来的生产力。</p>
+<p>v1 时代的教训（真实数据）：治理规则 45+ 条、三层元管理嵌套、每次会话写回约 10 个文件、双向同步连挂三天、136 项全量审计只发现 1 个真实故障——<b>两周 14 篇工作日志里 12 篇是在修体系本身</b>。</p>
+<p>v2 的答案是一句话：<b>用 git 当 agent 之间的通信总线，用一页规则替代全部治理，用「删掉它 agent 会不会变笨」当唯一的存在性判据。</b></p>
+
+<div class="kpi-row">
+  <div class="kpi"><div class="v"><span class="old">45+ 条</span> → 1 页</div><div class="k">治理规则</div></div>
+  <div class="kpi"><div class="v"><span class="old">~10 个</span> → 1-2 个</div><div class="k">每次会话写回文件</div></div>
+  <div class="kpi"><div class="v"><span class="old">每天</span> → 周五 30 分钟</div><div class="k">人工维护时间</div></div>
+  <div class="kpi"><div class="v">6 件</div><div class="k">常驻组件总数</div></div>
+</div>
+
+<h2><span class="no">01</span>架构总览</h2>
+<div class="card" style="text-align:center">
+<svg viewBox="0 0 760 360" width="100%" role="img" aria-label="架构图">
+  <defs><marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+    <path d="M2 1L8 5L2 9" fill="none" stroke="var(--muted)" stroke-width="1.5" stroke-linecap="round"/></marker></defs>
+  <rect x="190" y="16" width="380" height="116" rx="12" fill="none" stroke="var(--line)" stroke-dasharray="5 4"/>
+  <text x="380" y="40" text-anchor="middle" fill="var(--ink)" font-size="14" font-weight="600">家庭服务器（Mac mini · 永远开机 · 全盘加密）</text>
+  <rect x="210" y="56" width="160" height="56" rx="9" fill="var(--accent-bg)"/>
+  <text x="290" y="80" text-anchor="middle" fill="var(--accent)" font-size="13.5" font-weight="600">git 裸仓库（正本）</text>
+  <text x="290" y="99" text-anchor="middle" fill="var(--accent)" font-size="12">~/git/knowledge-base.git</text>
+  <rect x="390" y="56" width="160" height="56" rx="9" fill="var(--accent-bg)"/>
+  <text x="470" y="80" text-anchor="middle" fill="var(--accent)" font-size="13.5" font-weight="600">~/.secrets 密钥登记簿</text>
+  <text x="470" y="99" text-anchor="middle" fill="var(--accent)" font-size="12">密钥永不进 git</text>
+  <line x1="380" y1="138" x2="380" y2="172" stroke="var(--muted)" stroke-width="1.4" marker-start="url(#ar)" marker-end="url(#ar)"/>
+  <rect x="120" y="178" width="520" height="40" rx="9" fill="var(--good-bg)"/>
+  <text x="380" y="203" text-anchor="middle" fill="var(--good)" font-size="13.5" font-weight="600">私有加密内网（Tailscale）—— 数据只在自己设备间流动，不经过任何云</text>
+  <line x1="190" y1="224" x2="190" y2="258" stroke="var(--muted)" stroke-width="1.4" marker-start="url(#ar)" marker-end="url(#ar)"/>
+  <line x1="380" y1="224" x2="380" y2="258" stroke="var(--muted)" stroke-width="1.4" marker-start="url(#ar)" marker-end="url(#ar)"/>
+  <line x1="570" y1="224" x2="570" y2="258" stroke="var(--muted)" stroke-width="1.4" marker-start="url(#ar)" marker-end="url(#ar)"/>
+  <rect x="110" y="262" width="160" height="58" rx="9" fill="var(--code-bg)"/>
+  <text x="190" y="287" text-anchor="middle" fill="var(--ink)" font-size="13.5" font-weight="600">随身笔记本（主力）</text>
+  <text x="190" y="306" text-anchor="middle" fill="var(--muted)" font-size="12">克隆 · 离线可用 · 15 分钟自动同步</text>
+  <rect x="300" y="262" width="160" height="58" rx="9" fill="var(--code-bg)"/>
+  <text x="380" y="287" text-anchor="middle" fill="var(--ink)" font-size="13.5" font-weight="600">本地模型实验机（Linux）</text>
+  <text x="380" y="306" text-anchor="middle" fill="var(--muted)" font-size="12">克隆 · cron 同步 · 关机不算故障</text>
+  <rect x="490" y="262" width="160" height="58" rx="9" fill="var(--code-bg)"/>
+  <text x="570" y="287" text-anchor="middle" fill="var(--ink)" font-size="13.5" font-weight="600">手机（遥控器）</text>
+  <text x="570" y="306" text-anchor="middle" fill="var(--muted)" font-size="12">Telegram → 服务器上的 agent 干活</text>
+</svg>
+</div>
+<p>另有一台<b>业务隔离机</b>承担生产业务，红线是「稳定来自无聊」：不装新工具、不做实验、不克隆知识库（要读资料 ssh 到服务器看）。每台机器一个角色，互不越界。</p>
+
+<h2><span class="no">02</span>五条设计铁律</h2>
+<div class="card principle"><b>判别法（最重要的一条）</b>：删掉这个文件，agent 下次干活会不会变笨？会 → 它是工作上下文，保留；不会 → 它是报告，删掉或交给脚本自动生成。所有「要不要建 XX」的争论都终结于这一刀。</div>
+<div class="card principle"><b>不建索引是决定，不是疏漏</b>：agent 有 grep，目录名就是索引。任何需要人工保持同步的索引、导航、清单都不许存在——它们正是 v1 累死人的根源。</div>
+<div class="card principle"><b>协作走 git（双向），备份管道永远单向</b>：把这两件事混成一件（双向文件同步当备份）是 v1 同步连挂三天的根因。</div>
+<div class="card principle"><b>面板只许自动生成，通知只在失败时发</b>：绿灯不需要报告。给自己交付，消息比面板好。</div>
+<div class="card principle"><b>新增任何东西前先问每月人工维护成本</b>：必须趋近于 0，否则不进体系。宁可笨而稳，不要聪明而脆。</div>
+
+<h2><span class="no">03</span>常驻组件（恰好 6 件）</h2>
+<table>
+<tr><th>组件</th><th>干什么</th></tr>
+<tr><td><code>kb-sync.sh</code> + 定时任务</td><td>每 15 分钟自动「收口本地改动 → pull --rebase → push」。离线 = 正常，静默；冲突 = 回退安全态 + 本地只通知一次（macOS 用 launchd，Linux 用 cron，同一脚本跨平台）</td></tr>
+<tr><td><code>kb</code> 终端命令</td><td>坐下敲一下：同步 + 列出「你不在时谁干了什么」+ 显示 NEXT.md；兼任 72 小时失联黄字报警</td></tr>
+<tr><td><code>m4</code> 命令 + SSH 别名</td><td>一键进家庭服务器的 tmux 跑长任务（断线不丢）；所有脚本只引用别名，换 IP 只改一处</td></tr>
+<tr><td>仓库内三个配置</td><td><code>.gitattributes</code>（追加型文件 merge=union 自动合并）、<code>.gitignore</code>（媒体大文件不入库）、<code>AGENTS.md</code> 一页规则（CLAUDE.md 是它的符号链接，Claude 与 Codex 读同一份真相）</td></tr>
+<tr><td>默认模型 = 中档</td><td>日常用性价比模型，大决策手动切旗舰；不建任何自动路由机制</td></tr>
+<tr><td><code>~/.secrets</code> 约定</td><td>密钥唯一登记簿（只在服务器、磁盘加密保护）；agent 规则：密钥只从这里读、新密钥先登记、永不进 git</td></tr>
+</table>
+
+<h2><span class="no">04</span>知识库内部结构</h2>
+<table>
+<tr><th>文件 / 目录</th><th>角色</th><th>写入纪律</th></tr>
+<tr><td><code>AGENTS.md</code></td><td>唯一规则真相（一页、8 节）</td><td>基本不动</td></tr>
+<tr><td><code>START.md</code></td><td>开工卡片：丢给任何 agent 它就知道怎么做</td><td>不动</td></tr>
+<tr><td><code>NEXT.md</code></td><td>在做的事，<b>上限 3 件</b></td><td>只在收工时整文件重写</td></tr>
+<tr><td><code>IDEAS.md</code></td><td>想法收件箱，一行一条</td><td>只追加，永不改旧行</td></tr>
+<tr><td><code>PROJECTS.md</code></td><td>项目登记簿（名称/状态/位置/一句话）</td><td>开/关项目时加一行</td></tr>
+<tr><td><code>MACHINES.md</code></td><td>设备角色与红线、新机接入命令</td><td>只有人手动改</td></tr>
+<tr><td><code>runbooks/</code></td><td>修复技能库：症状 → 原因 → 命令 → 验证</td><td>只新建/更新同症状篇</td></tr>
+<tr><td><code>50-工作日志/</code></td><td>每会话一篇，<code>日期-机器-主题.md</code></td><td>只新建</td></tr>
+<tr><td><code>90-归档与未审/</code></td><td>历史快照（旧体系全部归档于此）</td><td>默认不读，只读不写</td></tr>
+<tr><td>主题目录（业务/技术…）</td><td>真正的知识内容</td><td>正常读写</td></tr>
+</table>
+<p class="small muted">防冲突的全部秘密：高频写入全是「追加型」（IDEAS、日志、runbook）配 merge=union 自动合并；唯一的「状态型」共享文件只有 NEXT.md 一个，且每次整文件重写自带自愈。实测多 agent 并行写一个月，真实冲突 ≈ 每月 0–1 次，处理方式是弹一次通知 + 3 分钟照 runbook 解决。</p>
+
+<h2><span class="no">05</span>日常怎么用</h2>
+<h3>开工（任何机器、任何 agent）</h3>
+<p>对 agent 说一句：<b>「读 ~/knowledge-base/START.md 照做」</b>。它会自动同步、读 NEXT、用三句话汇报「你不在时发生了什么、现在排着什么、建议先做哪件」，然后等你指示。在网页版或新工具里，直接把 START.md 内容粘贴进对话，效果相同——<b>这张卡片跟着文件走，不跟机器走</b>。</p>
+<p class="small muted">同时每台机器的 Claude / Codex 全局配置里都立了「指路牌」（知识库位置 + 开工收工规则），所以即使你什么都不说，agent 通常也会自己照做。</p>
+<h3>收工</h3>
+<p>说「收工」，agent 按规则执行：整写 NEXT → 写一篇工作日志 → 修复类工作沉淀 runbook → commit + push。<b>经验从此变成资产而不是消耗</b>：同一个故障第二次出现时，任何 agent 五分钟照方抓药。</p>
+<h3>想法</h3>
+<p>随时随地让手边的 agent往 IDEAS.md 追加一行。记下来 ≠ 要做——想法有了去处，脑子就不用一直挂着。</p>
+<h3>移动场景</h3>
+<p>手机发 Telegram → 家庭服务器上的 agent 干活（它有完整知识库和密钥）→ 结果写回 git → 你在任何电脑上 pull 即见。手机是遥控器，服务器是引擎，知识库是传送带。</p>
+
+<h2><span class="no">06</span>备份与安全（四层冗余，全自动）</h2>
+<table>
+<tr><th>层</th><th>什么</th><th>频率</th></tr>
+<tr><td>1</td><td>每台机器的 git 克隆 = 完整历史副本（git 免费送的）</td><td>每 15 分钟</td></tr>
+<tr><td>2</td><td>正本镜像到外接加密盘（含密钥、换机工具包、Brewfile）</td><td>每晚</td></tr>
+<tr><td>3</td><td>带日期的 git bundle 存档到冷备份大盘（保留 8 周）</td><td>每周</td></tr>
+<tr><td>4</td><td><b>自动验证备份可恢复</b>（fsck + bundle verify），失败才告警</td><td>每周日</td></tr>
+</table>
+<p>告警通道很取巧：验证失败时<b>直接往知识库写一篇告警文件并 push</b>——你下次开工时 agent 自然汇报，零新增通知系统。安全侧：服务器与笔记本全盘加密；密钥集中登记；<code>runbooks/设备丢失-笔记本.md</code> 预写好 15 分钟吊销清单（断网内身份 → 断 SSH → 远程抹除 → 吊销凭据）。</p>
+
+<h2><span class="no">07</span>维护：每周五 30 分钟，到点硬停</h2>
+<pre><code>1. 一周提交体检：auto 提交占比异常高 = agent 没按收工走，下次开工点名
+2. NEXT.md：过期的删，保持 ≤3 件
+3. 收件箱清零：每个文件 → 挪进主题目录 / 压成 IDEAS 一行 / 直接删
+4. IDEAS 扫一遍：挑 0–1 条进 NEXT，其余不动
+5. 翻本周日志：修过的东西 runbooks/ 里有没有对应条目？没有就当场补
+6. 到 30 分钟硬停，没做完的下周五再说</code></pre>
+<p>这是整个体系<b>唯一</b>的固定维护时间。衡量体系健康的朴素标准：连续一周没有为基础设施开过一次「修复会话」。管理系统唯一的 KPI 是你多久不需要看它。</p>
+
+<h2><span class="no">08</span>接入一台新机器（约 2 分钟）</h2>
+<p>新 Mac 跑一条引导命令（脚本存在服务器上）：自动完成 SSH 免密 → 克隆知识库 → 防冲突 git 配置（pull.rebase、autoStash、机器名作提交者）→ 装自动同步 → 装 <code>kb</code>/<code>m4</code> 命令 → 设默认模型。Linux 机器同样克隆，把 launchd 换成一条 cron 即可。换电脑剧本：插上加密外接盘（每晚载有完整镜像与换机包）→ 跑引导 → 半小时恢复全部工作环境。</p>
+
+<h2><span class="no">09</span>踩坑实录（每个坑都变成了 runbook）</h2>
+<div class="card pitfall"><b>macOS TCC 静默拦截</b>：launchd 后台任务无权读 <code>~/Documents</code>（退出码 127、手动跑却正常、两台机器同病）。修法不是点权限弹窗（点错一次=永久静默失败），而是把库整体迁出受保护目录。<b>铁律：自动任务的路径避开 Documents/Desktop/Downloads。</b></div>
+<div class="card pitfall"><b>幽灵挂载点</b>：外接盘未挂载时向 <code>/Volumes/盘名</code> 写入，macOS 会在内置盘悄悄建同名假目录 → 真盘再挂载变成「盘名 1」→ 双正本静默脑裂。<b>所以正本放永远在线的内置盘，外接盘只当镜像；所有触盘脚本先验挂载哨兵。</b></div>
+<div class="card pitfall"><b>双向同步是陷阱</b>：rclone bisync 连挂三天的根因是把「协作」和「备份」混成一件事。git 天然解决协作（每个克隆都是完整副本），备份管道保持单向后这类故障永久消失。</div>
+<div class="card pitfall"><b>不验证的「成功」不算成功</b>：曾有一整轮施工因终端异常而全部未持久化，但回显全是 ✅。此后铁律：每次 commit 后立刻 <code>git log</code> 验证落地；复杂操作写成脚本文件再执行；备份必须每周自动做恢复演练。</div>
+<div class="card pitfall"><b>护栏自己也会变成噪音源</b>：大文件护栏因不幂等导致排除清单膨胀 40 倍、每 15 分钟弹一次通知。任何自动护栏都要问一句：它失效或重复触发时，谁来守护护栏？（答案：幂等设计 + 只在状态变化时发声。）</div>
+
+<h2><span class="no">10</span>给想抄作业的人：三步起步</h2>
+<p><b>第一步</b>：把笔记目录变成 git 仓库，在常开的机器上建裸仓库当正本，其他设备克隆。<b>第二步</b>：写三个文件——NEXT.md（在做 ≤3 件）、IDEAS.md（想法只追加）、一页 AGENTS.md（开工 pull 读 NEXT / 收工整写 NEXT 写日志 push / 密钥永不进 git）。<b>第三步</b>：给 agent 的全局配置加一句指路牌，装一条 15 分钟的同步定时任务。</p>
+<p>就这些。其余一切——备份链、runbook、防冲突配置——都可以等真的痛了再加。<b>这套体系最大的教训恰恰是：先用最小集跑起来，警惕任何「为了管理而管理」的冲动。</b></p>
+
+<footer>
+  个人多机 AI 知识库体系 v2 · 公开分享版（已脱敏：设备/人名/网络地址/业务名均为代号）· 2026-06<br>
+  体系由 Claude (Fable 5) 与多轮多 agent 辩论共同设计，经真实多机环境验证运行。
+</footer>
+</div>
+</body>
+</html>
