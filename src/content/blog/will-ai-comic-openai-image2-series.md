@@ -7,7 +7,7 @@ title:
 category: "learning"
 date: "2026-06-12"
 author: Will
-coverImage: "/reports/will-ai-comic-openai-image2-2026-06-12/images/day1/day1_01.png"
+coverImage: "/reports/will-ai-comic-openai-image2-2026-06-12/thumbs/day1/day1_01.jpg"
 excerpt:
   zh: "一组 5 天、每天 6 张的中文知识漫画卡片，用 Will 贴纸漫画风讲清楚 AI 落地的五个核心主题：组织上下文、Agent 工作者、界面化交付、流程重构和应用层护城河。"
   ja: "5日間・各6枚の中国語ナレッジ漫画カード。AI導入の5テーマをWillのステッカー漫画で整理します。"
